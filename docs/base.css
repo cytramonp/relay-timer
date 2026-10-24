@@ -1,0 +1,193 @@
+
+/* Layout: stage monitor on the left (current speaker + countdown + milestone track), run-of-show on the right; stacks on phones. */
+:root{
+  --bg:#EDF0F3; --panel:#FFFFFF; --fg:#141920; --muted:#5B6471; --line:#D3D9E0; --accent:#2E57E0;
+  --ok:#17905A; --warn:#C77E00; --bad:#D2352E; --soft:#E3E8EE;
+  --ov-bg:#0E1116; --ov-fg:#F1F3F6; --ov-muted:#8D97A5; --ov-line:#262D36;
+  --ov-ok:#3CCB86; --ov-warn:#F2B233; --ov-bad:#FF6457; --ov-past:#4F74E3; --ov-up:#3A424E;
+  --f-num:"Martian Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --f-ui:"Onest", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F1216; --panel:#171B21; --fg:#E6EAF0; --muted:#96A0AD; --line:#2A313A; --accent:#829FFF;
+  --ok:#3CCB86; --warn:#F2B233; --bad:#FF6B5E; --soft:#20262E; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0F1216; --panel:#171B21; --fg:#E6EAF0; --muted:#96A0AD; --line:#2A313A; --accent:#829FFF;
+  --ok:#3CCB86; --warn:#F2B233; --bad:#FF6B5E; --soft:#20262E; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-ui);font-size:15px;line-height:1.45;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 40px}
+body.dragging-any{user-select:none;cursor:grabbing}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px}
+h1{font-size:1.35rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.col{display:grid;gap:16px;min-width:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:500}
+button{font:inherit;cursor:pointer;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--fg);padding:8px 14px}
+button:hover{border-color:var(--muted)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.danger{color:var(--bad)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.sm{padding:3px 9px;font-size:.8rem}
+.controls{display:flex;flex-wrap:wrap;gap:8px}
+kbd{font-family:var(--f-num);font-size:.72rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--muted)}
+
+/* ---- the overlay / stage monitor: one dark look in both themes, it is what the call sees ---- */
+.ov{background:var(--ov-bg);color:var(--ov-fg);border-radius:12px;padding:18px 20px 16px;display:grid;gap:10px;
+  border:1px solid var(--ov-line);--state:var(--ov-ok)}
+.ov[data-state="warn"]{--state:var(--ov-warn)}
+.ov[data-state="over"]{--state:var(--ov-bad)}
+.ov[data-state="idle"],.ov[data-state="done"]{--state:var(--ov-muted)}
+.ov-top{display:flex;justify-content:space-between;gap:12px;font-size:.78rem;color:var(--ov-muted);letter-spacing:.04em;flex-wrap:wrap}
+.ov-name{font-size:clamp(1.3rem,3.2vw,2rem);font-weight:700;line-height:1.1;overflow-wrap:anywhere}
+.ov-time{font-family:var(--f-num);font-weight:800;font-variant-numeric:tabular-nums;line-height:1;
+  font-size:clamp(3.6rem,11vw,7.5rem);color:var(--state);letter-spacing:-.03em}
+.ov-time small{font-size:.28em;font-weight:600;letter-spacing:0;color:var(--ov-muted);margin-left:.4em}
+.ov-bar{height:6px;border-radius:3px;background:var(--ov-line);overflow:hidden}
+.ov-bar i{display:block;height:100%;width:0;background:var(--state);transition:none}
+/* One block per agenda item, width by planned time: past blue, current green with its progress, upcoming grey. */
+.ov-blocks{display:flex;gap:3px;height:10px}
+.ov-blocks i{flex:1 1 0;min-width:4px;border-radius:2px;background:var(--ov-up)}
+.ov-blocks i.past{background:var(--ov-past)}
+.ov-blocks i.cur{background:linear-gradient(90deg, var(--state) var(--p), color-mix(in srgb, var(--state) 50%, transparent) var(--p))}
+.ov-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:.86rem;color:var(--ov-muted)}
+.ov-next{font-size:clamp(1.1rem,2.4vw,1.5rem);color:var(--ov-muted);line-height:1.2}
+.ov-next b{color:var(--ov-fg);font-weight:700}
+.ov-next small{display:block;font-size:.8rem;margin-top:2px}
+.ov-btns{display:flex;gap:6px}
+.ov button{background:transparent;color:var(--ov-fg);border-color:var(--ov-line);padding:5px 11px;font-size:.85rem}
+.ov button.go{background:var(--state);border-color:var(--state);color:var(--ov-bg);font-weight:700;white-space:nowrap}
+.ov[data-state="idle"] button.go{background:var(--ov-ok);border-color:var(--ov-ok)}
+.ov.paused .ov-time{opacity:.45}
+.floating-note{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;color:var(--muted)}
+
+/* compact layout when the overlay lives in its own always-on-top window; sizes follow the window, so it can be resized freely */
+body.pip{background:var(--ov-bg);padding:0;margin:0;height:100vh;overflow:hidden}
+body.pip .ov{border:0;border-radius:0;height:100vh;padding:10px 14px;gap:4px;align-content:center}
+body.pip .ov-name{font-size:clamp(.95rem,min(7vw,11vh),2.4rem)}
+/* --clk is the "Clock size" setting; 1 is the largest the window allows. */
+body.pip .ov-time{font-size:calc(clamp(2.2rem,min(22vw,34vh),9rem) * var(--clk,.5))}
+body.pip .ov-top{font-size:.7rem}
+body.pip .ov-foot{font-size:.75rem}
+body.pip .ov-next{font-size:clamp(1rem,min(6.5vw,10vh),2.2rem)}
+body.pip .ov-next small{display:none}
+body.pip .ov-blocks{height:clamp(6px,3vh,14px)}
+/* Small window: clock on the left, name and next on the right, blocks underneath; chrome (top line, bar, buttons) goes. */
+@media (max-height:169px){
+  body.pip .ov{grid-template-columns:auto minmax(0,1fr);grid-template-areas:". ." "time name" "time foot" ". ." "blocks blocks";
+    grid-template-rows:1fr auto auto 1fr auto;column-gap:clamp(6px,3vw,14px);row-gap:2px;padding:5px 9px;align-content:stretch}
+  body.pip .ov-top, body.pip .ov-bar, body.pip .ov-btns{display:none}
+  body.pip .ov-time{grid-area:time;align-self:center;font-size:calc(clamp(.9rem,min(14vw,50vh),5rem) * var(--clk,.5))}
+  body.pip .ov-name{grid-area:name;align-self:center;font-size:clamp(.7rem,min(6.5vw,19vh),1.6rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.pip .ov-foot{grid-area:foot;align-self:start;min-width:0}
+  body.pip .ov-next{font-size:clamp(.65rem,min(5vw,15vh),1.3rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.pip .ov-blocks{grid-area:blocks;height:clamp(3px,5vh,8px);gap:2px}
+  body.pip .ov-foot{flex-wrap:nowrap}
+  body.pip .ov-next{min-width:0;flex:1 1 auto}
+  body.pip .ov button{padding:2px 9px;font-size:.75rem}
+  /* Before the meeting the Start button stays, whatever the size, so the meeting can be started from the floating window. */
+  body.pip .ov[data-state="idle"] .ov-btns{display:flex}
+}
+/* Tiny window: only the clock and who is speaking. */
+@media (max-height:79px){
+  body.pip .ov{grid-template-areas:"time name";grid-template-rows:1fr;padding:3px 8px}
+  body.pip .ov-foot, body.pip .ov-blocks{display:none}
+  body.pip .ov-name{align-self:center;font-size:clamp(.65rem,min(7vw,38vh),1.4rem)}
+  body.pip .ov-time{font-size:calc(clamp(.8rem,min(12.5vw,72vh),4rem) * var(--clk,.5))}
+  body.pip .ov-time small{display:none}
+  body.pip .ov[data-state="idle"]{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"time name foot"}
+  body.pip .ov[data-state="idle"] .ov-foot{display:flex;align-self:center}
+  body.pip .ov[data-state="idle"] .ov-next{display:none}
+}
+.ov[data-state="idle"] #ovPause{display:none}
+
+/* ---- milestone track ---- */
+.track{position:relative;padding-top:4px;--st:var(--ok);--past:#4F74E3}
+.track[data-state="warn"]{--st:var(--warn)}
+.track[data-state="over"]{--st:var(--bad)}
+.lane{position:relative;height:22px;border-radius:5px;background:var(--soft);overflow:hidden}
+.lane + .lane{margin-top:6px}
+.seg{position:absolute;top:0;bottom:0;border-right:2px solid var(--panel);display:flex;align-items:center;padding-left:6px;
+  font-size:.72rem;white-space:nowrap;overflow:hidden;color:var(--fg);isolation:isolate}
+/* Plan lane uses the floating window's colours (done blue, now green with its progress, upcoming grey), tinted so the names stay readable. */
+.lane.plan .seg{background:color-mix(in srgb, var(--muted) 20%, transparent)}
+.lane.plan .seg.past{background:color-mix(in srgb, var(--past) 38%, transparent)}
+.lane.plan .seg.cur{background:linear-gradient(90deg, color-mix(in srgb, var(--st) 52%, transparent) var(--p), color-mix(in srgb, var(--st) 22%, transparent) var(--p));font-weight:600}
+.lane.plan .seg.topic::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:repeating-linear-gradient(135deg, color-mix(in srgb, var(--fg) 9%, transparent) 0 6px, transparent 6px 12px)}
+.lane.act .seg.under{background:color-mix(in srgb, var(--ok) 32%, transparent)}
+.lane.act .seg.over{background:color-mix(in srgb, var(--bad) 34%, transparent)}
+.lane.act .seg.live{background:color-mix(in srgb, var(--st) 22%, transparent)}
+/* Boundary handles between planned slots: drag to resize the slot on the left. */
+.bnd{position:absolute;top:0;bottom:0;width:14px;margin-left:-7px;cursor:col-resize;touch-action:none;z-index:2}
+.bnd::after{content:"";position:absolute;left:6px;top:3px;bottom:3px;width:2px;border-radius:1px;background:var(--fg);opacity:.18}
+.bnd:hover::after,.bnd.on::after{opacity:.75}
+.bnd.end{margin-left:-14px}
+.bnd.end::after{left:9px}
+body.resizing-any{user-select:none;cursor:col-resize}
+.keep{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);cursor:pointer}
+.ticks{position:relative;height:18px;margin-top:4px;font-family:var(--f-num);font-size:.66rem;color:var(--muted)}
+.ticks span{position:absolute;transform:translateX(-50%)}
+.ticks span:first-child{transform:none}
+/* The meeting-clock marker: drag it (or focus the knob and use arrows) to correct the clock. */
+.nowline{position:absolute;top:0;bottom:22px;width:2px;margin-left:-1px;background:var(--fg);border-radius:1px;cursor:ew-resize;touch-action:none}
+.nowline::before{content:"";position:absolute;top:-8px;bottom:0;left:-9px;right:-9px}
+.knob{position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:16px;height:16px;padding:0;border-radius:50%;
+  background:var(--fg);border:3px solid var(--panel);cursor:ew-resize}
+.nowline.grabbed .knob{transform:translateX(-50%) scale(1.25)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.75rem;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.clock{display:flex;justify-content:space-between;align-items:center;gap:8px 12px;flex-wrap:wrap;margin-bottom:12px}
+.clock .num{font-family:var(--f-num);font-variant-numeric:tabular-nums;font-size:1.05rem}
+.clock-adj{display:flex;gap:6px;align-items:center}
+
+/* ---- run of show ---- */
+.ros{display:grid;gap:6px}
+.row{display:grid;grid-template-columns:24px 18px minmax(0,1fr) 92px 116px 30px;gap:8px;align-items:center;
+  padding:6px 8px;border-radius:7px;border:1px solid transparent;background:var(--panel);cursor:grab}
+.row:hover{border-color:var(--line)}
+.row.topic{background:var(--soft)}
+.row.topic .nm{font-style:italic}
+.grip{padding:4px 0;border:0;background:transparent;color:var(--muted);cursor:grab;touch-action:none;font-size:1.1rem;line-height:1;user-select:none}
+.grip:hover{color:var(--fg)}
+.row.dragging{border-color:var(--accent);box-shadow:0 6px 18px rgba(0,0,0,.18);position:relative;z-index:2;cursor:grabbing}
+.row.cur{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 8%, transparent)}
+.row.done{color:var(--muted)}
+.row .n{font-family:var(--f-num);font-size:.75rem;color:var(--muted)}
+.row input{font:inherit;color:inherit;background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 7px;width:100%;min-width:0;cursor:text}
+.row input[type=number]{font-family:var(--f-num);text-align:right}
+.mnw{display:flex;align-items:center;gap:2px}
+.unpin{padding:2px 3px;border:0;background:transparent;color:var(--accent);font-size:.9rem;line-height:1}
+.unpin[hidden]{display:inline-block!important;visibility:hidden}
+.st{font-family:var(--f-num);font-size:.76rem;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip{display:inline-block;padding:1px 6px;border-radius:999px;font-size:.7rem;margin-left:4px}
+.chip.ok{background:color-mix(in srgb, var(--ok) 18%, transparent);color:var(--ok)}
+.chip.bad{background:color-mix(in srgb, var(--bad) 18%, transparent);color:var(--bad)}
+.chip.live{background:color-mix(in srgb, var(--accent) 18%, transparent);color:var(--accent)}
+.x{padding:4px 0;border:0;background:transparent;color:var(--muted);font-size:1.1rem;line-height:1}
+.x:hover{color:var(--bad)}
+.x:disabled{visibility:hidden}
+.tot{display:flex;align-items:center;gap:6px}
+.tot input{font:inherit;font-family:var(--f-num);font-size:.95rem;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px 7px;width:76px;text-align:right}
+.ros-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.ros-foot .btns{display:flex;gap:8px;flex-wrap:wrap}
+.warnline{font-size:.8rem;color:var(--warn);margin-top:8px}
+.settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.settings label{display:grid;gap:4px;font-size:.82rem;color:var(--muted);align-content:start}
+.settings input[type=number],.settings select{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 7px;width:100%}
+.settings input[type=number]{font-family:var(--f-num)}
+.settings input[type=range]{width:100%;accent-color:var(--accent)}
+.settings .chk{display:flex;align-items:flex-start;gap:8px;color:var(--fg)}
+.settings .chk input{margin-top:3px}
+.settings .hint{display:block;color:var(--muted);font-size:.76rem}
+.how{font-size:.86rem;color:var(--muted);display:grid;gap:6px}
+.how p{margin:0;max-width:65ch}
+.note{font-size:.82rem;color:var(--warn)}
+@media (prefers-reduced-motion: reduce){.ov-bar i{transition:none}}
