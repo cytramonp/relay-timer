@@ -1,4 +1,4 @@
-const CACHE='relay-public-v1';
+const CACHE='relay-public-v2';
 const ASSETS=['./','./index.html','./base.css','./workspace.css','./timer.js','./model.js','./icons.js','./library.js','./storage.js','./presets.js','./cloud.js','./icon.svg','./manifest.webmanifest','./firebase-config.json'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('relay-public-')&&k!==CACHE).map(k=>caches.delete(k))))));

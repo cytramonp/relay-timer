@@ -11,3 +11,5 @@ body.pip{min-width:0}body.pip .ov{min-height:0}body.pip .ov-btns{display:flex}bo
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
 .ov button:hover{background:#25364b;border-color:#526983}.ov-bar i{transition:none}
+
+@media(max-width:560px){.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.controls button{white-space:nowrap;min-width:0;margin:0;min-height:44px}.controls #btnNext{grid-column:1/3;grid-row:1;min-width:0}.controls #btnPause{grid-column:3;grid-row:1}.controls #btnBack{grid-column:1;grid-row:2}.controls #btnFloat{grid-column:2;grid-row:2;margin:0}.controls #btnReset{grid-column:3;grid-row:2}.row{grid-template-columns:44px minmax(0,1fr) 51px 63px 44px;gap:5px}.row .n{display:none}.row .grip,.row .x{min-width:44px;width:44px;min-height:44px}.row .grip{justify-content:center}.mnw:has(.unpin:not([hidden])){grid-column:3}.agenda-labels{padding-left:49px;padding-right:49px;grid-template-columns:1fr 51px 63px;gap:5px}.row .nm{min-width:0}}

@@ -532,13 +532,13 @@ import {iconMarkup} from "./icons.js";
     v.addEventListener("leavepictureinpicture", closeVideoPip, { once: true });
     setupMediaKeys();
     $("floatNote").querySelector("span").textContent = "Floating video timer is open. Media controls support next, undo and pause. Check its visibility in your screen share.";
-    $("floatNote").hidden = false; $("btnFloat").textContent = "Close floating window";
+    $("floatNote").hidden = false; $("btnFloat").textContent = "Close float";
   }
   function closeVideoPip(){
     if (!vpip) return;
     try { vpip.v.srcObject && vpip.v.srcObject.getTracks().forEach(t => t.stop()); } catch(e){}
     vpip.v.remove(); vpip = null;
-    $("floatNote").hidden = true; $("btnFloat").textContent = "Float on top of screen";
+    $("floatNote").hidden = true; $("btnFloat").textContent = "Float timer";
   }
   function setupMediaKeys(){
     if (!("mediaSession" in navigator)) return;
@@ -669,10 +669,10 @@ import {iconMarkup} from "./icons.js";
     pipWin.document.body.className = "pip";
     pipWin.document.body.appendChild($("ov"));
     pipWin.addEventListener("keydown", onKey);
-    $("floatNote").hidden = false; $("btnFloat").textContent = "Close floating window";
+    $("floatNote").hidden = false; $("btnFloat").textContent = "Close float";
     pipWin.addEventListener("pagehide", () => {
       $("ovSlot").appendChild($("ov"));
-      pipWin = null; $("floatNote").hidden = true; $("btnFloat").textContent = "Float on top of screen";
+      pipWin = null; $("floatNote").hidden = true; $("btnFloat").textContent = "Float timer";
     });
   }
 
