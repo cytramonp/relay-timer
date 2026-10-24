@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f4f5f7"><meta name="description" content="A shared schedule for people and ideas. Run meetings, standups and workshops with flexible slots, saved agendas and a floating timer.">
 <title>Relay Timer — Make room for every voice</title>
-<link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="manifest" href="./manifest.webmanifest"><link rel="stylesheet" href="./base.css"><link rel="stylesheet" href="./workspace.css">
+<link rel="icon" href="./icon.svg" type="image/svg+xml"><link rel="manifest" href="./manifest.webmanifest"><link rel="stylesheet" href="./base.css"><link rel="stylesheet" href="./workspace.css?v=2">
 </head>
 <body>
 <a class="skip" href="#workspace">Skip to timer</a>
@@ -32,5 +32,5 @@
 <dialog id="privacy-dialog" aria-labelledby="privacy-title"><button class="close-button" data-close aria-label="Close privacy"><span data-icon="close"></span></button><h2 id="privacy-title">Your agenda stays yours.</h2><p>Without sign-in, meeting names, agendas, settings and timing history stay in this browser's local storage. Export a backup before clearing browser data.</p><p>With Google sign-in, Firebase Authentication handles your basic account profile. Saved meeting records are synchronized to Cloud Firestore and protected by rules that restrict access to your Google account's user ID.</p><p>Only saved meetings are synchronized. The running timer is controlled on your current device. No advertising, analytics or payment service is included.</p><p>You can export meetings, delete them from your library, or sign out. Deleting a signed-in meeting removes its content from the cloud record; a small deletion marker prevents it from returning from another device.</p><p><a href="https://github.com/cytramonp/relay-timer/issues" target="_blank" rel="noopener">Questions or an account-data deletion request</a> — avoid including private meeting content in a public issue.</p></dialog>
 <dialog id="confirm-dialog" aria-labelledby="confirm-title"><h2 id="confirm-title">Open another meeting?</h2><p id="confirm-message">The current meeting stays saved. Its timer will be paused.</p><div class="dialog-actions"><button data-close>Cancel</button><button id="confirm-yes" class="primary">Continue</button></div></dialog>
 <input id="import-file" type="file" accept=".json,application/json" hidden><div id="toast" role="status" hidden></div>
-<script type="module" src="./timer.js"></script><script type="module" src="./library.js"></script>
+<script type="module" src="./timer.js?v=2"></script><script type="module" src="./library.js?v=2"></script>
 </body></html>
