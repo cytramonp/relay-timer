@@ -1,252 +1,293 @@
 ---
 name: "Relay Timer (working title)"
-description: "A light meeting workspace with a dark stage timer."
+description: "A light facilitator workspace with a dark shared timer."
 colors:
-  bg: "#f4f5f7"
+  bg: "#edeeeb"
   panel: "#fff"
-  fg: "#182329"
-  muted: "#5f6975"
-  line: "#dce1e6"
-  accent: "#2d50cc"
-  accent-hover: "#233eaa"
-  soft: "#edf1f7"
-  ok: "#17905A"
-  warn: "#C77E00"
+  fg: "#1a1b17"
+  muted: "#64665e"
+  line: "#dedfd8"
+  accent: "#20221b"
+  soft: "#f0f1e9"
+  signal: "#e5f65b"
+  signal-hover: "#d5e64a"
+  focus: "#687c16"
+  field: "#f7f8f3"
+  hover: "#e4e7dc"
+  ok: "#246841"
+  warn: "#936000"
   bad: "#ae2924"
-  ov-bg: "#131c29"
-  ov-fg: "#f5f7fa"
-  ov-muted: "#aab7c8"
-  ov-line: "#344050"
-  ov-ok: "#9ce0c2"
-  ov-warn: "#f3c56f"
-  ov-bad: "#ff978b"
-  ov-past: "#647ebd"
-  ov-up: "#394757"
+  up: "#d9dcd0"
+  ov-bg: "#181a15"
+  ov-fg: "#f8f9f1"
+  ov-muted: "#b1b4a5"
+  ov-line: "#3d4035"
+  ov-ok: "#e5f65b"
+  ov-warn: "#f5cd6e"
+  ov-bad: "#ffa294"
+  ov-past: "#9aa36c"
+  ov-up: "#414536"
+  audience-bg: "#151712"
+  audience-fg: "#f7f8f0"
 typography:
   display:
     fontFamily: "ui-monospace, 'Cascadia Mono', Consolas, monospace"
-    fontSize: "clamp(78px,8.8vw,124px)"
-    fontWeight: 650
-    lineHeight: 1.12
+    fontSize: "clamp(88px,9vw,132px)"
+    fontWeight: 600
+    lineHeight: 1.05
     letterSpacing: "-.04em"
   headline:
-    fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
-    fontSize: "27px"
+    fontFamily: "'Manrope', Arial, sans-serif"
+    fontSize: "clamp(34px,3.7vw,52px)"
     fontWeight: 650
-    lineHeight: 1.3
-    letterSpacing: "-.7px"
+    lineHeight: 1.15
+    letterSpacing: "-.04em"
   title:
-    fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
-    fontSize: "15px"
+    fontFamily: "'Manrope', Arial, sans-serif"
+    fontSize: "18px"
     fontWeight: 650
     lineHeight: 1.4
-    letterSpacing: "-.25px"
+    letterSpacing: "-.025em"
+  speaker:
+    fontFamily: "'Manrope', Arial, sans-serif"
+    fontSize: "34px"
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: "-.03em"
   body:
-    fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+    fontFamily: "'Manrope', Arial, sans-serif"
     fontSize: "14px"
+    fontWeight: 450
     lineHeight: 1.45
   label:
-    fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+    fontFamily: "'Manrope', Arial, sans-serif"
     fontSize: "12px"
   button:
-    fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+    fontFamily: "'Manrope', Arial, sans-serif"
     fontSize: "13px"
-    fontWeight: 500
+    fontWeight: 600
+    lineHeight: 1.45
+  live-display:
+    fontFamily: "ui-monospace, 'Cascadia Mono', Consolas, monospace"
+    fontSize: "clamp(74px,13vw,200px)"
+    fontWeight: 550
+    lineHeight: 1.2
+    letterSpacing: "-.04em"
 rounded:
-  field: "6px"
-  control: "7px"
-  panel: "12px"
-  stage: "14px"
+  field: "8px"
+  input: "10px"
+  surface: "16px"
   pill: "999px"
 spacing:
-  control-gap: "7px"
-  stack: "16px"
-  panel-inset: "22px"
-  column-gap: "24px"
+  tight: "8px"
+  stack: "18px"
+  column-gap: "22px"
+  panel-inset: "24px"
   workspace-inset: "28px"
 components:
   button-primary:
-    backgroundColor: "{colors.accent}"
-    textColor: "{colors.panel}"
+    backgroundColor: "{colors.signal}"
+    textColor: "{colors.accent}"
     typography: "{typography.button}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.pill}"
     padding: "8px 13px"
     height: "40px"
   button-primary-hover:
-    backgroundColor: "{colors.accent-hover}"
+    backgroundColor: "{colors.signal-hover}"
   button-secondary:
     backgroundColor: "{colors.panel}"
     textColor: "{colors.fg}"
     typography: "{typography.button}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.pill}"
     padding: "8px 13px"
     height: "40px"
-  button-text:
-    textColor: "{colors.accent}"
+  button-share:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.panel}"
     typography: "{typography.button}"
-    padding: "3px 6px"
-    height: "32px"
+    rounded: "{rounded.pill}"
+    padding: "9px 16px"
+    height: "44px"
   agenda-input:
-    backgroundColor: "#fbfcfd"
+    backgroundColor: "{colors.field}"
     textColor: "{colors.fg}"
     rounded: "{rounded.field}"
     padding: "6px 8px"
-    height: "38px"
+    height: "40px"
   navigation:
     backgroundColor: "{colors.panel}"
     textColor: "{colors.fg}"
-    height: "72px"
+    rounded: "{rounded.pill}"
+    padding: "8px 12px 8px 22px"
+    height: "68px"
   status-chip:
+    backgroundColor: "color-mix(in srgb, #246841 18%, transparent)"
     textColor: "{colors.ok}"
+    typography: "{typography.label}"
     rounded: "{rounded.pill}"
     padding: "0 4px"
   panel:
     backgroundColor: "{colors.panel}"
     textColor: "{colors.fg}"
-    rounded: "{rounded.panel}"
+    rounded: "{rounded.surface}"
     padding: "{spacing.panel-inset}"
   stage:
     backgroundColor: "{colors.ov-bg}"
     textColor: "{colors.ov-fg}"
-    rounded: "{rounded.stage}"
-    padding: "24px 28px 22px"
-  timeline:
-    backgroundColor: "{colors.soft}"
-    rounded: "5px"
-    height: "22px"
-  settings:
+    rounded: "{rounded.surface}"
+    padding: "28px 30px 25px"
+  dialog:
     backgroundColor: "{colors.panel}"
     textColor: "{colors.fg}"
-    rounded: "{rounded.panel}"
+    rounded: "{rounded.surface}"
+    padding: "34px"
+  live-stage:
+    backgroundColor: "{colors.audience-bg}"
+    textColor: "{colors.audience-fg}"
 ---
 
 # Design System: Relay Timer (working title)
 
 ## Overview
 
-**Creative North Star: "Facilitator's control desk" — extracted, provisional descriptive label.** This records the implemented direction in SURFACE.md; it is not a newly approved brand metaphor or final product name.
+**Creative North Star: "Facilitator's broadcast / control desk" — extracted, provisional descriptive label.** This describes the implemented system in SURFACE.md; it is not an approved brand metaphor or final product name.
 
-The confirmed visual commitment is a light workspace with a dark timer. Porcelain surfaces, ink text, cobalt actions, thin rules and consistent stroke icons keep the working controls quiet while the current speaker and countdown remain prominent. The interface opens directly into a usable tool.
+The user-confirmed direction pairs a light workspace with a dark timer and uses robot.com as its visual reference. Pale mineral ground, warm-black timing surfaces, acid-yellow actions, rounded flat panels and capsule controls give the working tool a soft industrial character. Self-hosted Manrope supplies geometric lettering without copying the reference's proprietary font or imagery.
 
-This document captures the effective cascade at commit `cd4cc3c`: `docs/base.css` supplies timer mechanics and timing states; the later `docs/workspace.css` defines the public workspace appearance. Frontmatter values are normative extracted values, not a new stylesheet. Color names and descriptive language below identify their observed roles.
+This is an extraction of the final implementation: `docs/base.css` supplies mechanics, then `docs/workspace.css` supplies the effective appearance, including its later reference-driven overrides and final mobile agenda rule. `docs/index.html`, `docs/live.html` and `docs/live.js` define host, audience and controller surfaces. Tokens above are normative. The earlier cobalt system is superseded. There is no separate approved comp or quality-bar image.
 
 **Key Characteristics:**
 
-- Light utility workspace and dark navy stage.
-- System sans for controls; tabular monospace for time.
-- Cobalt actions, restrained borders and modest corner radii.
-- Separate planned and actual timing tracks.
-- Stacked, touch-aware controls on small screens.
+- Mineral light workspace and warm-black stage.
+- Self-hosted Manrope with tabular system monospace for time.
+- Acid-yellow primary actions and capsule navigation.
+- Flat rounded panels separated by tone and space.
+- Separate host workspace, audience display and remote controls.
 
 ## Colors
 
-The palette combines cool light neutrals and a cobalt action color with a separate, higher-luminance timer palette. Descriptive names are extracted role labels.
+The palette combines low-chroma mineral and olive neutrals with a bright signal accent. Descriptive names below identify extracted roles.
 
 ### Primary
 
-- **Cobalt action** (`accent`): primary controls, action links, selection controls and visible keyboard focus. `accent-hover` is the primary button hover state.
-- **Timing states** (`ok`, `warn`, `bad`): progress, warning and overrun in the workspace. Their labels and track structure accompany the colors.
+- **Acid signal** (`signal`): Start / next, Add item, CSV export, active live sharing, live countdown and progress. `signal-hover` supplies primary hover.
+- **Warm ink** (`accent`): action text and the inactive Share live capsule. The primary button uses warm ink text over acid signal.
+- **Olive focus** (`focus`): the visible keyboard outline; focus is not represented by the fill alone.
 
 ### Neutral
 
-- **Porcelain ground** (`bg`) and **white panel** (`panel`): page ground and working surfaces.
-- **Ink** (`fg`) and **slate text** (`muted`): principal text and supporting labels.
-- **Cool rule** (`line`) and **soft lane** (`soft`): borders, dividers and unfilled timeline lanes.
-- **Navy stage** (`ov-bg`), **stage white** (`ov-fg`), **stage slate** (`ov-muted`) and **stage rule** (`ov-line`): timer surface, speaker text, secondary text/idle digits and bars.
-- **Stage green**, **stage amber**, **stage coral** (`ov-ok`, `ov-warn`, `ov-bad`): active, warning and overrun timer states.
-- **Past blue** (`ov-past`) and **upcoming slate** (`ov-up`): completed and upcoming blocks in the stage agenda strip.
+- **Mineral ground** (`bg`) and **white surface** (`panel`): page and enclosing utility panels.
+- **Warm text** (`fg`) and **mineral muted** (`muted`): primary content and supporting copy.
+- **Quiet rule** (`line`), **soft lane** (`soft`), **field chalk** (`field`) and **olive hover** (`hover`): separators, timeline ground, agenda fields and control hover.
+- **Warm-black stage** (`ov-bg`), **stage ivory** (`ov-fg`), **stage sage** (`ov-muted`) and **stage rule** (`ov-line`): host timer and floating display.
+- **Audience black** (`audience-bg`) and **audience ivory** (`audience-fg`): the full-page live surface.
 
-The visible timeline legend uses additional fixed swatches in workspace.css. Do not substitute those for timing-state tokens: the lanes themselves use the base stylesheet's color-mix treatments.
+Workspace timing states use `ok`, `warn`, `bad` and `up`. The dark timer uses its separate `ov-ok`, `ov-warn`, `ov-bad`, `ov-past` and `ov-up` states. These are semantic treatments, not extra brand accents. The planned timeline uses the implementation's olive tints; actual early / over segments retain their own status tints and text legend.
 
-**The Stage Separation Rule.** Keep workspace and timer color families distinct; preserve the confirmed light-workspace/dark-timer pairing.
+**The Stage Separation Rule.** Preserve the confirmed light host workspace and dark timer. The audience and controller share the full dark live surface.
+
+**The Signal Rule.** Use acid signal for the implemented primary actions and live timing emphasis; preserve distinct warning and overrun states.
 
 ## Typography
 
-**Display Font:** the `--f-num` system monospace stack.
-**Body Font:** the `--f-ui` system sans stack.
+**Display Font:** system monospace from `--f-num`, with Cascadia Mono and Consolas fallbacks.
+**Body Font:** Manrope from the self-hosted variable font `docs/fonts/Manrope.ttf`, with Arial and sans-serif fallbacks.
 
-The public stylesheet overrides the base Onest and Martian Mono declarations with system stacks. The UI loads no external font resource. Tabular numerals keep clocks, durations and usage values aligned.
+Manrope's geometric, close-set headlines sit beside stable numeric timing. The variable font is declared for weights 200–800 with font-display swap. Timing, duration and report values retain tabular alignment.
 
 ### Hierarchy
 
-- **Display:** large tabular countdown; frontmatter records the desktop fluid rule. At widths up to 1150px it becomes 105px, up to 900px 116px, and up to 560px `clamp(76px,22vw,103px)`.
-- **Headline:** editable meeting name; reduces to 25px on phones.
-- **Title:** compact section headings. The speaker name is a separate 30px, weight 550 stage role, reducing to 27px on phones.
-- **Body:** ordinary workspace text; help dialogs use 13px text with a 1.75 line height.
-- **Label:** 12px metadata, hints, timeline labels and agenda usage.
-- **Button:** 13px at rest; most mobile workspace buttons use 12px.
+- **Display:** the fluid host countdown recorded above; warning and overtime change its state color, pause reduces opacity.
+- **Headline:** the unboxed meeting-name field, with a fluid desktop size and a 38px phone size.
+- **Title:** section headings at weight 650; some intermediate-width timeline headings reduce to 16px.
+- **Speaker:** the host stage name at weight 500; phones use 29px. The live speaker uses weight 550 and `clamp(30px,4vw,66px)`, becoming 34px on phones.
+- **Body:** 14px workspace text at weight 450. Dialog body copy uses 13px with a 1.7 line height.
+- **Label:** 12px metadata, timing hints, connection messages and report headers.
+- **Button:** 13px at weight 600; primary host transport uses 15px, reducing to 14px on phones. Most mobile utilities use 12px.
+- **Live display:** larger audience countdown at weight 550; up to 900px it uses `clamp(70px,13vw,130px)`, and up to 560px `clamp(64px,22vw,100px)`.
+
+**The Numeric Alignment Rule.** Use the numeric stack and tabular figures for clocks, durations and timing comparisons.
 
 ## Layout
 
-The working container is centered with a maximum width of 1376px and desktop padding of 30px 28px 0. Its vertical gap is 26px. The main two-column grid uses `minmax(0,1.3fr) minmax(430px,1fr)` with a 24px gap. Columns use 16px stacks.
+The centered host workspace caps at 1376px, with 28px horizontal insets, 35px top padding and a 28px section gap. The desktop working grid is `minmax(0,1.2fr) minmax(440px,1fr)` with a 22px gap. Columns stack panels 18px apart. The floating white header caps at 1392px, sits 16px below the viewport edge, and uses a capsule silhouette.
 
-At 1150px, horizontal padding becomes 24px and the grid gap 18px. At 900px, the grid stacks, the workspace caps at 760px and the main controls remain on one row when space permits. At 560px, workspace padding is 22px 16px 0 and controls become a three-column grid: Start spans two columns beside Pause; Undo, Float and Reset occupy the second row. Primary timer controls and agenda drag/delete targets have 44px minimum touch dimensions.
+At 1150px, workspace insets become 24px, top padding 30px, grid gap 18px and panels 20px. At 900px the workspace caps at 760px and the working grid stacks. At 560px it uses 16px insets, 27px top padding and a 23px section gap; panels use 20px 15px. The header becomes a rounded two-row block with a three-column action row. The transport is a three-column grid: Start / next spans two columns beside Pause; Undo, Float and Reset form the second row.
 
-Agenda rows keep editable names, minutes and usage aligned. Phone rows hide the ordinal and retain 44px drag/delete targets. Settings retain a two-column grid, with wrapping text and supporting hints. The header wraps on phones; header help hides there while footer help remains available.
+The final phone agenda uses two lines per row: name across the top between drag and delete controls, minutes below on the left and Available / Used on the right. Desktop column labels hide there. Drag and delete targets are 36px wide and at least 44px tall. Keep names editable and timing values readable rather than squeezing desktop columns onto phones.
 
-The floating display has separate height breakpoints at 169px and 79px. These reduce stage chrome and prioritize clock/name, while idle Start remains available. Preserve these functional adaptations when adding controls.
+The live display caps at 1600px with a main timer and 220–310px agenda column, a 6vw gap and generous viewport-relative insets. At 900px the agenda narrows to 200px. At 560px it stacks below the timer with a 50px separation. The controller adds wrapping transport capsules beneath the same stage.
+
+Share and report dialogs cap at 700px and 850px respectively, with viewport-bounded widths and a 90dvh scrolling limit. The share QR is 150px square beside the viewer link; on phones it centers above the link. Report tables scroll horizontally in their own wrapper. Floating timer mode retains its separate compact height adaptations at 169px and 79px.
 
 ## Elevation & Depth
 
-The workspace is flat at rest: borders, white panels and the dark stage provide separation. Panels and ordinary buttons have no ambient shadow. The dragging agenda row uses a temporary `0 6px 18px rgba(0,0,0,.18)` shadow. Dialogs use a tinted `#17223566` backdrop. The toast is a solid dark utility notice.
+The implemented workspace is flat: tonal contrast, white panels, generous gaps and the dark stage create hierarchy. Main panels and navigation have no ambient shadow. A moving agenda row alone uses the temporary drag shadow `0 6px 18px rgba(0,0,0,.18)`. Dialogs obscure the workspace with the dark olive backdrop `#12170f70`; the toast is a solid dark notice.
 
-**The Flat Rest Rule.** Keep ordinary workspace surfaces flat; use the existing temporary drag treatment for movement feedback.
+**The Flat Rest Rule.** Keep resting surfaces flat; reserve the existing shadow for drag feedback.
 
 ## Shapes
 
-Fields use small rounded corners, controls a slightly softer control radius, and panels/stage larger enclosing radii as recorded in frontmatter. The stage uses a fine dark border; other panels use the cool rule. Timeline lanes clip segments within gently rounded ends. Status chips retain pill corners, while the stage's individual agenda blocks use 2px corners. Icons are small, consistent inline stroke SVGs; the wordmark is a filled SVG.
+Capsules define buttons, desktop navigation, template selection and library search. Main panels, stage and dialogs share the soft surface radius in frontmatter. Agenda fields use the smaller field radius; general input and total-duration controls use the input radius. Most panels and dialogs have no border; fields use soft fills with subtle hover strokes. Thin rules remain in report rows, private parking, live agenda and separators.
+
+Progress lanes have gently rounded, clipped ends; the host agenda-strip blocks have small 2px corners. Icons are compact inline stroke SVGs; the host wordmark uses a filled SVG with an acid cutout. Do not borrow robot photography, logos or proprietary type.
 
 ## Components
 
 ### Buttons
 
-Primary buttons use cobalt with white text and the darker cobalt hover. Secondary controls use white, a thin rule, and a cool gray hover with a stronger border. Text actions use cobalt on transparent ground. Reset uses the destructive text color. Normal buttons have a 40px minimum height; timer controls use 44px. Disabled controls reduce opacity to .38 and retain disabled behavior.
+Primary controls are acid capsules with warm ink text. Secondary buttons are white with a quiet rule; quiet and text controls use transparent grounds. Share live starts as a warm-ink capsule and becomes acid when live. Reset and revocation use destructive text.
 
-Visible keyboard focus uses a 2px cobalt outline with a 3px offset. State transitions are limited to background and border color over .15s. Reduced-motion preference disables transitions.
+Normal controls have a 40px minimum height; header actions use 44px and host transport 48px (46px on phones). Hover changes background and color over .16s. Visible focus uses a 2px olive outline with a 4px offset. Disabled opacity is .38. Reduced-motion preference removes transitions.
 
 ### Inputs / Fields
 
-Agenda fields use a near-white fill, a thin rule and small rounded corners. Names and minutes use 13px type; numerical fields use the numeric stack. The meeting title is an unboxed editable headline with the shared visible focus outline. Mobile agenda fields grow to 42px and use 12px type. Search uses a distinct 12px 13px inset.
+Agenda names and minutes use soft chalk fill, a transparent 1px border and 8px corners; hover exposes a quiet olive stroke. The editable meeting title is unboxed. Library search is a soft capsule. Parking entry fields use slightly warmer soft fills, while existing parking items use unboxed fields with ruled rows. Numeric inputs preserve timing alignment.
 
 ### Navigation
 
-A white, ruled utility header holds the wordmark and compact workspace actions. Optional account access receives a lightly tinted bordered button. Footer utilities are muted and wrap on narrow screens. Navigation remains subordinate to the timer.
+The white capsule header holds the wordmark and utility actions. Its account capsule has a pale tint. On phones, the wordmark sits above the three main actions. Header help hides at intermediate widths; footer help remains accessible. The live header is unboxed on the full dark surface, with connection status and Full screen action; status wraps below on phones.
 
 ### Chips
 
-Small timing-result chips use status text over an 18% color-mix tint. They accompany actual usage, using green, red or cobalt for early, over or live states.
+Compact timing-result pills use semantic foregrounds over 18% color-mix tints and accompany actual usage text. The private parking count uses a pale round badge. Status color never replaces a label.
 
 ### Cards / Containers
 
-White bordered panels group agenda, timeline and settings without shadows. Default panel padding is 22px, with contextual responsive reductions. Dialogs have a 14px radius and bounded viewport width. The saved-meeting library is a dialog containing a search field and ruled rows.
+White flat panels group agenda, timeline, private parking and settings. Settings use a native disclosure with a rotating plus icon and a two-column inner form. Dialogs reuse the surface radius with larger typography and insets. The library presents search and ruled saved-meeting rows. Private parking keeps its privacy note visible beneath the editor.
 
 ### Stage Timer
 
-The dark stage groups position, speaker, countdown, progress and next speaker. Minimum desktop height is 355px. Idle/done digits use stage-muted; active, warning and overrun use their stage state colors. Pause reduces digit opacity. The thin progress bar and proportional agenda strip reinforce the numerical clock. Floating mode reuses this stage with compact layouts and its own inline controls.
+The host stage contains position, speaker, countdown, progress, proportional agenda strip and next speaker. Desktop minimum height is 375px, 345px at the intermediate breakpoint, 350px when stacked, and 320px on phones. Idle digits use stage ivory; running, warning and overrun use the respective stage states. Done uses the base stage-muted state. Floating mode reuses the dark display and adds compact controls.
 
 ### Planned / Actual Timeline
 
-Two 22px lanes distinguish planned slots from actual usage. Planned segments tint past, current and upcoming states; current progress is a two-stop gradient. Topic segments add a repeating diagonal pattern. Actual early/over segments use separate status tints. Milestone boundaries are draggable; the meeting clock has a knob with keyboard correction. Labels and the legend explain color.
+Separate planned and actual lanes retain draggable milestone boundaries and a correctable meeting-clock marker. Current and completed planned segments use olive tones; topic segments retain diagonal texture. Early and overrun usage retain separate treatments. Keep textual legend and time values alongside color.
 
-### Settings
+### Live Viewer / Controller
 
-A native disclosure keeps lower-frequency timing and floating controls compact. Its summary uses a plus stroke icon that rotates on open. Inside, labeled fields and checkboxes use the standard input vocabulary. Supporting text wraps beside the associated setting.
+The live surface expands the same timing language into a dark broadcast layout: large current name, acid countdown, state copy, slim progress bar, next slot and ruled coming-up list. Viewer links show the read-only display. A controller link reveals Start / next, Pause / resume, Undo and Extend 1 min capsules plus acknowledgement text. Disconnected, expired and unavailable states replace timing claims with explicit copy.
+
+### Sharing / Reports
+
+Sharing groups the QR and viewer link first, then separates the co-host control capability with rules and explanatory copy. Revocation remains a destructive action. Reports use a clean ruled comparison table, session selector, plan-change text and CSV / copy / print controls. Print hides surrounding workspace and dialog controls. Neither report nor private parking content belongs on the audience surface.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** preserve the confirmed light workspace and dark timer.
-- **Do** reuse the source CSS custom properties when adding controls or stage states.
-- **Do** keep tabular monospace for clocks and usage values.
-- **Do** preserve visible focus, mobile touch targets and reduced-motion handling.
-- **Do** keep planned and actual tracks visibly distinct.
+- **Do** preserve the confirmed mineral light workspace and warm-black timer.
+- **Do** use self-hosted Manrope for interface text and tabular system monospace for timing.
+- **Do** use acid-yellow capsules for primary actions and preserve semantic timing states.
+- **Do** keep the final two-line phone agenda, visible focus and reduced-motion behavior.
+- **Do** keep planned and actual time visibly distinct.
+- **Do** keep audience, controller and private workspace roles visually explicit.
 
 ### Don't:
 
+- **Don't** restore the superseded cobalt palette or external font dependencies.
+- **Don't** imply the working title or extracted broadcast-desk description is an approved brand name.
+- **Don't** add ambient shadows to resting panels.
+- **Don't** communicate timing or connection state through color alone.
+- **Don't** expose private parking or reports in the shared display.
 - **Don't** replace the immediate working tool with a marketing or pricing gate.
-- **Don't** imply the working title or extracted descriptive metaphor is a final brand decision.
-- **Don't** add ambient card shadows to the flat workspace.
-- **Don't** communicate timing state through color alone.
-- **Don't** remove the mobile footer help entry when the header help action is hidden.
-
