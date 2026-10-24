@@ -1,6 +1,50 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function ownsRoom(roomId) { return request.auth != null && get(/databases/$(database)/documents/roomOwners/$(roomId)).data.uid == request.auth.uid; }
+    match /roomOwners/{roomId} {
+      allow get: if ownsRoom(roomId);
+      allow create: if request.auth != null && roomId.matches('^[a-f0-9]{32}$')
+        && request.resource.data.keys().hasOnly(['uid','controlToken','expiresAt'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.controlToken is string && request.resource.data.controlToken.matches('^[a-f0-9]{64}$')
+        && request.resource.data.expiresAt is int && request.resource.data.expiresAt > request.time.toMillis()
+        && request.resource.data.expiresAt <= request.time.toMillis() + 86460000;
+      allow delete: if ownsRoom(roomId);
+    }
+    match /liveRooms/{roomId} {
+      // A random URL grants read access to this projection only. Enumeration is denied.
+      allow get: if resource.data.expiresAt > request.time.toMillis();
+      allow create: if request.auth != null
+        && getAfter(/databases/$(database)/documents/roomOwners/$(roomId)).data.uid == request.auth.uid
+        && validProjection();
+      allow update: if ownsRoom(roomId) && validProjection()
+        && request.resource.data.expiresAt == resource.data.expiresAt;
+      allow delete: if ownsRoom(roomId);
+      function validProjection() {
+        return request.resource.data.keys().hasOnly(['title','name','next','status','baseRemaining','baseElapsed','publishedAt','plannedTotal','policy','agenda','expiresAt','lastCommand'])
+          && request.resource.data.title is string && request.resource.data.title.size() <= 120
+          && request.resource.data.name is string && request.resource.data.name.size() <= 120
+          && request.resource.data.next is string && request.resource.data.next.size() <= 120
+          && request.resource.data.status in ['ready','running','paused','done']
+          && request.resource.data.baseRemaining is number && request.resource.data.baseElapsed is number
+          && request.resource.data.plannedTotal is number && request.resource.data.publishedAt is int
+          && request.resource.data.policy in ['manual','auto']
+          && request.resource.data.agenda is list && request.resource.data.agenda.size() <= 2000
+          && request.resource.data.expiresAt is int && request.resource.data.expiresAt > request.time.toMillis()
+          && request.resource.data.expiresAt <= request.time.toMillis() + 86460000;
+      }
+      match /commands/{commandId} {
+        allow read, delete: if ownsRoom(roomId);
+        allow create: if request.auth != null
+          && get(/databases/$(database)/documents/liveRooms/$(roomId)).data.expiresAt > request.time.toMillis()
+          && request.resource.data.keys().hasOnly(['action','token','at'])
+          && request.resource.data.action in ['next','pause','undo','extend']
+          && request.resource.data.token == get(/databases/$(database)/documents/roomOwners/$(roomId)).data.controlToken
+          && request.resource.data.at is int && request.resource.data.at > request.time.toMillis() - 30000
+          && request.resource.data.at < request.time.toMillis() + 30000;
+      }
+    }
     match /users/{userId}/meetings/{meetingId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow create, update: if request.auth != null && request.auth.uid == userId

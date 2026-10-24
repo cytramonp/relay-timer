@@ -1,5 +1,6 @@
-import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState} from "./model.js";
-import {iconMarkup} from "./icons.js";
+import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState} from "./model.js?v=4";
+import {iconMarkup} from "./icons.js?v=4";
+import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=4';
 
 // Daily Relay Timer: milestone-anchored speaker slots with time rollover.
 (function(){
@@ -8,7 +9,7 @@ import {iconMarkup} from "./icons.js";
   let uid = 0;
   const mkId = () => "s" + Date.now().toString(36) + (uid++).toString(36);
   const mk = (name, min, kind) => ({ id: mkId(), kind: kind || "person", name, min });
-  const defaults = () => ({ agenda: NAMES.map(n => mk(n, 8)), floor: 1, warn: 1, sound: false, autoSplit: true, keepProp: true, clock: 70, shape: "wide", run: null });
+  const defaults = () => ({ agenda: NAMES.map(n => mk(n, 8)), floor: 1, warn: 1, sound: false, autoSplit: true, keepProp: true, clock: 70, shape: "wide", endPolicy:'manual',parking:[],reports:[],run: null });
   let S = load();
   S.agenda.forEach(a => { if (!a.id) a.id = mkId(); if (!a.kind) a.kind = "person"; });
   if (!(S.total > 0)) S.total = round2(S.agenda.reduce((s, a) => s + (+a.min || 0), 0));
@@ -27,6 +28,7 @@ import {iconMarkup} from "./icons.js";
     return defaults();
   }
   function save(){
+    if(S.run){const plan=copyPlan(S.agenda),last=S.run.planChanges?.at(-1)?.plan||S.run.originalPlan;if(last&&JSON.stringify(plan)!==JSON.stringify(last)){S.run.planChanges||=[];S.run.planChanges.push({at:elapsed(),plan});}}
     if (!S.autoSplit) S.total = round2(total() / MIN);
     try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){ document.dispatchEvent(new CustomEvent("relay:storage-error")); }
     document.dispatchEvent(new CustomEvent("relay:change"));
@@ -104,7 +106,7 @@ import {iconMarkup} from "./icons.js";
     const r = S.run;
     if (!r){
       const p = pending(); if (!p.length) return;
-      S.run = { t0: Date.now(), pausedMs: 0, pauseAt: null, log: [], cur: { id: p[0].id, start: 0 } };
+      S.run = { id:crypto.randomUUID(),t0: Date.now(), pausedMs: 0, pauseAt: null, log: [], cur: { id: p[0].id, start: 0 },originalPlan:copyPlan(S.agenda),planChanges:[] };
     } else if (!isDone()){
       if (r.pauseAt != null) togglePause();
       const e = elapsed();
@@ -125,12 +127,14 @@ import {iconMarkup} from "./icons.js";
     save(); tick();
   }
   let resetArmed = null;
+  function archiveRun(){if(!S.run)return;S.reports||=[];const report=makeReport(S);S.reports=S.reports.filter(r=>r.id!==report.id);S.reports.push(report);}
   function reset(){
     const b = $("btnReset");
     if (!resetArmed){ b.textContent = "Click again to reset"; resetArmed = setTimeout(() => { resetArmed = null; b.textContent = "Reset"; }, 3000); return; }
     clearTimeout(resetArmed); resetArmed = null; b.textContent = "Reset";
-    S.run = null; resetBeeps(); save(); renderRos(); tick();
+    archiveRun(); S.run = null; resetBeeps(); save(); renderRos(); tick();
   }
+  function extendCurrent(){if(!S.run?.cur)return;const a=byId(S.run.cur.id);a.min=round2(a.min+1);a.pin=true;S.total=round2(total()/MIN);resetBeeps();save();renderRos();tick();}
   function addItem(kind){
     if (kind === "topic"){
       // A topic goes right after whoever is speaking, or to the top before the meeting starts.
@@ -254,6 +258,7 @@ import {iconMarkup} from "./icons.js";
   }
   let view = { state: "idle", pos: "", slotInfo: "", name: "", bar: 0, over: false, time: "", nextName: "", nextNote: "", blocks: [] };
   function tick(){
+    if(advanceAutomatic(S)){beep(2);save();renderRos();}
     const r = S.run, e = elapsed(), n = N(), p = pending();
     const ov = $("ov");
     $("clk").textContent = fmt(e, "up");
@@ -319,6 +324,8 @@ import {iconMarkup} from "./icons.js";
     $("btnPause").textContent = pl; $("ovPause").textContent = pl;
     $("btnPause").disabled = $("ovPause").disabled = !r || isDone();
     $("clkMinus").disabled = $("clkPlus").disabled = !r || isDone();
+    if($("extend-current"))$("extend-current").disabled=!r||isDone();
+    if($("end-policy"))$("end-policy").value=S.endPolicy||'manual';
 
     // per-row status
     S.agenda.forEach((sp, i) => {
@@ -344,6 +351,7 @@ import {iconMarkup} from "./icons.js";
     });
     $("track").dataset.state = state;
     renderTrack(e, blocks);
+    document.dispatchEvent(new Event('relay:tick'));
   }
 
   let lastScale = 1, clockDrag = null;
@@ -677,7 +685,7 @@ import {iconMarkup} from "./icons.js";
   }
 
   function onKey(ev){
-    const t = ev.target; if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
+    const t = ev.target; if (t && (t.closest('dialog') || t.tagName === 'BUTTON' || t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
     if (ev.key === "-" || ev.key === "_"){ ev.preventDefault(); setClock((+S.clock || 50) - 5); return; }
     if (ev.key === "=" || ev.key === "+"){ ev.preventDefault(); setClock((+S.clock || 50) + 5); return; }
     if (ev.code === "Space" || ev.key === "ArrowRight" || ev.key === "n" || ev.key === "N"){ ev.preventDefault(); next(); }
@@ -699,6 +707,8 @@ import {iconMarkup} from "./icons.js";
   $("btnAdd").addEventListener("click", () => addItem("person"));
   $("btnEqual").addEventListener("click", equalize);
   $("btnTopic").addEventListener("click", () => addItem("topic"));
+  $("extend-current").addEventListener('click',extendCurrent);
+  $("end-policy").addEventListener('change',e=>{S.endPolicy=e.target.value==='auto'?'auto':'manual';if(S.endPolicy==='auto'&&S.run?.cur&&S.run.pauseAt==null&&elapsed()>=deadlineFor(S.run.cur.id,S.run.cur.start)){next();return;}save();tick();});
   const tm = $("totalMin"); let tmBase = null;
   const snapshot = () => { const b = {}; S.agenda.forEach(a => b[a.id] = a.min); return b; };
   tm.addEventListener("focus", () => { tmBase = snapshot(); });
@@ -734,8 +744,9 @@ import {iconMarkup} from "./icons.js";
     replace(input){ S=normalizeState(input); resetBeeps();
       fl.value=S.floor;wa.value=S.warn;so.checked=S.sound;sp.checked=S.autoSplit;sh.value=S.shape;kp.checked=S.keepProp;
       setClock(S.clock);save();renderRos();tick(); },
-    plan(){const p=structuredClone(S);p.run=null;return p;},
-    command(action){if(action==='next')next();if(action==='pause')togglePause();if(action==='undo')back();if(action==='reset'){S.run=null;resetBeeps();save();renderRos();tick();}},
+    plan(){const p=structuredClone(S);p.run=null;p.reports=[];p.parking=[];return p;},
+    command(action){if(action==='next')next();if(action==='pause')togglePause();if(action==='undo')back();if(action==='extend')extendCurrent();if(action==='reset'){archiveRun();S.run=null;resetBeeps();save();renderRos();tick();}},
+    setParking(items){S.parking=cleanParking(items);save();},
     isRunning:()=>!!S.run&&!isDone(),
     closeFloat(){if(pipWin)pipWin.close();if(vpip)document.exitPictureInPicture().catch(closeVideoPip);}
   };

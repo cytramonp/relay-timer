@@ -1,5 +1,5 @@
-const CACHE='relay-public-v4';
-const ASSETS=['./','./index.html','./base.css','./workspace.css?v=3','./timer.js?v=3','./model.js','./icons.js','./library.js?v=3','./storage.js','./presets.js','./cloud.js','./icon.svg','./manifest.webmanifest','./firebase-config.json'];
+const CACHE='relay-public-v5';
+const ASSETS=['./','./index.html','./base.css','./workspace.css?v=4','./timer.js?v=4','./model.js?v=4','./icons.js?v=4','./library.js?v=4','./storage.js?v=4','./presets.js?v=4','./cloud.js?v=4','./features.js?v=4','./session.js?v=4','./live.html','./live.js?v=4','./vendor/qrcode.js','./fonts/Manrope.ttf','./icon.svg','./manifest.webmanifest','./firebase-config.json'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('relay-public-')&&k!==CACHE).map(k=>caches.delete(k))))));
 self.addEventListener('fetch',event=>{if(event.request.method!=='GET'||new URL(event.request.url).origin!==self.location.origin)return;event.respondWith(fetch(event.request,{cache:'no-cache'}).then(response=>{if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)));}return response;}).catch(()=>caches.match(event.request).then(cached=>cached||new Response('Offline. Reconnect to load this resource.',{status:503}))));});

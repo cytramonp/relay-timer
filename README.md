@@ -14,6 +14,18 @@ Open the app and edit the agenda immediately. No account, subscription, trial or
 - Floating Document PiP, video/canvas PiP fallback, wide/strip/square layouts and clock size.
 - Automatic local recovery, named meeting library, JSON import/export and completed-run summary.
 - Presets: Daily standup, retrospective, planning, workshop and focus session. Presets are editable examples, not mandatory Scrum timings.
+- Live audience link and locally generated QR; a separate control capability supports start/next, pause/resume, undo and one-minute extensions.
+- Private parking topics, action owners and completion checkboxes, saved with each meeting.
+- Original agenda captured at Start, actual-time report, plan-change history, CSV export, copy and print. Reset archives the session report; a fresh meeting copy clears reports and notes.
+- Manual overtime or automatic milestone transitions. One-minute extensions add time to the current slot and the overall agenda.
+
+## Live sharing
+
+Choose **Share live → Create live link**. The viewer needs no account. Google sign-in is also optional for hosting; Firebase can create an anonymous host identity. Keep the host tab open. The audience page extrapolates the anchored clock and shows a stale-connection warning after 45 seconds without a host update. The existing worker clock also drives live heartbeats, with a page-timer fallback. This remains a browser-hosted session, not an always-running server timer.
+
+Anyone with the viewer link can see the meeting title, agenda names, planned durations and current timer. The public projection excludes parking notes, action owners, reports, Google profile and private library IDs. The control link contains an independent capability in its URL fragment; only share it with a trusted co-host. Control requests are acknowledged by the host. Links expire after 24 hours; **Stop sharing** revokes them after server confirmation. Switching meetings stops broadcasting and attempts revocation; if offline, reconnect and retry Stop sharing. Signing in/out waits for revocation. Automatic expiry restricts access; it is not a promise that expired infrastructure records have been physically erased.
+
+Firestore denies room enumeration, access to the host/control-secret record, and writes from viewers. A controller can submit only the four allowed actions with the correct capability. This is a scoped access-control design, not a substitute for a comprehensive security review or abuse protection at scale.
 
 ## Development
 
@@ -39,7 +51,11 @@ Firebase was provisioned in a separate project with a free-tier Firestore databa
 
 ## Validation
 
-Eleven tests cover the production model, timestamp behavior, quarter-minute allocation, import validation, preset totals, record merging and deletion tombstones. JavaScript syntax and public JSON are checked by `npm run check`. Browser and deployment validation are reported in the delivery, without treating provider setup as proof of user sign-in.
+Nineteen tests cover the production model, timestamp behavior, allocation, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping and private-data projection. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
+
+## Visual reference and licenses
+
+The user selected robot.com as a visual reference. This application uses its own layout, icons and a self-hosted open-source font. See [THIRD-PARTY.md](THIRD-PARTY.md).
 
 ## Product research
 
