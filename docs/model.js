@@ -1,4 +1,4 @@
-import {cleanPlan,cleanParking,cleanReports} from './session.js?v=4';
+import {cleanPlan,cleanParking,cleanReports} from './session.js?v=5';
 export const MIN=60000;
 export function elapsedTime(run,now=Date.now()){if(!run)return 0; if(run.doneAt!=null)return run.doneAt;return Math.max(0,(run.pauseAt??now)-run.t0-run.pausedMs);}
 export function deadline(agenda,id,start,floor){let sum=0;for(const item of agenda){sum+=Math.max(0,item.min)*MIN;if(item.id===id)break;}return Math.max(sum,start+Math.max(0,floor)*MIN);}
@@ -10,6 +10,7 @@ export function normalizeState(input){
   const total=Number(input.total)||agenda.reduce((a,b)=>a+b.min,0);if(total<=0||total>100000)throw Error('Use a positive meeting duration.');
   const state={agenda,total,floor:Math.min(30,Math.max(0,Number(input.floor)||0)),warn:Math.min(10,Math.max(0,Number(input.warn)||0)),sound:!!input.sound,autoSplit:input.autoSplit!==false,keepProp:input.keepProp!==false,clock:Math.min(100,Math.max(20,Number(input.clock)||70)),shape:['wide','strip','square'].includes(input.shape)?input.shape:'wide',run:null};
   state.endPolicy=input.endPolicy==='auto'?'auto':'manual';state.parking=cleanParking(input.parking);state.reports=cleanReports(input.reports);
+  if(input.template){state.template={color:['citron','peach','lilac','mint'].includes(input.template.color)?input.template.color:'citron',icon:['people','loop','grid','spark','focus','coffee'].includes(input.template.icon)?input.template.icon:'grid'};state.run=null;state.parking=[];state.reports=[];return state;}
   const r=input.run;if(r){const number=n=>Number.isFinite(n)&&n>=0;const originalPlan=cleanPlan(r.originalPlan);const known=new Set([...ids,...originalPlan.map(a=>a.id)]);if(Array.isArray(r.planChanges))r.planChanges.slice(0,1000).flatMap(c=>cleanPlan(c.plan)).forEach(a=>known.add(a.id)); if(!number(r.t0)||!number(r.pausedMs)||(r.pauseAt!=null&&!number(r.pauseAt))||!Array.isArray(r.log)||r.log.length>5000)throw Error('The saved run is malformed.'); const log=r.log.map(l=>{if(!known.has(l.id)||![l.start,l.end,l.dl].every(number)||l.end<l.start)throw Error('The saved timing history is malformed.');return{id:l.id,start:l.start,end:l.end,dl:l.dl};});if(r.cur&&(!ids.has(r.cur.id)||!number(r.cur.start)))throw Error('The active slot is invalid.');state.run={t0:r.t0,pausedMs:r.pausedMs,pauseAt:r.pauseAt??null,log,cur:r.cur?{id:r.cur.id,start:r.cur.start}:null,originalPlan,id:typeof r.id==='string'?r.id:String(r.t0),planChanges:Array.isArray(r.planChanges)?r.planChanges.slice(0,1000).map(c=>({at:Math.max(0,Number(c.at)||0),plan:cleanPlan(c.plan)})):[]};if(r.doneAt!=null){if(!number(r.doneAt))throw Error('The finish time is invalid.');state.run.doneAt=r.doneAt;}}
   return state;
 }

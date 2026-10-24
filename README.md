@@ -14,6 +14,8 @@ Open the app and edit the agenda immediately. No account, subscription, trial or
 - Floating Document PiP, video/canvas PiP fallback, wide/strip/square layouts and clock size.
 - Automatic local recovery, named meeting library, JSON import/export and completed-run summary.
 - Presets: Daily standup, retrospective, planning, workshop and focus session. Presets are editable examples, not mandatory Scrum timings.
+- **Templates**: save the current agenda, create a plan from scratch, or customize a starter. Edit slot names, types, durations and order; choose one of four colors and six icons; duplicate or delete your templates. Applying one creates an independent meeting without previous notes or session history.
+- On phones, **Timer / Agenda / Notes** navigation keeps each task in view. Agenda and notes include a live countdown shortcut back to the timer; editable fields use a larger mobile type size.
 - Live audience link and locally generated QR; a separate control capability supports start/next, pause/resume, undo and one-minute extensions.
 - Private parking topics, action owners and completion checkboxes, saved with each meeting.
 - Original agenda captured at Start, actual-time report, plan-change history, CSV export, copy and print. Reset archives the session report; a fresh meeting copy clears reports and notes.
@@ -45,13 +47,15 @@ Firebase Authentication uses the Google provider with basic profile scopes. Clou
 
 Libraries merge by record ID and modification timestamp. The newest edit to the same meeting wins; this is saved-library sync, not collaborative live control. Deleted records retain a content-free tombstone to prevent resurrection from another device. Guest libraries and signed-in account caches use separate local-storage keys. Signing out returns to the guest library.
 
+Custom templates use the same private record envelope and synchronization path, with validated `state.template` appearance metadata. They are listed separately from meetings and included in **Export all** backups. The editor refuses to overwrite a template changed remotely while its draft was open. Saving a template excludes runs, archived reports and parking notes. Starter templates remain unchanged when customized.
+
 Export before clearing browser storage. Google sign-in and initial SDK loading need a network connection. Cached timer resources provide best-effort offline guest use after the first successful load. Mobile background alarms and actual screen-share visibility are browser/OS dependent and are not guaranteed.
 
 Firebase was provisioned in a separate project with a free-tier Firestore database and no linked billing account. Free provider quotas still apply; they are infrastructure limits, not product paywalls. Do not enable billing without the owner's approval.
 
 ## Validation
 
-Nineteen tests cover the production model, timestamp behavior, allocation, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping and private-data projection. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
+Twenty-three tests cover the production model, timestamp behavior, allocation, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping, private-data projection and reusable-template isolation/backup/sync behavior. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
 
 ## Visual reference and licenses
 

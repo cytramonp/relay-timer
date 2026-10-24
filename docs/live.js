@@ -1,5 +1,5 @@
-import {loadCloud} from './cloud.js?v=4';
-import {formatTime} from './model.js?v=4';
+import {loadCloud} from './cloud.js?v=5';
+import {formatTime} from './model.js?v=5';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.hash.slice(1)),room=params.get('room'),token=params.get('control');
 const controller=!!token&&/^[a-f0-9]{64}$/.test(token);let data=null,api=null,pending='',pendingTimer,lastStatus='';
 if(controller){document.title='Remote control — Relay Timer';$('remote-controls').hidden=false;}

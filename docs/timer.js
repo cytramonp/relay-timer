@@ -1,6 +1,6 @@
-import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState} from "./model.js?v=4";
-import {iconMarkup} from "./icons.js?v=4";
-import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=4';
+import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState} from "./model.js?v=5";
+import {iconMarkup} from "./icons.js?v=5";
+import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=5';
 
 // Daily Relay Timer: milestone-anchored speaker slots with time rollover.
 (function(){

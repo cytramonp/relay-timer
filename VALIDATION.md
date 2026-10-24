@@ -2,6 +2,16 @@
 
 Public application: https://cytramonp.github.io/relay-timer/
 
+## Custom templates and mobile workspace update
+
+- Twenty-three Node tests pass. Four new cases cover removing private session data from templates, independent slot IDs on application, template backup/merge/deletion with meeting isolation, and appearance validation.
+- Browser exercised: customize a starter; name, color and icon selection; add/reorder slots; save, apply and reload; edit, duplicate, delete a copy. A template edited to 21 minutes left its existing 20-minute meeting unchanged. Local notes were kept out of the reusable template.
+- Against the already-deployed Firestore rules, two disposable anonymous identities verified template create/read, edit, tombstone, and denial to another account. The test template and both identities were deleted. This verifies the record path and rules; it does not verify real Google sign-in across physical devices.
+- Final captures: 1440 and 1270 desktop; 390 and 320 responsive widths; desktop template shelf; 390 mobile template editor, agenda and notes. Dialog/viewport captures replace malformed stale browser captures. All final files were reopened. No console errors observed during this pass.
+- Official Google sign-in assets appear in the header and account dialog. On phones the header uses the official icon-only variant with an accessible sign-in label; the account dialog retains the full branded button.
+- The one detector warning, a 10px Share live label below 360px, was changed to 11px before the final captures. Other findings were design-token advisories and intentional topic timeline stripes. Detector ran once.
+- Fresh full finish review disposition: **ship**; no material fixes. Nonblocking notes concern the existing singular people count, focus retention in rebuilt appearance controls, and truncation of long labels at 320px. No exact-comp fidelity claim is made.
+
 ## Robot-reference design and live-session update
 
 - Nineteen tests pass, including automatic catch-up at exact deadlines, manual/pause behavior, immutable original plans, added/removed slot history, parking import, CSV formula escaping and exclusion of private data from live projections.
