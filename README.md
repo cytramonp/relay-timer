@@ -1,6 +1,8 @@
 # CorpTimer
 
-Public app: **https://cytramonp.github.io/relay-timer/**
+Public app: **https://corptimer.com/**
+
+Source repository: **https://github.com/cytramonp/relay-timer**. The Codex project uses the existing local checkout, `D:\Codex_C\Personal\relay-timer`.
 
 A meeting timer with fixed milestones. An early finish passes spare time to the next speaker; an overrun reduces later time. Based on the owner's latest Daily Relay Timer HTML, with a cream editorial workspace and a dark floating/audience monitor.
 
@@ -39,7 +41,18 @@ npm test
 npm run check
 ```
 
-GitHub Pages publishes `docs/` from `main`. All asset paths are relative to support the repository subpath. Keep the `.nojekyll` marker.
+Firebase Hosting serves `docs/` from project/site `relay-timer-web-7c39`. `corptimer.com` is the primary domain; `www.corptimer.com` redirects to it. The registrar remains Namecheap. All asset paths remain relative, so the original GitHub Pages address still works during migration. Keep the `.nojekyll` marker.
+
+Publish a checked revision with the Firebase CLI (`firebase deploy --only hosting`), or use the included standard-library Python deploy script with an existing authorized Google Cloud session:
+
+```powershell
+$env:RELAY_DEPLOY_ACCESS_TOKEN = (gcloud auth print-access-token --account=cytramonp@gmail.com --quiet).Trim()
+try { python scripts/deploy-hosting.py } finally { Remove-Item Env:RELAY_DEPLOY_ACCESS_TOKEN }
+```
+
+The script uses a short-lived access token kept in the process environment. Do not save tokens or service-account keys in this repository. A GitHub push preserves source and updates the legacy Pages copy; Firebase publication is a separate deployment step.
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for DNS, authentication and migration details. Local-only meetings belong to their original browser origin: use **My meetings → Export all** on the old site and **Import** on the new site. They do not transfer automatically when the domain changes.
 
 ## Data and Google sign-in
 
@@ -55,7 +68,7 @@ Firebase was provisioned in a separate project with a free-tier Firestore databa
 
 ## Validation
 
-Twenty-seven tests cover the production model, timestamp behavior, allocation, explicit equalization, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping, private-data projection and reusable-template isolation/backup/sync behavior. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
+Twenty-nine tests cover the production model, timestamp behavior, allocation, explicit equalization, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping, private-data projection and reusable-template isolation/backup/sync behavior. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
 
 ## Visual reference and licenses
 
