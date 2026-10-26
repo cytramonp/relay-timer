@@ -2,6 +2,8 @@
 
 Primary origin: **https://corptimer.com/**
 
+Cutover check, 26 October 2026: the site is published and verified at the provider URL. Public DNS at 1.1.1.1 resolves the apex A record and ownership/ACME TXT records correctly, and Firebase recognizes www ownership and hosting. Firebase's apex check still reports its cached parking record; both managed certificates remain `CERT_VALIDATING`. Custom-domain HTTPS must be rechecked after provider reconciliation. Do not describe the .com origin as fully live until that succeeds.
+
 - Repository: https://github.com/cytramonp/relay-timer
 - Local checkout: `D:\Codex_C\Personal\relay-timer`
 - Hosting: Firebase project/site `relay-timer-web-7c39`, public directory `docs/`.
@@ -32,3 +34,5 @@ Browser storage is origin-specific. Keep https://cytramonp.github.io/relay-timer
 Run `npm run check` and appropriate model tests before publication. `.firebaserc` and `firebase.json` support the official Firebase CLI. `scripts/deploy-hosting.py` publishes the same directory through Firebase's REST deploy API using a process-only short-lived Google Cloud access token; see README.md for the command.
 
 Commit and push source separately. Firebase Hosting does not automatically deploy on GitHub pushes. Do not introduce permanent deploy credentials or enable billing without the owner's approval.
+
+Release verification: 29 model tests and JavaScript/JSON checks pass. The deployed provider origin returned HTTP 200 with the new canonical URL and outlined-panel stylesheet. Browser QA confirmed Start, Next speaker with carried time, Pause, Undo and Reset. Google authorized-domain configuration was reread after update; a real Google sign-in on the .com origin is still pending valid HTTPS and owner verification.
