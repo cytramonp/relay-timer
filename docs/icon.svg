@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#2d50cc"/><path d="M15 14h13v36H15zm21 0h13v36H36z" fill="#fff"/><path d="m24 24 20 8-20 8z" fill="#2d50cc"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="40" fill="#eeece5"/><g transform="translate(0 64)">
+  <title>CorpTimer glasses</title>
+  <!-- Vector adaptation of the selected concept A: eye left, elapsed timer right. -->
+  <path d="M20 20Q55-8 100 19Q59 9 20 20M140 19Q185-8 220 20Q181 9 140 19" fill="#20211e"/>
+  <path d="M8 32Q48 18 98 29Q120 40 142 29Q192 18 232 32L229 48L223 50L218 87Q214 105 180 105Q147 105 141 88L133 53Q120 43 107 53L99 88Q93 105 60 105Q26 105 22 87L17 50L11 48Z" fill="#20211e"/>
+  <path d="M29 39Q58 29 91 38Q102 42 99 55L91 84Q87 94 61 94Q36 94 32 83L26 50Q24 42 29 39ZM149 38Q182 29 211 39Q216 42 214 50L208 83Q204 94 179 94Q153 94 149 84L141 55Q138 42 149 38Z" fill="#eeece5"/>
+  <circle cx="17" cy="38" r="2.4" fill="#eeece5"/><circle cx="223" cy="38" r="2.4" fill="#eeece5"/>
+  <path d="M36 59Q60 38 87 56M35 65Q60 46 88 65Q62 86 35 65Z" stroke="#20211e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="61" cy="64" r="12" fill="#20211e"/><circle cx="57" cy="59" r="3" fill="#eeece5"/>
+  <path d="M180 64V34A30 30 0 0 1 206 79Z" fill="#c62d35"/>
+  <path d="M180 36V64M150 65H157M203 65H210M180 87V93" stroke="#20211e" stroke-width="2.7"/>
+  <circle cx="180" cy="64" r="4.8" fill="#20211e"/>
+</g></svg>

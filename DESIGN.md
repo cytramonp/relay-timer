@@ -160,3 +160,8 @@ Use restrained 5px control and field corners, 4px utility corners and 8px dialog
 - **Don't** connect the clock to an individual speaker row.
 - **Don't** introduce remote font dependencies, decorative card shadows or a marketing/paywall gate.
 - **Don't** convey state through color alone or imply floating content is always visible in every screen-sharing mode.
+
+
+## Selected identity — 26 October 2026
+
+User selected schematic logo A: black rectangular glasses, eye on viewer-left, red elapsed-time sector in viewer-right lens. `docs/assets/corptimer-mark.svg` is its scalable vector adaptation, paired with the existing CorpTimer wordmark and a red Timer accent. Host and audience headers share the mark. The install/favicon icon places it on a cream square. The sector is static brand artwork, not a live progress indicator.
