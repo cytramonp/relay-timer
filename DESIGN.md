@@ -25,6 +25,15 @@ colors:
   ov-bad: "#ff8b82"
   ov-past: "#609694"
   ov-up: "#354e51"
+  block-border: "#a6aaa2"
+  timer-border: "#27484c"
+  timer-ok: "#64c9c4"
+  timer-bad: "#ff9b90"
+  timer-float: "#58c2bc"
+  transport-ink: "#132c30"
+  reset-ink: "#431612"
+  trace-base: "#969f98"
+  trace-active: "#d4484e"
 typography:
   display:
     fontFamily: "Manrope, Arial, sans-serif"
@@ -55,24 +64,26 @@ rounded:
   control: "5px"
   utility: "4px"
   dialog: "8px"
+  block: "14px"
+  agenda-action: "6px"
 spacing:
   control-gap: "8px"
   column-gap: "44px"
   workspace-gap: "28px"
 components:
   transport:
-    backgroundColor: "transparent"
-    textColor: "#a7242d"
+    backgroundColor: "{colors.ov-fg}"
+    textColor: "{colors.transport-ink}"
     rounded: "{rounded.control}"
     padding: "10px 14px"
   float:
-    backgroundColor: "{colors.signal}"
+    backgroundColor: "{colors.timer-float}"
     textColor: "#061a1e"
     rounded: "{rounded.control}"
     padding: "10px 14px"
   reset:
-    backgroundColor: "{colors.accent}"
-    textColor: "#fff"
+    backgroundColor: "{colors.timer-bad}"
+    textColor: "{colors.reset-ink}"
     rounded: "{rounded.control}"
     padding: "7px 12px"
   agenda-input:
@@ -92,9 +103,9 @@ components:
 
 **Creative North Star: "The newspaper workbench"**
 
-Cream paper, charcoal ink, upright serif headings and fine rules make a working meeting agenda feel editorial and immediately readable. The host clock sits directly on the paper. Red outlines identify Start / Next Speaker, solid red identifies Reset, and saturated teal identifies Float Timer. The compact clock leaves room for editing and handing off the agenda.
+Cream paper, charcoal ink, upright serif headings and fine rules make a working meeting agenda feel editorial and immediately readable. The host clock sits inside a dark teal timer block on the light page. Cream identifies Start / Next Speaker, salmon identifies Reset, and bright teal identifies Float Timer. The compact clock leaves room for editing and handing off the agenda.
 
-This documents the user-approved editorial redesign and subsequent explicit corrections of 25 October 2026. It replaces the earlier mineral/acid visual contract. CorpTimer is the selected working brand; domain registration is pending. Preserve the existing public URL, https://cytramonp.github.io/relay-timer/, and the functional product contract in PRODUCT.md. The effective cascade is `docs/base.css`, then `docs/workspace.css`, then `docs/editorial.css`; inherited mechanics remain relevant, but older overwritten styles are not current design guidance.
+This documents the user-approved editorial redesign and subsequent explicit corrections of 25 October 2026. It replaces the earlier mineral/acid visual contract. CorpTimer is the selected working brand; domain registration is pending. Preserve the existing public URL, https://cytramonp.github.io/relay-timer/, and the functional product contract in PRODUCT.md. The effective cascade is `docs/base.css`, then `docs/workspace.css`, then `docs/editorial.css`, then `docs/blocks.css`; inherited mechanics remain relevant, but older overwritten styles are not current design guidance.
 
 The direction image `.impeccable/mocks/editorial-approved.png` is a reference, not an exact-match requirement: later user corrections supersede its oversized clock, pale green, filled Start and connector geometry. The earlier failed 63.7 reproduction score remains historical evidence; it is not a current passed gate. Current review screenshots are `.impeccable/review/desktop.png`, `mobile.png`, `user-320.png` and `mobile-agenda.png`. Documentation records the implemented system and does not establish deployment status or claim exact comp matching.
 
@@ -122,41 +133,41 @@ The host clock uses Manrope at weight 750 with tabular figures and the display c
 
 ## Layout
 
-The desktop workspace has a 1440px maximum width, 40px horizontal padding and 28px vertical spacing. The header has a 1500px maximum width and an 84px height. A ruled meeting heading precedes the two-column grid: `minmax(0,1.35fr) minmax(390px,1fr)`, separated by 44px. The timeline follows the timer controls; the agenda has no enclosing card.
+The desktop workspace has a 1440px maximum width, 40px horizontal padding and 28px vertical spacing. The header has a 1500px maximum width and an 84px height. A ruled meeting heading precedes the two-column grid: `minmax(0,1.35fr) minmax(390px,1fr)`, separated by 44px. The timeline follows the timer block; agenda, timeline, parking, settings and session summary use outlined rounded blocks.
 
-A single short grey connector bridges the desktop gutter at agenda-heading level. Its final 15px and hollow end dot are red. It refers to the entire agenda, never a particular row, and has no pointer interaction. It disappears at 1100px and below.
+A thin extended bent grey/red SVG trace bridges the desktop gutter at agenda-heading level, with no endpoint circles. Its 170px by 100px canvas uses a 1.5px stroke. It refers to the entire agenda, never a particular row, and has no pointer interaction. It disappears at 1100px and below.
 
 At 1100px the grid narrows, at 800px it becomes one column, and at 600px the existing Timer / Agenda / Notes focused-view behavior applies. At 480px the header navigation wraps and workspace side padding becomes 14px. The supported floor is 320px. Preserve the reviewed 320px and 390px layouts: task controls stay reachable, meeting tools wrap, agenda fields use the mobile two-line structure, and Agenda / Notes provide the return-to-timer preview. Do not restore desktop agenda columns on phones merely because a narrower breakpoint appears earlier in the stylesheet; the final 600px rule wins.
 
 ## Elevation & Depth
 
-The main workspace is flat: panels are transparent, borderless and square with no shadow. Fine rules, spacing and field tones provide separation. Dialogs have a thin border, 8px radius, no shadow and a charcoal translucent backdrop (`#20211e66`). Mobile navigation also has no shadow. Preserve inherited temporary interaction treatments where applicable; do not add ambient card elevation to the editorial workspace.
+The main workspace has no card shadows: thin outlined rounded panels, spacing and surface tones provide separation. Dialogs have a thin border, 8px radius, no shadow and a charcoal translucent backdrop (`#20211e66`). Mobile navigation also has no shadow. Preserve inherited temporary interaction treatments where applicable; do not add ambient card elevation to the editorial workspace.
 
 ## Shapes
 
-Use restrained 5px control and field corners, 4px utility corners and 8px dialog corners. Main panels have zero radius. The small timer status dot and connector endpoint remain circular. The inherited dark mobile return preview retains its 12px radius. Template cards use 5px corners and small illustrated identity blocks; broad capsule styling is no longer the default host control language.
+Use restrained 5px control and field corners, 4px utility corners and 8px dialog corners. Working panels and the timer block have 14px corners. The small timer status dot remains circular; the trace has no endpoint circles. The inherited dark mobile return preview retains its 12px radius. Template cards use 5px corners and small illustrated identity blocks; broad capsule styling is no longer the default host control language.
 
 ## Components
 
-**Transport and floating.** Start / Next Speaker and Float Timer occupy the first control row at a normal 44px minimum height. Start / Next is transparent with a red border and dark red text; hover is pale red `#f1e0da`. Float is saturated teal with dark text, a darker teal border and hover `#3aa5a6`. Preserve their small directional corner/arrow marks. The second row contains Pause, Undo and Reset at 40px minimum height; Reset is filled red with white text and darkens to `#a51f29` on hover.
+**Transport and floating.** Start / Next Speaker and Float Timer occupy the first control row at a normal 44px minimum height. Inside the dark timer, Start / Next is cream with dark teal text and hover `#dedbd2`. Float is bright teal with dark text and hover `#7bd4ce`. Preserve their small directional corner/arrow marks. The second row contains Pause, Undo and Reset at 40px minimum height; Reset is salmon with dark red text and hover `#ffb3aa`. Pause and Undo use light text and a muted teal outline.
 
-**Clock states.** Ready/running use charcoal numbers; warning and overtime use their semantic colors and existing text. Paused host clock opacity is **0.72**, overriding the old base opacity of 0.45. Keep real state and timing behavior; visual changes must not change milestones, carryover, pause or host authority.
+**Clock states.** Ready/running use cream numbers inside the dark timer; warning and overtime use their semantic colors and existing text. Paused host clock opacity is **0.72**, overriding the old base opacity of 0.45. Keep real state and timing behavior; visual changes must not change milestones, carryover, pause or host authority.
 
 **Agenda.** Editable names and minutes have pale fields, fine borders, 5px corners and 44px height. The current row receives a muted red paper tint. Drag handles, slot indices, actual timings, pins, result chips and delete controls retain their functional roles. The connector targets the agenda as a whole.
 
-**Navigation and fields.** Keep Templates as a native select and Manage as its adjacent action. At mobile widths, the three task tabs have a fine bordered paper container with 5px corners and a red selected tab. Focus uses a 2px dark teal outline with 3px offset. Reduced-motion preferences disable button transitions; normal buttons inherit 0.15s background/border transitions. Disabled controls retain inherited opacity 0.38.
+**Navigation and fields.** Keep Templates as a native select and Manage as its adjacent action. Templates, Manage, Add speaker and Add topic have visible 1px outlines, pale backgrounds, 6px corners and 42px minimum height. At mobile widths, the three task tabs have a fine bordered paper container with 5px corners and a red selected tab. Focus uses a 2px dark teal outline with 3px offset. Reduced-motion preferences disable button transitions; normal buttons inherit 0.15s background/border transitions. Disabled controls retain inherited opacity 0.38.
 
-**Secondary surfaces.** Templates, saved meetings, import/export, reports, settings and private parking retain their current workflows. Templates use editable identity colors and proportional duration graphics. Keep official Google sign-in artwork, including the compact mobile header asset. Floating and audience views stay dark; private parking and reports never become audience content. Viewer access remains read-only; co-host controls remain a separate capability, and the host tab must stay open.
+**Secondary surfaces.** Templates, saved meetings, import/export, reports, settings and private parking retain their current workflows. Templates use editable identity colors and proportional duration graphics. Keep official Google sign-in artwork, including the compact mobile header asset. Floating content stays dark; the audience page matches the light host page with a dark timer stage and light outlined agenda; private parking and reports never become audience content. Viewer access remains read-only; co-host controls remain a separate capability, and the host tab must stay open.
 
 ## Do's and Don'ts
 
 - **Do** preserve the cream/charcoal editorial ground and upright serif hierarchy.
-- **Do** retain red outlined Start / Next, red filled Reset and saturated teal Float.
-- **Do** keep the smaller clock, 0.72 paused opacity and short agenda-level connector.
+- **Do** retain cream Start / Next, salmon Reset and bright teal Float inside the dark timer.
+- **Do** keep the smaller clock, 0.72 paused opacity and thin bent agenda-level trace without endpoint circles.
 - **Do** preserve responsive 320px/390px task navigation, focus visibility and real editable data.
 - **Do** retain the canonical public URL, optional sign-in and immediate app entry.
 - **Don't** restore the superseded mineral/acid world or treat historical mock scores as current approval.
-- **Don't** enlarge the clock or fill Start to imitate the older reference image.
+- **Don't** enlarge the clock or restore the decorative stopwatch.
 - **Don't** connect the clock to an individual speaker row.
 - **Don't** introduce remote font dependencies, decorative card shadows or a marketing/paywall gate.
 - **Don't** convey state through color alone or imply floating content is always visible in every screen-sharing mode.
@@ -165,3 +176,7 @@ Use restrained 5px control and field corners, 4px utility corners and 8px dialog
 ## Selected identity — 26 October 2026
 
 User selected schematic logo A: black rectangular glasses, eye on viewer-left, red elapsed-time sector in viewer-right lens. `docs/assets/corptimer-mark.svg` is its scalable vector adaptation, paired with the existing CorpTimer wordmark and a red Timer accent. Host and audience headers share the mark. The install/favicon icon places it on a cream square. The sector is static brand artwork, not a live progress indicator.
+
+## Approved block refinement — 26 October 2026
+
+`docs/blocks.css` is the final visual override after `editorial.css` and supersedes older borderless-panel and short dotted-connector guidance. The timer block uses 24px desktop padding; light working panels use 22px (settings keeps zero padding). At 600px and below, timer and primary working panels use 18px 14px padding and preserve the 320px agenda layout. The timer progress bar is 12px high with 4px corners. The decorative stopwatch is hidden. Audience mode uses the same light-page/dark-timer composition. Logo A and the canonical URL remain unchanged.

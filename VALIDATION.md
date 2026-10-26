@@ -68,3 +68,8 @@ Cloud-library sync merges saved meetings; it does not provide a shared live time
 - Independent review identified paused-clock contrast and 320px template clipping; both scored resolved after recapture. DESIGN documentation follows the corrected code.
 - Earlier raster reproduction score63.7 was failed and superseded by explicit user revisions; this release does not claim pixel-identical reproduction.
 - Existing real-account Google sync and physical iOS/Android verification gaps above remain. No new live room was created in this release.
+
+
+## Outlined block restoration — 26 October 2026
+
+Added approved dark timer/control panel and outlined agenda, timeline, settings and notes panels; matched audience-page light shell/dark timer. Browser checked1440,390 and320px; Start/Pause worked after wrapping controls. At320px document clientWidth and scrollWidth both310px (scrollbar excluded), with no horizontal overflow. Gray/red trace has no endpoint circles or arrowheads. Independent scoped review: SHIP after removing intersecting stopwatch decoration and fixing body minimum width. JS/JSON and diff checks pass. This release changes presentation, not live progress semantics or Google sync.

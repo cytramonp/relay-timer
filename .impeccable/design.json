@@ -1,82 +1,161 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-25T00:00:00Z",
+  "generatedAt": "2026-10-26T00:00:00Z",
   "title": "Design System: CorpTimer",
   "extensions": {
     "colorMeta": {
-      "bg": {"role":"neutral","displayName":"Cream paper"},
-      "fg": {"role":"neutral","displayName":"Charcoal ink"},
-      "accent": {"role":"primary","displayName":"Editorial red"},
-      "signal": {"role":"secondary","displayName":"Saturated teal"}
+      "bg": {
+        "role": "neutral",
+        "displayName": "Cream paper"
+      },
+      "fg": {
+        "role": "neutral",
+        "displayName": "Charcoal ink"
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Editorial red"
+      },
+      "signal": {
+        "role": "secondary",
+        "displayName": "Saturated teal"
+      }
     },
     "typographyMeta": {
-      "display": {"displayName":"Host clock","purpose":"Compact Manrope countdown with tabular figures; not the inherited floating numeric stack."},
-      "headline": {"displayName":"Editorial heading","purpose":"Self-hosted upright Cantata One meeting titles."},
-      "body": {"displayName":"Interface","purpose":"Self-hosted Manrope for controls, labels and editable data."}
+      "display": {
+        "displayName": "Host clock",
+        "purpose": "Compact Manrope countdown with tabular figures; not the inherited floating numeric stack."
+      },
+      "headline": {
+        "displayName": "Editorial heading",
+        "purpose": "Self-hosted upright Cantata One meeting titles."
+      },
+      "body": {
+        "displayName": "Interface",
+        "purpose": "Self-hosted Manrope for controls, labels and editable data."
+      }
     },
     "shadows": [],
     "motion": [
-      {"name":"button-state","value":"background .15s,border-color .15s","purpose":"Inherited button hover transition; disabled under prefers-reduced-motion."},
-      {"name":"paused-clock","value":"opacity: .72","purpose":"Final editorial host paused state, overriding the older .45 base rule."}
+      {
+        "name": "button-state",
+        "value": "background .15s,border-color .15s",
+        "purpose": "Inherited button hover transition; disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "paused-clock",
+        "value": "opacity: .72",
+        "purpose": "Final editorial host paused state, overriding the older .45 base rule."
+      }
     ],
     "breakpoints": [
-      {"name":"compact-desktop","value":"1100px"},
-      {"name":"single-column","value":"800px"},
-      {"name":"focused-mobile","value":"600px"},
-      {"name":"small-phone","value":"480px"}
+      {
+        "name": "compact-desktop",
+        "value": "1100px"
+      },
+      {
+        "name": "single-column",
+        "value": "800px"
+      },
+      {
+        "name": "focused-mobile",
+        "value": "600px"
+      },
+      {
+        "name": "small-phone",
+        "value": "480px"
+      }
     ]
   },
   "components": [
     {
-      "name":"Start / Next Speaker",
-      "kind":"button",
-      "refersTo":"transport",
-      "description":"Normal-height red outlined transport; the old filled Start reference is superseded.",
-      "html":"<button class=\"transport\">Next Speaker <span aria-hidden=\"true\">›</span></button>",
-      "css":".transport{font:500 14px var(--f-ui,Manrope,Arial,sans-serif);min-height:44px;padding:10px 14px;border:1px solid var(--accent,#c62d35);border-radius:5px;background:transparent;color:#a7242d;cursor:pointer;transition:background .15s,border-color .15s}.transport span{margin-left:12px}.transport:hover{background:#f1e0da}.transport:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}.transport:disabled{opacity:.38}@media(prefers-reduced-motion:reduce){.transport{transition:none}}"
+      "name": "Start / Next Speaker",
+      "kind": "button",
+      "refersTo": "transport",
+      "description": "Cream transport action within the dark timer block.",
+      "html": "<button class=\"transport\">Next Speaker <span aria-hidden=\"true\">›</span></button>",
+      "css": ".transport{font:500 14px var(--f-ui,Manrope,Arial,sans-serif);min-height:44px;padding:10px 14px;border:1px solid #f5f2e9;border-radius:5px;background:#f5f2e9;color:#132c30;cursor:pointer;transition:background .15s,border-color .15s}.transport span{margin-left:12px}.transport:hover{background:#dedbd2}.transport:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}.transport:disabled{opacity:.38}@media(prefers-reduced-motion:reduce){.transport{transition:none}}"
     },
     {
-      "name":"Float Timer",
-      "kind":"button",
-      "refersTo":"float",
-      "description":"Saturated teal action beside transport.",
-      "html":"<button class=\"float\">Float Timer <svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M2 2h8v8\" stroke=\"currentColor\" stroke-width=\"1.5\" fill=\"none\"/></svg></button>",
-      "css":".float{display:inline-flex;align-items:center;gap:12px;font:650 14px var(--f-ui,Manrope,Arial,sans-serif);min-height:44px;padding:10px 14px;border:1px solid #227d80;border-radius:5px;background:var(--signal,#299093);color:#061a1e;cursor:pointer;transition:background .15s,border-color .15s}.float:hover{background:#3aa5a6;border-color:var(--focus,#17676b)}.float:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(prefers-reduced-motion:reduce){.float{transition:none}}"
+      "name": "Float Timer",
+      "kind": "button",
+      "refersTo": "float",
+      "description": "Saturated teal action beside transport.",
+      "html": "<button class=\"float\">Float Timer <svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M2 2h8v8\" stroke=\"currentColor\" stroke-width=\"1.5\" fill=\"none\"/></svg></button>",
+      "css": ".float{display:inline-flex;align-items:center;gap:12px;font:650 14px var(--f-ui,Manrope,Arial,sans-serif);min-height:44px;padding:10px 14px;border:1px solid #58c2bc;border-radius:5px;background:#58c2bc;color:#061a1e;cursor:pointer;transition:background .15s,border-color .15s}.float:hover{background:#7bd4ce;border-color:var(--focus,#17676b)}.float:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(prefers-reduced-motion:reduce){.float{transition:none}}"
     },
     {
-      "name":"Reset",
-      "kind":"button",
-      "refersTo":"reset",
-      "description":"Red filled secondary-row reset action.",
-      "html":"<button class=\"reset\">Reset</button>",
-      "css":".reset{font:500 12px var(--f-ui,Manrope,Arial,sans-serif);min-height:40px;padding:7px 12px;border:1px solid var(--accent,#c62d35);border-radius:5px;background:var(--accent,#c62d35);color:#fff;cursor:pointer;transition:background .15s,border-color .15s}.reset:hover{background:#a51f29}.reset:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(prefers-reduced-motion:reduce){.reset{transition:none}}"
+      "name": "Reset",
+      "kind": "button",
+      "refersTo": "reset",
+      "description": "Salmon reset action within the dark timer block.",
+      "html": "<button class=\"reset\">Reset</button>",
+      "css": ".reset{font:500 12px var(--f-ui,Manrope,Arial,sans-serif);min-height:40px;padding:7px 12px;border:1px solid #ff9b90;border-radius:5px;background:#ff9b90;color:#431612;cursor:pointer;transition:background .15s,border-color .15s}.reset:hover{background:#ffb3aa}.reset:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(prefers-reduced-motion:reduce){.reset{transition:none}}"
     },
     {
-      "name":"Agenda field",
-      "kind":"input",
-      "refersTo":"agenda-input",
-      "description":"Pale paper field with mobile 16px text.",
-      "html":"<label class=\"label\">Speaker / topic<input class=\"field\" value=\"Progress toward the goal\"></label>",
-      "css":".label{display:grid;gap:7px;font:12px var(--f-ui,Manrope,Arial,sans-serif);color:var(--muted,#62635e)}.field{height:44px;min-width:0;padding:7px 10px;box-sizing:border-box;border:1px solid #cccdc5;border-radius:5px;background:var(--field,#f3f1eb);color:var(--fg,#20211e);font:500 14px var(--f-ui,Manrope,Arial,sans-serif)}.field:hover{border-color:#b7bea7}.field:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(max-width:600px){.field{font-size:16px}}"
+      "name": "Agenda field",
+      "kind": "input",
+      "refersTo": "agenda-input",
+      "description": "Pale paper field with mobile 16px text.",
+      "html": "<label class=\"label\">Speaker / topic<input class=\"field\" value=\"Progress toward the goal\"></label>",
+      "css": ".label{display:grid;gap:7px;font:12px var(--f-ui,Manrope,Arial,sans-serif);color:var(--muted,#62635e)}.field{height:44px;min-width:0;padding:7px 10px;box-sizing:border-box;border:1px solid #cccdc5;border-radius:5px;background:var(--field,#f3f1eb);color:var(--fg,#20211e);font:500 14px var(--f-ui,Manrope,Arial,sans-serif)}.field:hover{border-color:#b7bea7}.field:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(max-width:600px){.field{font-size:16px}}"
     },
     {
-      "name":"Mobile task navigation",
-      "kind":"nav",
-      "description":"Focused Timer / Agenda / Notes controls; selected tab uses editorial red.",
-      "html":"<nav class=\"tasks\" aria-label=\"Mobile workspace\"><button aria-pressed=\"true\">Timer</button><button aria-pressed=\"false\">Agenda</button><button aria-pressed=\"false\">Notes</button></nav>",
-      "css":".tasks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border:1px solid var(--line,#bbbcb4);border-radius:5px;background:var(--field,#f3f1eb);box-shadow:none}.tasks button{min-height:44px;padding:9px 7px;border:0;border-radius:5px;font:500 12px var(--f-ui,Manrope,Arial,sans-serif);background:transparent;color:var(--fg,#20211e);cursor:pointer}.tasks button[aria-pressed=true]{background:var(--accent,#c62d35);color:#fff}.tasks button:hover{background:var(--soft,#e5e4dc);color:var(--fg,#20211e)}.tasks button:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}"
+      "name": "Mobile task navigation",
+      "kind": "nav",
+      "description": "Focused Timer / Agenda / Notes controls; selected tab uses editorial red.",
+      "html": "<nav class=\"tasks\" aria-label=\"Mobile workspace\"><button aria-pressed=\"true\">Timer</button><button aria-pressed=\"false\">Agenda</button><button aria-pressed=\"false\">Notes</button></nav>",
+      "css": ".tasks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border:1px solid var(--line,#bbbcb4);border-radius:5px;background:var(--field,#f3f1eb);box-shadow:none}.tasks button{min-height:44px;padding:9px 7px;border:0;border-radius:5px;font:500 12px var(--f-ui,Manrope,Arial,sans-serif);background:transparent;color:var(--fg,#20211e);cursor:pointer}.tasks button[aria-pressed=true]{background:var(--accent,#c62d35);color:#fff}.tasks button:hover{background:var(--soft,#e5e4dc);color:var(--fg,#20211e)}.tasks button:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}"
+    },
+    {
+      "name": "Working block",
+      "kind": "card",
+      "description": "Outlined light agenda, timeline, parking and summary surface; final blocks.css override.",
+      "html": "<section class=\"ds-working-block\">Meeting agenda</section>",
+      "css": ".ds-working-block{border:1px solid #a6aaa2;border-radius:14px;background:#f3f1eb;padding:22px;color:#20211e;box-shadow:none}@media(max-width:600px){.ds-working-block{padding:18px 14px}}"
     }
   ],
   "narrative": {
-    "northStar":"The newspaper workbench",
-    "overview":"The user-approved editorial world uses cream paper, charcoal ink, upright Cantata One headings and Manrope controls. Red outlined Start / Next, red filled Reset and saturated teal Float support a smaller host clock and editable agenda. Thin rules and flat surfaces replace the earlier mineral/acid world. Floating and audience screens remain dark.\n\nThe final source of visual overrides is docs/editorial.css after base.css and workspace.css. The reference image is directional: subsequent explicit user corrections supersede its oversized clock, pale green, filled Start and connector geometry. The historical failed 63.7 reproduction remains historical evidence, not a current passed gate or an exact-match claim. Current review artifacts are .impeccable/review/desktop.png, mobile.png, user-320.png and mobile-agenda.png. This documentation does not assert deployment status. Preserve https://cytramonp.github.io/relay-timer/ and PRODUCT.md behavior; CorpTimer is the selected working brand with domain registration pending.",
-    "keyCharacteristics":["Cream and charcoal editorial host workspace","Self-hosted upright Cantata One and Manrope","Compact host clock with paused opacity .72","Red outlined transport, red Reset and saturated teal Float","Short grey-red connector to the whole agenda","Responsive focused task navigation at 320px and 390px","Dark floating and audience views with private host tools kept separate"],
-    "rules":[
-      {"name":"Action roles","body":"Preserve the distinct outlined transport, filled red Reset and saturated teal Float.","section":"colors"},
-      {"name":"Editorial hierarchy","body":"Upright Cantata One headings and Manrope host clock and controls; retain tabular figures.","section":"typography"},
-      {"name":"Flat workspace","body":"Use rules, spacing and paper tones instead of ambient card shadows.","section":"elevation"}
+    "northStar": "The newspaper workbench",
+    "overview": "The user-approved editorial world uses cream paper, charcoal ink, upright Cantata One headings and Manrope controls. Red outlined Start / Next, red filled Reset and saturated teal Float support a smaller host clock and editable agenda. Thin rules and flat surfaces replace the earlier mineral/acid world. Floating and audience screens remain dark.\n\nThe final source of visual overrides is docs/editorial.css after base.css and workspace.css. The reference image is directional: subsequent explicit user corrections supersede its oversized clock, pale green, filled Start and connector geometry. The historical failed 63.7 reproduction remains historical evidence, not a current passed gate or an exact-match claim. Current review artifacts are .impeccable/review/desktop.png, mobile.png, user-320.png and mobile-agenda.png. This documentation does not assert deployment status. Preserve https://cytramonp.github.io/relay-timer/ and PRODUCT.md behavior; CorpTimer is the selected working brand with domain registration pending.\n\nApproved block refinement: docs/blocks.css loads last. The light page contains a dark teal timer and outlined light working panels with 14px corners and no shadows. Start / Next is cream, Float bright teal, Reset salmon. Templates and Add actions have clear outlines. The thin extended bent grey/red agenda trace has no endpoint circles and hides at 1100px. The decorative stopwatch is hidden. Audience mode matches the light page and dark timer. Preserve selected logo A and the canonical URL. This refinement supersedes earlier borderless panels, outlined Start and short dotted connector descriptions.",
+    "keyCharacteristics": [
+      "Cream and charcoal editorial host workspace",
+      "Self-hosted upright Cantata One and Manrope",
+      "Compact host clock with paused opacity .72",
+      "Cream transport, salmon Reset and bright teal Float in a dark timer",
+      "Thin extended bent grey-red trace to the whole agenda, without endpoint circles",
+      "Responsive focused task navigation at 320px and 390px",
+      "Dark floating content; light audience page with dark timer; private host tools kept separate"
     ],
-    "dos":["Do preserve the actual editable agenda, host authority and timing behavior.","Do keep the short connector at agenda-heading level and hide it at 1100px and below.","Do retain mobile task navigation, 16px mobile fields and visible keyboard focus.","Do keep the canonical URL, optional Google sign-in and immediate app entry."],
-    "donts":["Don't restore the superseded mineral/acid palette.","Don't treat the historical reproduction score as current approval or claim exact comp matching.","Don't enlarge the clock or fill Start to imitate the older reference.","Don't connect to individual speaker rows or expose private notes and reports to audience views.","Don't introduce external font dependencies or claim PiP is visible in every sharing mode."]
+    "rules": [
+      {
+        "name": "Action roles",
+        "body": "Preserve cream transport, salmon Reset and bright teal Float within the dark timer block.",
+        "section": "colors"
+      },
+      {
+        "name": "Editorial hierarchy",
+        "body": "Upright Cantata One headings and Manrope host clock and controls; retain tabular figures.",
+        "section": "typography"
+      },
+      {
+        "name": "Flat workspace",
+        "body": "Use rules, spacing and paper tones instead of ambient card shadows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve the actual editable agenda, host authority and timing behavior.",
+      "Do keep the thin bent trace without endpoint circles at agenda-heading level and hide it at 1100px and below.",
+      "Do retain mobile task navigation, 16px mobile fields and visible keyboard focus.",
+      "Do keep the canonical URL, optional Google sign-in and immediate app entry."
+    ],
+    "donts": [
+      "Don't restore the superseded mineral/acid palette.",
+      "Don't treat the historical reproduction score as current approval or claim exact comp matching.",
+      "Don't enlarge the clock or restore the decorative stopwatch.",
+      "Don't connect to individual speaker rows or expose private notes and reports to audience views.",
+      "Don't introduce external font dependencies or claim PiP is visible in every sharing mode."
+    ]
   }
 }

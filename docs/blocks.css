@@ -1,0 +1,42 @@
+/* Approved light workspace, dark timer, and outlined working panels. */
+body{min-width:0}
+.timer-block{background:#061a1e;border:1px solid #27484c;border-radius:14px;padding:24px;min-width:0}
+body:not(.pip):not(.audience) .timer-block .ov{--fg:#f5f2e9;--muted:#b5cbca;--state:#64c9c4;--ov-fg:#f5f2e9;--ov-muted:#b5cbca;--ov-up:#375055;--ov-past:#609694;--ov-line:#375055;--ov-ok:#64c9c4;--ov-bad:#ff9b90;--ov-warn:#f1bc61;color:#f5f2e9}
+body:not(.pip):not(.audience) .timer-block .ov-name,body:not(.pip):not(.audience) .timer-block .ov-time,body:not(.pip):not(.audience) .timer-block .ov-next b{color:#f5f2e9}
+body:not(.pip):not(.audience) .timer-block .ov[data-state='over'] .ov-time{color:#ff9b90}
+body:not(.pip):not(.audience) .timer-block .ov[data-state='warn'] .ov-time{color:#f1bc61}
+body:not(.pip):not(.audience) .timer-block .ov-bar{height:12px;background:#375055;border-radius:4px}
+body:not(.pip):not(.audience) .timer-block .ov-blocks{height:4px}
+.timer-block .stage-stopwatch{display:none}
+.timer-block .controls{grid-template-columns:repeat(6,minmax(0,1fr));border:0;padding:12px 0 0}
+.timer-block .controls #btnNext{background:#f5f2e9;border-color:#f5f2e9;color:#132c30;font-weight:650}
+.timer-block .controls #btnNext:hover{background:#dedbd2}
+.timer-block .controls #btnFloat{background:#58c2bc;border-color:#58c2bc;color:#061a1e}
+.timer-block .controls #btnFloat:hover{background:#7bd4ce}
+.timer-block .controls #btnPause,.timer-block .controls #btnBack{border-color:#819d9e;color:#f5f2e9;background:transparent}
+.timer-block .controls #btnPause:hover,.timer-block .controls #btnBack:hover{background:#244247}
+.timer-block .controls #btnReset{background:#ff9b90;color:#431612;border-color:#ff9b90}
+.timer-block .controls #btnReset:hover{background:#ffb3aa}
+.timer-block .floating-note{background:#17363a;color:#f5f2e9;border-color:#819d9e}
+.timer-block .floating-note button{background:#f5f2e9;color:#132c30}
+.agenda-panel,.timeline-panel,.parking-panel,.settings-panel,.session-summary{border:1px solid #a6aaa2;border-radius:14px;background:#f3f1eb;padding:22px;box-sizing:border-box}
+.settings-panel{padding:0;overflow:hidden}.agenda-col{border:0;padding-top:0}
+.timeline-panel{margin-top:4px}.timeline-panel::before{left:22px;top:-1px;width:65px;height:2px}
+.parking-panel{margin-top:0}.agenda-top{margin-bottom:20px}
+.row{grid-template-columns:14px 10px minmax(0,1fr) 52px 58px 22px;gap:5px}
+.agenda-labels{grid-template-columns:1fr 52px 58px;padding-left:34px;padding-right:27px;gap:5px}
+.template-control select,#template-manage,#btnAdd,#btnTopic{border:1px solid #818980;background:#f8f6f0;border-radius:6px;min-height:42px;color:#20211e}
+#template-manage:hover,#btnAdd:hover,#btnTopic:hover{background:#e5e4dc;border-color:#465a57}
+.agenda-trace{position:absolute;left:calc(57.4468% - 118px);top:82px;width:170px;height:100px;z-index:2;pointer-events:none;overflow:visible;fill:none;stroke-width:1.5}
+.trace-base{stroke:#969f98}.trace-active{stroke:#d4484e}
+.audience{background:#eeece5;color:#20211e}.audience .live-header{color:#62635e;border-bottom:1px solid #bbbcb4}
+.audience .live-header .wordmark{color:#20211e}.audience .brand-timer{color:#c62d35}.audience .live-header button{color:#20211e;border-color:#818980}
+.audience .live-stage{background:#061a1e;color:#f5f2e9;padding:30px;border:1px solid #27484c;border-radius:14px}
+.audience .live-agenda{padding:24px;border:1px solid #a6aaa2;border-radius:14px;background:#f3f1eb}
+.audience .live-agenda h2{color:#20211e}.audience .live-footer{color:#62635e}
+.audience .live-agenda li{color:#62635e;border-color:#bbbcb4}.audience .live-agenda li.current{color:#20211e}.audience .live-note{color:#62635e}
+.audience .live-progress{height:12px;background:#375055;border-radius:4px;overflow:hidden}.audience .live-progress i{background:#64c9c4}
+.audience .live-stage #live-clock.time-over{color:#ff9b90}
+@media(max-width:1100px){.agenda-trace{display:none}.timer-block{padding:20px}.agenda-panel,.timeline-panel,.parking-panel{padding:18px}}
+@media(max-width:800px){.grid{gap:20px}.timer-block{padding:22px}.agenda-panel,.timeline-panel,.parking-panel{padding:20px}.audience .live-stage{padding:22px}}
+@media(max-width:600px){.timer-block{padding:18px 14px}.agenda-panel,.timeline-panel,.parking-panel{padding:18px 14px}.row{grid-template-columns:26px minmax(0,1fr) 66px 28px;gap:4px}.row .grip,.row .x{width:26px;min-width:26px}.timer-block .controls button{padding-inline:5px}.timer-block .controls #btnNext,.timer-block .controls #btnFloat{font-size:12px}.timer-block .controls #btnNext::after,.timer-block .controls #btnFloat::after{margin-left:6px}.agenda-top h2{font-size:21px}.tot{gap:5px}.tot input{width:58px}.audience .live-agenda{margin-top:20px}}
