@@ -1,6 +1,6 @@
-import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState} from "./model.js?v=5";
-import {iconMarkup} from "./icons.js?v=5";
-import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=5';
+import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState,equalizedAgenda} from "./model.js?v=6";
+import {iconMarkup} from "./icons.js?v=6";
+import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=6';
 
 // Daily Relay Timer: milestone-anchored speaker slots with time rollover.
 (function(){
@@ -437,15 +437,11 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
     else { if (before <= 0) return; v = pool - (L - P) / before * R; }
     if (applyKeep(grow, v, absorb, base)) pinEdited(grow, absorb, true);
   }
-  // Equal times: every person still to speak gets the same slot again; topics and anyone who already spoke keep theirs.
+  // Explicit equalization covers both speakers and topics, unlike the optional automatic people split.
   function equalize(){
-    const ppl = S.agenda.filter(a => a.kind !== "topic" && !isPast(a));
-    if (!ppl.length) return;
-    ppl.forEach(a => delete a.pin);
     const tot = S.autoSplit ? (+S.total || 0) : total() / MIN;
-    const locked = S.agenda.filter(a => !ppl.includes(a)).reduce((s, a) => s + (+a.min || 0), 0);
-    splitInto(ppl, tot - locked, ppl.map(() => 1));
-    save(); tick();
+    S.agenda=equalizedAgenda(S.agenda,S.run,tot);
+    save(); renderRos(); tick();
   }
   const snapMins = () => { const b = {}; S.agenda.forEach(a => b[a.id] = +a.min || 0); return b; };
   const xToMin = x => { const b = $("lanes").getBoundingClientRect(); return (x - b.left) / b.width * lastScale / MIN; };

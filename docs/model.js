@@ -1,8 +1,20 @@
-import {cleanPlan,cleanParking,cleanReports} from './session.js?v=5';
+import {cleanPlan,cleanParking,cleanReports} from './session.js?v=6';
 export const MIN=60000;
 export function elapsedTime(run,now=Date.now()){if(!run)return 0; if(run.doneAt!=null)return run.doneAt;return Math.max(0,(run.pauseAt??now)-run.t0-run.pausedMs);}
 export function deadline(agenda,id,start,floor){let sum=0;for(const item of agenda){sum+=Math.max(0,item.min)*MIN;if(item.id===id)break;}return Math.max(sum,start+Math.max(0,floor)*MIN);}
 export function splitMinutes(target,weights){const units=Math.round(Math.max(0,target)/.25),sum=weights.reduce((a,b)=>a+b,0);const raw=weights.map(w=>(sum?w/sum:1/weights.length)*units),whole=raw.map(Math.floor);let left=units-whole.reduce((a,b)=>a+b,0);raw.map((v,i)=>[v-whole[i],i]).sort((a,b)=>b[0]-a[0]).forEach(([,i])=>{if(left>0){whole[i]++;left--;}});return whole.map(v=>v*.25);}
+// An explicit Equal times action includes topics and clears manual pins.
+// Completed slots stay frozen during an active session; finished meetings are editable again.
+export function equalizedAgenda(agenda,run,totalMin){
+  const result=agenda.map(a=>({...a}));
+  const completed=new Set(run?.cur?run.log.map(l=>l.id).filter(id=>id!==run.cur.id):[]);
+  const free=result.filter(a=>!completed.has(a.id));
+  if(!free.length)return result;
+  const locked=result.filter(a=>completed.has(a.id)).reduce((sum,a)=>sum+a.min,0);
+  const shares=splitMinutes(totalMin-locked,free.map(()=>1));
+  free.forEach((a,i)=>{delete a.pin;a.min=shares[i];});
+  return result;
+}
 export function formatTime(ms,mode){const neg=ms<0,sec=mode==='up'?Math.floor(Math.abs(ms)/1000):Math.ceil(Math.abs(ms)/1000);return(neg?'-':'')+Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');}
 export function normalizeState(input){
   if(!input||!Array.isArray(input.agenda)||!input.agenda.length||input.agenda.length>2000)throw Error('The file needs an agenda with at least one slot.');

@@ -1,7 +1,7 @@
-import {icon} from './icons.js?v=5';
-import {presets} from './presets.js?v=5';
-import {isTemplate,freshPlan,makeTemplate,reviseTemplate,templateColors,templateIcons} from './templates.js?v=5';
-import {removeRecord} from './storage.js?v=5';
+import {icon} from './icons.js?v=6';
+import {presets} from './presets.js?v=6';
+import {isTemplate,freshPlan,makeTemplate,reviseTemplate,templateColors,templateIcons} from './templates.js?v=6';
+import {removeRecord} from './storage.js?v=6';
 
 const $=id=>document.getElementById(id);
 const el=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(text!=null)node.textContent=text;return node;};
@@ -10,6 +10,7 @@ const builtins=[['daily','people','citron','A quick team check-in.'],['retro','l
 export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
   let draft=null,editingId=null,revision=null,dirty=false;
   const dialog=$('templates-dialog');
+  const select=$('template-select');
   function shelf(){draft=null;dirty=false;$('template-shelf').hidden=false;$('template-editor').hidden=true;$('templates-title').textContent='A good meeting starts here.';render();dialog.scrollTop=0;}
   function preview(state,color){const track=el('div','template-preview');track.dataset.color=color;track.setAttribute('aria-hidden','true');for(const a of state.agenda){const bar=el('i');bar.style.flexGrow=Math.max(.25,a.min);track.append(bar);}return track;}
   function card(record,appearance,description,builtin=false){
@@ -26,6 +27,13 @@ export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
     const custom=getRecords().filter(r=>!r.deleted&&isTemplate(r));$('custom-template-list').replaceChildren(...custom.map(r=>card(r,r.state.template)));
     $('template-empty').hidden=!!custom.length;$('custom-template-count').textContent=String(custom.length);
     $('builtin-template-list').replaceChildren(...builtins.map(([id,shape,color,description])=>card(presets[id](),{icon:shape,color},description,true)));
+    const option=(value,label)=>{const o=el('option','',label);o.value=value;return o;};
+    const starters=el('optgroup');starters.label='Starter templates';
+    for(const [id]of builtins){const p=presets[id]();starters.append(option('starter:'+id,`${p.title} · ${p.state.total} min`));}
+    const own=el('optgroup');own.label='Your templates';
+    for(const r of custom)own.append(option('custom:'+r.id,`${r.title} · ${r.state.agenda.reduce((n,a)=>n+a.min,0)} min`));
+    const actions=el('optgroup');actions.label='Create & manage';actions.append(option('save','Save current agenda as template…'),option('new','Create template…'),option('manage','Manage templates…'));
+    select.replaceChildren(option('','Templates'),starters,...(custom.length?[own]:[]),actions);
   }
   function updatePreview(){
     if(!draft)return;const sum=draft.state.agenda.reduce((n,a)=>n+(Number(a.min)||0),0);$('template-total').textContent=`${draft.state.agenda.length} slots · ${sum} min`;
@@ -56,7 +64,13 @@ export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
   }
   function leave(action){if(!dirty){action();return;}confirm('Discard template changes?','The saved template stays unchanged. Your unsaved edits will be discarded.',()=>{dirty=false;action();});}
   function open(){shelf();dialog.showModal();}
-  $('templates-open').onclick=open;
+  select.onchange=()=>{const value=select.value;select.value='';
+    if(value.startsWith('starter:')){const p=presets[value.slice(8)]?.();if(p)apply(p.title,freshPlan(p.state));}
+    else if(value.startsWith('custom:')){const r=getRecords().find(r=>r.id===value.slice(7)&&!r.deleted&&isTemplate(r));if(r)apply(r.title,freshPlan(r.state));else toast('This template changed. Choose it again from the list.');}
+    else if(value==='manage')open();
+    else if(value==='save'){open();$('template-from-current').click();}
+    else if(value==='new'){open();$('template-new').click();}
+  };
   $('template-from-current').onclick=()=>{const current=getCurrent();editDraft({title:current.title,state:current.state},true);};
   $('template-new').onclick=()=>editDraft({title:'My template',state:{...presets.blank().state,agenda:[{id:crypto.randomUUID(),name:'Opening',min:5,kind:'topic'}],total:5,autoSplit:false}},true);
   $('template-back').onclick=()=>leave(shelf);

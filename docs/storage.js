@@ -1,4 +1,4 @@
-import {normalizeState} from './model.js?v=5';
+import {normalizeState} from './model.js?v=6';
 export function makeRecord(title,state){return{id:crypto.randomUUID(),title:(title||'Untitled meeting').trim().slice(0,120),updatedAt:Date.now(),deleted:false,state:normalizeState(state)};}
 export function validateRecord(r){if(!r||typeof r.id!=='string'||!/^[\w-]{1,100}$/.test(r.id)||typeof r.title!=='string'||r.title.length>120||!Number.isSafeInteger(r.updatedAt)||r.updatedAt<0||typeof r.deleted!=='boolean')throw Error('This meeting record is invalid.');return{id:r.id,title:r.title,updatedAt:r.updatedAt,deleted:r.deleted,state:r.deleted?null:normalizeState(r.state)};}
 export function mergeRecords(local,remote){const map=new Map();for(const r of [...local,...remote]){const item=validateRecord(r),old=map.get(item.id);if(!old||item.updatedAt>old.updatedAt||(item.updatedAt===old.updatedAt&&item.deleted))map.set(item.id,item);}return[...map.values()].sort((a,b)=>b.updatedAt-a.updatedAt);}

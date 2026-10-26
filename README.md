@@ -8,13 +8,13 @@ A meeting timer with fixed milestones. An early finish passes spare time to the 
 
 Open the app and edit the agenda immediately. No account, subscription, trial or feature gate is required. Google sign-in optionally synchronizes private saved meetings across devices.
 
-- Speakers and group topics, equal split, pinned durations, proportional redistribution.
+- Speakers and group topics, equal split, pinned durations, proportional redistribution. **Equal times** includes unfinished speakers and topics, clears their manual pins and preserves completed slots during an active session.
 - Drag agenda rows or milestone boundaries; reorder during a meeting.
 - Pause, undo, minimum turns, warning cues and clock correction.
 - Floating Document PiP, video/canvas PiP fallback, wide/strip/square layouts and clock size.
 - Automatic local recovery, named meeting library, JSON import/export and completed-run summary.
 - Presets: Daily standup, retrospective, planning, workshop and focus session. Presets are editable examples, not mandatory Scrum timings.
-- **Templates**: save the current agenda, create a plan from scratch, or customize a starter. Edit slot names, types, durations and order; choose one of four colors and six icons; duplicate or delete your templates. Applying one creates an independent meeting without previous notes or session history.
+- **Templates dropdown**: start from a preset or your saved plan directly; choose Save current agenda, Create template or Manage templates for the editor. Edit slot names, types, durations and order; choose one of four colors and six icons; duplicate or delete your templates. Applying one creates an independent meeting without previous notes or session history.
 - On phones, **Timer / Agenda / Notes** navigation keeps each task in view. Agenda and notes include a live countdown shortcut back to the timer; editable fields use a larger mobile type size.
 - Live audience link and locally generated QR; a separate control capability supports start/next, pause/resume, undo and one-minute extensions.
 - Private parking topics, action owners and completion checkboxes, saved with each meeting.
@@ -55,7 +55,7 @@ Firebase was provisioned in a separate project with a free-tier Firestore databa
 
 ## Validation
 
-Twenty-three tests cover the production model, timestamp behavior, allocation, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping, private-data projection and reusable-template isolation/backup/sync behavior. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
+Twenty-seven tests cover the production model, timestamp behavior, allocation, explicit equalization, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping, private-data projection and reusable-template isolation/backup/sync behavior. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
 
 ## Visual reference and licenses
 

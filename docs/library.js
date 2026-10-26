@@ -1,5 +1,5 @@
-import {templateUI} from './template-ui.js?v=5';import {isMeeting,freshPlan} from './templates.js?v=5';
-import {icon} from './icons.js?v=5';import {makeRecord,mergeRecords,parseBackup,readLibrary,writeLibrary,removeRecord} from './storage.js?v=5';import {presets} from './presets.js?v=5';import {formatTime} from './model.js?v=5';import {loadCloud} from './cloud.js?v=5';
+import {templateUI} from './template-ui.js?v=6';import {isMeeting,freshPlan} from './templates.js?v=6';
+import {icon} from './icons.js?v=6';import {makeRecord,mergeRecords,parseBackup,readLibrary,writeLibrary,removeRecord} from './storage.js?v=6';import {presets} from './presets.js?v=6';import {formatTime} from './model.js?v=6';import {loadCloud} from './cloud.js?v=6';
 const $=id=>document.getElementById(id),guestKey='relay.library.guest.v1';
 let key=guestKey,records=[],activeId=null,user=null,cloud=null,ready=false,loading=false,timer,noticeTimer,confirmAction,importMode='all',cloudReady=false;
 let templates;

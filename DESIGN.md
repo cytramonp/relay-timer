@@ -154,6 +154,11 @@ components:
     textColor: "{colors.fg}"
     rounded: "{rounded.surface}"
     padding: "20px"
+  template-select:
+    backgroundColor: "{colors.panel}"
+    textColor: "{colors.fg}"
+    rounded: "{rounded.pill}"
+    padding: "10px 32px 10px 16px"
   mobile-navigation:
     backgroundColor: "{colors.panel}"
     rounded: "{rounded.pill}"
@@ -177,7 +182,7 @@ components:
 
 The user-confirmed direction pairs a light workspace with a dark timer and uses robot.com as its visual reference. Pale mineral ground, warm-black timing surfaces, acid-yellow actions, rounded flat panels and capsule controls give the working tool a soft industrial character. Self-hosted Manrope supplies geometric lettering without copying the reference's proprietary font or imagery.
 
-This refresh merges the implemented template library, editable template identities, official Google sign-in assets and mobile workspace views into the incumbent world. These are scoped additions; the palette, material, typography and host/audience distinction remain the confirmed contract. `docs/base.css` supplies mechanics, then the complete `docs/workspace.css` cascade supplies effective appearance. `docs/template-ui.js`, `docs/templates.js`, `docs/mobile.js`, `docs/index.html`, `docs/live.html` and `docs/live.js` supply the corresponding surfaces and behavior. Tokens above are normative. The earlier cobalt system is superseded. There is no separate approved comp or quality-bar image.
+This refresh merges the implemented template library, editable template identities, official Google sign-in assets, mobile workspace views and native Templates dropdown into the incumbent world. These are scoped additions; the palette, material, typography and host/audience distinction remain the confirmed contract. `docs/base.css` supplies mechanics, then the complete `docs/workspace.css` cascade supplies effective appearance. `docs/template-ui.js`, `docs/templates.js`, `docs/mobile.js`, `docs/index.html`, `docs/live.html` and `docs/live.js` supply the corresponding surfaces and behavior. Tokens above are normative. The earlier cobalt system is superseded. There is no separate approved comp or quality-bar image; separately generated raster mockups remain unapproved and do not replace this implemented world.
 
 **Key Characteristics:**
 
@@ -233,7 +238,7 @@ Manrope's geometric, close-set headlines sit beside stable numeric timing. The v
 - **Body:** 14px workspace text at weight 450. Dialog body copy uses 13px with a 1.7 line height.
 - **Label:** 12px metadata, timing hints, connection messages and report headers.
 - **Button:** 13px at weight 600; primary host transport uses 15px, reducing to 14px on phones. Most mobile utilities use 12px. Compact mobile header actions use 11px, including Share live through the 360px breakpoint.
-- **Mobile field:** agenda names/minutes, template name and slot name/minutes, template end-policy select and private notes inputs use 16px at up to 600px. The template slot-type select uses 14px.
+- **Mobile field:** agenda names/minutes, template name and slot name/minutes, template end-policy select, Templates dropdown and private notes inputs use 16px at up to 600px. The template slot-type select uses 14px.
 - **Template hierarchy:** the library heading is 32px, becoming 28px on phones; card titles are 19px at weight 650 and descriptions/details 13px. These are scoped utility-dialog roles.
 - **Live display:** larger audience countdown at weight 550; up to 900px it uses `clamp(70px,13vw,130px)`, and up to 560px `clamp(64px,22vw,100px)`.
 
@@ -246,6 +251,8 @@ The centered host workspace caps at 1376px, with 28px horizontal insets, 35px to
 At 1150px, workspace insets become 24px, top padding 30px, grid gap 18px and panels 20px. At 900px the workspace caps at 760px and the working grid stacks. At up to 600px, the workspace uses 14px horizontal insets, 22px top padding and an 18px section gap. The header becomes a compact single-row capsule with wordmark, Share live, icon-only meeting library and icon-only Google sign-in. Library and Google controls end at 44px wide with a 44px minimum height; the supplied Google icon itself remains 40px square. At 360px the wordmark and gaps tighten, and Share live keeps its 11px text while its arrow hides.
 
 At up to 600px, sticky Timer / Agenda / Notes navigation separates the same host workspace into focused views. Timer is the initial view and shows stage, transport and timeline. Agenda shows editable run of show and settings; Notes shows private parking. Agenda and Notes retain a dark return-to-timer preview with current name and countdown, updated from timer/change events. View selection exposes its state with `aria-pressed`; selecting a tab scrolls the navigation into view. Above this breakpoint the desktop workspace remains continuous. At up to 560px, transport retains a three-column arrangement: Start / next spans two columns beside Pause; Undo, Float and Reset form the second row.
+
+The meeting-heading Templates dropdown is a native select with a 44px minimum height and 260px maximum width. At up to 600px its wrapper flexes with `min-width:0`, the select fills its available width up to 240px and uses 16px text; meeting tools span the available row.
 
 The template library caps at 850px, with a two-column grid and 16px gaps. At 760px its insets and card gaps tighten; at up to 600px it becomes one column, uses a viewport-minus-16px dialog width and height limit, and stacks the two creation actions. The editor reflows slot controls into name, type/minutes, then reorder actions; its Save template action spans the sticky footer above secondary actions. Appearance controls wrap rather than compress.
 At up to 560px the final agenda uses two lines per row: name across the top between drag and delete controls, minutes below on the left and Available / Used on the right. Desktop column labels hide there. Drag and delete targets are 36px wide and at least 44px tall. Keep names editable and timing values readable rather than squeezing desktop columns onto phones.
@@ -262,7 +269,7 @@ The implemented workspace is flat: tonal contrast, white panels, generous gaps a
 
 ## Shapes
 
-Capsules define buttons, desktop/header navigation, mobile workspace navigation, the Templates trigger and library search. Main panels, stage and dialogs share the soft surface radius in frontmatter. Agenda fields use the smaller field radius; general input and total-duration controls use the input radius. Most panels and dialogs have no border; fields use soft fills with subtle hover strokes. Thin rules remain in report rows, private parking, live agenda and separators.
+Capsules define buttons, desktop/header navigation, mobile workspace navigation, the native Templates select and library search. Main panels, stage and dialogs share the soft surface radius in frontmatter. Agenda fields use the smaller field radius; general input and total-duration controls use the input radius. Most panels and dialogs have no border; fields use soft fills with subtle hover strokes. Thin rules remain in report rows, private parking, live agenda and separators.
 
 Progress lanes have gently rounded, clipped ends; the host agenda-strip blocks have small 2px corners. Template icon tiles and the mobile return preview use the compact surface radius; appearance choices are circular. Icons are compact inline stroke SVGs (18px utilities, 20px section markers, 24px template card marks, 30px editor preview); the host wordmark uses a filled SVG with an acid cutout. Do not borrow robot photography, logos or proprietary type.
 
@@ -286,9 +293,15 @@ The live header is unboxed on the full dark surface, with connection status and 
 
 ### Template Library / Editor
 
+The meeting heading uses native `select#template-select`, visibly and accessibly named Templates. Its grouped options expose Starter templates, Your templates when custom plans exist, and Create & manage with Save current agenda as template…, Create template… and Manage templates…. Starter and custom options include total minutes. The select uses a white capsule, a quiet 1px rule, soft hover and the established focus treatment. Preserve the browser's native selection interaction. Manage templates opens the full library and editor below.
+
 Templates are reusable plans, with separate Your templates and starter sections. Each bordered, flat card pairs a meaningful line icon with a proportional duration graphic, name, slot count and total minutes, summary and explicit Use template / Edit or Customize actions. Duration bars derive from slot minutes; they are functional agenda summaries, not decorative equal bars. The editor updates its preview as minutes change.
 
 The editor groups identity first, then plan and timing options. Four named color choices and six icons (people, loop, grid, spark, focus, coffee) use labeled buttons with `aria-pressed`. Selection receives a 2px warm-text outline at 2px offset, and selected color also shows a check. Choices are 44px square, becoming 40px at up to 360px. Name, slot type/minutes, reorder and remove controls stay directly editable; Save template remains the primary action. Customizing a starter creates a separate reusable plan. Template styling carries no live status meaning.
+
+### Equal Times
+
+The timeline's Equal times text action divides remaining planned time across all unfinished speakers and topics and clears their manual pins. During a session completed slots keep their planned time. Keep this explicit action distinct from the separate Split people's time equally setting, which preserves topic and pinned-slot durations.
 
 ### Google Identity Assets
 

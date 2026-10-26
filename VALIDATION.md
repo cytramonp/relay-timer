@@ -1,6 +1,18 @@
-# Release verification — 23 October 2026
+# Release verification — 25 October 2026
 
 Public application: https://cytramonp.github.io/relay-timer/
+
+## Equal times fix and Templates dropdown
+
+- Reproduced the all-topic bug: Equal times left a 4/8/3-minute agenda unchanged because it excluded topics. The explicit action now splits remaining planned time across unfinished speakers and topics and clears their manual pins. Completed slots are preserved during an active session; a finished plan becomes editable again. The separate automatic people-only split retains its existing behavior.
+- Twenty-seven Node tests pass. Four new tests cover all-topic equalization without source mutation, mixed kinds and pins, completed-slot preservation, exact quarter-minute remainders and finished-plan editing. Syntax/public JSON checks pass.
+- Local browser verifies 4/8/3 → 5/5/5 and imported mixed slots 2.25/4.25/5.5 → 4/4/4. Templates is a native grouped dropdown with starters, saved plans, save/new/manage commands. Applying, saving, editing, duplicating, deleting, ordering slots and discarding an unsaved draft were exercised through the picker and editor.
+- Broader browser pass: add/remove/reorder slots, start/pause/resume/next/undo/reset, clock correction, one-minute extension, auto-next and manual overtime, meeting copies, notes/owners/completion, library, JSON import and exports, help and privacy. A downloaded CSV was independently parsed (11 rows); current/all-meeting JSON files were created. Print was invoked and dismissed without sending a job; native print output was not verified. Real Google sign-in and cross-device private sync remain unverified.
+- Real Chrome Document PiP opened in wide, strip and square layouts and returned to the host. The embedded browser did not provide a usable floating surface. Actual screen-share visibility and real mobile devices remain outside this pass.
+- Disposable live host/viewer/controller verified Start/Next, Pause/Resume, Extend and Undo with host acknowledgements and reflected audience state; viewer/control copy actions and QR were exercised. The user explicitly authorized cleanup. The QA room, owner record and any queued commands were deleted; public room GET subsequently returned 403 and administrator owner GET returned 404. No active QA capability is retained in this report.
+- Responsive captures reopened at actual desktop width 1440 and phone widths 390/320, including agenda and template manager. Detector ran once with no primary findings; remaining advisories concern existing tokens and intentional topic timeline stripes.
+- Fresh independent finish review disposition: **ship**, scoped to the Equal times fix and native picker in the existing visual system. All five supplied captures were reviewed; no material fixes were requested. DESIGN.md and its sidecar were merged after that review.
+- The pixel and newspaper CorpTimer images are design exploration only. They are not the deployed UI, and naming/domain checks do not rename the application.
 
 ## Custom templates and mobile workspace update
 
