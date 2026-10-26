@@ -1,4 +1,4 @@
-import {cleanPlan,cleanParking,cleanReports} from './session.js?v=6';
+import {cleanPlan,cleanParking,cleanReports} from './session.js?v=8';
 export const MIN=60000;
 export function elapsedTime(run,now=Date.now()){if(!run)return 0; if(run.doneAt!=null)return run.doneAt;return Math.max(0,(run.pauseAt??now)-run.t0-run.pausedMs);}
 export function deadline(agenda,id,start,floor){let sum=0;for(const item of agenda){sum+=Math.max(0,item.min)*MIN;if(item.id===id)break;}return Math.max(sum,start+Math.max(0,floor)*MIN);}

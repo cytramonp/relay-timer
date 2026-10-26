@@ -1,8 +1,8 @@
-import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState,equalizedAgenda} from "./model.js?v=6";
-import {iconMarkup} from "./icons.js?v=6";
-import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=6';
+import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState,equalizedAgenda} from "./model.js?v=8";
+import {iconMarkup} from "./icons.js?v=8";
+import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=8';
 
-// Daily Relay Timer: milestone-anchored speaker slots with time rollover.
+// CorpTimer: milestone-anchored speaker slots with time rollover.
 (function(){
   const KEY = "relay.timer.workspace.v4", OLD_KEY = "relay-timer-v3";
   const NAMES = ["Alex","Morgan","Jordan","Sam","Taylor","Casey","Robin"];
@@ -175,7 +175,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
         '<button type="button" class="x" aria-label="Remove ' + esc(sp.name) + '">' + iconMarkup('close') + '</button>';
       const nm = row.querySelector(".nm"), mn = row.querySelector(".mn");
       nm.value = sp.name; mn.value = sp.min;
-      nm.addEventListener("input", () => { sp.name = nm.value; save(); tick(); });
+      nm.addEventListener("input", () => { sp.name = nm.value; mn.setAttribute("aria-label", "Minutes for " + sp.name); row.querySelector(".grip").setAttribute("aria-label", "Reorder " + sp.name); row.querySelector(".x").setAttribute("aria-label", "Remove " + sp.name); row.querySelector(".unpin").setAttribute("aria-label", "Put " + sp.name + " back into the equal split"); save(); tick(); });
       // With Keep proportions on, a typed value is spread over everyone still to speak, against the sizes at focus,
       // so each keystroke recomputes from the same starting point instead of compounding the rounding.
       let mnBase = null;
@@ -547,7 +547,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
   function setupMediaKeys(){
     if (!("mediaSession" in navigator)) return;
     const ms = navigator.mediaSession, set = (a, f) => { try { ms.setActionHandler(a, f); } catch(e){} };
-    try { ms.metadata = new MediaMetadata({ title: "Daily Relay Timer", artist: "Start/Pause ⏯  ·  Next ⏭  ·  Undo ⏮" }); } catch(e){}
+    try { ms.metadata = new MediaMetadata({ title: "CorpTimer", artist: "Start/Pause ⏯  ·  Next ⏭  ·  Undo ⏮" }); } catch(e){}
     set("nexttrack", () => next());
     set("previoustrack", () => back());
     // Chrome may draw this centre button as "pause" because the stream itself is playing,
@@ -669,7 +669,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
       try { const st = pipWin.document.createElement("style"); st.textContent = [...ss.cssRules].map(x => x.cssText).join("\n"); pipWin.document.head.appendChild(st); }
       catch(e){ if (ss.href){ const l = pipWin.document.createElement("link"); l.rel = "stylesheet"; l.href = ss.href; pipWin.document.head.appendChild(l); } }
     }
-    pipWin.document.title = "Relay Timer";
+    pipWin.document.title = "CorpTimer";
     pipWin.document.body.className = "pip";
     pipWin.document.body.appendChild($("ov"));
     pipWin.addEventListener("keydown", onKey);

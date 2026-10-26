@@ -1,4 +1,4 @@
-# Relay Timer
+# CorpTimer
 
 <!-- impeccable:product-schema 1 -->
 ## Platform
@@ -14,6 +14,6 @@ Facilitator at a laptop; the floating display stays near the video call. The new
 ## Capabilities and Constraints
 No monetization, paywalls or tier limits in this release. Preserve core features, named meeting library, templates, import/export and Google sync. Live sharing publishes a separate audience projection; private library, notes and reports remain separate. Host tab stays authoritative and must remain open. Viewer links are read-only; separate control capabilities permit next, pause, undo and extend. No analytics. Never promise PiP visibility to an audience without checking the actual sharing mode.
 ## Brand Commitments
-Relay Timer remains a neutral working title. User confirmed a light workspace with a dark timer and requested a redesign inspired by robot.com. Start directly in the app, not a marketing or pricing page.
+CorpTimer is the user-selected working brand; domain purchase is pending. User approved a cream editorial workspace, charcoal type, compact clock, red outline transport, red Reset and saturated Mind Robotics teal Float. Floating and audience screens stay dark. Start directly in the app, not a marketing or pricing page.
 ## Product Principles
 Immediate use without sign-in; preserve the host's control; show plan and actual time; state local/cloud save status truthfully; isolate each signed-in user's records.

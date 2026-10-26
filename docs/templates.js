@@ -1,5 +1,5 @@
-import {normalizeState} from './model.js?v=6';
-import {makeRecord} from './storage.js?v=6';
+import {normalizeState} from './model.js?v=8';
+import {makeRecord} from './storage.js?v=8';
 
 export const templateColors=['citron','peach','lilac','mint'];
 export const templateIcons=['people','loop','grid','spark','focus','coffee'];

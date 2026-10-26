@@ -1,8 +1,8 @@
-# Relay Timer
+# CorpTimer
 
 Public app: **https://cytramonp.github.io/relay-timer/**
 
-A meeting timer with fixed milestones. An early finish passes spare time to the next speaker; an overrun reduces later time. Based on the owner's latest Daily Relay Timer HTML, with a new light workspace and dark stage monitor.
+A meeting timer with fixed milestones. An early finish passes spare time to the next speaker; an overrun reduces later time. Based on the owner's latest Daily Relay Timer HTML, with a cream editorial workspace and a dark floating/audience monitor.
 
 ## Use
 
@@ -13,7 +13,7 @@ Open the app and edit the agenda immediately. No account, subscription, trial or
 - Pause, undo, minimum turns, warning cues and clock correction.
 - Floating Document PiP, video/canvas PiP fallback, wide/strip/square layouts and clock size.
 - Automatic local recovery, named meeting library, JSON import/export and completed-run summary.
-- Presets: Daily standup, retrospective, planning, workshop and focus session. Presets are editable examples, not mandatory Scrum timings.
+- Presets: Daily standup, retrospective, planning, workshop, focus session, Pomodoro and countdown. Pomodoro is a finite four-round 25/5 sequence ending with a 15-minute break (130 minutes); transitions are automatic. Manual early handoff still uses the shared-deadline rules. Presets are editable examples, not mandatory Scrum timings.
 - **Templates dropdown**: start from a preset or your saved plan directly; choose Save current agenda, Create template or Manage templates for the editor. Edit slot names, types, durations and order; choose one of four colors and six icons; duplicate or delete your templates. Applying one creates an independent meeting without previous notes or session history.
 - On phones, **Timer / Agenda / Notes** navigation keeps each task in view. Agenda and notes include a live countdown shortcut back to the timer; editable fields use a larger mobile type size.
 - Live audience link and locally generated QR; a separate control capability supports start/next, pause/resume, undo and one-minute extensions.

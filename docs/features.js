@@ -1,6 +1,6 @@
-import {makeReport,reportCSV,liveProjection} from './session.js?v=6';
-import {formatTime} from './model.js?v=6';
-import {loadCloud} from './cloud.js?v=6';
+import {makeReport,reportCSV,liveProjection} from './session.js?v=8';
+import {formatTime} from './model.js?v=8';
+import {loadCloud} from './cloud.js?v=8';
 import qrcode from './vendor/qrcode.js';
 const $=id=>document.getElementById(id),timer=window.relayTimer;
 const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;};

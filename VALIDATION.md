@@ -57,3 +57,14 @@ Public application: https://cytramonp.github.io/relay-timer/
 - Desktop Chrome and a responsive viewport were used; real iOS/Android browser testing was not performed. This is a web release, not a native mobile application.
 
 Cloud-library sync merges saved meetings; it does not provide a shared live timer room. No paid feature restrictions are enabled. Relay Timer remains a working product name.
+
+
+## CorpTimer editorial release — 25 October 2026
+
+- 29 automated tests pass, including normalized Pomodoro focus/break/final boundaries and countdown completion; JS/JSON checks pass.
+- Desktop 1505px and responsive 390px/320px inspected. Long meeting titles remain in their grid column; native Templates remains readable at 320px; mobile agenda uses stacked, 16px editable fields.
+- Browser exercised Start, Next, Undo, Pause, double-click-confirmed Reset, Templates, Manage and all-topic Equal times (4/8/3 -> 5/5/5). Pomodoro applies automatic policy. A 15-second Countdown completed automatically after the UI clock-forward action.
+- Chrome Document PiP opens (host shows Close float and Bring it back); closing restores the host timer. IAB did not expose a floating window. Real screen-share visibility is not claimed.
+- Independent review identified paused-clock contrast and 320px template clipping; both scored resolved after recapture. DESIGN documentation follows the corrected code.
+- Earlier raster reproduction score63.7 was failed and superseded by explicit user revisions; this release does not claim pixel-identical reproduction.
+- Existing real-account Google sync and physical iOS/Android verification gaps above remain. No new live room was created in this release.

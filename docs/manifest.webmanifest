@@ -1,1 +1,1 @@
-{"name":"Relay Timer","short_name":"Relay Timer","start_url":"./","scope":"./","display":"standalone","background_color":"#f4f5f7","theme_color":"#f4f5f7","icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}
+{"name":"CorpTimer","short_name":"CorpTimer","start_url":"./","scope":"./","display":"standalone","background_color":"#eeece5","theme_color":"#eeece5","icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}

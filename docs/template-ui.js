@@ -1,11 +1,11 @@
-import {icon} from './icons.js?v=6';
-import {presets} from './presets.js?v=6';
-import {isTemplate,freshPlan,makeTemplate,reviseTemplate,templateColors,templateIcons} from './templates.js?v=6';
-import {removeRecord} from './storage.js?v=6';
+import {icon} from './icons.js?v=8';
+import {presets} from './presets.js?v=8';
+import {isTemplate,freshPlan,makeTemplate,reviseTemplate,templateColors,templateIcons} from './templates.js?v=8';
+import {removeRecord} from './storage.js?v=8';
 
 const $=id=>document.getElementById(id);
 const el=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(text!=null)node.textContent=text;return node;};
-const builtins=[['daily','people','citron','A quick team check-in.'],['retro','loop','lilac','Reflect, discuss, improve.'],['planning','grid','mint','Turn a goal into a plan.'],['workshop','spark','peach','Make space for good ideas.'],['focus','focus','citron','Deep work, then a breather.']];
+const builtins=[['daily','people','citron','A quick team check-in.'],['retro','loop','lilac','Reflect, discuss, improve.'],['planning','grid','mint','Turn a goal into a plan.'],['workshop','spark','peach','Make space for good ideas.'],['focus','focus','citron','Deep work, then a breather.'],['pomodoro','loop','peach','Four focus rounds with automatic breaks.'],['countdown','focus','mint','One timer. Set your duration and start.']];
 
 export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
   let draft=null,editingId=null,revision=null,dirty=false;
@@ -64,6 +64,7 @@ export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
   }
   function leave(action){if(!dirty){action();return;}confirm('Discard template changes?','The saved template stays unchanged. Your unsaved edits will be discarded.',()=>{dirty=false;action();});}
   function open(){shelf();dialog.showModal();}
+  $('template-manage').onclick=open;
   select.onchange=()=>{const value=select.value;select.value='';
     if(value.startsWith('starter:')){const p=presets[value.slice(8)]?.();if(p)apply(p.title,freshPlan(p.state));}
     else if(value.startsWith('custom:')){const r=getRecords().find(r=>r.id===value.slice(7)&&!r.deleted&&isTemplate(r));if(r)apply(r.title,freshPlan(r.state));else toast('This template changed. Choose it again from the list.');}

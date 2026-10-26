@@ -1,8 +1,8 @@
-import {loadCloud} from './cloud.js?v=6';
-import {formatTime} from './model.js?v=6';
+import {loadCloud} from './cloud.js?v=8';
+import {formatTime} from './model.js?v=8';
 const $=id=>document.getElementById(id),params=new URLSearchParams(location.hash.slice(1)),room=params.get('room'),token=params.get('control');
 const controller=!!token&&/^[a-f0-9]{64}$/.test(token);let data=null,api=null,pending='',pendingTimer,lastStatus='';
-if(controller){document.title='Remote control — Relay Timer';$('remote-controls').hidden=false;}
+if(controller){document.title='Remote control — CorpTimer';$('remote-controls').hidden=false;}
 function failed(message){data=null;$('live-title').textContent='Live meeting';$('live-next').textContent='';$('live-agenda-list').replaceChildren();$('live-progress-bar').style.width='0%';$('live-name').textContent='This live link is unavailable.';$('live-clock').textContent='—:—';$('live-state').textContent=message;$('live-connection').textContent='Not connected';document.querySelectorAll('[data-command]').forEach(b=>b.disabled=true);}
 function render(){if(!data)return;const age=Date.now()-data.publishedAt,stale=age>45000,active=data.status==='running',remaining=data.baseRemaining-(active?Math.max(0,Math.min(age,45000)):0),over=remaining<0;
   $('live-title').textContent=data.title;$('live-name').textContent=data.name;$('live-clock').textContent=data.status==='done'?formatTime(data.baseElapsed,'up'):(over?'+':'')+formatTime(Math.abs(remaining),over?'up':undefined);$('live-clock').classList.toggle('time-over',over);

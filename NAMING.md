@@ -34,3 +34,8 @@ Two directions worth considering:
 - **Tandem Timer / TandemTimer**: suggests coordinated, shared time and alliteration. A nearby [TandemTime](https://tandemtime.org/) language/skills exchange name exists, so this direction needs more careful screening.
 
 Focused exact-phrase web searches for MingleTimer/Mingle Timer and TandemTimer/Tandem Timer did not identify an exact app/product match in this pass. This is a preliminary search observation, not proof of availability. Domains, social handles and trademarks have not been cleared. Do not rename or purchase based on the absence of search results alone.
+
+
+## Budget domain check — 25 October 2026
+
+CorpTimer is the selected working brand. Public registrar results at https://porkbun.com/checkout/search?q=corptimer.work offered corptimer.work with an enabled Add to cart control: USD2.06 first year, USD10.81 renewal. corptimer.xyz showed USD2.04 / USD14.21; corptimer.homes USD1.54 / USD14.21. Primary tariff: https://porkbun.com/products/domains (non-premium annual prices, ICANN fees included). RDAP returned404 for corptimer.work, corptimer.xyz and corptimer.click. RDAP404 alone is not a registration guarantee; registrar checkout remains final authority. No domain bought, cart edited or billing commitment made. Cheapest verified free option remains the existing GitHub Pages address. These are bounded comparison results, not a claim of globally lowest pricing.

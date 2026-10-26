@@ -1,719 +1,82 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T01:36:05.743167Z",
-  "title": "Design System: Relay Timer (working title)",
+  "generatedAt": "2026-10-25T00:00:00Z",
+  "title": "Design System: CorpTimer",
   "extensions": {
     "colorMeta": {
-      "bg": {
-        "role": "neutral",
-        "displayName": "Mineral ground",
-        "canonical": "#edeeeb",
-        "tonalRamp": [
-          "oklch(15.00% 0.0041 121.56)",
-          "oklch(26.43% 0.0041 121.56)",
-          "oklch(37.86% 0.0041 121.56)",
-          "oklch(49.29% 0.0041 121.56)",
-          "oklch(60.71% 0.0041 121.56)",
-          "oklch(72.14% 0.0041 121.56)",
-          "oklch(83.57% 0.0041 121.56)",
-          "oklch(95.00% 0.0041 121.56)"
-        ]
-      },
-      "panel": {
-        "role": "neutral",
-        "displayName": "White surface",
-        "canonical": "#fff",
-        "tonalRamp": [
-          "oklch(15.00% 0 0)",
-          "oklch(26.43% 0 0)",
-          "oklch(37.86% 0 0)",
-          "oklch(49.29% 0 0)",
-          "oklch(60.71% 0 0)",
-          "oklch(72.14% 0 0)",
-          "oklch(83.57% 0 0)",
-          "oklch(95.00% 0 0)"
-        ]
-      },
-      "fg": {
-        "role": "neutral",
-        "displayName": "Warm text",
-        "canonical": "#1a1b17",
-        "tonalRamp": [
-          "oklch(15.00% 0.0078 118.45)",
-          "oklch(26.43% 0.0078 118.45)",
-          "oklch(37.86% 0.0078 118.45)",
-          "oklch(49.29% 0.0078 118.45)",
-          "oklch(60.71% 0.0078 118.45)",
-          "oklch(72.14% 0.0078 118.45)",
-          "oklch(83.57% 0.0078 118.45)",
-          "oklch(95.00% 0.0078 118.45)"
-        ]
-      },
-      "muted": {
-        "role": "neutral",
-        "displayName": "Mineral muted",
-        "canonical": "#64665e",
-        "tonalRamp": [
-          "oklch(15.00% 0.0126 118.27)",
-          "oklch(26.43% 0.0126 118.27)",
-          "oklch(37.86% 0.0126 118.27)",
-          "oklch(49.29% 0.0126 118.27)",
-          "oklch(60.71% 0.0126 118.27)",
-          "oklch(72.14% 0.0126 118.27)",
-          "oklch(83.57% 0.0126 118.27)",
-          "oklch(95.00% 0.0126 118.27)"
-        ]
-      },
-      "line": {
-        "role": "neutral",
-        "displayName": "Quiet rule",
-        "canonical": "#dedfd8",
-        "tonalRamp": [
-          "oklch(15.00% 0.0095 113.18)",
-          "oklch(26.43% 0.0095 113.18)",
-          "oklch(37.86% 0.0095 113.18)",
-          "oklch(49.29% 0.0095 113.18)",
-          "oklch(60.71% 0.0095 113.18)",
-          "oklch(72.14% 0.0095 113.18)",
-          "oklch(83.57% 0.0095 113.18)",
-          "oklch(95.00% 0.0095 113.18)"
-        ]
-      },
-      "accent": {
-        "role": "primary",
-        "displayName": "Warm ink",
-        "canonical": "#20221b",
-        "tonalRamp": [
-          "oklch(15.00% 0.0132 120.33)",
-          "oklch(26.43% 0.0132 120.33)",
-          "oklch(37.86% 0.0132 120.33)",
-          "oklch(49.29% 0.0132 120.33)",
-          "oklch(60.71% 0.0132 120.33)",
-          "oklch(72.14% 0.0132 120.33)",
-          "oklch(83.57% 0.0132 120.33)",
-          "oklch(95.00% 0.0132 120.33)"
-        ]
-      },
-      "soft": {
-        "role": "neutral",
-        "displayName": "Soft lane",
-        "canonical": "#f0f1e9",
-        "tonalRamp": [
-          "oklch(15.00% 0.0106 112.37)",
-          "oklch(26.43% 0.0106 112.37)",
-          "oklch(37.86% 0.0106 112.37)",
-          "oklch(49.29% 0.0106 112.37)",
-          "oklch(60.71% 0.0106 112.37)",
-          "oklch(72.14% 0.0106 112.37)",
-          "oklch(83.57% 0.0106 112.37)",
-          "oklch(95.00% 0.0106 112.37)"
-        ]
-      },
-      "signal": {
-        "role": "primary",
-        "displayName": "Acid signal",
-        "canonical": "#e5f65b",
-        "tonalRamp": [
-          "oklch(15.00% 0.1759 115.21)",
-          "oklch(26.43% 0.1759 115.21)",
-          "oklch(37.86% 0.1759 115.21)",
-          "oklch(49.29% 0.1759 115.21)",
-          "oklch(60.71% 0.1759 115.21)",
-          "oklch(72.14% 0.1759 115.21)",
-          "oklch(83.57% 0.1759 115.21)",
-          "oklch(95.00% 0.1759 115.21)"
-        ]
-      },
-      "signal-hover": {
-        "role": "primary",
-        "displayName": "Acid signal hover",
-        "canonical": "#d5e64a",
-        "tonalRamp": [
-          "oklch(15.00% 0.1748 115.43)",
-          "oklch(26.43% 0.1748 115.43)",
-          "oklch(37.86% 0.1748 115.43)",
-          "oklch(49.29% 0.1748 115.43)",
-          "oklch(60.71% 0.1748 115.43)",
-          "oklch(72.14% 0.1748 115.43)",
-          "oklch(83.57% 0.1748 115.43)",
-          "oklch(95.00% 0.1748 115.43)"
-        ]
-      },
-      "focus": {
-        "role": "primary",
-        "displayName": "Olive focus",
-        "canonical": "#687c16",
-        "tonalRamp": [
-          "oklch(15.00% 0.1234 120.74)",
-          "oklch(26.43% 0.1234 120.74)",
-          "oklch(37.86% 0.1234 120.74)",
-          "oklch(49.29% 0.1234 120.74)",
-          "oklch(60.71% 0.1234 120.74)",
-          "oklch(72.14% 0.1234 120.74)",
-          "oklch(83.57% 0.1234 120.74)",
-          "oklch(95.00% 0.1234 120.74)"
-        ]
-      },
-      "field": {
-        "role": "neutral",
-        "displayName": "Field chalk",
-        "canonical": "#f7f8f3",
-        "tonalRamp": [
-          "oklch(15.00% 0.0067 115.70)",
-          "oklch(26.43% 0.0067 115.70)",
-          "oklch(37.86% 0.0067 115.70)",
-          "oklch(49.29% 0.0067 115.70)",
-          "oklch(60.71% 0.0067 115.70)",
-          "oklch(72.14% 0.0067 115.70)",
-          "oklch(83.57% 0.0067 115.70)",
-          "oklch(95.00% 0.0067 115.70)"
-        ]
-      },
-      "hover": {
-        "role": "neutral",
-        "displayName": "Olive hover",
-        "canonical": "#e4e7dc",
-        "tonalRamp": [
-          "oklch(15.00% 0.0150 119.12)",
-          "oklch(26.43% 0.0150 119.12)",
-          "oklch(37.86% 0.0150 119.12)",
-          "oklch(49.29% 0.0150 119.12)",
-          "oklch(60.71% 0.0150 119.12)",
-          "oklch(72.14% 0.0150 119.12)",
-          "oklch(83.57% 0.0150 119.12)",
-          "oklch(95.00% 0.0150 119.12)"
-        ]
-      },
-      "ok": {
-        "role": "semantic",
-        "displayName": "Workspace early",
-        "canonical": "#246841",
-        "tonalRamp": [
-          "oklch(15.00% 0.0935 154.84)",
-          "oklch(26.43% 0.0935 154.84)",
-          "oklch(37.86% 0.0935 154.84)",
-          "oklch(49.29% 0.0935 154.84)",
-          "oklch(60.71% 0.0935 154.84)",
-          "oklch(72.14% 0.0935 154.84)",
-          "oklch(83.57% 0.0935 154.84)",
-          "oklch(95.00% 0.0935 154.84)"
-        ]
-      },
-      "warn": {
-        "role": "semantic",
-        "displayName": "Workspace warning",
-        "canonical": "#936000",
-        "tonalRamp": [
-          "oklch(15.00% 0.1131 73.16)",
-          "oklch(26.43% 0.1131 73.16)",
-          "oklch(37.86% 0.1131 73.16)",
-          "oklch(49.29% 0.1131 73.16)",
-          "oklch(60.71% 0.1131 73.16)",
-          "oklch(72.14% 0.1131 73.16)",
-          "oklch(83.57% 0.1131 73.16)",
-          "oklch(95.00% 0.1131 73.16)"
-        ]
-      },
-      "bad": {
-        "role": "semantic",
-        "displayName": "Workspace overrun",
-        "canonical": "#ae2924",
-        "tonalRamp": [
-          "oklch(15.00% 0.1704 27.63)",
-          "oklch(26.43% 0.1704 27.63)",
-          "oklch(37.86% 0.1704 27.63)",
-          "oklch(49.29% 0.1704 27.63)",
-          "oklch(60.71% 0.1704 27.63)",
-          "oklch(72.14% 0.1704 27.63)",
-          "oklch(83.57% 0.1704 27.63)",
-          "oklch(95.00% 0.1704 27.63)"
-        ]
-      },
-      "up": {
-        "role": "neutral",
-        "displayName": "Upcoming workspace",
-        "canonical": "#d9dcd0",
-        "tonalRamp": [
-          "oklch(15.00% 0.0165 118.15)",
-          "oklch(26.43% 0.0165 118.15)",
-          "oklch(37.86% 0.0165 118.15)",
-          "oklch(49.29% 0.0165 118.15)",
-          "oklch(60.71% 0.0165 118.15)",
-          "oklch(72.14% 0.0165 118.15)",
-          "oklch(83.57% 0.0165 118.15)",
-          "oklch(95.00% 0.0165 118.15)"
-        ]
-      },
-      "ov-bg": {
-        "role": "neutral",
-        "displayName": "Warm-black stage",
-        "canonical": "#181a15",
-        "tonalRamp": [
-          "oklch(15.00% 0.0100 125.03)",
-          "oklch(26.43% 0.0100 125.03)",
-          "oklch(37.86% 0.0100 125.03)",
-          "oklch(49.29% 0.0100 125.03)",
-          "oklch(60.71% 0.0100 125.03)",
-          "oklch(72.14% 0.0100 125.03)",
-          "oklch(83.57% 0.0100 125.03)",
-          "oklch(95.00% 0.0100 125.03)"
-        ]
-      },
-      "ov-fg": {
-        "role": "neutral",
-        "displayName": "Stage ivory",
-        "canonical": "#f8f9f1",
-        "tonalRamp": [
-          "oklch(15.00% 0.0106 112.36)",
-          "oklch(26.43% 0.0106 112.36)",
-          "oklch(37.86% 0.0106 112.36)",
-          "oklch(49.29% 0.0106 112.36)",
-          "oklch(60.71% 0.0106 112.36)",
-          "oklch(72.14% 0.0106 112.36)",
-          "oklch(83.57% 0.0106 112.36)",
-          "oklch(95.00% 0.0106 112.36)"
-        ]
-      },
-      "ov-muted": {
-        "role": "neutral",
-        "displayName": "Stage sage",
-        "canonical": "#b1b4a5",
-        "tonalRamp": [
-          "oklch(15.00% 0.0212 116.09)",
-          "oklch(26.43% 0.0212 116.09)",
-          "oklch(37.86% 0.0212 116.09)",
-          "oklch(49.29% 0.0212 116.09)",
-          "oklch(60.71% 0.0212 116.09)",
-          "oklch(72.14% 0.0212 116.09)",
-          "oklch(83.57% 0.0212 116.09)",
-          "oklch(95.00% 0.0212 116.09)"
-        ]
-      },
-      "ov-line": {
-        "role": "neutral",
-        "displayName": "Stage rule",
-        "canonical": "#3d4035",
-        "tonalRamp": [
-          "oklch(15.00% 0.0188 119.73)",
-          "oklch(26.43% 0.0188 119.73)",
-          "oklch(37.86% 0.0188 119.73)",
-          "oklch(49.29% 0.0188 119.73)",
-          "oklch(60.71% 0.0188 119.73)",
-          "oklch(72.14% 0.0188 119.73)",
-          "oklch(83.57% 0.0188 119.73)",
-          "oklch(95.00% 0.0188 119.73)"
-        ]
-      },
-      "ov-ok": {
-        "role": "semantic",
-        "displayName": "Stage running signal",
-        "canonical": "#e5f65b",
-        "tonalRamp": [
-          "oklch(15.00% 0.1759 115.21)",
-          "oklch(26.43% 0.1759 115.21)",
-          "oklch(37.86% 0.1759 115.21)",
-          "oklch(49.29% 0.1759 115.21)",
-          "oklch(60.71% 0.1759 115.21)",
-          "oklch(72.14% 0.1759 115.21)",
-          "oklch(83.57% 0.1759 115.21)",
-          "oklch(95.00% 0.1759 115.21)"
-        ]
-      },
-      "ov-warn": {
-        "role": "semantic",
-        "displayName": "Stage warning amber",
-        "canonical": "#f5cd6e",
-        "tonalRamp": [
-          "oklch(15.00% 0.1225 86.90)",
-          "oklch(26.43% 0.1225 86.90)",
-          "oklch(37.86% 0.1225 86.90)",
-          "oklch(49.29% 0.1225 86.90)",
-          "oklch(60.71% 0.1225 86.90)",
-          "oklch(72.14% 0.1225 86.90)",
-          "oklch(83.57% 0.1225 86.90)",
-          "oklch(95.00% 0.1225 86.90)"
-        ]
-      },
-      "ov-bad": {
-        "role": "semantic",
-        "displayName": "Stage overrun coral",
-        "canonical": "#ffa294",
-        "tonalRamp": [
-          "oklch(15.00% 0.1133 29.08)",
-          "oklch(26.43% 0.1133 29.08)",
-          "oklch(37.86% 0.1133 29.08)",
-          "oklch(49.29% 0.1133 29.08)",
-          "oklch(60.71% 0.1133 29.08)",
-          "oklch(72.14% 0.1133 29.08)",
-          "oklch(83.57% 0.1133 29.08)",
-          "oklch(95.00% 0.1133 29.08)"
-        ]
-      },
-      "ov-past": {
-        "role": "neutral",
-        "displayName": "Stage completed olive",
-        "canonical": "#9aa36c",
-        "tonalRamp": [
-          "oklch(15.00% 0.0761 115.99)",
-          "oklch(26.43% 0.0761 115.99)",
-          "oklch(37.86% 0.0761 115.99)",
-          "oklch(49.29% 0.0761 115.99)",
-          "oklch(60.71% 0.0761 115.99)",
-          "oklch(72.14% 0.0761 115.99)",
-          "oklch(83.57% 0.0761 115.99)",
-          "oklch(95.00% 0.0761 115.99)"
-        ]
-      },
-      "ov-up": {
-        "role": "neutral",
-        "displayName": "Stage upcoming olive",
-        "canonical": "#414536",
-        "tonalRamp": [
-          "oklch(15.00% 0.0252 119.73)",
-          "oklch(26.43% 0.0252 119.73)",
-          "oklch(37.86% 0.0252 119.73)",
-          "oklch(49.29% 0.0252 119.73)",
-          "oklch(60.71% 0.0252 119.73)",
-          "oklch(72.14% 0.0252 119.73)",
-          "oklch(83.57% 0.0252 119.73)",
-          "oklch(95.00% 0.0252 119.73)"
-        ]
-      },
-      "audience-bg": {
-        "role": "neutral",
-        "displayName": "Audience black",
-        "canonical": "#151712",
-        "tonalRamp": [
-          "oklch(15.00% 0.0102 125.09)",
-          "oklch(26.43% 0.0102 125.09)",
-          "oklch(37.86% 0.0102 125.09)",
-          "oklch(49.29% 0.0102 125.09)",
-          "oklch(60.71% 0.0102 125.09)",
-          "oklch(72.14% 0.0102 125.09)",
-          "oklch(83.57% 0.0102 125.09)",
-          "oklch(95.00% 0.0102 125.09)"
-        ]
-      },
-      "audience-fg": {
-        "role": "neutral",
-        "displayName": "Audience ivory",
-        "canonical": "#f7f8f0",
-        "tonalRamp": [
-          "oklch(15.00% 0.0106 112.37)",
-          "oklch(26.43% 0.0106 112.37)",
-          "oklch(37.86% 0.0106 112.37)",
-          "oklch(49.29% 0.0106 112.37)",
-          "oklch(60.71% 0.0106 112.37)",
-          "oklch(72.14% 0.0106 112.37)",
-          "oklch(83.57% 0.0106 112.37)",
-          "oklch(95.00% 0.0106 112.37)"
-        ]
-      },
-      "template-citron": {
-        "role": "secondary",
-        "displayName": "Template citron",
-        "canonical": "#e5f65b",
-        "tonalRamp": [
-          "oklch(15.00% 0.1759 115.21)",
-          "oklch(26.43% 0.1759 115.21)",
-          "oklch(37.86% 0.1759 115.21)",
-          "oklch(49.29% 0.1759 115.21)",
-          "oklch(60.71% 0.1759 115.21)",
-          "oklch(72.14% 0.1759 115.21)",
-          "oklch(83.57% 0.1759 115.21)",
-          "oklch(95.00% 0.1759 115.21)"
-        ]
-      },
-      "template-peach": {
-        "role": "secondary",
-        "displayName": "Template peach",
-        "canonical": "#f4ceb5",
-        "tonalRamp": [
-          "oklch(15.00% 0.0546 55.21)",
-          "oklch(26.43% 0.0546 55.21)",
-          "oklch(37.86% 0.0546 55.21)",
-          "oklch(49.29% 0.0546 55.21)",
-          "oklch(60.71% 0.0546 55.21)",
-          "oklch(72.14% 0.0546 55.21)",
-          "oklch(83.57% 0.0546 55.21)",
-          "oklch(95.00% 0.0546 55.21)"
-        ]
-      },
-      "template-lilac": {
-        "role": "secondary",
-        "displayName": "Template lilac",
-        "canonical": "#d8d2f2",
-        "tonalRamp": [
-          "oklch(15.00% 0.0441 294.07)",
-          "oklch(26.43% 0.0441 294.07)",
-          "oklch(37.86% 0.0441 294.07)",
-          "oklch(49.29% 0.0441 294.07)",
-          "oklch(60.71% 0.0441 294.07)",
-          "oklch(72.14% 0.0441 294.07)",
-          "oklch(83.57% 0.0441 294.07)",
-          "oklch(95.00% 0.0441 294.07)"
-        ]
-      },
-      "template-mint": {
-        "role": "secondary",
-        "displayName": "Template mint",
-        "canonical": "#cce2d6",
-        "tonalRamp": [
-          "oklch(15.00% 0.0285 162.03)",
-          "oklch(26.43% 0.0285 162.03)",
-          "oklch(37.86% 0.0285 162.03)",
-          "oklch(49.29% 0.0285 162.03)",
-          "oklch(60.71% 0.0285 162.03)",
-          "oklch(72.14% 0.0285 162.03)",
-          "oklch(83.57% 0.0285 162.03)",
-          "oklch(95.00% 0.0285 162.03)"
-        ]
-      }
+      "bg": {"role":"neutral","displayName":"Cream paper"},
+      "fg": {"role":"neutral","displayName":"Charcoal ink"},
+      "accent": {"role":"primary","displayName":"Editorial red"},
+      "signal": {"role":"secondary","displayName":"Saturated teal"}
     },
     "typographyMeta": {
-      "display": {
-        "displayName": "Host countdown",
-        "purpose": "Tabular countdown in the host stage and floating display."
-      },
-      "headline": {
-        "displayName": "Meeting name",
-        "purpose": "Editable unboxed meeting title."
-      },
-      "title": {
-        "displayName": "Section heading",
-        "purpose": "Agenda, timing, parking and utility group headings."
-      },
-      "speaker": {
-        "displayName": "Host speaker",
-        "purpose": "Current speaker or topic in the warm-black host stage."
-      },
-      "body": {
-        "displayName": "Interface body",
-        "purpose": "Self-hosted Manrope for ordinary workspace content."
-      },
-      "label": {
-        "displayName": "Metadata",
-        "purpose": "Small utility hints, state copy and labels."
-      },
-      "button": {
-        "displayName": "Capsule control",
-        "purpose": "Compact action labels with a strong but quiet weight."
-      },
-      "live-display": {
-        "displayName": "Audience countdown",
-        "purpose": "Larger numeric countdown on the full dark live surface."
-      },
-      "mobile-field": {
-        "displayName": "Mobile editable field",
-        "purpose": "16px agenda, template and notes inputs at up to 600px; slot type remains a 14px select."
-      }
+      "display": {"displayName":"Host clock","purpose":"Compact Manrope countdown with tabular figures; not the inherited floating numeric stack."},
+      "headline": {"displayName":"Editorial heading","purpose":"Self-hosted upright Cantata One meeting titles."},
+      "body": {"displayName":"Interface","purpose":"Self-hosted Manrope for controls, labels and editable data."}
     },
-    "shadows": [
-      {
-        "name": "drag-feedback",
-        "value": "0 6px 18px rgba(0,0,0,.18)",
-        "purpose": "Temporary elevation for the actively dragged agenda row; resting panels have no shadow."
-      },
-      {
-        "name": "sticky-mobile-navigation",
-        "value": "0 5px 20px #1a1b1710",
-        "purpose": "Subtle separation under the sticky Timer / Agenda / Notes capsule at up to 600px."
-      }
-    ],
+    "shadows": [],
     "motion": [
-      {
-        "name": "button-state",
-        "value": "background .16s,color .16s",
-        "purpose": "Background and text feedback on capsule controls."
-      },
-      {
-        "name": "reduced-motion",
-        "value": "transition:none!important;scroll-behavior:auto!important",
-        "purpose": "Applied under prefers-reduced-motion:reduce."
-      },
-      {
-        "name": "template-duration-preview",
-        "value": "flex-grow .3s cubic-bezier(.16,1,.3,1)",
-        "purpose": "Duration preview responds to changed minutes only under prefers-reduced-motion:no-preference."
-      }
+      {"name":"button-state","value":"background .15s,border-color .15s","purpose":"Inherited button hover transition; disabled under prefers-reduced-motion."},
+      {"name":"paused-clock","value":"opacity: .72","purpose":"Final editorial host paused state, overriding the older .45 base rule."}
     ],
     "breakpoints": [
-      {
-        "name": "workspace-intermediate",
-        "value": "1150px"
-      },
-      {
-        "name": "workspace-stacked",
-        "value": "900px"
-      },
-      {
-        "name": "phone",
-        "value": "560px"
-      },
-      {
-        "name": "floating-compact-height",
-        "value": "169px"
-      },
-      {
-        "name": "floating-micro-height",
-        "value": "79px"
-      },
-      {
-        "name": "template-editor-compact",
-        "value": "760px"
-      },
-      {
-        "name": "mobile-workspace",
-        "value": "600px"
-      },
-      {
-        "name": "narrow-header",
-        "value": "360px"
-      }
+      {"name":"compact-desktop","value":"1100px"},
+      {"name":"single-column","value":"800px"},
+      {"name":"focused-mobile","value":"600px"},
+      {"name":"small-phone","value":"480px"}
     ]
   },
   "components": [
     {
-      "name": "Templates dropdown",
-      "kind": "input",
-      "refersTo": "template-select",
-      "description": "Native meeting-heading select named Templates: grouped starters, custom plans when present, and save/create/manage actions. Manage templates retains the full library and editor. Desktop minimum height 44px and maximum width 260px; up to 600px, fluid width capped at 240px with 16px text.",
-      "html": "<label class=\"ds-template-control\"><span class=\"ds-sr-only\">Templates</span><select class=\"ds-template-select\" aria-label=\"Templates\"><option value=\"\">Templates</option><optgroup label=\"Starter templates\"><option value=\"starter:workshop\">Workshop · 35 min</option></optgroup><optgroup label=\"Your templates\"><option value=\"custom:example\">Team review · 30 min</option></optgroup><optgroup label=\"Create &amp; manage\"><option value=\"save\">Save current agenda as template…</option><option value=\"new\">Create template…</option><option value=\"manage\">Manage templates…</option></optgroup></select></label>",
-      "css": ".ds-template-control{min-width:0}.ds-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.ds-template-select{font:13px var(--f-ui,'Manrope',Arial,sans-serif);border:1px solid var(--line,#dedfd8);border-radius:999px;background:var(--panel,#fff);color:var(--fg,#1a1b17);min-height:44px;padding:10px 32px 10px 16px;max-width:260px;cursor:pointer}.ds-template-select:hover{background:var(--soft,#f0f1e9)}.ds-template-select:focus-visible{outline:2px solid var(--focus,#687c16);outline-offset:4px}@media(max-width:600px){.ds-template-control{display:block;flex:1}.ds-template-select{font-size:16px;width:100%;max-width:240px;padding:9px 30px 9px 14px}}"
+      "name":"Start / Next Speaker",
+      "kind":"button",
+      "refersTo":"transport",
+      "description":"Normal-height red outlined transport; the old filled Start reference is superseded.",
+      "html":"<button class=\"transport\">Next Speaker <span aria-hidden=\"true\">›</span></button>",
+      "css":".transport{font:500 14px var(--f-ui,Manrope,Arial,sans-serif);min-height:44px;padding:10px 14px;border:1px solid var(--accent,#c62d35);border-radius:5px;background:transparent;color:#a7242d;cursor:pointer;transition:background .15s,border-color .15s}.transport span{margin-left:12px}.transport:hover{background:#f1e0da}.transport:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}.transport:disabled{opacity:.38}@media(prefers-reduced-motion:reduce){.transport{transition:none}}"
     },
     {
-      "name": "Primary capsule",
-      "kind": "button",
-      "refersTo": "button-primary",
-      "description": "Acid signal for primary actions; host transport uses a larger instance.",
-      "html": "<button class=\"ds-btn ds-primary\">Start meeting</button>",
-      "css": ".ds-btn{font-family:var(--f-ui,'Manrope',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 13px;border:1px solid var(--line,#dedfd8);border-radius:999px;font-size:13px;font-weight:600;line-height:1.45;cursor:pointer;transition:background .16s,color .16s}.ds-primary{background:var(--signal,#e5f65b);color:var(--accent,#20221b);border-color:var(--signal,#e5f65b)}.ds-primary:hover{background:var(--signal-hover,#d5e64a);border-color:var(--signal-hover,#d5e64a)}.ds-btn:focus-visible{outline:2px solid var(--focus,#687c16);outline-offset:4px}.ds-btn:disabled{opacity:.38;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-btn{transition:none}}"
+      "name":"Float Timer",
+      "kind":"button",
+      "refersTo":"float",
+      "description":"Saturated teal action beside transport.",
+      "html":"<button class=\"float\">Float Timer <svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M2 2h8v8\" stroke=\"currentColor\" stroke-width=\"1.5\" fill=\"none\"/></svg></button>",
+      "css":".float{display:inline-flex;align-items:center;gap:12px;font:650 14px var(--f-ui,Manrope,Arial,sans-serif);min-height:44px;padding:10px 14px;border:1px solid #227d80;border-radius:5px;background:var(--signal,#299093);color:#061a1e;cursor:pointer;transition:background .15s,border-color .15s}.float:hover{background:#3aa5a6;border-color:var(--focus,#17676b)}.float:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(prefers-reduced-motion:reduce){.float{transition:none}}"
     },
     {
-      "name": "Secondary capsule",
-      "kind": "button",
-      "refersTo": "button-secondary",
-      "description": "White utility controls with quiet borders and olive hover.",
-      "html": "<button class=\"ds-btn ds-secondary\">Add speaker</button>",
-      "css": ".ds-btn{font-family:var(--f-ui,'Manrope',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 13px;border:1px solid var(--line,#dedfd8);border-radius:999px;font-size:13px;font-weight:600;line-height:1.45;cursor:pointer;transition:background .16s,color .16s}.ds-secondary{background:var(--panel,#fff);color:var(--fg,#1a1b17)}.ds-secondary:hover{background:var(--hover,#e4e7dc);border-color:#a9ad9b}.ds-btn:focus-visible{outline:2px solid var(--focus,#687c16);outline-offset:4px}.ds-btn:disabled{opacity:.38;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-btn{transition:none}}"
+      "name":"Reset",
+      "kind":"button",
+      "refersTo":"reset",
+      "description":"Red filled secondary-row reset action.",
+      "html":"<button class=\"reset\">Reset</button>",
+      "css":".reset{font:500 12px var(--f-ui,Manrope,Arial,sans-serif);min-height:40px;padding:7px 12px;border:1px solid var(--accent,#c62d35);border-radius:5px;background:var(--accent,#c62d35);color:#fff;cursor:pointer;transition:background .15s,border-color .15s}.reset:hover{background:#a51f29}.reset:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(prefers-reduced-motion:reduce){.reset{transition:none}}"
     },
     {
-      "name": "Share live capsule",
-      "kind": "button",
-      "refersTo": "button-share",
-      "description": "Warm ink before sharing, acid signal while live.",
-      "html": "<button class=\"ds-btn ds-share\">Share live <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"M4 12h15m-6-6 6 6-6 6\"/></svg></button>",
-      "css": ".ds-btn{font-family:var(--f-ui,'Manrope',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 13px;border:1px solid var(--line,#dedfd8);border-radius:999px;font-size:13px;font-weight:600;line-height:1.45;cursor:pointer;transition:background .16s,color .16s}.ds-share{min-height:44px;padding:9px 16px;background:var(--accent,#20221b);color:#fff;border-color:var(--accent,#20221b)}.ds-share:hover{background:#373c2d;color:#fff;border-color:#373c2d}.ds-share.ds-is-live{background:var(--signal,#e5f65b);color:var(--accent,#20221b);border-color:var(--signal,#e5f65b)}.ds-btn:focus-visible{outline:2px solid var(--focus,#687c16);outline-offset:4px}.ds-btn:disabled{opacity:.38;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-btn{transition:none}}"
+      "name":"Agenda field",
+      "kind":"input",
+      "refersTo":"agenda-input",
+      "description":"Pale paper field with mobile 16px text.",
+      "html":"<label class=\"label\">Speaker / topic<input class=\"field\" value=\"Progress toward the goal\"></label>",
+      "css":".label{display:grid;gap:7px;font:12px var(--f-ui,Manrope,Arial,sans-serif);color:var(--muted,#62635e)}.field{height:44px;min-width:0;padding:7px 10px;box-sizing:border-box;border:1px solid #cccdc5;border-radius:5px;background:var(--field,#f3f1eb);color:var(--fg,#20211e);font:500 14px var(--f-ui,Manrope,Arial,sans-serif)}.field:hover{border-color:#b7bea7}.field:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}@media(max-width:600px){.field{font-size:16px}}"
     },
     {
-      "name": "Agenda field",
-      "kind": "input",
-      "refersTo": "agenda-input",
-      "description": "Soft-filled editable agenda name; focus stays explicit.",
-      "html": "<label class=\"ds-field-label\">Speaker / topic<input class=\"ds-agenda-input\" value=\"Progress toward the goal\"></label>",
-      "css": ".ds-field-label{font-family:var(--f-ui,'Manrope',Arial,sans-serif);display:grid;gap:7px;font-size:12px;color:var(--muted,#64665e)}.ds-agenda-input{font-family:var(--f-ui,'Manrope',Arial,sans-serif);height:40px;padding:6px 8px;border:1px solid transparent;border-radius:8px;background:var(--field,#f7f8f3);color:var(--fg,#1a1b17);font-size:13px;min-width:0;caret-color:#454f19}.ds-agenda-input:hover{border-color:#b7bea7}.ds-agenda-input:focus-visible{outline:2px solid var(--focus,#687c16);outline-offset:4px}@media(max-width:600px){.ds-agenda-input{font-size:16px;min-height:44px}}"
-    },
-    {
-      "name": "Mobile workspace navigation",
-      "kind": "nav",
-      "refersTo": "mobile-navigation",
-      "description": "Sticky Timer / Agenda / Notes view control and the return countdown shown in Agenda or Notes. Header Google PNGs are documented in DESIGN.md and intentionally not redrawn in this SVG-only component preview.",
-      "html": "<nav class=\"ds-mobile-nav\" aria-label=\"Mobile workspace\"><button aria-pressed=\"false\">Timer</button><button aria-pressed=\"true\">Agenda</button><button aria-pressed=\"false\">Notes</button></nav><button class=\"ds-peek\" aria-label=\"Return to timer\"><span class=\"ds-peek-dot\"></span><span class=\"ds-peek-name\">Progress toward the goal</span><strong>4:00</strong><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><path d=\"M4 12h16m-6-6 6 6-6 6\"/></svg></button>",
-      "css": ".ds-mobile-nav{font-family:var(--f-ui,'Manrope',Arial,sans-serif);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;background:var(--panel,#fff);border-radius:999px;position:sticky;top:8px;box-shadow:0 5px 20px #1a1b1710}.ds-mobile-nav button{font:600 12px var(--f-ui,'Manrope',Arial,sans-serif);border:0;background:transparent;min-height:44px;padding:9px 7px;border-radius:999px;color:var(--fg,#1a1b17);cursor:pointer;transition:background .16s,color .16s}.ds-mobile-nav button[aria-pressed=true]{background:var(--accent,#20221b);color:#fff}.ds-mobile-nav button:hover{background:var(--hover,#e4e7dc);color:var(--fg,#1a1b17)}.ds-peek{font-family:var(--f-ui,'Manrope',Arial,sans-serif);display:flex;align-items:center;gap:10px;width:100%;margin-top:18px;min-height:52px;padding:12px 16px;background:var(--ov-bg,#181a15);color:var(--ov-fg,#f8f9f1);border:0;border-radius:12px;text-align:left;cursor:pointer}.ds-peek:hover{background:var(--ov-bg,#181a15);color:var(--ov-fg,#f8f9f1)}.ds-peek-dot{width:7px;height:7px;border-radius:50%;background:var(--signal,#e5f65b);flex-shrink:0}.ds-peek-name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1;font-size:13px}.ds-peek strong{font:600 19px var(--f-num,ui-monospace,'Cascadia Mono',Consolas,monospace);font-variant-numeric:tabular-nums}.ds-mobile-nav button:focus-visible,.ds-peek:focus-visible{outline:2px solid var(--focus,#687c16);outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-mobile-nav button{transition:none}}"
-    },
-    {
-      "name": "Timing result chip",
-      "kind": "chip",
-      "refersTo": "status-chip",
-      "description": "A labeled result uses status text and a quiet semantic tint.",
-      "html": "<span class=\"ds-chip\">early</span>",
-      "css": ".ds-chip{font-family:var(--f-ui,'Manrope',Arial,sans-serif);display:inline-block;width:max-content;padding:0 4px;border-radius:999px;background:color-mix(in srgb,var(--ok,#246841) 18%,transparent);color:var(--ok,#246841);font-size:12px;line-height:1.5}"
-    },
-    {
-      "name": "Private parking panel",
-      "kind": "card",
-      "refersTo": "panel",
-      "description": "A flat rounded utility panel with visible privacy copy.",
-      "html": "<section class=\"ds-panel\"><div class=\"ds-panel-heading\"><h2>For later</h2><span class=\"ds-count\">0</span></div><p class=\"ds-panel-note\">Park the tangent. Keep the conversation moving.</p><p class=\"ds-panel-empty\">Nothing parked yet. Add a tangent or a follow-up action.</p><p class=\"ds-private\">Private to your meeting library. Never on the live screen.</p></section>",
-      "css": ".ds-panel{font-family:var(--f-ui,'Manrope',Arial,sans-serif);background:var(--panel,#fff);color:var(--fg,#1a1b17);border:0;border-radius:16px;padding:24px}.ds-panel-heading{display:flex;justify-content:space-between;gap:15px;align-items:start}.ds-panel h2{font-size:18px;font-weight:650;line-height:1.4;letter-spacing:-.025em;margin:0}.ds-count{min-width:27px;height:27px;padding:3px 6px;border-radius:999px;background:#eff2e5;text-align:center;font-size:13px}.ds-panel-note{color:var(--muted,#64665e);font-size:12px;line-height:1.6;margin:6px 0 0}.ds-panel-empty{font-size:13px;color:var(--muted,#64665e);padding:16px 0 5px;line-height:1.6}.ds-private{border-top:1px solid var(--line,#dedfd8);padding-top:14px;margin-top:12px;font-size:12px;line-height:1.6;color:var(--muted,#64665e)}@media(max-width:560px){.ds-panel{padding:20px 15px}}"
-    },
-    {
-      "name": "Host stage",
-      "kind": "custom",
-      "refersTo": "stage",
-      "description": "Warm-black timing surface with speaker, numeric clock and next slot.",
-      "html": "<section class=\"ds-stage\" aria-label=\"Current speaker timer\"><div class=\"ds-stage-top\"><span>READY</span><span>slot 4:00</span></div><div class=\"ds-speaker\">Progress toward the goal</div><div class=\"ds-clock\" role=\"timer\">4:00</div><div class=\"ds-stage-bar\"></div><div class=\"ds-stage-blocks\"><i></i><i></i><i></i></div><div class=\"ds-next\">Next: <b>Work in progress &amp; blockers</b><small>gets 8:00</small></div></section>",
-      "css": ".ds-stage{font-family:var(--f-ui,'Manrope',Arial,sans-serif);display:grid;gap:13px;min-height:375px;background:var(--ov-bg,#181a15);color:var(--ov-fg,#f8f9f1);border:0;border-radius:16px;padding:28px 30px 25px}.ds-stage-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ov-muted,#b1b4a5)}.ds-speaker{font-size:34px;font-weight:500;line-height:1.3;letter-spacing:-.03em;overflow-wrap:anywhere}.ds-clock{font-family:var(--f-num,ui-monospace,'Cascadia Mono',Consolas,monospace);font-size:clamp(88px,9vw,132px);font-weight:600;line-height:1.05;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:3px 0 14px}.ds-stage-bar{height:4px;border-radius:3px;background:var(--ov-line,#3d4035)}.ds-stage-blocks{display:flex;gap:3px;height:5px}.ds-stage-blocks i{flex:1;border-radius:2px;background:var(--ov-up,#414536)}.ds-stage-blocks i:nth-child(2){flex:2}.ds-next{color:var(--ov-muted,#b1b4a5);font-size:18px;line-height:1.2;margin-top:13px}.ds-next b{font-weight:550;color:var(--ov-fg,#f8f9f1)}.ds-next small{display:block;margin-top:4px;font-size:12px}@media(max-width:560px){.ds-stage{padding:24px 22px 22px;min-height:320px}.ds-speaker{font-size:29px}.ds-clock{font-size:clamp(76px,22vw,110px);margin-bottom:9px}}@media(max-width:600px){.ds-stage{padding:22px;min-height:280px}.ds-speaker{font-size:28px}.ds-clock{font-size:clamp(70px,22vw,110px);margin:14px 0 22px}}"
-    },
-    {
-      "name": "Live controller",
-      "kind": "custom",
-      "refersTo": "live-stage",
-      "description": "The dark live display gains bounded co-host controls and host acknowledgement copy.",
-      "html": "<section class=\"ds-live\"><p class=\"ds-live-title\">Daily standup</p><h1>Progress toward the goal</h1><div class=\"ds-live-clock\" role=\"timer\">4:00</div><p class=\"ds-live-state\">Ready when you are</p><div class=\"ds-live-progress\"></div><p class=\"ds-live-next\">Next: Work in progress &amp; blockers</p><div class=\"ds-remote\"><button class=\"ds-remote-primary\">Start / next</button><button>Pause / resume</button><button>Undo</button><button>Extend 1 min</button></div><p class=\"ds-command-status\">Remote control · host tab must stay open.</p></section>",
-      "css": ".ds-live{font-family:var(--f-ui,'Manrope',Arial,sans-serif);padding:32px 24px;background:var(--audience-bg,#151712);color:var(--audience-fg,#f7f8f0)}.ds-live-title{color:#b0b89f;font-size:16px;margin:0 0 30px}.ds-live h1{font-size:clamp(30px,4vw,66px);font-weight:550;line-height:1.12;letter-spacing:-.04em;overflow-wrap:anywhere;margin:0}.ds-live-clock{font-family:var(--f-num,ui-monospace,'Cascadia Mono',Consolas,monospace);font-size:clamp(74px,13vw,200px);font-weight:550;line-height:1.2;letter-spacing:-.04em;color:var(--signal,#e5f65b);margin:24px 0 0}.ds-live-state{font-size:14px;color:#bec6ad}.ds-live-progress{height:6px;background:#3c4330;margin-top:36px;border-radius:6px;overflow:hidden}.ds-live-next{font-size:22px;margin-top:24px}.ds-remote{display:flex;flex-wrap:wrap;gap:9px;margin-top:30px}.ds-remote button{font-family:var(--f-ui,'Manrope',Arial,sans-serif);min-height:40px;padding:8px 13px;border:1px solid #53643a;border-radius:999px;background:#333d24;color:#f3f6e9;font-size:13px;font-weight:600;cursor:pointer;transition:background .16s,color .16s}.ds-remote button:hover{background:#556536}.ds-remote .ds-remote-primary{background:var(--signal,#e5f65b);color:var(--accent,#20221b);border-color:var(--signal,#e5f65b)}.ds-remote .ds-remote-primary:hover{background:var(--signal-hover,#d5e64a)}.ds-remote button:focus-visible{outline:2px solid var(--focus,#687c16);outline-offset:4px}.ds-remote button:disabled{opacity:.38;cursor:not-allowed}.ds-command-status{font-size:12px;color:#bbc8a4;line-height:1.6;margin-top:15px}@media(max-width:560px){.ds-live h1{font-size:34px}.ds-live-title{font-size:14px;margin-bottom:24px}.ds-live-clock{font-size:clamp(64px,22vw,100px);margin-top:22px}.ds-live-next{font-size:20px}.ds-remote button{font-size:12px}}@media(prefers-reduced-motion:reduce){.ds-remote button{transition:none}}"
-    },
-    {
-      "name": "Reusable template card",
-      "kind": "card",
-      "refersTo": "template-card",
-      "description": "Scoped peach identity, inline workshop icon, proportional slot-duration bars and explicit Use / Customize controls. Library uses two columns, then one at up to 600px.",
-      "html": "<article class=\"ds-template\"><div class=\"ds-template-graphic\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8L12 2z\"/></svg><div class=\"ds-template-bars\" aria-hidden=\"true\"><i style=\"flex-grow:5\"></i><i style=\"flex-grow:20\"></i><i style=\"flex-grow:10\"></i></div></div><h4>Workshop</h4><p class=\"ds-template-detail\">3 slots · 35 min</p><p class=\"ds-template-description\">Make space for good ideas.</p><div class=\"ds-template-actions\"><button class=\"ds-template-use\">Use template</button><button class=\"ds-template-edit\">Customize</button></div></article>",
-      "css": ".ds-template{font-family:var(--f-ui,'Manrope',Arial,sans-serif);min-width:0;border:1px solid var(--line,#dedfd8);border-radius:16px;padding:20px;background:var(--panel,#fff);color:var(--fg,#1a1b17);display:flex;flex-direction:column}.ds-template-graphic{display:flex;gap:24px;align-items:center;margin-bottom:22px}.ds-template-graphic>svg{width:24px;height:24px;flex-shrink:0;background:var(--template-peach,#f4ceb5);padding:12px;border-radius:12px}.ds-template-bars{display:flex;align-items:stretch;gap:4px;height:28px;flex:1;min-width:0;overflow:hidden}.ds-template-bars i{background:var(--template-peach,#f4ceb5);min-width:2px;flex-basis:0;border-radius:3px}.ds-template-bars i:nth-child(even){opacity:.55}.ds-template h4{font-size:19px;font-weight:650;letter-spacing:-.02em;margin:0 0 7px;overflow-wrap:anywhere}.ds-template-detail{font-size:13px;margin:0;color:var(--muted,#64665e);font-variant-numeric:tabular-nums}.ds-template-description{font-size:13px;line-height:1.5;color:var(--muted,#64665e);margin:12px 0 22px}.ds-template-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}.ds-template-actions button{font:600 12px var(--f-ui,'Manrope',Arial,sans-serif);min-height:44px;padding:8px 12px;border:1px solid transparent;border-radius:999px;cursor:pointer;transition:background .16s,color .16s}.ds-template-use{background:var(--accent,#20221b);color:#fff}.ds-template-use:hover{background:#3a3e31;color:#fff}.ds-template-edit{background:transparent;color:var(--fg,#1a1b17)}.ds-template-edit:hover{background:var(--hover,#e4e7dc)}.ds-template-actions button:focus-visible{outline:2px solid var(--focus,#687c16);outline-offset:4px}@media(max-width:760px){.ds-template{padding:16px}.ds-template-graphic{gap:15px}.ds-template-actions{flex-wrap:wrap}}@media(max-width:600px){.ds-template-graphic{margin-bottom:16px}.ds-template-description{margin-bottom:16px}}@media(prefers-reduced-motion:reduce){.ds-template-actions button{transition:none}}"
+      "name":"Mobile task navigation",
+      "kind":"nav",
+      "description":"Focused Timer / Agenda / Notes controls; selected tab uses editorial red.",
+      "html":"<nav class=\"tasks\" aria-label=\"Mobile workspace\"><button aria-pressed=\"true\">Timer</button><button aria-pressed=\"false\">Agenda</button><button aria-pressed=\"false\">Notes</button></nav>",
+      "css":".tasks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border:1px solid var(--line,#bbbcb4);border-radius:5px;background:var(--field,#f3f1eb);box-shadow:none}.tasks button{min-height:44px;padding:9px 7px;border:0;border-radius:5px;font:500 12px var(--f-ui,Manrope,Arial,sans-serif);background:transparent;color:var(--fg,#20211e);cursor:pointer}.tasks button[aria-pressed=true]{background:var(--accent,#c62d35);color:#fff}.tasks button:hover{background:var(--soft,#e5e4dc);color:var(--fg,#20211e)}.tasks button:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}"
     }
   ],
   "narrative": {
-    "northStar": "Facilitator's broadcast / control desk",
-    "overview": "The user-confirmed direction pairs a light workspace with a dark timer and uses robot.com as its visual reference. Pale mineral ground, warm-black timing surfaces, acid-yellow actions, rounded flat panels and capsule controls give the working tool a soft industrial character. Self-hosted Manrope supplies geometric lettering without copying the reference's proprietary font or imagery.\n\nThis refresh merges the implemented template library, editable template identities, official Google sign-in assets, mobile workspace views and native Templates dropdown into the incumbent world. These are scoped additions; the palette, material, typography and host/audience distinction remain the confirmed contract. `docs/base.css` supplies mechanics, then the complete `docs/workspace.css` cascade supplies effective appearance. `docs/template-ui.js`, `docs/templates.js`, `docs/mobile.js`, `docs/index.html`, `docs/live.html` and `docs/live.js` supply the corresponding surfaces and behavior. Tokens above are normative. The earlier cobalt system is superseded. There is no separate approved comp or quality-bar image; separately generated raster mockups remain unapproved and do not replace this implemented world.",
-    "keyCharacteristics": [
-      "Mineral light workspace and warm-black stage.",
-      "Self-hosted Manrope with tabular system monospace for time.",
-      "Acid-yellow primary actions and capsule navigation.",
-      "Flat rounded panels separated by tone and space.",
-      "Separate host workspace, audience display and remote controls.",
-      "Reusable plans identified by meaningful icons and proportional agenda graphics.",
-      "Focused Timer, Agenda and Notes views on phones."
+    "northStar":"The newspaper workbench",
+    "overview":"The user-approved editorial world uses cream paper, charcoal ink, upright Cantata One headings and Manrope controls. Red outlined Start / Next, red filled Reset and saturated teal Float support a smaller host clock and editable agenda. Thin rules and flat surfaces replace the earlier mineral/acid world. Floating and audience screens remain dark.\n\nThe final source of visual overrides is docs/editorial.css after base.css and workspace.css. The reference image is directional: subsequent explicit user corrections supersede its oversized clock, pale green, filled Start and connector geometry. The historical failed 63.7 reproduction remains historical evidence, not a current passed gate or an exact-match claim. Current review artifacts are .impeccable/review/desktop.png, mobile.png, user-320.png and mobile-agenda.png. This documentation does not assert deployment status. Preserve https://cytramonp.github.io/relay-timer/ and PRODUCT.md behavior; CorpTimer is the selected working brand with domain registration pending.",
+    "keyCharacteristics":["Cream and charcoal editorial host workspace","Self-hosted upright Cantata One and Manrope","Compact host clock with paused opacity .72","Red outlined transport, red Reset and saturated teal Float","Short grey-red connector to the whole agenda","Responsive focused task navigation at 320px and 390px","Dark floating and audience views with private host tools kept separate"],
+    "rules":[
+      {"name":"Action roles","body":"Preserve the distinct outlined transport, filled red Reset and saturated teal Float.","section":"colors"},
+      {"name":"Editorial hierarchy","body":"Upright Cantata One headings and Manrope host clock and controls; retain tabular figures.","section":"typography"},
+      {"name":"Flat workspace","body":"Use rules, spacing and paper tones instead of ambient card shadows.","section":"elevation"}
     ],
-    "rules": [
-      {
-        "name": "The Stage Separation Rule",
-        "body": "Preserve the confirmed light host workspace and dark timer. The audience and controller share the full dark live surface.",
-        "section": "colors"
-      },
-      {
-        "name": "The Signal Rule",
-        "body": "Use acid signal for the implemented primary actions and live timing emphasis; preserve distinct warning and overrun states.",
-        "section": "colors"
-      },
-      {
-        "name": "The Numeric Alignment Rule",
-        "body": "Use the numeric stack and tabular figures for clocks, durations and timing comparisons.",
-        "section": "typography"
-      },
-      {
-        "name": "The Flat Rest Rule",
-        "body": "Keep main resting surfaces flat; use the existing temporary drag shadow and subtle sticky mobile-navigation separation only in their implemented roles.",
-        "section": "elevation"
-      }
-    ],
-    "dos": [
-      "**Do** preserve the confirmed mineral light workspace and warm-black timer.",
-      "**Do** use self-hosted Manrope for interface text and tabular system monospace for timing.",
-      "**Do** use acid-yellow capsules for primary actions and preserve semantic timing states.",
-      "**Do** keep focused mobile views, the live return preview, the two-line phone agenda and readable mobile fields.",
-      "**Do** keep template identity colors separate from semantic timer states and derive previews from real slot durations.",
-      "**Do** preserve official Google artwork and the full-button / compact-header distinction.",
-      "**Do** keep visible focus and reduced-motion behavior.",
-      "**Do** keep planned and actual time visibly distinct.",
-      "**Do** keep audience, controller and private workspace roles visually explicit."
-    ],
-    "donts": [
-      "**Don't** restore the superseded cobalt palette or external font dependencies.",
-      "**Don't** imply the working title or extracted broadcast-desk description is an approved brand name.",
-      "**Don't** add ambient shadows to resting panels.",
-      "**Don't** communicate timing or connection state through color alone.",
-      "**Don't** expose private parking or reports in the shared display.",
-      "**Don't** replace the immediate working tool with a marketing or pricing gate."
-    ]
+    "dos":["Do preserve the actual editable agenda, host authority and timing behavior.","Do keep the short connector at agenda-heading level and hide it at 1100px and below.","Do retain mobile task navigation, 16px mobile fields and visible keyboard focus.","Do keep the canonical URL, optional Google sign-in and immediate app entry."],
+    "donts":["Don't restore the superseded mineral/acid palette.","Don't treat the historical reproduction score as current approval or claim exact comp matching.","Don't enlarge the clock or fill Start to imitate the older reference.","Don't connect to individual speaker rows or expose private notes and reports to audience views.","Don't introduce external font dependencies or claim PiP is visible in every sharing mode."]
   }
 }

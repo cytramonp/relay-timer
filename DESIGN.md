@@ -1,354 +1,162 @@
 ---
-name: "Relay Timer (working title)"
-description: "A light facilitator workspace with a dark shared timer."
+name: "CorpTimer"
+description: "A newspaper workbench for shared meeting time."
 colors:
-  bg: "#edeeeb"
-  panel: "#fff"
-  fg: "#1a1b17"
-  muted: "#64665e"
-  line: "#dedfd8"
-  accent: "#20221b"
-  soft: "#f0f1e9"
-  signal: "#e5f65b"
-  signal-hover: "#d5e64a"
-  focus: "#687c16"
-  field: "#f7f8f3"
-  hover: "#e4e7dc"
-  ok: "#246841"
-  warn: "#936000"
-  bad: "#ae2924"
-  up: "#d9dcd0"
-  ov-bg: "#181a15"
-  ov-fg: "#f8f9f1"
-  ov-muted: "#b1b4a5"
-  ov-line: "#3d4035"
-  ov-ok: "#e5f65b"
-  ov-warn: "#f5cd6e"
-  ov-bad: "#ffa294"
-  ov-past: "#9aa36c"
-  ov-up: "#414536"
-  audience-bg: "#151712"
-  audience-fg: "#f7f8f0"
-  template-citron: "#e5f65b"
-  template-peach: "#f4ceb5"
-  template-lilac: "#d8d2f2"
-  template-mint: "#cce2d6"
+  bg: "#eeece5"
+  panel: "#eeece5"
+  fg: "#20211e"
+  muted: "#62635e"
+  line: "#bbbcb4"
+  soft: "#e5e4dc"
+  field: "#f3f1eb"
+  accent: "#c62d35"
+  signal: "#299093"
+  signal-hover: "#227d80"
+  focus: "#17676b"
+  green: "#c9dddd"
+  green-ink: "#06282b"
+  bad: "#a91f29"
+  ov-bg: "#061a1e"
+  ov-fg: "#f5f2e9"
+  ov-muted: "#b5cbca"
+  ov-line: "#375055"
+  ov-ok: "#b7dedd"
+  ov-warn: "#f1bc61"
+  ov-bad: "#ff8b82"
+  ov-past: "#609694"
+  ov-up: "#354e51"
 typography:
   display:
-    fontFamily: "ui-monospace, 'Cascadia Mono', Consolas, monospace"
-    fontSize: "clamp(88px,9vw,132px)"
-    fontWeight: 600
-    lineHeight: 1.05
+    fontFamily: "Manrope, Arial, sans-serif"
+    fontSize: "clamp(90px,10.2vw,144px)"
+    fontWeight: 750
+    lineHeight: 1.1
     letterSpacing: "-.04em"
   headline:
-    fontFamily: "'Manrope', Arial, sans-serif"
-    fontSize: "clamp(34px,3.7vw,52px)"
-    fontWeight: 650
-    lineHeight: 1.15
-    letterSpacing: "-.04em"
-  title:
-    fontFamily: "'Manrope', Arial, sans-serif"
-    fontSize: "18px"
-    fontWeight: 650
-    lineHeight: 1.4
-    letterSpacing: "-.025em"
-  speaker:
-    fontFamily: "'Manrope', Arial, sans-serif"
-    fontSize: "34px"
-    fontWeight: 500
+    fontFamily: "'Cantata One', Georgia, serif"
+    fontSize: "32px"
+    fontWeight: 400
     lineHeight: 1.3
-    letterSpacing: "-.03em"
+    letterSpacing: "-.7px"
+  title:
+    fontFamily: "'Cantata One', Georgia, serif"
+    fontSize: "24px"
+    fontWeight: 400
+    lineHeight: 1.25
+    letterSpacing: "-.5px"
   body:
-    fontFamily: "'Manrope', Arial, sans-serif"
+    fontFamily: "Manrope, Arial, sans-serif"
     fontSize: "14px"
-    fontWeight: 450
     lineHeight: 1.45
   label:
-    fontFamily: "'Manrope', Arial, sans-serif"
+    fontFamily: "Manrope, Arial, sans-serif"
     fontSize: "12px"
-  button:
-    fontFamily: "'Manrope', Arial, sans-serif"
-    fontSize: "13px"
-    fontWeight: 600
-    lineHeight: 1.45
-  mobile-field:
-    fontFamily: "'Manrope', Arial, sans-serif"
-    fontSize: "16px"
-  live-display:
-    fontFamily: "ui-monospace, 'Cascadia Mono', Consolas, monospace"
-    fontSize: "clamp(74px,13vw,200px)"
-    fontWeight: 550
-    lineHeight: 1.2
-    letterSpacing: "-.04em"
 rounded:
-  field: "8px"
-  input: "10px"
-  surface: "16px"
-  compact-surface: "12px"
-  pill: "999px"
+  control: "5px"
+  utility: "4px"
+  dialog: "8px"
 spacing:
-  tight: "8px"
-  stack: "18px"
-  column-gap: "22px"
-  panel-inset: "24px"
-  workspace-inset: "28px"
+  control-gap: "8px"
+  column-gap: "44px"
+  workspace-gap: "28px"
 components:
-  button-primary:
+  transport:
+    backgroundColor: "transparent"
+    textColor: "#a7242d"
+    rounded: "{rounded.control}"
+    padding: "10px 14px"
+  float:
     backgroundColor: "{colors.signal}"
-    textColor: "{colors.accent}"
-    typography: "{typography.button}"
-    rounded: "{rounded.pill}"
-    padding: "8px 13px"
-    height: "40px"
-  button-primary-hover:
-    backgroundColor: "{colors.signal-hover}"
-  button-secondary:
-    backgroundColor: "{colors.panel}"
-    textColor: "{colors.fg}"
-    typography: "{typography.button}"
-    rounded: "{rounded.pill}"
-    padding: "8px 13px"
-    height: "40px"
-  button-share:
+    textColor: "#061a1e"
+    rounded: "{rounded.control}"
+    padding: "10px 14px"
+  reset:
     backgroundColor: "{colors.accent}"
-    textColor: "{colors.panel}"
-    typography: "{typography.button}"
-    rounded: "{rounded.pill}"
-    padding: "9px 16px"
-    height: "44px"
+    textColor: "#fff"
+    rounded: "{rounded.control}"
+    padding: "7px 12px"
   agenda-input:
     backgroundColor: "{colors.field}"
     textColor: "{colors.fg}"
-    rounded: "{rounded.field}"
-    padding: "6px 8px"
-    height: "40px"
-  navigation:
-    backgroundColor: "{colors.panel}"
-    textColor: "{colors.fg}"
-    rounded: "{rounded.pill}"
-    padding: "8px 12px 8px 22px"
-    height: "68px"
-  status-chip:
-    backgroundColor: "color-mix(in srgb, #246841 18%, transparent)"
-    textColor: "{colors.ok}"
-    typography: "{typography.label}"
-    rounded: "{rounded.pill}"
-    padding: "0 4px"
-  panel:
-    backgroundColor: "{colors.panel}"
-    textColor: "{colors.fg}"
-    rounded: "{rounded.surface}"
-    padding: "{spacing.panel-inset}"
-  stage:
-    backgroundColor: "{colors.ov-bg}"
-    textColor: "{colors.ov-fg}"
-    rounded: "{rounded.surface}"
-    padding: "28px 30px 25px"
+    rounded: "{rounded.control}"
+    height: "44px"
   dialog:
-    backgroundColor: "{colors.panel}"
+    backgroundColor: "{colors.bg}"
     textColor: "{colors.fg}"
-    rounded: "{rounded.surface}"
-    padding: "34px"
-  template-card:
-    backgroundColor: "{colors.panel}"
-    textColor: "{colors.fg}"
-    rounded: "{rounded.surface}"
-    padding: "20px"
-  template-select:
-    backgroundColor: "{colors.panel}"
-    textColor: "{colors.fg}"
-    rounded: "{rounded.pill}"
-    padding: "10px 32px 10px 16px"
-  mobile-navigation:
-    backgroundColor: "{colors.panel}"
-    rounded: "{rounded.pill}"
-    padding: "4px"
-  mobile-return:
-    backgroundColor: "{colors.ov-bg}"
-    textColor: "{colors.ov-fg}"
-    rounded: "{rounded.compact-surface}"
-    padding: "12px 16px"
-    height: "52px"
-  live-stage:
-    backgroundColor: "{colors.audience-bg}"
-    textColor: "{colors.audience-fg}"
+    rounded: "{rounded.dialog}"
 ---
 
-# Design System: Relay Timer (working title)
+# Design System: CorpTimer
 
 ## Overview
 
-**Creative North Star: "Facilitator's broadcast / control desk" — extracted, provisional descriptive label.** This describes the implemented system in SURFACE.md; it is not an approved brand metaphor or final product name.
+**Creative North Star: "The newspaper workbench"**
 
-The user-confirmed direction pairs a light workspace with a dark timer and uses robot.com as its visual reference. Pale mineral ground, warm-black timing surfaces, acid-yellow actions, rounded flat panels and capsule controls give the working tool a soft industrial character. Self-hosted Manrope supplies geometric lettering without copying the reference's proprietary font or imagery.
+Cream paper, charcoal ink, upright serif headings and fine rules make a working meeting agenda feel editorial and immediately readable. The host clock sits directly on the paper. Red outlines identify Start / Next Speaker, solid red identifies Reset, and saturated teal identifies Float Timer. The compact clock leaves room for editing and handing off the agenda.
 
-This refresh merges the implemented template library, editable template identities, official Google sign-in assets, mobile workspace views and native Templates dropdown into the incumbent world. These are scoped additions; the palette, material, typography and host/audience distinction remain the confirmed contract. `docs/base.css` supplies mechanics, then the complete `docs/workspace.css` cascade supplies effective appearance. `docs/template-ui.js`, `docs/templates.js`, `docs/mobile.js`, `docs/index.html`, `docs/live.html` and `docs/live.js` supply the corresponding surfaces and behavior. Tokens above are normative. The earlier cobalt system is superseded. There is no separate approved comp or quality-bar image; separately generated raster mockups remain unapproved and do not replace this implemented world.
+This documents the user-approved editorial redesign and subsequent explicit corrections of 25 October 2026. It replaces the earlier mineral/acid visual contract. CorpTimer is the selected working brand; domain registration is pending. Preserve the existing public URL, https://cytramonp.github.io/relay-timer/, and the functional product contract in PRODUCT.md. The effective cascade is `docs/base.css`, then `docs/workspace.css`, then `docs/editorial.css`; inherited mechanics remain relevant, but older overwritten styles are not current design guidance.
+
+The direction image `.impeccable/mocks/editorial-approved.png` is a reference, not an exact-match requirement: later user corrections supersede its oversized clock, pale green, filled Start and connector geometry. The earlier failed 63.7 reproduction score remains historical evidence; it is not a current passed gate. Current review screenshots are `.impeccable/review/desktop.png`, `mobile.png`, `user-320.png` and `mobile-agenda.png`. Documentation records the implemented system and does not establish deployment status or claim exact comp matching.
 
 **Key Characteristics:**
 
-- Mineral light workspace and warm-black stage.
-- Self-hosted Manrope with tabular system monospace for time.
-- Acid-yellow primary actions and capsule navigation.
-- Flat rounded panels separated by tone and space.
-- Separate host workspace, audience display and remote controls.
-- Reusable plans identified by meaningful icons and proportional agenda graphics.
-- Focused Timer, Agenda and Notes views on phones.
+- Cream host workspace with flat surfaces, thin rules and red rule accents.
+- Self-hosted Cantata One headings and Manrope interface text.
+- Compact tabular clock and distinct transport, reset and floating actions.
+- Editable desktop agenda beside the clock; focused mobile task navigation.
+- Dark floating and audience surfaces, separate from private host tools.
 
 ## Colors
 
-The palette combines low-chroma mineral and olive neutrals with a bright signal accent. Descriptive names below identify extracted roles.
+The frontmatter records the actual editorial root tokens. Cream `bg` and `panel` share the same ground; `fg` is charcoal, while `muted` and `line` provide quieter hierarchy. `field` gives editable areas a subtle paper tint.
 
-### Primary
+Red `accent` marks transport borders, Reset, active mobile navigation and short rule details. Teal `signal` fills Float and selected primary utility actions; `focus` is the darker teal keyboard outline. These roles replace the former acid-yellow action system. Template identity colors remain scoped to templates and do not redefine timing status.
 
-- **Acid signal** (`signal`): Start / next, Add item, CSV export, active live sharing, live countdown and progress. `signal-hover` supplies primary hover.
-- **Warm ink** (`accent`): action text and the inactive Share live capsule. The primary button uses warm ink text over acid signal.
-- **Olive focus** (`focus`): the visible keyboard outline; focus is not represented by the fill alone.
-
-### Secondary
-
-- **Template citron, peach, lilac and mint** (`template-citron`, `template-peach`, `template-lilac`, `template-mint`): scoped identities for reusable plans. Citron shares the acid-signal value; the other three are soft peach, lavender and mint fills. They color template icon tiles and duration previews, never timing or connection status.
-
-### Neutral
-
-- **Mineral ground** (`bg`) and **white surface** (`panel`): page and enclosing utility panels.
-- **Warm text** (`fg`) and **mineral muted** (`muted`): primary content and supporting copy.
-- **Quiet rule** (`line`), **soft lane** (`soft`), **field chalk** (`field`) and **olive hover** (`hover`): separators, timeline ground, agenda fields and control hover.
-- **Warm-black stage** (`ov-bg`), **stage ivory** (`ov-fg`), **stage sage** (`ov-muted`) and **stage rule** (`ov-line`): host timer and floating display.
-- **Audience black** (`audience-bg`) and **audience ivory** (`audience-fg`): the full-page live surface.
-
-Workspace timing states use `ok`, `warn`, `bad` and `up`. The dark timer uses its separate `ov-ok`, `ov-warn`, `ov-bad`, `ov-past` and `ov-up` states. These are semantic treatments, not extra brand accents. The planned timeline uses the implementation's olive tints; actual early / over segments retain their own status tints and text legend.
-
-**The Stage Separation Rule.** Preserve the confirmed light host workspace and dark timer. The audience and controller share the full dark live surface.
-
-**The Signal Rule.** Use acid signal for the implemented primary actions and live timing emphasis; preserve distinct warning and overrun states.
+The host `.ov` overrides overlay tokens locally to use charcoal text on transparent cream, red progress, muted grey upcoming segments, amber warning and red overtime. Floating views retain the dark teal overlay tokens. The audience stylesheet retains its own dark surface and gets the editorial light clock, red progress and red remote primary control. Do not assume root overlay tokens recolor every audience selector.
 
 ## Typography
 
-**Display Font:** system monospace from `--f-num`, with Cascadia Mono and Consolas fallbacks.
-**Body Font:** Manrope from the self-hosted variable font `docs/fonts/Manrope.ttf`, with Arial and sans-serif fallbacks.
+Cantata One is loaded from `docs/fonts/CantataOne-Regular.ttf`; Manrope is loaded from `docs/fonts/Manrope.ttf`. Both use `font-display: swap`. Headings are upright, regular-weight serif: the wordmark is 32px, meeting title 32px, main section headings about 24–25px and dialog headings 29px. Interface text is Manrope, generally 11–14px according to hierarchy.
 
-Manrope's geometric, close-set headlines sit beside stable numeric timing. The variable font is declared for weights 200–800 with font-display swap. Timing, duration and report values retain tabular alignment.
-
-### Hierarchy
-
-- **Display:** the fluid host countdown recorded above; warning and overtime change its state color, pause reduces opacity.
-- **Headline:** the unboxed meeting-name field, with a fluid desktop size and a 30px size at the mobile workspace breakpoint.
-- **Title:** section headings at weight 650; some intermediate-width timeline headings reduce to 16px.
-- **Speaker:** the host stage name at weight 500; mobile workspace views use 28px. The live speaker uses weight 550 and `clamp(30px,4vw,66px)`, becoming 34px on phones.
-- **Body:** 14px workspace text at weight 450. Dialog body copy uses 13px with a 1.7 line height.
-- **Label:** 12px metadata, timing hints, connection messages and report headers.
-- **Button:** 13px at weight 600; primary host transport uses 15px, reducing to 14px on phones. Most mobile utilities use 12px. Compact mobile header actions use 11px, including Share live through the 360px breakpoint.
-- **Mobile field:** agenda names/minutes, template name and slot name/minutes, template end-policy select, Templates dropdown and private notes inputs use 16px at up to 600px. The template slot-type select uses 14px.
-- **Template hierarchy:** the library heading is 32px, becoming 28px on phones; card titles are 19px at weight 650 and descriptions/details 13px. These are scoped utility-dialog roles.
-- **Live display:** larger audience countdown at weight 550; up to 900px it uses `clamp(70px,13vw,130px)`, and up to 560px `clamp(64px,22vw,100px)`.
-
-**The Numeric Alignment Rule.** Use the numeric stack and tabular figures for clocks, durations and timing comparisons.
+The host clock uses Manrope at weight 750 with tabular figures and the display clamp above. At widths up to 800px it uses `clamp(74px,18vw,120px)`. Small timer labels remain 14px. The system monospace numeric stack remains in inherited secondary and floating/live contexts where implemented; do not replace the new host clock with it. Mobile editable agenda fields use 16px text at up to 600px.
 
 ## Layout
 
-The centered host workspace caps at 1376px, with 28px horizontal insets, 35px top padding and a 28px section gap. The desktop working grid is `minmax(0,1.2fr) minmax(440px,1fr)` with a 22px gap. Columns stack panels 18px apart. The floating white header caps at 1392px, sits 16px below the viewport edge, and uses a capsule silhouette.
+The desktop workspace has a 1440px maximum width, 40px horizontal padding and 28px vertical spacing. The header has a 1500px maximum width and an 84px height. A ruled meeting heading precedes the two-column grid: `minmax(0,1.35fr) minmax(390px,1fr)`, separated by 44px. The timeline follows the timer controls; the agenda has no enclosing card.
 
-At 1150px, workspace insets become 24px, top padding 30px, grid gap 18px and panels 20px. At 900px the workspace caps at 760px and the working grid stacks. At up to 600px, the workspace uses 14px horizontal insets, 22px top padding and an 18px section gap. The header becomes a compact single-row capsule with wordmark, Share live, icon-only meeting library and icon-only Google sign-in. Library and Google controls end at 44px wide with a 44px minimum height; the supplied Google icon itself remains 40px square. At 360px the wordmark and gaps tighten, and Share live keeps its 11px text while its arrow hides.
+A single short grey connector bridges the desktop gutter at agenda-heading level. Its final 15px and hollow end dot are red. It refers to the entire agenda, never a particular row, and has no pointer interaction. It disappears at 1100px and below.
 
-At up to 600px, sticky Timer / Agenda / Notes navigation separates the same host workspace into focused views. Timer is the initial view and shows stage, transport and timeline. Agenda shows editable run of show and settings; Notes shows private parking. Agenda and Notes retain a dark return-to-timer preview with current name and countdown, updated from timer/change events. View selection exposes its state with `aria-pressed`; selecting a tab scrolls the navigation into view. Above this breakpoint the desktop workspace remains continuous. At up to 560px, transport retains a three-column arrangement: Start / next spans two columns beside Pause; Undo, Float and Reset form the second row.
-
-The meeting-heading Templates dropdown is a native select with a 44px minimum height and 260px maximum width. At up to 600px its wrapper flexes with `min-width:0`, the select fills its available width up to 240px and uses 16px text; meeting tools span the available row.
-
-The template library caps at 850px, with a two-column grid and 16px gaps. At 760px its insets and card gaps tighten; at up to 600px it becomes one column, uses a viewport-minus-16px dialog width and height limit, and stacks the two creation actions. The editor reflows slot controls into name, type/minutes, then reorder actions; its Save template action spans the sticky footer above secondary actions. Appearance controls wrap rather than compress.
-At up to 560px the final agenda uses two lines per row: name across the top between drag and delete controls, minutes below on the left and Available / Used on the right. Desktop column labels hide there. Drag and delete targets are 36px wide and at least 44px tall. Keep names editable and timing values readable rather than squeezing desktop columns onto phones.
-
-The live display caps at 1600px with a main timer and 220–310px agenda column, a 6vw gap and generous viewport-relative insets. At 900px the agenda narrows to 200px. At 560px it stacks below the timer with a 50px separation. The controller adds wrapping transport capsules beneath the same stage.
-
-Share and report dialogs cap at 700px and 850px respectively, with viewport-bounded widths and a 90dvh scrolling limit. The share QR is 150px square beside the viewer link; on phones it centers above the link. Report tables scroll horizontally in their own wrapper. Floating timer mode retains its separate compact height adaptations at 169px and 79px.
+At 1100px the grid narrows, at 800px it becomes one column, and at 600px the existing Timer / Agenda / Notes focused-view behavior applies. At 480px the header navigation wraps and workspace side padding becomes 14px. The supported floor is 320px. Preserve the reviewed 320px and 390px layouts: task controls stay reachable, meeting tools wrap, agenda fields use the mobile two-line structure, and Agenda / Notes provide the return-to-timer preview. Do not restore desktop agenda columns on phones merely because a narrower breakpoint appears earlier in the stylesheet; the final 600px rule wins.
 
 ## Elevation & Depth
 
-The implemented workspace is flat: tonal contrast, white panels, generous gaps and the dark stage create hierarchy. Main panels and the header have no ambient shadow. The scoped sticky mobile workspace navigation uses the subtle separation shadow `0 5px 20px #1a1b1710` to remain legible over scrolling content. A moving agenda row alone uses the temporary drag shadow `0 6px 18px rgba(0,0,0,.18)`. Dialogs obscure the workspace with the dark olive backdrop `#12170f70`; the toast is a solid dark notice.
-
-**The Flat Rest Rule.** Keep main resting surfaces flat; use the existing temporary drag shadow and subtle sticky mobile-navigation separation only in their implemented roles.
+The main workspace is flat: panels are transparent, borderless and square with no shadow. Fine rules, spacing and field tones provide separation. Dialogs have a thin border, 8px radius, no shadow and a charcoal translucent backdrop (`#20211e66`). Mobile navigation also has no shadow. Preserve inherited temporary interaction treatments where applicable; do not add ambient card elevation to the editorial workspace.
 
 ## Shapes
 
-Capsules define buttons, desktop/header navigation, mobile workspace navigation, the native Templates select and library search. Main panels, stage and dialogs share the soft surface radius in frontmatter. Agenda fields use the smaller field radius; general input and total-duration controls use the input radius. Most panels and dialogs have no border; fields use soft fills with subtle hover strokes. Thin rules remain in report rows, private parking, live agenda and separators.
-
-Progress lanes have gently rounded, clipped ends; the host agenda-strip blocks have small 2px corners. Template icon tiles and the mobile return preview use the compact surface radius; appearance choices are circular. Icons are compact inline stroke SVGs (18px utilities, 20px section markers, 24px template card marks, 30px editor preview); the host wordmark uses a filled SVG with an acid cutout. Do not borrow robot photography, logos or proprietary type.
+Use restrained 5px control and field corners, 4px utility corners and 8px dialog corners. Main panels have zero radius. The small timer status dot and connector endpoint remain circular. The inherited dark mobile return preview retains its 12px radius. Template cards use 5px corners and small illustrated identity blocks; broad capsule styling is no longer the default host control language.
 
 ## Components
 
-### Buttons
+**Transport and floating.** Start / Next Speaker and Float Timer occupy the first control row at a normal 44px minimum height. Start / Next is transparent with a red border and dark red text; hover is pale red `#f1e0da`. Float is saturated teal with dark text, a darker teal border and hover `#3aa5a6`. Preserve their small directional corner/arrow marks. The second row contains Pause, Undo and Reset at 40px minimum height; Reset is filled red with white text and darkens to `#a51f29` on hover.
 
-Primary controls are acid capsules with warm ink text. Secondary buttons are white with a quiet rule; quiet and text controls use transparent grounds. Share live starts as a warm-ink capsule and becomes acid when live. Reset and revocation use destructive text.
+**Clock states.** Ready/running use charcoal numbers; warning and overtime use their semantic colors and existing text. Paused host clock opacity is **0.72**, overriding the old base opacity of 0.45. Keep real state and timing behavior; visual changes must not change milestones, carryover, pause or host authority.
 
-Normal controls have a 40px minimum height; header actions use 44px and host transport 48px (44px in mobile workspace views). Hover changes background and color over .16s. Visible focus uses a 2px olive outline with a 4px offset. Disabled opacity is .38. Reduced-motion preference removes transitions.
+**Agenda.** Editable names and minutes have pale fields, fine borders, 5px corners and 44px height. The current row receives a muted red paper tint. Drag handles, slot indices, actual timings, pins, result chips and delete controls retain their functional roles. The connector targets the agenda as a whole.
 
-### Inputs / Fields
+**Navigation and fields.** Keep Templates as a native select and Manage as its adjacent action. At mobile widths, the three task tabs have a fine bordered paper container with 5px corners and a red selected tab. Focus uses a 2px dark teal outline with 3px offset. Reduced-motion preferences disable button transitions; normal buttons inherit 0.15s background/border transitions. Disabled controls retain inherited opacity 0.38.
 
-Agenda names and minutes use soft chalk fill, a transparent 1px border and 8px corners; hover exposes a quiet olive stroke. The editable meeting title is unboxed. Library search is a soft capsule. Parking entry fields use slightly warmer soft fills, while existing parking items use unboxed fields with ruled rows. Numeric inputs preserve timing alignment. Mobile agenda and template-editor text/minute fields use the mobile-field size instead of inheriting the smaller desktop utility text.
-
-### Navigation
-
-The white capsule header holds the wordmark and utility actions. The signed-out account action uses the official full Sign in with Google button on desktop; at up to 600px the header switches to the official icon-only variant. The account dialog always retains the full button. Header help hides at intermediate widths; footer help remains accessible. On phones, the separate sticky Timer / Agenda / Notes control uses dark warm ink for the selected capsule and transparent inactive controls; a dark countdown preview returns Agenda or Notes to Timer.
-
-The live header is unboxed on the full dark surface, with connection status and Full screen action; status wraps below on phones.
-
-### Template Library / Editor
-
-The meeting heading uses native `select#template-select`, visibly and accessibly named Templates. Its grouped options expose Starter templates, Your templates when custom plans exist, and Create & manage with Save current agenda as template…, Create template… and Manage templates…. Starter and custom options include total minutes. The select uses a white capsule, a quiet 1px rule, soft hover and the established focus treatment. Preserve the browser's native selection interaction. Manage templates opens the full library and editor below.
-
-Templates are reusable plans, with separate Your templates and starter sections. Each bordered, flat card pairs a meaningful line icon with a proportional duration graphic, name, slot count and total minutes, summary and explicit Use template / Edit or Customize actions. Duration bars derive from slot minutes; they are functional agenda summaries, not decorative equal bars. The editor updates its preview as minutes change.
-
-The editor groups identity first, then plan and timing options. Four named color choices and six icons (people, loop, grid, spark, focus, coffee) use labeled buttons with `aria-pressed`. Selection receives a 2px warm-text outline at 2px offset, and selected color also shows a check. Choices are 44px square, becoming 40px at up to 360px. Name, slot type/minutes, reorder and remove controls stay directly editable; Save template remains the primary action. Customizing a starter creates a separate reusable plan. Template styling carries no live status meaning.
-
-### Equal Times
-
-The timeline's Equal times text action divides remaining planned time across all unfinished speakers and topics and clears their manual pins. During a session completed slots keep their planned time. Keep this explicit action distinct from the separate Split people's time equally setting, which preserves topic and pinned-slot durations.
-
-### Google Identity Assets
-
-Use the unmodified official light-pill standard and icon-only PNGs from Google's sign-in asset ZIP, locally stored as `docs/assets/google-signin.png` and `docs/assets/google-signin-icon.png`. The source and embedded provenance are recorded in `THIRD-PARTY.md`. The full asset displays at 180×40px; the compact asset at 40×40px. These are provider identity assets, not illustrations or a new palette source. Preserve their artwork and aspect ratio rather than redrawing or recoloring the logo. The header's compact touch wrapper does not change the account-dialog button.
-### Chips
-
-Compact timing-result pills use semantic foregrounds over 18% color-mix tints and accompany actual usage text. The private parking count uses a pale round badge. Status color never replaces a label.
-
-### Cards / Containers
-
-White flat panels group agenda, timeline, private parking and settings. Settings use a native disclosure with a rotating plus icon and a two-column inner form. Dialogs reuse the surface radius with larger typography and insets. The meeting library presents search and ruled saved-meeting rows; the template library uses its distinct bordered cards described above. Private parking keeps its privacy note visible beneath the editor.
-
-### Stage Timer
-
-The host stage contains position, speaker, countdown, progress, proportional agenda strip and next speaker. Desktop minimum height is 375px, 345px at the intermediate breakpoint, 350px when stacked, and 280px in the mobile workspace. The mobile countdown uses `clamp(70px,22vw,110px)` with 22px stage padding. Idle digits use stage ivory; running, warning and overrun use the respective stage states. Done uses the base stage-muted state. Floating mode reuses the dark display and adds compact controls.
-
-### Planned / Actual Timeline
-
-Separate planned and actual lanes retain draggable milestone boundaries and a correctable meeting-clock marker. Current and completed planned segments use olive tones; topic segments retain diagonal texture. Early and overrun usage retain separate treatments. Keep textual legend and time values alongside color.
-
-### Live Viewer / Controller
-
-The live surface expands the same timing language into a dark broadcast layout: large current name, acid countdown, state copy, slim progress bar, next slot and ruled coming-up list. Viewer links show the read-only display. A controller link reveals Start / next, Pause / resume, Undo and Extend 1 min capsules plus acknowledgement text. Disconnected, expired and unavailable states replace timing claims with explicit copy.
-
-### Sharing / Reports
-
-Sharing groups the QR and viewer link first, then separates the co-host control capability with rules and explanatory copy. Revocation remains a destructive action. Reports use a clean ruled comparison table, session selector, plan-change text and CSV / copy / print controls. Print hides surrounding workspace and dialog controls. Neither report nor private parking content belongs on the audience surface.
+**Secondary surfaces.** Templates, saved meetings, import/export, reports, settings and private parking retain their current workflows. Templates use editable identity colors and proportional duration graphics. Keep official Google sign-in artwork, including the compact mobile header asset. Floating and audience views stay dark; private parking and reports never become audience content. Viewer access remains read-only; co-host controls remain a separate capability, and the host tab must stay open.
 
 ## Do's and Don'ts
 
-### Do:
-
-- **Do** preserve the confirmed mineral light workspace and warm-black timer.
-- **Do** use self-hosted Manrope for interface text and tabular system monospace for timing.
-- **Do** use acid-yellow capsules for primary actions and preserve semantic timing states.
-- **Do** keep focused mobile views, the live return preview, the two-line phone agenda and readable mobile fields.
-- **Do** keep template identity colors separate from semantic timer states and derive previews from real slot durations.
-- **Do** preserve official Google artwork and the full-button / compact-header distinction.
-- **Do** keep visible focus and reduced-motion behavior.
-- **Do** keep planned and actual time visibly distinct.
-- **Do** keep audience, controller and private workspace roles visually explicit.
-
-### Don't:
-
-- **Don't** restore the superseded cobalt palette or external font dependencies.
-- **Don't** imply the working title or extracted broadcast-desk description is an approved brand name.
-- **Don't** add ambient shadows to resting panels.
-- **Don't** communicate timing or connection state through color alone.
-- **Don't** expose private parking or reports in the shared display.
-- **Don't** replace the immediate working tool with a marketing or pricing gate.
+- **Do** preserve the cream/charcoal editorial ground and upright serif hierarchy.
+- **Do** retain red outlined Start / Next, red filled Reset and saturated teal Float.
+- **Do** keep the smaller clock, 0.72 paused opacity and short agenda-level connector.
+- **Do** preserve responsive 320px/390px task navigation, focus visibility and real editable data.
+- **Do** retain the canonical public URL, optional sign-in and immediate app entry.
+- **Don't** restore the superseded mineral/acid world or treat historical mock scores as current approval.
+- **Don't** enlarge the clock or fill Start to imitate the older reference image.
+- **Don't** connect the clock to an individual speaker row.
+- **Don't** introduce remote font dependencies, decorative card shadows or a marketing/paywall gate.
+- **Don't** convey state through color alone or imply floating content is always visible in every screen-sharing mode.
