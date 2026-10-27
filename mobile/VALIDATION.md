@@ -25,4 +25,3 @@ The current Expo SDK 58 dependency tree reports five high-severity transitive fi
 - Dark appearance, large system text, safe areas, keyboard and gestures on actual supported devices.
 - Native document picker/share sheet and SQLite recovery on hardware.
 - No App Store or Google Play submission has been made by this source-code change.
-
