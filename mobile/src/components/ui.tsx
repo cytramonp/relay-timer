@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Alert,
   Platform,
@@ -8,10 +8,13 @@ import {
   Text,
   TextInput,
   View,
+  useColorScheme,
   type TextInputProps,
   type ViewStyle,
 } from "react-native";
 import { Host, Switch } from "@expo/ui";
+import { useFocusEffect } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../theme";
 import { useApp } from "../state/app-store";
 
@@ -78,6 +81,18 @@ export function Heading({ children }: { children: React.ReactNode }) {
 }
 export function Page({ children }: { children: React.ReactNode }) {
   const t = useTheme();
+  const scheme = useColorScheme();
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === "web") return;
+      // Apply after the focused native screen updates its window flags.
+      const timer = setTimeout(
+        () => StatusBar.setStyle(scheme === "dark" ? "light" : "dark"),
+        100,
+      );
+      return () => clearTimeout(timer);
+    }, [scheme]),
+  );
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"

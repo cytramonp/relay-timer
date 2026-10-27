@@ -20,7 +20,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: t.bg,
           borderTopColor: t.line,
-          ...(expanded ? { width: 156 } : {}),
+          ...(expanded ? { width: 156, minWidth: 156, maxWidth: 156 } : {}),
         },
         headerStyle: { backgroundColor: t.bg },
         headerTintColor: t.ink,
@@ -47,6 +47,7 @@ export default function TabLayout() {
         name="programs"
         options={{
           title: "My programs",
+          tabBarLabel: "Programs",
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="bookmarks-outline"
