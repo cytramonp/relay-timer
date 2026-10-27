@@ -29,7 +29,10 @@ for form in ['phone','tablet']:
     xml=adb('shell','cat','/sdcard/corptimer-ui.xml')
     if 'Make time for it' not in xml:
         capture(f'{form}-android-launch-failed.png')
-        raise RuntimeError('CorpTimer catalog did not render: '+xml[:1500])
+        (output/f'{form}-android-window.xml').write_text(xml)
+        log=adb('logcat','-d','-s','AndroidRuntime','ReactNativeJS','ReactNative')
+        (output/f'{form}-android-crash.log').write_text(log)
+        raise RuntimeError('CorpTimer catalog did not render: '+xml+'\n'+log[-14000:])
     capture(f'{form}-android-home.png')
     for path in ['timer/boxing','edit/boxing','history']:
         adb('shell','am','start','-W','-a','android.intent.action.VIEW','-d',f'corptimer://{path}','com.corptimer.app')
