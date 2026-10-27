@@ -1,0 +1,11 @@
+{
+  "localDate": "2026-10-26",
+  "origin": "https://corptimer.com/",
+  "firebaseRelease": "sites/relay-timer-web-7c39/releases/1793067097278000",
+  "files": 59,
+  "changes": ["Native timer dropdown in every header", "Compact related-timer picker", "Red and teal preset outlines and actual-setting selection", "Accent Save, Export, Import and sound controls", "Paired line brand details"],
+  "testsPassed": 42,
+  "independentReview": "Ship",
+  "browserChecks": ["HIIT updates to 40/20", "Custom work duration clears preset selection", "Selection survives reload", "Menu navigation to 15 Minute Timer", "Escape and unobstructed outside-click dismissal", "320px menu bounds and no horizontal overflow"],
+  "scope": "Existing timer behavior, guide text and canonical URLs preserved"
+}

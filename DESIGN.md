@@ -170,6 +170,8 @@ Use restrained 5px control and field corners, 4px utility corners and 8px dialog
 
 **How it works and advice.** Each timer page ends with a closed native details disclosure, below the related links on standalone tools and above the meeting footer. Its quiet 13px summary and plus/minus mark keep the workspace primary. Expanded content uses the existing serif section headings, readable body copy and practical bullets, with two columns on desktop and one on phones. Instructions are specific to the activity or duration and remain in static HTML for every reader. The disclosure does not require JavaScript. The follow-up desktop/mobile review returned SHIP.
 
+**Timer menus and accent controls.** Other Timers is a native dropdown with a ruled red/teal header, activity links, a grid of minute presets, a current-page marker and an all-timers link. The lower tool navigation uses the same picker opening upward. Keep menus within the viewport, internally scroll long lists and close them with Escape or an outside click. Preset controls alternate red and teal outlines; the matching actual configuration gets a filled state and check mark. Custom timings clear the selected state. Save uses a soft teal fill, Export a red outline, and Import/sound controls teal outlines. Paired strokes and a short split-color rule extend the glasses identity; preserve the cream ground, typography and minimal composition.
+
 ## Do's and Don'ts
 
 - **Do** preserve the cream/charcoal editorial ground and upright serif hierarchy.

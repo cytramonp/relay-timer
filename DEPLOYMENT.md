@@ -37,6 +37,8 @@ Commit and push source separately. Firebase Hosting does not automatically deplo
 
 ## Timer library release - 26 October 2026
 
+Controls follow-up: `sites/relay-timer-web-7c39/releases/1793067097278000` publishes 59 files with the native timer dropdown, compact lower picker, red/teal outlined controls, actual-config preset selection and paired-line accents. Existing 42 tests pass; browser checks cover selection after edits/reload, menu navigation, Escape, outside click and menu bounds at 320px. The independent narrow review returned Ship. Details: `outputs/timer-library/controls-release.json`.
+
 Published the fourteen standalone tools, timer directory and page-specific How it works and advice disclosures, including the Meeting Timer guide. Firebase release: `sites/relay-timer-web-7c39/releases/1793059330139000`, 58 public files. All 42 tests pass. The canonical domain returned HTTP 200 on all sixteen sitemap URLs; fifteen timer pages contain the closed static guide. Published CSS, JavaScript and the illustration atlas match the checked local bytes. See `outputs/timer-library/public-verification.json` and `validation.md` for scoped evidence.
 
 The Search Console HTTPS URL-prefix property is verified. The submitted `/sitemap.xml` has Success status and sixteen discovered pages. Preserve `docs/google9b7523e5b6829d1e.html` to retain ownership. `robots.txt` permits OAI-SearchBot and references the sitemap; `llms.txt` lists the public tools. Submission and discovery do not establish indexing or search visibility.

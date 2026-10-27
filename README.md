@@ -25,7 +25,7 @@ Open the app and edit the agenda immediately. No account, subscription, trial or
 
 ## Other Timers
 
-The meeting workspace remains at `/`, named **Meeting Timer**. **Other Timers** in the header and footer opens `/timers/`. The old How it works dialog has been removed.
+The meeting workspace remains at `/`, named **Meeting Timer**. **Other Timers** in the header opens a dropdown of activities and 5-30 minute countdowns, with a current-page indicator and a Browse all timers link to `/timers/`. Standalone tools have the same compact picker below the workspace. The menu works as a native details disclosure with ordinary links; JavaScript adds Escape, outside-click dismissal and one-open-at-a-time behavior. The old How it works dialog has been removed.
 
 Fourteen standalone routes extend the existing cream/charcoal visual system:
 
@@ -40,6 +40,8 @@ Fourteen standalone routes extend the existing cream/charcoal visual system:
 - `/5-minute-timer/`, `/10-minute-timer/`, `/15-minute-timer/`, `/20-minute-timer/`, `/25-minute-timer/`, `/30-minute-timer/`: independent, ready-set countdown pages.
 
 These tools use separate local-storage keys and do not use Google/Firebase meeting sync. Setups can be named, saved, removed, exported and imported. Reloaded sessions return paused; New Year follows its selected target date. The interval and chess engines use timestamp deltas, including delayed callbacks. This cannot guarantee background/mobile sound delivery or an alarm after the page closes. A screen wake lock is requested during running sessions where supported. The website is browser based; no native app is included in this change.
+
+Preset and quick-duration controls use red/teal outlines and a filled, checked selected state. Selection reflects the actual settings, clears when their timing no longer matches, and is restored from saved settings. Save, Export, Import and sound testing have distinct accent treatments; paired strokes and short two-color rules extend the existing brand without changing the page layout.
 
 Static pages contain distinct titles, descriptions, canonicals, headings, guides and related links, with WebApplication metadata; the catalog uses CollectionPage/ItemList. Every timer, including Meeting Timer, has a closed native **How it works and advice** section at the bottom, with page-specific instructions and practical advice. The text is present in the static HTML and can be read without running JavaScript. The duration pages use distinct examples and advice rather than only swapping a number.
 

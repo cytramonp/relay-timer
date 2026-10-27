@@ -80,7 +80,8 @@
       "compositionSources": [
         "scripts/build-timers.mjs",
         "docs/timer-forms.js",
-        "docs/special-timers.js"
+        "docs/special-timers.js",
+        "docs/timer-menu.js"
       ],
       "layout": "Illustrated ruled heading, dark clock beside task settings; clock before settings on phones. Ruled directory links and a six-duration strip.",
       "supportedMinimumWidth": "320px",
@@ -123,6 +124,37 @@
           "meeting-desktop.png",
           "meeting-320.png"
         ]
+      },
+      "controlsRefinement": {
+        "designGuidance": "Other Timers is a native dropdown with a ruled red/teal header, activity links, a grid of minute presets, a current-page marker and an all-timers link. The lower tool navigation uses the same picker opening upward. Keep menus within the viewport, internally scroll long lists and close them with Escape or an outside click. Preset controls alternate red and teal outlines; the matching actual configuration gets a filled state and check mark. Custom timings clear the selected state. Save uses a soft teal fill, Export a red outline, and Import/sound controls teal outlines. Paired strokes and a short split-color rule extend the glasses identity; preserve the cream ground, typography and minimal composition.",
+        "menu": {
+          "source": "docs/timer-menu.js",
+          "structure": "Native details/summary timer-switcher with activity links, minute grid, aria-current=\"page\" marker and all-timers link.",
+          "placement": "Header dropdown; matching lower tool picker opens upward.",
+          "behavior": "Opening one picker closes the others. Outside clicks close open pickers. Escape closes the open picker and returns focus to its summary.",
+          "containment": "Viewport-bounded width, internally scrolling long lists; mobile links have 40px minimum height."
+        },
+        "presets": {
+          "appearance": "Alternating red and teal outlines on cream fields; paired skewed strokes become a check in the filled selected state.",
+          "selection": "aria-pressed follows the actual matching configuration; custom or nonmatching timing clears selection."
+        },
+        "utilityActions": {
+          "save": "Soft teal fill with paired strokes",
+          "export": "Red outline",
+          "importAndSoundTest": "Teal outlines; sound test carries paired strokes"
+        },
+        "lineAccents": "Short split red/teal rules and paired strokes extend the glasses identity without changing the cream ground or typography.",
+        "review": {
+          "disposition": "SHIP",
+          "reportedPassingTests": 42,
+          "scope": "Desktop Chrome and mobile viewport captures plus reported browser checks; no deployment or real-device alarm claim.",
+          "captures": [
+            "controls-desktop.png",
+            "menu-desktop.png",
+            "utilities-mobile.png",
+            "controls-mobile.png"
+          ]
+        }
       }
     }
   },
@@ -186,6 +218,20 @@
       "description": "Flat title and supporting copy divided by a fine rule; illustration placement is documented in timerLibrary.",
       "html": "<a class=\"ds-directory-link\" href=\"/boxing-timer/\"><h3>Boxing Timer</h3><p>Your rounds. Your rhythm.</p><span>Custom rounds · gong · warning cues</span></a>",
       "css": ".ds-directory-link{display:grid;gap:8px;padding:22px 0;border-top:1px solid var(--line,#bbbcb4);color:var(--fg,#20211e);text-decoration:none}.ds-directory-link h3{margin:0;font:400 23px/1.3 var(--f-editorial,\"Cantata One\",Georgia,serif)}.ds-directory-link p{margin:0;color:var(--muted,#62635e);font:13px/1.7 var(--f-ui,Manrope,Arial,sans-serif)}.ds-directory-link span{color:var(--muted,#62635e);font:11px/1.7 var(--f-ui,Manrope,Arial,sans-serif)}.ds-directory-link:hover h3{text-decoration:underline;text-underline-offset:6px}.ds-directory-link:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}"
+    },
+    {
+      "name": "Timer switcher",
+      "kind": "nav",
+      "description": "Native timer picker with current-page marker. Header opens downward; lower placement opens upward. Production Escape/outside handling is in docs/timer-menu.js.",
+      "html": "<details class=\"ds-timer-switcher\"><summary>Other Timers <svg viewBox=\"0 0 16 16\" width=\"14\" height=\"14\" aria-hidden=\"true\"><path d=\"m4 6 4 4 4-4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"/></svg></summary><nav class=\"ds-timer-menu\" aria-label=\"Other timers\"><div class=\"ds-menu-rule\" aria-hidden=\"true\"></div><p>By activity</p><a href=\"/boxing-timer/\" aria-current=\"page\">Boxing Timer</a><a href=\"/fitness-timer/\">Fitness Timer</a><p>A few minutes</p><div class=\"ds-menu-minutes\"><a href=\"/5-minute-timer/\">5 min</a><a href=\"/10-minute-timer/\">10 min</a><a href=\"/15-minute-timer/\">15 min</a></div><a class=\"ds-menu-all\" href=\"/timers/\">Browse all timers</a></nav></details>",
+      "css": ".ds-timer-switcher{position:relative;display:inline-block;font:550 13px/1.5 var(--f-ui,Manrope,Arial,sans-serif)}.ds-timer-switcher>summary{display:inline-flex;align-items:center;gap:12px;min-height:44px;padding:9px 14px;list-style:none;border:1px solid var(--accent,#c62d35);border-radius:6px;background:var(--field,#f3f1eb);color:#a7242d;cursor:pointer}.ds-timer-switcher>summary::-webkit-details-marker{display:none}.ds-timer-switcher>summary svg{color:var(--focus,#17676b)}.ds-timer-switcher[open]>summary,.ds-timer-switcher>summary:hover{background:#f1e0da}.ds-timer-switcher[open]>summary svg{transform:rotate(180deg)}.ds-timer-switcher>summary:focus-visible,.ds-timer-menu a:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}.ds-timer-menu{position:absolute;right:0;top:calc(100% + 9px);z-index:40;width:290px;max-width:calc(100vw - 36px);max-height:min(70dvh,600px);overflow:auto;padding:16px;border:1px solid #818980;border-radius:10px;background:var(--bg,#eeece5)}.ds-timer-switcher.ds-picker-lower .ds-timer-menu{top:auto;bottom:calc(100% + 9px);right:auto;left:0}.ds-menu-rule{height:3px;margin:0 0 14px;background:linear-gradient(to right,var(--accent,#c62d35) 0 60%,var(--signal,#299093) 60% 100%)}.ds-timer-menu p{margin:14px 0 7px;font-size:11px;color:var(--muted,#62635e)}.ds-timer-menu a{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:36px;padding:7px 10px;border-radius:4px;color:var(--fg,#20211e);text-decoration:none}.ds-timer-menu a:hover{background:var(--soft,#e5e4dc);color:#a7242d}.ds-timer-menu a[aria-current=page]{background:#dce9e3;color:#0c484b;font-weight:700}.ds-timer-menu a[aria-current=page]::after{content:\"\";width:6px;height:6px;border-radius:50%;background:var(--signal,#299093)}.ds-menu-minutes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ds-menu-minutes a{justify-content:center;border:1px solid var(--line,#bbbcb4);font-size:12px}.ds-timer-menu .ds-menu-all{margin-top:14px;padding-top:12px;border-top:1px solid var(--line,#bbbcb4);border-radius:0;color:#a7242d}@media(max-width:600px){.ds-timer-menu a{min-height:40px}}"
+    },
+    {
+      "name": "Accent preset and setup controls",
+      "kind": "button",
+      "description": "Outlined red/teal presets with actual-configuration selection; soft teal Save, red Export and teal Import/Test sound use restrained identity strokes.",
+      "html": "<section class=\"ds-accent-controls\"><div class=\"ds-accent-rule\" aria-hidden=\"true\"></div><div class=\"ds-accent-row\"><button class=\"ds-preset\" aria-pressed=\"false\">5 min</button><button class=\"ds-preset ds-teal\" aria-pressed=\"true\">10 min</button></div><div class=\"ds-accent-row\"><button class=\"ds-setup ds-save\">Save setup</button><button class=\"ds-setup ds-export\">Export</button><button class=\"ds-setup ds-import\">Import</button><button class=\"ds-setup ds-sound\">Test sound</button></div></section>",
+      "css": ".ds-accent-rule{width:52px;height:3px;margin:0 0 14px;background:linear-gradient(to right,var(--accent,#c62d35) 0 60%,var(--signal,#299093) 60% 100%)}.ds-accent-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.ds-accent-controls button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:9px 13px;border-width:1px;border-style:solid;border-radius:6px;font:600 12px var(--f-ui,Manrope,Arial,sans-serif);cursor:pointer}.ds-preset{--choice-ink:#a7242d;--choice-line:var(--accent,#c62d35);--choice-soft:#f1e0da;background:var(--field,#f3f1eb);color:var(--choice-ink);border-color:var(--choice-line)}.ds-preset.ds-teal{--choice-ink:#17676b;--choice-line:var(--signal,#299093);--choice-soft:#dce9e3}.ds-preset::before,.ds-save::before,.ds-sound::before{content:\"\";width:8px;height:7px;border-top:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:skew(-20deg)}.ds-preset:hover{background:var(--choice-soft)}.ds-preset[aria-pressed=true]{background:var(--choice-line);border-color:var(--choice-line);color:#fff}.ds-preset.ds-teal[aria-pressed=true]{background:#17676b;border-color:#17676b}.ds-preset[aria-pressed=true]::before{height:8px;width:5px;border:0;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(40deg)}.ds-save{background:#dce9e3;color:#0c484b;border-color:var(--signal,#299093)}.ds-save:hover{background:#c9dddd}.ds-export{background:transparent;color:#a7242d;border-color:var(--accent,#c62d35)}.ds-export:hover{background:#f1e0da}.ds-import,.ds-sound{background:transparent;color:var(--focus,#17676b);border-color:var(--signal,#299093)}.ds-import:hover,.ds-sound:hover{background:#dce9e3}.ds-accent-controls button:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}"
     }
   ],
   "narrative": {

@@ -102,12 +102,17 @@
     {
       "path": "/special-timers.css",
       "status": 200,
-      "sha256": "a06711f41aee1e3030b06e6774d61704a25e743448cd71f0ca74d8957681ab74"
+      "sha256": "e6cb58c8ffbbd243840abf2fc7c1a212966732bd3e6e2b5a893efa80940b68ed"
     },
     {
       "path": "/special-timers.js",
       "status": 200,
-      "sha256": "b66ee1af544ee77f770f8cad1907a1d882527a78b4ecc2f5bbc433c4cab02cce"
+      "sha256": "49dbf3fbe95406070f49d61004587a43c9b48448762fb256ad9055b3f07b1ed5"
+    },
+    {
+      "path": "/timer-menu.js",
+      "status": 200,
+      "sha256": "9af90fb924410fc6912713ca7bf6640dcebedd77cb9d8b68671fb1bc32cb760b"
     },
     {
       "path": "/timer-engine.js",

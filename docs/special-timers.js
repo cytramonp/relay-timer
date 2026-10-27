@@ -110,6 +110,12 @@ function lockFields() {
   Array.from(fields).forEach(f => { if (['sound','volume','hideDigits'].includes(f.name) || f.id==='test-sound') return; f.disabled=locked; });
   $('delete-setup').disabled=locked||$('saved-presets').value==='';
   $('settings-notice').textContent=locked?'Reset the timer to edit this setup. Sound and volume can be changed while it runs.':'';
+  form.querySelectorAll('[data-preset]').forEach(button=>{
+    const pattern=presets[button.dataset.preset];
+    const selected=!config.customRounds&&Object.entries(pattern).every(([name,value])=>config[name]===value);
+    button.setAttribute('aria-pressed',String(selected));
+  });
+  form.querySelectorAll('[data-minutes]').forEach(button=>button.setAttribute('aria-pressed',String(config.duration===Number(button.dataset.minutes)*60)));
 }
 function renderSequence() {
   if (!$('sequence-list') || !clock?.sequence) return;

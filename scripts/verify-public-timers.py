@@ -26,6 +26,7 @@ def check_page(url):
     html = body.decode('utf-8')
     assert status == 200, url
     assert final_url == url, (url, final_url)
+    assert '<details class="timer-switcher">' in html, url
     assert f'rel="canonical" href="{url}"' in html, url
     assert not re.search(r'name="robots"[^>]*noindex', html), url
     guide = url != ORIGIN + '/timers/'
@@ -39,7 +40,7 @@ def check_page(url):
 with ThreadPoolExecutor(max_workers=4) as pool:
     pages = list(pool.map(check_page, urls))
 assets = []
-for asset in ['/special-timers.css', '/special-timers.js', '/timer-engine.js', '/assets/timer-illustrations.jpg']:
+for asset in ['/special-timers.css', '/special-timers.js', '/timer-menu.js', '/timer-engine.js', '/assets/timer-illustrations.jpg']:
     status, _, body = fetch(ORIGIN + asset)
     assert status == 200 and body == (ROOT / 'docs' / asset.lstrip('/')).read_bytes(), asset
     assets.append({'path': asset, 'status': status, 'sha256': hashlib.sha256(body).hexdigest()})
