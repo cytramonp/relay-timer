@@ -82,3 +82,4 @@ Cloud build resources have plan limits. Production distribution needs owner-cont
 ## Assets
 
 Run `npm run assets` to derive icons/illustration crops from approved website artwork and synthesize the three short PCM cues. Python requires Pillow. The icon uses Sharp. See `assets/PROVENANCE.md` and the bundled font licenses. Images and sounds are bundled so the app can work without downloading resources.
+

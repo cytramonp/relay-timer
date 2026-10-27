@@ -2,12 +2,16 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../theme";
+import { Platform, useWindowDimensions } from "react-native";
 
 export default function TabLayout() {
   const t = useTheme();
+  const { width } = useWindowDimensions();
   return (
     <Tabs
       screenOptions={{
+        tabBarPosition:
+          Platform.OS === "android" && width >= 768 ? "left" : "bottom",
         tabBarActiveTintColor: t.red,
         tabBarInactiveTintColor: t.muted,
         tabBarStyle: { backgroundColor: t.bg, borderTopColor: t.line },

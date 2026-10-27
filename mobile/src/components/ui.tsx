@@ -92,6 +92,7 @@ export function Page({ children }: { children: React.ReactNode }) {
         alignSelf: "center",
       }}
     >
+      <Notice />
       {children}
     </ScrollView>
   );
@@ -250,7 +251,7 @@ export function Notice() {
         accessibilityRole="button"
         accessibilityLabel="Dismiss message"
         onPress={() => notify("")}
-        style={{ minHeight: 44, justifyContent: "center" }}
+        style={{ minHeight: 48, justifyContent: "center" }}
       >
         <Text style={{ color: t.teal, fontWeight: "600" }}>Dismiss</Text>
       </Pressable>

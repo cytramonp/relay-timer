@@ -31,6 +31,7 @@ import { emptyStore, loadStore, saveStore } from "../services/storage";
 import { syncNotifications } from "../services/notifications";
 import { playCue } from "../services/audio";
 import { clone } from "../core/clone";
+import { applyRun, recoverStore } from "../core/recovery";
 
 type Action =
   "toggle" | "next" | "extend" | "finish" | "lap" | "undo" | "reset";
@@ -92,13 +93,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       undo.current.push(advance(s.run, Date.now()));
       undo.current = undo.current.slice(-20);
     }
-    let history = s.history;
-    if (run?.status === "done")
-      history = [report(run), ...history.filter((h) => h.id !== run.id)].slice(
-        0,
-        100,
-      );
-    commit({ ...s, run, history });
+    commit(applyRun(s, run));
   }
   useEffect(() => {
     let lastSecond = -1;
@@ -146,8 +141,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const subscription = AppState.addEventListener("change", (state) => {
       const s = current.current;
       if (s.run) {
-        const r = advance(s.run, Date.now());
-        commit({ ...s, run: r });
+        commit(recoverStore(s, Date.now()));
       }
       if (state === "active") lastSecond = -1;
     });

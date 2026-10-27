@@ -5,7 +5,6 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppProvider } from "../state/app-store";
 import { ThemeProvider, useTheme } from "../theme";
-import { Notice } from "../components/ui";
 
 export const unstable_settings = { initialRouteName: "(tabs)" };
 
@@ -14,7 +13,6 @@ function Navigation() {
   return (
     <>
       <StatusBar style="auto" />
-      <Notice />
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: t.bg },

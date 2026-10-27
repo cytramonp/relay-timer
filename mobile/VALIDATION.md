@@ -5,7 +5,7 @@ Checked 26 October 2026 (America/Los_Angeles). These statuses describe the devel
 ## Passed locally
 
 - TypeScript strict typecheck and Expo ESLint.
-- 19 mobile core tests: shared meeting deadlines, pause/resume, manual/automatic transitions, long gaps, workout sequence boundaries, chess increment/delay/flag, time zones, recovery, bounded alert plans, imports and CSV formula escaping.
+- 20 mobile core tests: shared meeting deadlines, pause/resume, manual/automatic transitions, long gaps, workout sequence boundaries, chess increment/delay/flag, time zones, recovery, bounded alert plans, imports and CSV formula escaping.
 - Expo Doctor: 20/20 checks after adding the required expo-asset peer dependency.
 - Production web export of the native UI code.
 - Production Hermes bundle export for iOS and Android on the Windows host. The isolated compiler invocation failed; the host invocation succeeded. This validates JS bundling, not Xcode/Gradle compilation or device behavior.
@@ -25,3 +25,4 @@ The current Expo SDK 58 dependency tree reports five high-severity transitive fi
 - Dark appearance, large system text, safe areas, keyboard and gestures on actual supported devices.
 - Native document picker/share sheet and SQLite recovery on hardware.
 - No App Store or Google Play submission has been made by this source-code change.
+
