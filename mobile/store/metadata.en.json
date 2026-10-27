@@ -1,0 +1,14 @@
+{
+  "status": "Draft for beta 0.1.0; review against the tested native binary before submission",
+  "name": "CorpTimer",
+  "appleSubtitle": "Meetings, workouts & focus",
+  "googleShortDescription": "Timers for meetings, boxing, workouts, focus and everyday routines.",
+  "description": "Make time for it with CorpTimer.\n\nBuild a meeting agenda, set up your next training session or start a quick countdown. Save your programs and come back to them whenever you need a little structure.\n\nMEETINGS\nGive every speaker a place in the agenda. Early finishes pass spare time forward; overruns reduce the time left for later turns. Pause, move to the next speaker, extend a turn and keep private notes.\n\nWORKOUTS\nConfigure boxing rounds, rest, preparation and cool-down. Start from HIIT, Tabata, EMOM and AMRAP presets or customize individual rounds and sets.\n\nFOCUS AND EVERYDAY TIMERS\nUse Pomodoro focus sessions, classroom visual timers, two-player chess clocks, a stopwatch with laps, countdowns and a New Year timer with a selected time zone.\n\nMAKE IT YOURS\nSave named programs on your device. Import and export JSON setups, and export session results as CSV. Choose bundled sounds, optional in-app spoken cues and haptic feedback.\n\nNo account, ads or subscription. Programs and history stay on your device. Background alerts require notification permission and follow your phone's settings; spoken cues play while the app is open.",
+  "appleKeywords": "timer,meeting,boxing,interval,tabata,hiit,pomodoro,focus,chess,stopwatch,countdown",
+  "categoryProposal": { "apple": "Utilities", "google": "Tools" },
+  "releaseNotes": "First mobile beta: nine timer modes, editable programs, local history and import/export.",
+  "supportUrl": "https://github.com/cytramonp/relay-timer/issues",
+  "marketingUrl": "https://corptimer.com/",
+  "privacyUrl": null,
+  "reviewNotes": "No account or login required. Start from Timers. For a short transition check, edit Boxing to 2 rounds of 2 seconds work, 1 second rest and 0 seconds preparation. Native notification/device QA must be completed before using these notes for a submission."
+}

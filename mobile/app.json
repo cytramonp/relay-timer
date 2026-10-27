@@ -1,0 +1,67 @@
+{
+  "expo": {
+    "icon": "./assets/icon.png",
+    "version": "0.1.0",
+    "ios": {
+      "bundleIdentifier": "com.corptimer.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#eeece5"
+      },
+      "predictiveBackGestureEnabled": true,
+      "permissions": ["android.permission.SCHEDULE_EXACT_ALARM"],
+      "package": "com.corptimer.app"
+    },
+    "slug": "corptimer",
+    "orientation": "default",
+    "scheme": "corptimer",
+    "userInterfaceStyle": "automatic",
+    "name": "CorpTimer",
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#eeece5",
+          "imageWidth": 180,
+          "image": "./assets/splash-icon.png"
+        }
+      ],
+      "expo-sqlite",
+      [
+        "expo-notifications",
+        {
+          "sounds": [
+            "./assets/bell.wav",
+            "./assets/gong.wav",
+            "./assets/beep.wav"
+          ]
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "enableBackgroundRecording": false,
+          "microphonePermission": false,
+          "enableBackgroundPlayback": false
+        }
+      ],
+      "expo-document-picker",
+      "expo-sharing",
+      "expo-image",
+      "expo-asset"
+    ],
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png",
+      "output": "single"
+    }
+  }
+}
