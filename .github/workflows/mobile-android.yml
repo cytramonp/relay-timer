@@ -2,7 +2,7 @@ name: Android APK
 on:
   push:
     branches: ['codex/corptimer-mobile']
-    paths: ['.github/workflows/mobile-android.yml']
+    paths: ['.github/workflows/mobile-android.yml', 'mobile/src/app/_layout.tsx']
   workflow_dispatch:
 permissions:
   contents: read

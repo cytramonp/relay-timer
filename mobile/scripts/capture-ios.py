@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import subprocess
 import time
+import os
 
 def run(*args):
     return subprocess.check_output(args, text=True)
@@ -27,13 +28,11 @@ for category in ['iPhone', 'iPad']:
     run('xcrun', 'simctl', 'launch', udid, 'com.corptimer.app')
     time.sleep(5)
     run('xcrun', 'simctl', 'io', udid, 'screenshot', str(output / f'{category.lower()}-ios-home.png'))
-    for path in ['timer/boxing','edit/boxing','history']:
-        run('xcrun','simctl','openurl',udid,f'corptimer://{path}')
-        time.sleep(3)
-        run('xcrun','simctl','io',udid,'screenshot',str(output / f'{category.lower()}-ios-{path.split("/")[0]}.png'))
+    subprocess.run([str(Path.home()/'.maestro/bin/maestro'),'--device',udid,'test','--test-output-dir',str(output/category.lower()),'-e',f'DEVICE_CLASS={category.lower()}',str(root/'tests/native-smoke.yaml')],check=True,cwd=root,env={**os.environ,'MAESTRO_CLI_NO_ANALYTICS':'1'})
     run('xcrun','simctl','ui',udid,'appearance','dark')
     run('xcrun','simctl','ui',udid,'content_size','accessibility-medium')
-    run('xcrun','simctl','openurl',udid,'corptimer://')
+    run('xcrun','simctl','terminate',udid,'com.corptimer.app')
+    run('xcrun','simctl','launch',udid,'com.corptimer.app')
     time.sleep(3)
     run('xcrun','simctl','io',udid,'screenshot',str(output / f'{category.lower()}-ios-dark-large-text.png'))
     run('xcrun', 'simctl', 'shutdown', udid)
