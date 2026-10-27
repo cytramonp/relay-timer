@@ -91,9 +91,9 @@ components:
 
 This mobile extension preserves CorpTimer's cream paper, charcoal ink, upright serif headings, fine rules, original glasses and half-comic activity artwork. The catalog is an illustrated list; an active timer is a dark teal stage. Native task conventions guide navigation, editing and switches.
 
-This is the implemented mobile system, scoped separately from the web design in `../DESIGN.md`. Source is the authority for tokens and behavior. `.impeccable/review/mobile-beta/home-web-390.png` and `history-web-390.png` at the repository root remain browser previews only. Native Android phone/tablet captures now exist in `.local/final-android-captures/`, covering home, timer, editor, History and dark large text. Android APK CI run `40446595327` succeeded on source `ddfcc48`.
+This is the implemented mobile system, scoped separately from the web design in `../DESIGN.md`. Source is the authority for tokens and behavior. `.impeccable/review/mobile-beta/home-web-390.png` and `history-web-390.png` at the repository root remain browser previews only. Native Android phone/tablet captures in `.local/final-android-captures/` cover home, timer, editor, History and dark large text. They were replaced by successful compilation/capture run `40450811756` on source `5c4cd90`.
 
-The Android-only visual review returned **FIX** for low-contrast dark system icons, default blue selection and a tablet sidebar occupying about 45% of the width. The source corrections documented below await new native verification; those captures do not validate the corrections. iOS Xcode compilation succeeded and simulator home rendered, but an OS Open dialog blocked deep-link screenshots. The Maestro interaction-capture pipeline is pending; there is no iOS visual pass. No native release approval or store submission is established. The owner has no Apple or Google developer account.
+The second bounded Android visual review remains **FIX**. Tablet rail width and Programs-label truncation are **resolved**; phone dark status icons and the gesture indicator remain **unresolved** for low contrast. There is no overall native visual approval. On iOS, run `40448998225` compiled successfully and passed Maestro catalog, timer and editor assertions, then reached the (240-second) timeout before History. Current CI preserves the app before testing and permits (600 seconds); that configuration is not a completed interaction run or an iOS visual pass. No native release approval or store submission is established. The owner has no Apple or Google developer account.
 
 **Key Characteristics:**
 
@@ -116,21 +116,21 @@ The frontmatter records `src/theme.tsx` plus the reusable action text colors. Un
 
 ## Typography
 
-Cantata One is bundled as `Cantata`; Manrope is bundled as `Manrope`. Body, labels and actions use the platform system font. Headings stay upright. The root layout now holds the splash screen until font loading resolves, mounting the workspace after the fonts are ready or a font error occurs. This prevents the normal first render from preceding bundled-font availability; corrected native rendering remains pending verification.
+Cantata One is bundled as `Cantata`; Manrope is bundled as `Manrope`. Body, labels and actions use the platform system font. Headings stay upright. The root layout holds the splash screen until font loading resolves, mounting the workspace after the fonts are ready or a font error occurs. Bundled-font rendering is confirmed in the current Android captures; this evidence does not establish every launch or device condition.
 
 - **Headline:** the frontmatter headline role styles section headings; catalog titles use Cantata at (23px), timer phase labels at (22px).
 - **Clock:** Manrope uses tabular figures. The standard clock uses the display role with one-line fitting and a (90px) minimum height. New Year uses (46px), chess (54px), and the active-session return preview (38px).
 - **Body:** the body role is selectable; catalog descriptions reduce to (14px) with (20px) line height. Field values use (17px); action and field labels use the label role.
 
-Do not import the web's small interface text scale into the native workspace. Native large-type behavior still needs device validation.
+Do not import the web's small interface text scale into the native workspace. The Android dark large-text captures do not establish full large-type coverage or physical-device validation.
 
 ## Layout
 
 `Page` is a vertical scroll container with automatic content-inset adjustment, a centered content width capped at (850px), page padding from the spacing tokens, and consistent vertical gaps. Rows wrap with the row gap; field wrappers grow from a (140px) basis. The timer remains above its agenda/sequence and program-saving controls.
 
-Expo Router supplies the stack and four tabs: Timers, My programs, History and Settings. Editors open as modals; timer headers expose Edit. Headers use the page ground without a shadow. Tabs use red active tint, muted inactive tint, soft-teal selected background and (13px) semibold labels. Android moves tabs to a (156px) left rail at widths of (768px) or more; other cases use bottom tabs. The narrower rail and explicit selected background correct the reviewed source; native recapture and scoring are pending.
+Expo Router supplies the stack and four tab labels: Timers, Programs, History and Settings. The Programs screen retains the title “My programs.” Editors open as modals; timer headers expose Edit. Headers use the page ground without a shadow. Tabs use red active tint, muted inactive tint, soft-teal selected background and (13px) semibold labels. Android moves tabs to a left rail at widths of (768px) or more; width, minimum width and maximum width are all fixed at (156px). Other cases use bottom tabs. The current Android review confirms the rail width and Programs-label truncation fixes.
 
-The complete React Navigation theme maps primary/notification, background/card, text and border to CorpTimer roles. StatusBar and Stack explicitly select light foregrounds in dark appearance and dark foregrounds in light appearance. Android's `expo-navigation-bar` uses the matching foreground style; `expo-system-ui` sets the themed system background and the app declares automatic appearance. These are source-level corrections to system chrome and selection, not a passed visual gate.
+The complete React Navigation theme maps primary/notification, background/card, text and border to CorpTimer roles. StatusBar and Stack explicitly request light foregrounds in dark appearance and dark foregrounds in light appearance. Android's `expo-navigation-bar` requests the matching foreground style; `expo-system-ui` sets the themed system background and the app declares automatic appearance. Despite these source settings, phone dark status icons and the gesture indicator remain low contrast in the current review. Do not describe system-chrome contrast as fixed.
 
 `SafeAreaProvider` wraps navigation. Notices live inside `Page`, beneath the navigation and within the scroll content, rather than above the safe-area-aware navigation tree.
 
@@ -159,7 +159,7 @@ Controls and fields share restrained control corners. Activity thumbnails, paire
 - **Do** preserve the original glasses, activity artwork, upright headings and ruled catalog.
 - **Do** use theme roles for both appearances and retain the dark active-clock stage.
 - **Do** preserve wrapping controls, labeled fields, native switches and explicit timer state.
-- **Do** recapture and rescore the corrected Android phone/tablet surfaces; complete iOS interaction captures before claiming native visual approval.
+- **Do** retain the resolved tablet rail and Programs label; keep Android system-chrome contrast and incomplete iOS coverage explicit until further verification.
 - **Don't** copy web-only floating controls, private host panels or desktop agenda composition into this app.
 - **Don't** replace system navigation with decorative custom chrome or add card shadows.
 - **Don't** treat browser previews, a successful build or unscored source corrections as a native release approval.
