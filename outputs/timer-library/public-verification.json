@@ -1,0 +1,126 @@
+{
+  "origin": "https://corptimer.com",
+  "public_pages": [
+    {
+      "url": "https://corptimer.com/",
+      "status": 200,
+      "title": "Meeting Timer \u2014 Free Agenda Timer with Live Sharing | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/timers/",
+      "status": 200,
+      "title": "Other Timers \u2014 Free Online Timer | CorpTimer",
+      "static_guide": false
+    },
+    {
+      "url": "https://corptimer.com/boxing-timer/",
+      "status": 200,
+      "title": "Boxing Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/fitness-timer/",
+      "status": 200,
+      "title": "Fitness Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/pomodoro-timer/",
+      "status": 200,
+      "title": "Pomodoro Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/classroom-timer/",
+      "status": 200,
+      "title": "Classroom Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/chess-timer/",
+      "status": 200,
+      "title": "Chess Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/stopwatch/",
+      "status": 200,
+      "title": "Online Stopwatch \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/simple-timer/",
+      "status": 200,
+      "title": "Simple Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/new-year-countdown/",
+      "status": 200,
+      "title": "New Year Countdown \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/5-minute-timer/",
+      "status": 200,
+      "title": "5 Minute Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/10-minute-timer/",
+      "status": 200,
+      "title": "10 Minute Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/15-minute-timer/",
+      "status": 200,
+      "title": "15 Minute Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/20-minute-timer/",
+      "status": 200,
+      "title": "20 Minute Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/25-minute-timer/",
+      "status": 200,
+      "title": "25 Minute Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    },
+    {
+      "url": "https://corptimer.com/30-minute-timer/",
+      "status": 200,
+      "title": "30 Minute Timer \u2014 Free Online Timer | CorpTimer",
+      "static_guide": true
+    }
+  ],
+  "assets": [
+    {
+      "path": "/special-timers.css",
+      "status": 200,
+      "sha256": "a06711f41aee1e3030b06e6774d61704a25e743448cd71f0ca74d8957681ab74"
+    },
+    {
+      "path": "/special-timers.js",
+      "status": 200,
+      "sha256": "b66ee1af544ee77f770f8cad1907a1d882527a78b4ecc2f5bbc433c4cab02cce"
+    },
+    {
+      "path": "/timer-engine.js",
+      "status": 200,
+      "sha256": "6621be8eae9c4b5b2e39006e6236ffa2db8d5c13b49854c70b7983b9778bf01a"
+    },
+    {
+      "path": "/assets/timer-illustrations.jpg",
+      "status": 200,
+      "sha256": "95fde68b9dfcb1de4d5ee45eeb31180b3e161a29c2e792b923492d48dc385c5d"
+    }
+  ],
+  "robots": "pass",
+  "llms": "pass",
+  "google_verification_file": "pass"
+}

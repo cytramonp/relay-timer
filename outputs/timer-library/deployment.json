@@ -1,0 +1,18 @@
+{
+  "localDate": "2026-10-26",
+  "origin": "https://corptimer.com/",
+  "firebaseSite": "relay-timer-web-7c39",
+  "release": "sites/relay-timer-web-7c39/releases/1793059330139000",
+  "files": 58,
+  "publicPagesVerified": 16,
+  "timerGuidesVerified": 15,
+  "testsPassed": 42,
+  "searchConsoleProperty": "https://corptimer.com/",
+  "ownershipVerified": true,
+  "sitemap": "https://corptimer.com/sitemap.xml",
+  "sitemapStatus": "Success",
+  "discoveredPages": 16,
+  "indexingConfirmed": false,
+  "directoryIndexStatus": "Discovered - currently not indexed",
+  "additionalManualRequest": "Not accepted: reCAPTCHA service connection error; no bypass attempted"
+}

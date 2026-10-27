@@ -35,4 +35,10 @@ Run `npm run check` and appropriate model tests before publication. `.firebaserc
 
 Commit and push source separately. Firebase Hosting does not automatically deploy on GitHub pushes. Do not introduce permanent deploy credentials or enable billing without the owner's approval.
 
+## Timer library release - 26 October 2026
+
+Published the fourteen standalone tools, timer directory and page-specific How it works and advice disclosures, including the Meeting Timer guide. Firebase release: `sites/relay-timer-web-7c39/releases/1793059330139000`, 58 public files. All 42 tests pass. The canonical domain returned HTTP 200 on all sixteen sitemap URLs; fifteen timer pages contain the closed static guide. Published CSS, JavaScript and the illustration atlas match the checked local bytes. See `outputs/timer-library/public-verification.json` and `validation.md` for scoped evidence.
+
+The Search Console HTTPS URL-prefix property is verified. The submitted `/sitemap.xml` has Success status and sixteen discovered pages. Preserve `docs/google9b7523e5b6829d1e.html` to retain ownership. `robots.txt` permits OAI-SearchBot and references the sitemap; `llms.txt` lists the public tools. Submission and discovery do not establish indexing or search visibility.
+
 Release verification: 29 model tests and JavaScript/JSON checks pass. The deployed provider origin returned HTTP 200 with the new canonical URL and outlined-panel stylesheet. Browser QA confirmed Start, Next speaker with carried time, Pause, Undo and Reset. Google authorized-domain configuration was reread after update; a real Google sign-in and saved-meeting sync on the .com origin still require owner verification.

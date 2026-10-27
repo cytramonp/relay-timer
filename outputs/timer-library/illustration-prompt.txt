@@ -1,0 +1,12 @@
+Create a single production-ready illustration sprite atlas for the CorpTimer web app. Square canvas, exactly 2 equal columns by 4 equal rows: eight equally sized wide 2:1 rectangular cells, no gutters, no borders or divider lines. Each cell's entire background is the same flat warm paper cream #eeece5. Every illustration must be fully contained within its own cell with generous empty cream margin, never crossing cell boundaries. No labels, no lettering, no numerals, no text.
+Style: minimalist playful half-comic editorial spot illustrations matching a black eyeglasses logo whose right lens has a red timer wedge. Thick clean slightly hand-shaped charcoal #20211e outlines, flat cream interiors, restrained red #c62d35 solid accents, small flat muted teal #299093 accents. Confident very simple contours, just 2-4 recognizable objects per cell, sparse comic motion ticks. No photography, no realism, no shading, no gradients, no texture, no 3D, no emoji, no glossy icons. Keep the same outline thickness and visual scale across all eight cells.
+Exact layout in reading order:
+ROW 1 LEFT: a miniature empty boxing ring with three ropes and a red corner cushion, with a pair of red boxing gloves draped over a rope.
+ROW 1 RIGHT: one red-ended dumbbell, a small teal water bottle and a little sweat-motion tick.
+ROW 2 LEFT: one red tomato-shaped kitchen timer, a simple pencil and a small cream notepad with just three abstract lines.
+ROW 2 RIGHT: a small classroom board with an abstract red pie-shaped time wedge and two simplified cream books, a teal chalk detail.
+ROW 3 LEFT: one charcoal chess knight and one cream rook outlined in charcoal, with a small red handoff arrow.
+ROW 3 RIGHT: a classic cream stopwatch with a red clock hand and two simple charcoal speed lines.
+ROW 4 LEFT: a simple cream mechanical kitchen countdown dial with a red elapsed wedge and a little teal pushbutton. No numbers on dial.
+ROW 4 RIGHT: a minimalist New Year celebration: one red party popper, a couple of teal and red confetti pieces and a small outlined clock pointing to midnight. No year text.
+Each cell should feel like a friendly recognizable miniature scene rather than a generic app icon. Matte flat colors, cream canvas, crisp vector-like bitmap edges. The image is an ASSET SHEET, not a website mockup.

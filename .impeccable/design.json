@@ -64,8 +64,67 @@
       {
         "name": "small-phone",
         "value": "480px"
+      },
+      {
+        "name": "standalone-stack",
+        "value": "760px"
+      },
+      {
+        "name": "standalone-small-phone",
+        "value": "400px"
       }
-    ]
+    ],
+    "timerLibrary": {
+      "surfaceBrief": ".impeccable/surfaces/timer-library.md",
+      "stylesheet": "docs/special-timers.css",
+      "compositionSources": [
+        "scripts/build-timers.mjs",
+        "docs/timer-forms.js",
+        "docs/special-timers.js"
+      ],
+      "layout": "Illustrated ruled heading, dark clock beside task settings; clock before settings on phones. Ruled directory links and a six-duration strip.",
+      "supportedMinimumWidth": "320px",
+      "inactiveChessOpacity": 1,
+      "storage": "Distinct browser-local settings, presets and sessions; no standalone account sync.",
+      "illustration": {
+        "asset": "docs/assets/timer-illustrations.jpg",
+        "format": "JPEG sprite atlas, 2 columns by 4 rows",
+        "backgroundSize": "200% 400%",
+        "blendMode": "darken",
+        "style": "User-directed minimal half-comic scenes: thick charcoal outlines, cream ground, restrained red and teal accents.",
+        "scenes": [
+          "boxing",
+          "fitness",
+          "Pomodoro",
+          "classroom",
+          "chess",
+          "stopwatch",
+          "simple countdown",
+          "New Year"
+        ],
+        "promptProvenance": [
+          "JPEG COM metadata",
+          "outputs/timer-library/illustration-prompt.txt"
+        ]
+      },
+      "review": {
+        "disposition": "SHIP after inactive chess-clock opacity correction",
+        "scope": "Viewport captures and reported browser checks; no full-page or real-device alarm claim; no deployment claim.",
+        "evidenceDirectory": ".impeccable/review/",
+        "captures": [
+          "boxing-desktop.png",
+          "boxing-mobile.png",
+          "boxing-mobile-settings.png",
+          "directory-desktop.png",
+          "directory-mobile.png",
+          "chess-mobile.png",
+          "newyear-mobile.png",
+          "long-timer-320.png",
+          "meeting-desktop.png",
+          "meeting-320.png"
+        ]
+      }
+    }
   },
   "components": [
     {
@@ -113,19 +172,32 @@
       "description": "Outlined light agenda, timeline, parking and summary surface; final blocks.css override.",
       "html": "<section class=\"ds-working-block\">Meeting agenda</section>",
       "css": ".ds-working-block{border:1px solid #a6aaa2;border-radius:14px;background:#f3f1eb;padding:22px;color:#20211e;box-shadow:none}@media(max-width:600px){.ds-working-block{padding:18px 14px}}"
+    },
+    {
+      "name": "Standalone clock stage",
+      "kind": "custom",
+      "description": "Dark clock and phase hierarchy with cream Start and salmon Reset; adjacent activity settings live on the light page.",
+      "html": "<section class=\"ds-clock-stage\"><p class=\"ds-clock-meta\">Ready</p><h2>Time to focus</h2><div class=\"ds-clock-time\" role=\"timer\" aria-label=\"Time remaining\">25:00</div><div class=\"ds-clock-actions\"><button class=\"ds-clock-start\">Start</button><button class=\"ds-clock-reset\">Reset</button></div></section>",
+      "css": ".ds-clock-stage{padding:30px;border:1px solid #27484c;border-radius:14px;background:#061a1e;color:#f5f2e9}.ds-clock-meta{margin:0;color:#b5cbca;font:12px var(--f-ui,Manrope,Arial,sans-serif)}.ds-clock-stage h2{margin:17px 0 0;color:#64c9c4;font:400 26px/1.4 var(--f-editorial,\"Cantata One\",Georgia,serif)}.ds-clock-time{margin:18px 0;font:750 clamp(60px,9.5vw,136px)/1.3 var(--f-ui,Manrope,Arial,sans-serif);font-variant-numeric:tabular-nums;letter-spacing:-.04em;white-space:nowrap}.ds-clock-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}.ds-clock-actions button{min-height:44px;padding:10px;border:1px solid;border-radius:5px;font:650 14px var(--f-ui,Manrope,Arial,sans-serif);cursor:pointer}.ds-clock-start{flex:2;background:#f5f2e9;color:#132c30;border-color:#f5f2e9}.ds-clock-start:hover{background:#dedbd2}.ds-clock-reset{flex:1;background:#ff9b90;color:#431612;border-color:#ff9b90}.ds-clock-reset:hover{background:#ffb3aa}.ds-clock-actions button:focus-visible{outline:2px solid #64c9c4;outline-offset:3px}@media(max-width:400px){.ds-clock-stage{padding:20px 16px}.ds-clock-time{font-size:clamp(60px,17vw,120px)}}"
+    },
+    {
+      "name": "Ruled timer directory link",
+      "kind": "nav",
+      "description": "Flat title and supporting copy divided by a fine rule; illustration placement is documented in timerLibrary.",
+      "html": "<a class=\"ds-directory-link\" href=\"/boxing-timer/\"><h3>Boxing Timer</h3><p>Your rounds. Your rhythm.</p><span>Custom rounds · gong · warning cues</span></a>",
+      "css": ".ds-directory-link{display:grid;gap:8px;padding:22px 0;border-top:1px solid var(--line,#bbbcb4);color:var(--fg,#20211e);text-decoration:none}.ds-directory-link h3{margin:0;font:400 23px/1.3 var(--f-editorial,\"Cantata One\",Georgia,serif)}.ds-directory-link p{margin:0;color:var(--muted,#62635e);font:13px/1.7 var(--f-ui,Manrope,Arial,sans-serif)}.ds-directory-link span{color:var(--muted,#62635e);font:11px/1.7 var(--f-ui,Manrope,Arial,sans-serif)}.ds-directory-link:hover h3{text-decoration:underline;text-underline-offset:6px}.ds-directory-link:focus-visible{outline:2px solid var(--focus,#17676b);outline-offset:3px}"
     }
   ],
   "narrative": {
     "northStar": "The newspaper workbench",
-    "overview": "The user-approved editorial world uses cream paper, charcoal ink, upright Cantata One headings and Manrope controls. Red outlined Start / Next, red filled Reset and saturated teal Float support a smaller host clock and editable agenda. Thin rules and flat surfaces replace the earlier mineral/acid world. Floating and audience screens remain dark.\n\nThe final source of visual overrides is docs/editorial.css after base.css and workspace.css. The reference image is directional: subsequent explicit user corrections supersede its oversized clock, pale green, filled Start and connector geometry. The historical failed 63.7 reproduction remains historical evidence, not a current passed gate or an exact-match claim. Current review artifacts are .impeccable/review/desktop.png, mobile.png, user-320.png and mobile-agenda.png. This documentation does not assert deployment status. Preserve https://cytramonp.github.io/relay-timer/ and PRODUCT.md behavior; CorpTimer is the selected working brand with domain registration pending.\n\nApproved block refinement: docs/blocks.css loads last. The light page contains a dark teal timer and outlined light working panels with 14px corners and no shadows. Start / Next is cream, Float bright teal, Reset salmon. Templates and Add actions have clear outlines. The thin extended bent grey/red agenda trace has no endpoint circles and hides at 1100px. The decorative stopwatch is hidden. Audience mode matches the light page and dark timer. Preserve selected logo A and the canonical URL. This refinement supersedes earlier borderless panels, outlined Start and short dotted connector descriptions.",
+    "overview": "Cream paper, charcoal ink, upright serif headings and fine rules make a working meeting agenda feel editorial and immediately readable. The host clock sits inside a dark teal timer block on the light page. Cream identifies Start / Next Speaker, salmon identifies Reset, and bright teal identifies Float Timer. The compact clock leaves room for editing and handing off the agenda.\n\nThis documents the user-approved editorial redesign and subsequent explicit corrections of 25–26 October 2026. It replaces the earlier mineral/acid visual contract. CorpTimer is the selected brand; https://corptimer.com/ is the primary origin after the 25 October cutover to Firebase Hosting project `relay-timer-web-7c39`. Keep https://cytramonp.github.io/relay-timer/ available as the legacy Pages copy and preserve the functional product contract in PRODUCT.md. The meeting cascade is `docs/base.css`, then `docs/workspace.css`, then `docs/editorial.css`, then `docs/blocks.css`; standalone tools add `docs/special-timers.css` last. Inherited mechanics remain relevant, but older overwritten styles are not current design guidance.\n\nThe direction image `.impeccable/mocks/editorial-approved.png` is a reference, not an exact-match requirement: later user corrections supersede its oversized clock, pale green, filled Start and connector geometry. The earlier failed 63.7 reproduction score remains historical evidence; it is not a current passed gate. Current review screenshots are `.impeccable/review/desktop.png`, `mobile.png`, `user-320.png` and `mobile-agenda.png`. Documentation records the implemented system and does not establish deployment status or claim exact comp matching.\n\nThe timer-library extension has a SHIP finish-review disposition after the inactive chess-clock contrast correction. Evidence in `.impeccable/review/` includes `boxing-desktop.png`, `boxing-mobile.png`, `boxing-mobile-settings.png`, `directory-desktop.png`, `directory-mobile.png`, `chess-mobile.png`, `newyear-mobile.png`, `long-timer-320.png`, `meeting-desktop.png` and `meeting-320.png`. This covers viewport captures and reported browser checks, not full-page or real-device alarm validation. No deployment is established by this documentation pass.",
     "keyCharacteristics": [
-      "Cream and charcoal editorial host workspace",
-      "Self-hosted upright Cantata One and Manrope",
-      "Compact host clock with paused opacity .72",
-      "Cream transport, salmon Reset and bright teal Float in a dark timer",
-      "Thin extended bent grey-red trace to the whole agenda, without endpoint circles",
-      "Responsive focused task navigation at 320px and 390px",
-      "Dark floating content; light audience page with dark timer; private host tools kept separate"
+      "Cream host workspace with flat surfaces, thin rules and red rule accents.",
+      "Self-hosted Cantata One headings and Manrope interface text.",
+      "Compact tabular clock and distinct transport, reset and floating actions.",
+      "Editable desktop agenda beside the clock; focused mobile task navigation.",
+      "Dark floating content and a light audience page with a dark timer, separate from private host tools.",
+      "Illustrated standalone tools and a ruled directory within the same editorial world."
     ],
     "rules": [
       {
@@ -145,17 +217,19 @@
       }
     ],
     "dos": [
-      "Do preserve the actual editable agenda, host authority and timing behavior.",
-      "Do keep the thin bent trace without endpoint circles at agenda-heading level and hide it at 1100px and below.",
-      "Do retain mobile task navigation, 16px mobile fields and visible keyboard focus.",
-      "Do keep the canonical URL, optional Google sign-in and immediate app entry."
+      "**Do** preserve the cream/charcoal editorial ground and upright serif hierarchy.",
+      "**Do** retain cream Start / Next, salmon Reset and bright teal Float inside the dark timer.",
+      "**Do** keep the smaller clock, 0.72 paused opacity and thin bent agenda-level trace without endpoint circles.",
+      "**Do** preserve responsive 320px/390px task navigation, focus visibility and real editable data.",
+      "**Do** retain the canonical public URL, optional sign-in and immediate app entry.",
+      "**Do** preserve illustrated tool headings, ruled directory links, legible inactive chess clocks and separate browser-local setups."
     ],
     "donts": [
-      "Don't restore the superseded mineral/acid palette.",
-      "Don't treat the historical reproduction score as current approval or claim exact comp matching.",
-      "Don't enlarge the clock or restore the decorative stopwatch.",
-      "Don't connect to individual speaker rows or expose private notes and reports to audience views.",
-      "Don't introduce external font dependencies or claim PiP is visible in every sharing mode."
+      "**Don't** restore the superseded mineral/acid world or treat historical mock scores as current approval.",
+      "**Don't** enlarge the meeting clock or restore its decorative stopwatch.",
+      "**Don't** connect the clock to an individual speaker row.",
+      "**Don't** introduce remote font dependencies, decorative card shadows or a marketing/paywall gate.",
+      "**Don't** convey state through color alone or imply floating content is always visible in every screen-sharing mode."
     ]
   }
 }

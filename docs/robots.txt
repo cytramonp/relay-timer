@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /live.html
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /live.html
+
+Sitemap: https://corptimer.com/sitemap.xml

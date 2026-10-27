@@ -23,6 +23,30 @@ Open the app and edit the agenda immediately. No account, subscription, trial or
 - Original agenda captured at Start, actual-time report, plan-change history, CSV export, copy and print. Reset archives the session report; a fresh meeting copy clears reports and notes.
 - Manual overtime or automatic milestone transitions. One-minute extensions add time to the current slot and the overall agenda.
 
+## Other Timers
+
+The meeting workspace remains at `/`, named **Meeting Timer**. **Other Timers** in the header and footer opens `/timers/`. The old How it works dialog has been removed.
+
+Fourteen standalone routes extend the existing cream/charcoal visual system:
+
+- `/boxing-timer/`: rounds, optional per-round names/work/rest, preparation, cool-down, gong/bell/beep, volume, work-warning threshold, final countdown and automatic/manual transitions.
+- `/fitness-timer/`: editable HIIT, Tabata, EMOM and AMRAP presets, rounds, sets and separate recovery between sets.
+- `/pomodoro-timer/`: named focus task, session count, focus/short/long breaks, long-break frequency and optional final break.
+- `/classroom-timer/`: activity name, silent default, visual progress and optional hidden digits.
+- `/chess-timer/`: two clocks, Fischer increment, per-turn delay, first player, move counts, side swap, pause and flag stopping.
+- `/stopwatch/`: elapsed time, laps/splits and CSV export.
+- `/simple-timer/`: custom duration up to 24 hours, alarm and one-minute extensions.
+- `/new-year-countdown/`: the next January 1 in a selected time zone and an optional midnight alarm.
+- `/5-minute-timer/`, `/10-minute-timer/`, `/15-minute-timer/`, `/20-minute-timer/`, `/25-minute-timer/`, `/30-minute-timer/`: independent, ready-set countdown pages.
+
+These tools use separate local-storage keys and do not use Google/Firebase meeting sync. Setups can be named, saved, removed, exported and imported. Reloaded sessions return paused; New Year follows its selected target date. The interval and chess engines use timestamp deltas, including delayed callbacks. This cannot guarantee background/mobile sound delivery or an alarm after the page closes. A screen wake lock is requested during running sessions where supported. The website is browser based; no native app is included in this change.
+
+Static pages contain distinct titles, descriptions, canonicals, headings, guides and related links, with WebApplication metadata; the catalog uses CollectionPage/ItemList. Every timer, including Meeting Timer, has a closed native **How it works and advice** section at the bottom, with page-specific instructions and practical advice. The text is present in the static HTML and can be read without running JavaScript. The duration pages use distinct examples and advice rather than only swapping a number.
+
+`docs/sitemap.xml`, `robots.txt` and a concise public `llms.txt` directory are generated. Robots explicitly permits OAI-SearchBot and keeps live session views excluded. The sitemap covers sixteen public pages and has an explicit content-update date; do not advance that date for unrelated builds. Search volume, indexing, ranking and AI citations are not guaranteed. To regenerate after changing `timer-catalog.js`, `timer-forms.js`, `timer-guides.js` or the page template, run `npm run build:timers`, then the normal checks. Static output is committed alongside the source; deployment does not require a build. Preserve the public Google ownership-verification HTML file after Search Console verification.
+
+The eight generated comic-style illustrations are one optimized atlas at `docs/assets/timer-illustrations.jpg`, selected via CSS background positions. The exact generation prompt is embedded in JPEG metadata and saved in `outputs/timer-library/illustration-prompt.txt`. The photographs considered earlier are not shipped.
+
 ## Live sharing
 
 Choose **Share live → Create live link**. The viewer needs no account. Google sign-in is also optional for hosting; Firebase can create an anonymous host identity. Keep the host tab open. The audience page extrapolates the anchored clock and shows a stale-connection warning after 45 seconds without a host update. The existing worker clock also drives live heartbeats, with a page-timer fallback. This remains a browser-hosted session, not an always-running server timer.
@@ -68,7 +92,7 @@ Firebase was provisioned in a separate project with a free-tier Firestore databa
 
 ## Validation
 
-Twenty-nine tests cover the production model, timestamp behavior, allocation, explicit equalization, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping, private-data projection and reusable-template isolation/backup/sync behavior. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
+Forty-two tests cover the production model, timestamp behavior, allocation, explicit equalization, imports, merges, deletion, automatic transitions, immutable report baselines, removed-slot history, CSV formula escaping, private-data projection and reusable-template isolation/backup/sync behavior. JavaScript syntax and public JSON are checked by `npm run check`. See [VALIDATION.md](VALIDATION.md) for browser, Firebase and deployment evidence. Provider setup is not proof of a real Google sign-in.
 
 ## Visual reference and licenses
 

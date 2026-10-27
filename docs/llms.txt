@@ -1,0 +1,30 @@
+# CorpTimer
+
+> Free browser-based timers for meetings, focus, classrooms, workouts and everyday activities.
+
+## Public timer pages
+
+- [Meeting Timer](https://corptimer.com/): Give every speaker their time. Build an agenda, pass spare minutes forward and share a live audience screen.
+- [Boxing Timer](https://corptimer.com/boxing-timer/): Your rounds. Your rhythm. A flexible boxing round timer with rest periods, a gong and adjustable warning cues.
+- [Fitness Timer](https://corptimer.com/fitness-timer/): Make room for the next rep. Set up HIIT, Tabata, EMOM, AMRAP or your own interval workout.
+- [Pomodoro Timer](https://corptimer.com/pomodoro-timer/): One thing at a time. Focus sessions, short breaks and a longer pause, at a pace you choose.
+- [Classroom Timer](https://corptimer.com/classroom-timer/): A little structure for a room full of ideas. A clear activity countdown for lessons, group work and quiet reading.
+- [Chess Timer](https://corptimer.com/chess-timer/): Two players. Equal time. A chess clock with increment, delay and a clear handoff after every move.
+- [Online Stopwatch](https://corptimer.com/stopwatch/): Start now. See how long it takes. A simple stopwatch with laps, splits and an exportable record.
+- [Simple Timer](https://corptimer.com/simple-timer/): Just the time you need. An adjustable online countdown with an alarm, fullscreen and one-minute extensions.
+- [New Year Countdown](https://corptimer.com/new-year-countdown/): A fresh start, down to the second. Count down to midnight in the time zone you choose.
+- [5 Minute Timer](https://corptimer.com/5-minute-timer/): Start a 5 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [10 Minute Timer](https://corptimer.com/10-minute-timer/): Start a 10 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [15 Minute Timer](https://corptimer.com/15-minute-timer/): Start a 15 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [20 Minute Timer](https://corptimer.com/20-minute-timer/): Start a 20 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [25 Minute Timer](https://corptimer.com/25-minute-timer/): Start a 25 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [30 Minute Timer](https://corptimer.com/30-minute-timer/): Start a 30 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+
+## Directory and usage
+
+- [Other Timers](https://corptimer.com/timers/): Browse all activities and preset countdowns.
+- Each timer page contains a public, expandable How it works and advice guide in its HTML.
+- JavaScript is required to operate the clocks; an account is not required.
+- Standalone setups stay in browser storage. Optional Google synchronization belongs to the Meeting Timer.
+- Keep the tab open for alarms; background and mobile delivery depend on the browser.
+- Live audience links are temporary session views, not indexable timer guides.
