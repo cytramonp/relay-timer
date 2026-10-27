@@ -4,7 +4,8 @@ appId: com.corptimer.app
     clearState: true
 - assertVisible: 'Make time for it.'
 - takeScreenshot: '${DEVICE_CLASS}-ios-home'
-- tapOn: 'Boxing timer'
+- tapOn:
+    text: 'Boxing.*'
 - assertVisible: 'Start timer'
 - takeScreenshot: '${DEVICE_CLASS}-ios-timer'
 - tapOn: 'Edit'
