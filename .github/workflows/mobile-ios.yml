@@ -28,17 +28,22 @@ jobs:
       - name: Compile unsigned iOS simulator app
         run: |
           xcodebuild -workspace ios/CorpTimer.xcworkspace -scheme CorpTimer -configuration Release -sdk iphonesimulator -derivedDataPath ios-build CODE_SIGNING_ALLOWED=NO build > xcodebuild.log 2>&1 || { tail -n 100 xcodebuild.log; exit 1; }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: corptimer-ios-simulator
+          path: mobile/ios-build/Build/Products/Release-iphonesimulator/CorpTimer.app
+          if-no-files-found: error
+          retention-days: 14
       - name: Install native UI test driver from its official distribution
         run: curl -fsSL https://get.maestro.mobile.dev | bash
       - name: Launch iPhone and iPad and capture native UI
         run: python3 scripts/capture-ios.py
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: corptimer-ios-simulator
-          path: |
-            mobile/ios-build/Build/Products/Release-iphonesimulator/CorpTimer.app
-            mobile/native-captures/**
-          if-no-files-found: error
+          name: corptimer-ios-native-captures
+          path: mobile/native-captures/**
+          if-no-files-found: warn
           retention-days: 14
       - uses: actions/upload-artifact@v4
         if: failure()

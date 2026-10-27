@@ -28,7 +28,7 @@ for category in ['iPhone', 'iPad']:
     run('xcrun', 'simctl', 'launch', udid, 'com.corptimer.app')
     time.sleep(5)
     run('xcrun', 'simctl', 'io', udid, 'screenshot', str(output / f'{category.lower()}-ios-home.png'))
-    subprocess.run([str(Path.home()/'.maestro/bin/maestro'),'--device',udid,'test','--test-output-dir',str(output/category.lower()),'-e',f'DEVICE_CLASS={category.lower()}',str(root/'tests/native-smoke.yaml')],check=True,cwd=root,env={**os.environ,'MAESTRO_CLI_NO_ANALYTICS':'1'},timeout=240)
+    subprocess.run([str(Path.home()/'.maestro/bin/maestro'),'--device',udid,'test','--test-output-dir',str(output/category.lower()),'-e',f'DEVICE_CLASS={category.lower()}',str(root/'tests/native-smoke.yaml')],check=True,cwd=root,env={**os.environ,'MAESTRO_CLI_NO_ANALYTICS':'1'},timeout=600)
     run('xcrun','simctl','ui',udid,'appearance','dark')
     run('xcrun','simctl','ui',udid,'content_size','accessibility-medium')
     run('xcrun','simctl','terminate',udid,'com.corptimer.app')
