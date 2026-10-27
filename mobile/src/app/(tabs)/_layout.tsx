@@ -7,14 +7,21 @@ import { Platform, useWindowDimensions } from "react-native";
 export default function TabLayout() {
   const t = useTheme();
   const { width } = useWindowDimensions();
+  const expanded = Platform.OS === "android" && width >= 768;
   return (
     <Tabs
       screenOptions={{
-        tabBarPosition:
-          Platform.OS === "android" && width >= 768 ? "left" : "bottom",
+        tabBarPosition: expanded ? "left" : "bottom",
         tabBarActiveTintColor: t.red,
         tabBarInactiveTintColor: t.muted,
-        tabBarStyle: { backgroundColor: t.bg, borderTopColor: t.line },
+        tabBarActiveBackgroundColor: t.soft,
+        tabBarInactiveBackgroundColor: "transparent",
+        tabBarLabelStyle: { fontSize: 13, fontWeight: "600" },
+        tabBarStyle: {
+          backgroundColor: t.bg,
+          borderTopColor: t.line,
+          ...(expanded ? { width: 156 } : {}),
+        },
         headerStyle: { backgroundColor: t.bg },
         headerTintColor: t.ink,
         headerTitleStyle: { fontFamily: "Cantata" },
