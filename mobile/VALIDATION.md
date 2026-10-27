@@ -25,3 +25,11 @@ The current Expo SDK 58 dependency tree reports five high-severity transitive fi
 - Dark appearance, large system text, safe areas, keyboard and gestures on actual supported devices.
 - Native document picker/share sheet and SQLite recovery on hardware.
 - No App Store or Google Play submission has been made by this source-code change.
+
+## Native evidence and review update
+
+- Android run [40446595327](https://github.com/cytramonp/relay-timer/actions/runs/40446595327), source `ddfcc48`, compiled a standalone arm64/x86_64 release-mode test APK and passed emulator launch/captures for phone and tablet. Light/dark and font scale 1.3 captures are available. This establishes basic launch and ready-state UI, not lock-screen alarm delivery or physical-device behavior.
+- Its APK SHA-256 is `0D9ABD8815280AF342B350D23343991B9A7EC2F035D3B7F5A0F7316E6CC4EAD7`. It is an internal test build signed with the generated development identity.
+- Android visual review returned **fix**: low-contrast dark system icons, default blue selected rail surface and oversized tablet navigation. Source `ca649b7` addresses these with the navigation theme, explicit system-bar styles and a 156 dp tablet rail. Native recapture and scoring of these corrections are pending.
+- iOS native compilation succeeded on macOS, and the initial simulator catalog rendered on iPhone and iPad. The first deep-link captures were blocked by the OS confirmation and are not accepted as timer/editor/history evidence. A native interaction flow is present; complete iOS visual and interaction approval remains pending.
+- The owner confirmed that Apple Developer and Google Play developer accounts have not been created. No store enrollment, signing-account setup or store publication was performed.
