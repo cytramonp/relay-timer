@@ -37,6 +37,7 @@ if(typeof document!=='undefined'){
  dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close();}});
  document.addEventListener('pointerdown',e=>{if(!dialog.contains(e.target)&&eligible(e.target)){e.preventDefault();open(e.target);}},true);
  document.addEventListener('keydown',e=>{if(!dialog.contains(e.target)&&eligible(e.target)&&['Enter',' '].includes(e.key)){e.preventDefault();open(e.target);}},true);
- const mark=()=>document.querySelectorAll('input[type="number"]').forEach(input=>{if(eligible(input)&&!input.dataset.durationDial){input.dataset.durationDial='true';input.setAttribute('aria-haspopup','dialog');input.title='Click to rotate time. Keyboard input also works.';}});
- mark();new MutationObserver(mark).observe(document.body,{childList:true,subtree:true});
+ const annotate=input=>{if(eligible(input)&&!input.dataset.durationDial){input.dataset.durationDial='true';input.setAttribute('aria-haspopup','dialog');input.title='Click to rotate time. Keyboard input also works.';}};
+ const mark=root=>{if(root.matches?.('input[type="number"]'))annotate(root);root.querySelectorAll?.('input[type="number"]').forEach(annotate);};
+ mark(document);new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes)if(node.nodeType===1)mark(node);}).observe(document.body,{childList:true,subtree:true});
 }
