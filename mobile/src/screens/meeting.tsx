@@ -299,6 +299,8 @@ export function MeetingScreen() {
           onPress={() => router.push("/meeting-options")}
           style={{
             minHeight: 52,
+            minWidth: 92,
+            flexShrink: 0,
             paddingHorizontal: 12,
             borderWidth: 1,
             borderColor: t.line,
@@ -309,7 +311,20 @@ export function MeetingScreen() {
           }}
         >
           <Text style={{ fontSize: 11, color: t.muted }}>Total, min</Text>
-          <Text style={{ fontSize: 19, color: t.ink, fontFamily: "Manrope" }}>
+          <Text
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style={{
+              fontSize: 19,
+              lineHeight: 30,
+              minWidth: 68,
+              paddingHorizontal: 4,
+              includeFontPadding: true,
+              textAlign: "center",
+              color: t.ink,
+              fontFamily: "Manrope",
+            }}
+          >
             {Math.round((totalSeconds(config.agenda) / 60) * 100) / 100}
           </Text>
         </Pressable>

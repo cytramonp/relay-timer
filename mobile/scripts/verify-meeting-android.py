@@ -61,6 +61,13 @@ def scroll_to(identifier):
         swipe_up()
     raise AssertionError('Could not reach ' + identifier)
 
+def scroll_text(text):
+    for _ in range(12):
+        t = tree(); node = find(t, text=text)
+        if node is not None: return t, node
+        swipe_up()
+    raise AssertionError('Could not reach text ' + text)
+
 def open_path(path):
     adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW', '-d', 'corptimer://' + path, 'com.corptimer.app'); time.sleep(1)
 
@@ -137,6 +144,31 @@ try:
         capture(f'{form}-android-feedback-validation.png')
         # No nonempty message is sent by the native regression harness.
         adb('shell', 'input', 'keyevent', 'KEYCODE_BACK'); open_path('')
+        # Preserve intermediate decimal/empty input until the generic editor commits.
+        open_path('edit/meeting')
+        t = tree(); field = find(t, description='Duration · minutes')
+        if field is None:
+            swipe_up(); t = tree(); field = find(t, description='Duration · minutes')
+        tap_node(field)
+        adb('shell', 'input', 'keyevent', 'KEYCODE_DEL')
+        assert find(tree(), description='Duration · minutes').attrib.get('text') == '', 'Clearing the duration immediately became zero'
+        adb('shell', 'input', 'text', '2.')
+        assert find(tree(), description='Duration · minutes').attrib.get('text') == '2.', 'Decimal intermediate was normalized away'
+        adb('shell', 'input', 'text', '5'); adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        tap_node(find(tree(), text='Done'))
+        open_path('')
+        assert find(scroll_top(), identifier='meeting-remaining').attrib.get('text') == '2:30', '2.5 minutes did not save as 150 seconds'
+        open_path('meeting-options')
+        t, _ = scroll_to('dial-value'); tap_node(find(t, identifier='dial-value'))
+        adb('shell', 'input', 'text', '120'); adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        t, save = scroll_text('Save settings'); tap_node(save)
+        open_path(''); t, _ = scroll_to('drag-handle-1')
+        assert find(t, text='120') is not None, 'Long total did not retain all digits'
+        capture(f'{form}-android-total-long.png')
+        # The rest of the required matrix uses the untouched one-hour starter.
+        adb('shell', 'pm', 'clear', 'com.corptimer.app')
+        adb('shell', 'appops', 'set', 'com.corptimer.app', 'SYSTEM_ALERT_WINDOW', 'allow')
+        launch()
         # A horizontal resize handle must yield vertical motion to the page,
         # and still change planned budgets when dragged horizontally.
         t, boundary = scroll_to('boundary-1')

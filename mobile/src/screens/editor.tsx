@@ -39,6 +39,9 @@ export function EditorScreen({ kind }: { kind: Kind }) {
     ),
   );
   const [error, setError] = useState("");
+  const [agendaMinutes, setAgendaMinutes] = useState<Record<string, string>>(
+    {},
+  );
   const patch = (value: Partial<Config>) => {
     setConfig((c) => ({ ...c, ...value }));
     setNumbers((n) => ({
@@ -72,6 +75,12 @@ export function EditorScreen({ kind }: { kind: Kind }) {
     try {
       const converted = {
         ...config,
+        agenda: config.agenda.map((slot) => {
+          const minutes = agendaMinutes[slot.id];
+          if (minutes === undefined) return slot;
+          if (!minutes.trim()) throw Error("Fill in every turn duration.");
+          return { ...slot, seconds: Number(minutes) * 60 };
+        }),
         ...Object.fromEntries(
           Object.entries(numbers).map(([k, v]) => {
             if (!v.trim()) throw Error("Fill in all timing fields.");
@@ -166,13 +175,9 @@ export function EditorScreen({ kind }: { kind: Kind }) {
               <DurationField
                 label="Duration · minutes"
                 unit="minutes"
-                value={String(slot.seconds / 60)}
+                value={agendaMinutes[slot.id] ?? String(slot.seconds / 60)}
                 onChangeText={(v) =>
-                  patch({
-                    agenda: config.agenda.map((a) =>
-                      a.id === slot.id ? { ...a, seconds: Number(v) * 60 } : a,
-                    ),
-                  })
+                  setAgendaMinutes((drafts) => ({ ...drafts, [slot.id]: v }))
                 }
               />
               <Row>

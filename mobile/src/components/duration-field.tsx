@@ -111,6 +111,7 @@ export function DurationField({
             onChangeText={onChangeText}
             inputMode="decimal"
             keyboardType="decimal-pad"
+            selectTextOnFocus
             containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
           />
           <Action label={`Use dial · ${label}`} onPress={() => setOpen(true)} />
