@@ -1,6 +1,6 @@
 # CorpTimer mobile
 
-Native React Native / Expo SDK 58 application for iPhone, iPad and Android, in the same repository as corptimer.com. Version 0.2.0 rebuilds the app around the Meeting workspace. See VALIDATION.md for the verified binary and remaining gates.
+Native React Native / Expo SDK 58 application for iPhone, iPad and Android, in the same repository as corptimer.com. Version 0.3.0 adds rotary duration controls, a one-hour Meeting starter and an in-app support form. See VALIDATION.md for the verified binary and remaining gates.
 
 ## Run
 
@@ -23,7 +23,9 @@ Open http://127.0.0.1:4176. A browser preview checks UI and portable logic; it d
 ## Included
 
 - Nine timer modes: Meeting, Boxing, Fitness, Pomodoro, Classroom, Chess, Stopwatch, Countdown, New Year.
-- Meeting opens with Welcome (2 minutes), seven named participants, current/next budgets, filled segmented cells, Next, Pause, Undo and +1 minute. Drag agenda handles to reorder while preserving the current speaker's identity.
+- Meeting opens with Welcome (5 minutes), five named participants (11 minutes each), current/next budgets, six segmented cells, Next, Pause, Undo and +1 minute. The total is 60 minutes. Drag agenda handles to reorder while preserving the current speaker's identity.
+- Rotate a duration dial clockwise/counterclockwise, use accessible +/- actions or type a number. Mechanical click sounds can be muted independently of haptics.
+- Support & feedback stays inside the app, preserves unsent drafts and sends through Web3Forms without bundling the recipient address. See FEEDBACK.md for the verified transport boundary and provider setup.
 - A proportional timeline with draggable boundaries, clock correction, equal times, pinned durations, automatic split and keep proportions; manual and automatic handoff.
 - Website starter templates, editable saved plans, duplicate/color/icon controls, private follow-ups and notes, original-plan versus actual reports, CSV/copy/print.
 - Explicit live viewer/control sharing through the existing Firebase protocol; QR links, heartbeat, expiry and revocation. Hosting requires the app to stay active. End-to-end network validation is pending.

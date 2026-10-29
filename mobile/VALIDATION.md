@@ -1,6 +1,18 @@
 # Mobile beta validation
 
-Updated 28 October 2026 (America/Los_Angeles). Current 0.2 evidence is in the Meeting redesign section. These statuses describe a development beta, not a store release.
+Updated 28 October 2026 (America/Los_Angeles). Current 0.3 evidence is below; earlier release evidence remains historical. These statuses describe a development beta, not a store release.
+
+## 0.3 rotary controls and in-app feedback
+
+- Corrected runtime source: `7927e48ffeb28880831230cf053920de48e2bc8a`. Public native configuration is version `0.3.0`, Android versionCode `5` and iOS build `5`.
+- TypeScript, Expo lint, 36 core tests, web export and both native Hermes exports pass [CI 40829700547](https://github.com/cytramonp/relay-timer/actions/runs/40829700547).
+- First 0.3 APK source `c0cf933` compiled in [40818187841](https://github.com/cytramonp/relay-timer/actions/runs/40818187841). Its initial UI driver mistakenly expected `05:00`; the actual clock reads `5:00`. Corrected driver [40826232688](https://github.com/cytramonp/relay-timer/actions/runs/40826232688) passed the same binary on API35 phone/tablet: clockwise and counterclockwise rim gestures, numeric entry, feedback validation, timeline resizing/perpendicular scrolling, actual reorder, stable handoff and floating Next/Pause/Undo. It produced 21 PNGs and two reorder videos.
+- The first independent 0.3 review returned **fix** for fractional generic-editor input, a clipped phone total and stale documentation. The bounded source correction preserves duration strings until commit and reserves space for complete totals. Final build and expanded native verification [40829694438](https://github.com/cytramonp/relay-timer/actions/runs/40829694438) **passed**. On both classes, the driver checked empty input, intermediate `2.`, `2.5` saved as 150 seconds, and a 120-minute readout, then restored the untouched hour-long starter for the remaining regression flow.
+- Final evidence contains 23 PNGs and two reorder videos. The independent verdict scored all three listed fixes **resolved**, disposition **ship at Android emulator beta correction scope**. The phone reordered viewport scrolls its total above the header; its separate range capture shows all three digits of `120`. Tablet captures show `60` and `120`. This verdict is not a new physical-device/iOS/store approval.
+- Final APK: 73,732,203 bytes; SHA-256 `E2CD7B77A5F76B435D756AF999809B5AF90E5152FE0E4E3B5087C41CB786A568`. Manifest confirms version `0.3.0` / code `5`; signer certificate SHA-256 `FAC61745DC0903786FB9EDE62A962B399F7348F0BB6F899B8332667591033B9C` matches prior betas, allowing an update without uninstalling.
+- Exactly one owner-approved nonempty browser-preview feedback submission reached the support Gmail INBOX. See FEEDBACK.md. The final APK bundle was independently inspected: its public form alias and corrected-editor code are present, the recipient address is absent, and the exact synthesized click WAV is included. Native nonempty delivery and physical sound/haptic feel have not been claimed.
+- Asset provenance scan: 12 rasters, zero missing origins. No new raster artwork was generated; the new sound is original deterministic PCM.
+- Current iOS runtime interactions, physical devices, alarm delivery, store signing/enrollment and store publication remain separate gates. No store release or website deployment was performed for these changes.
 
 ## Historical 0.1 local checks — 26 October
 
