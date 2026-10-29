@@ -1,3 +1,4 @@
+import {stageTick} from './transition-sound.js';
 import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState,equalizedAgenda} from "./model.js?v=8";
 import {iconMarkup} from "./icons.js?v=8";
 import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=8';
@@ -102,7 +103,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
     r.cur = null;
   }
   function next(){
-    initAudio();
+    initAudio();if(S.run)stageTick();
     const r = S.run;
     if (!r){
       const p = pending(); if (!p.length) return;
@@ -258,7 +259,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
   }
   let view = { state: "idle", pos: "", slotInfo: "", name: "", bar: 0, over: false, time: "", nextName: "", nextNote: "", blocks: [] };
   function tick(){
-    if(advanceAutomatic(S)){beep(2);save();renderRos();}
+    if(advanceAutomatic(S)){stageTick();beep(2);save();renderRos();}
     const r = S.run, e = elapsed(), n = N(), p = pending();
     const ov = $("ov");
     $("clk").textContent = fmt(e, "up");

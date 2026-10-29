@@ -1,3 +1,4 @@
+import {createAlarm} from './timeline-alarm.js';
 export function createTimeline(parent,{label='Timeline',seek}){
   const wrap=document.createElement('div');wrap.className='timer-timeline';
   const title=document.createElement('label');title.textContent=label;
@@ -14,8 +15,10 @@ export function createTimeline(parent,{label='Timeline',seek}){
   input.addEventListener('change',()=>{seek(+input.value);dragging=false;});
   input.addEventListener('pointercancel',()=>dragging=false);
   input.addEventListener('blur',()=>dragging=false);
+  const alarm=document.body.dataset.timerKind==='newyear'?null:createAlarm(wrap,(document.body.dataset.timerSlug||'meeting')+'.'+label);
   let signature='';
-  return {update(value,max,stages=[]){
+  return {update(value,max,stages=[],running=false,alarmValue=value){
+    alarm?.update(alarmValue,max,running);
     axis.textContent='0:00 — '+format(max);
     if(!dragging){input.max=String(Math.max(1,max));input.value=String(Math.min(max,value));input.setAttribute('aria-valuetext',format(value));input.style.setProperty('--position',`${Math.min(100,value/Math.max(1,max)*100)}%`);}
     let boundary=0;phases.querySelectorAll('span').forEach(el=>{const start=boundary;boundary+=Number(el.dataset.duration);el.classList.toggle('is-current',value>=start&&value<boundary);el.classList.toggle('is-past',value>=boundary);});

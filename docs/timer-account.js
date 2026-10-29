@@ -1,3 +1,5 @@
+import {createAlarm} from './timeline-alarm.js';
+import {elapsedTime} from './model.js';
 import {loadCloud} from './cloud.js';
 import {localSettings,receiveSetting,selectAccount,writeSetting} from './timer-store.js';
 import {toggleFullscreen} from './fullscreen.js';
@@ -41,3 +43,5 @@ function drawCustomLibrary(){
   const create=document.createElement('a');create.href=new URL('./custom-timer/',import.meta.url).href;create.textContent='Make your own timer';list.append(create);own.append(list);
 }
 drawCustomLibrary();window.addEventListener('timer-settings-received',drawCustomLibrary);window.addEventListener('timer-setting-written',drawCustomLibrary);
+
+const meetingTimeline=document.querySelector('.timeline-panel');if(meetingTimeline){const alarm=createAlarm(meetingTimeline,'meeting');setInterval(()=>{const s=window.relayTimer?.snapshot();if(!s)return;const r=s.run;alarm.update(r?elapsedTime(r,Date.now())/1000:0,s.agenda.reduce((n,a)=>n+a.min,0)*60,!!r&&r.pauseAt==null&&r.doneAt==null);},200);}

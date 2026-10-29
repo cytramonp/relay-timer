@@ -1,3 +1,4 @@
+import {stageTick} from './transition-sound.js';
 import {intervalCue} from './interval-cues.js';
 import {CuePlayer} from './cue-player.js';
 import {createTimeline} from './timer-timeline.js';
@@ -20,6 +21,7 @@ const initialSaved = readStorage(key);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 let config = structuredClone(base), clock, audio, gain, wake, lastIndex = -1, lastSecond = -1, lastDone = false;
 let stopwatch = { elapsed: 0, anchor: null, running: false, laps: [] }, yearTarget, lastSave = 0, midnightBase=0;
+let timelineWasRunning=false;
 let presetRows = [], audioReported = false, initializing=true;
 function notice(message) { $('runtime-note').textContent = message; }
 function readStorage(storageKey) { try { return JSON.parse(localStorage.getItem(storageKey)); } catch { return null; } }
@@ -164,12 +166,14 @@ function tone(type=config.sound) {
 async function acquireWake() { try { if ('wakeLock' in navigator && !document.hidden && !wake) { wake=await navigator.wakeLock.request('screen');wake.addEventListener('release',()=>{wake=null;}); } } catch { /* Browser may deny wake lock in low power mode. */ } }
 function releaseWake() { if (wake) { wake.release().catch(()=>{}); wake=null; } }
 function audioCues(previousIndex, previousRemaining, wasDone) {
+  if(clock.index!==previousIndex||clock.done&&!wasDone||clock.waiting&&previousRemaining>0)stageTick();
   const type=intervalCue(clock,{index:previousIndex,remaining:previousRemaining,done:wasDone},config,lastSecond);
   if(type)tone(type);
   lastSecond=Math.ceil(clock.remaining()/1000);
 }
 
 function tick() {
+  timelineWasRunning=isRunning();
   const now=Date.now();
   if (kind==='stopwatch') { if (stopwatch.running) { stopwatch.elapsed+=Math.max(0,now-stopwatch.anchor);stopwatch.anchor=Math.max(now,stopwatch.anchor); } }
   else if (kind==='chess') { const wasFlag=clock.flag;clock.update(now);if(wasFlag===null&&clock.flag!==null)tone(); }
@@ -227,7 +231,7 @@ function renderNewYear() {
   $('clock-status').textContent=remaining?'Counting down':'Midnight';
   $('clock-next').textContent=`January 1, ${yearTarget.year} · 00:00 · ${yearTarget.zone}`;
   $('next-year').hidden=remaining>0;
-  if(!remaining&&!lastDone){tone();$('clock-announcement').textContent=`Happy New Year ${yearTarget.year}!`;lastDone=true;}
+  if(!remaining&&!lastDone){stageTick();tone();$('clock-announcement').textContent=`Happy New Year ${yearTarget.year}!`;lastDone=true;}
   document.title=`${values[0]} days · New Year Countdown | CorpTimer`;
 }
 async function startPause() {
@@ -249,7 +253,8 @@ async function startPause() {
   }
   if(isRunning())await acquireWake();else releaseWake();lockFields();render();save();
 }
-function addLap() { if(!stopwatch.running||stopwatch.laps.length>=1000)return;tick();stopwatch.laps.push(stopwatch.elapsed);renderLaps();save(); }
+function addLap() {
+  stageTick(); if(!stopwatch.running||stopwatch.laps.length>=1000)return;tick();stopwatch.laps.push(stopwatch.elapsed);renderLaps();save(); }
 function renderLaps() {
   if(!$('lap-rows'))return;
   $('lap-rows').innerHTML=stopwatch.laps.map((time,i)=>`<tr><td>${i+1}</td><td>${formatTime(time-(stopwatch.laps[i-1]||0),true)}</td><td>${formatTime(time,true)}</td></tr>`).reverse().join('');
@@ -268,11 +273,11 @@ form.querySelectorAll('[data-minutes]').forEach(b=>b.onclick=()=>setConfig({...c
 $('test-sound').onclick=async()=>{await armAudio();if(config.sound==='off'||!config.volume)notice('Choose a sound and raise the volume to test it.');else{tone();notice('Sound test played. Check your device volume before starting.');}};
 if($('start-timer'))$('start-timer').onclick=startPause;
 if($('reset-timer'))$('reset-timer').onclick=()=>{resetClock();notice('Timer reset. Your setup is ready.');};
-if($('next-interval'))$('next-interval').onclick=async()=>{await armAudio();const waiting=clock.waiting,done=clock.done;clock.next(Date.now());if(waiting&&!clock.done)clock.start(Date.now());if(!done)tone();render();lockFields();save();};
+if($('next-interval'))$('next-interval').onclick=async()=>{await armAudio();const waiting=clock.waiting,done=clock.done;clock.next(Date.now());if(waiting&&!clock.done)clock.start(Date.now());if(!done){stageTick();tone();}render();lockFields();save();};
 if($('extend-timer'))$('extend-timer').onclick=()=>{clock.update(Date.now());clock.extend(60000);renderSequence();render();save();};
 if($('lap-timer'))$('lap-timer').onclick=addLap;
 if($('export-laps'))$('export-laps').onclick=()=>download('corptimer-laps.csv','Lap,Split seconds,Elapsed seconds\r\n'+stopwatch.laps.map((t,i)=>`${i+1},${((t-(stopwatch.laps[i-1]||0))/1000).toFixed(3)},${(t/1000).toFixed(3)}`).join('\r\n'),'text/csv');
-for(let i=0;i<2;i++)if($(`player-${i}`))$(`player-${i}`).onclick=async()=>{await armAudio();if(clock.active===i&&clock.switch(Date.now()))tone('beep');render();lockFields();save();};
+for(let i=0;i<2;i++)if($(`player-${i}`))$(`player-${i}`).onclick=async()=>{await armAudio();if(clock.active===i&&clock.switch(Date.now())){stageTick();tone('beep');}render();lockFields();save();};
 if($('swap-chess'))$('swap-chess').onclick=()=>{const players=$('chess-players');players.classList.toggle('swapped');players.style.direction=players.classList.contains('swapped')?'rtl':'ltr';};
 if($('next-year'))$('next-year').onclick=()=>{resetClock();};
 if($('enable-newyear-sound'))$('enable-newyear-sound').onclick=async()=>{await armAudio();tone();notice('Midnight alarm enabled for this open tab.');};
@@ -286,7 +291,7 @@ $('delete-setup').onclick=()=>{const selected=$('saved-presets').value;if(select
 $('export-setup').onclick=()=>{if(!form.reportValidity()||$('form-error').textContent)return;download(`corptimer-${slug}.json`,JSON.stringify({version:1,kind,config},null,2));};
 $('import-setup').onclick=()=>$('import-file').click();
 $('import-file').onchange=async()=>{const file=$('import-file').files[0];if(!file)return;try{if(file.size>100000)throw new Error('Choose a setup file smaller than 100 KB.');const data=JSON.parse(await file.text());if(data.version!==1||data.kind!==kind)throw new Error(`Choose a ${document.body.dataset.timerTitle} setup exported from this tool.`);setConfig(data.config);notice('Setup imported. Ready to start.');}catch(e){notice(e instanceof SyntaxError?'This file is not valid JSON. Choose an exported timer setup.':e.message);}finally{$('import-file').value='';}};
-document.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea,button,summary,a,dialog')||e.altKey||e.ctrlKey||e.metaKey||e.repeat)return;if(e.code==='Space'&&kind!=='newyear'){e.preventDefault();if(kind==='chess'&&clock.running){clock.switch(Date.now());render();save();}else startPause();}if(kind==='stopwatch'&&e.key.toLowerCase()==='l')addLap();});
+document.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea,button,summary,a,dialog')||e.altKey||e.ctrlKey||e.metaKey||e.repeat)return;if(e.code==='Space'&&kind!=='newyear'){e.preventDefault();if(kind==='chess'&&clock.running){if(clock.switch(Date.now()))stageTick();render();save();}else startPause();}if(kind==='stopwatch'&&e.key.toLowerCase()==='l')addLap();});
 window.addEventListener('pagehide',()=>{tick();save();});
 document.addEventListener('visibilitychange',()=>{tick();save();if(!document.hidden&&isRunning())acquireWake();if(!document.hidden&&audio?.state==='suspended'&&!audioReported){audioReported=true;notice('The browser suspended audio while hidden. Test sound again if you need an alarm.');}});
 syncForm();resetClock();restore();renderPresets();initializing=false;
@@ -306,9 +311,9 @@ if(kind==='chess') {
 if(kind==='newyear')midnightBase=yearTarget.target;
 function updateTimeline(){
   if(!timelines.length)return;
-  if(kind==='chess')timelines.forEach((t,i)=>t.update(clock.times[i]/1000,Math.max(clock.initial,clock.times[i])/1000));
-  else if(kind==='newyear')timelines[0].update(43200+(yearTarget.target-midnightBase)/1000,86400);
-  else if(kind==='stopwatch')timelines[0].update(stopwatch.elapsed/1000,Math.max(600,Math.ceil(stopwatch.elapsed/600000)*600));
-  else{const total=clock.sequence.reduce((n,s)=>n+s.ms,0);timelines[0].update((clock.done?total:clock.sequence.slice(0,clock.index).reduce((n,s)=>n+s.ms,0)+clock.elapsed)/1000,total/1000,clock.sequence.map(s=>({name:s.name,seconds:s.ms/1000})));}
+  if(kind==='chess')timelines.forEach((t,i)=>t.update(clock.times[i]/1000,Math.max(clock.initial,clock.times[i])/1000,[],clock.running,Math.max(0,(clock.initial-clock.times[i])/1000)));
+  else if(kind==='newyear')timelines[0].update(43200+(yearTarget.target-midnightBase)/1000,86400,[],true,86400-Math.max(0,(yearTarget.target-Date.now())/1000));
+  else if(kind==='stopwatch')timelines[0].update(stopwatch.elapsed/1000,Math.max(600,Math.ceil(stopwatch.elapsed/600000)*600),[],stopwatch.running);
+  else{const total=clock.sequence.reduce((n,s)=>n+s.ms,0);timelines[0].update((clock.done?total:clock.sequence.slice(0,clock.index).reduce((n,s)=>n+s.ms,0)+clock.elapsed)/1000,total/1000,clock.sequence.map(s=>({name:s.name,seconds:s.ms/1000})),clock.running||timelineWasRunning);}
 }
 updateTimeline();

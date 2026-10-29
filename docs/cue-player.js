@@ -17,7 +17,7 @@ export class CuePlayer {
     const source=this.context.createBufferSource(),gain=this.context.createGain();
     source.buffer=buffer;gain.gain.value=Math.max(0,Math.min(1,volume/100))*(name==='click'?.25:1);
     if(name==='horn')source.playbackRate.value=.65;
-    source.connect(gain);gain.connect(this.context.destination);source.start();
+    source.connect(gain);gain.connect(this.context.destination);source.start();if(name==='click')source.stop(this.context.currentTime+.035);
     document.body.dataset.lastCue=name;
     document.body.dataset.cueCount=String(Number(document.body.dataset.cueCount||0)+1);
     source.onended=()=>{source.disconnect();gain.disconnect();};

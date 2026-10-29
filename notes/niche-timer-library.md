@@ -28,3 +28,7 @@ Validation includes independent/manual clock mechanics, seeking, account isolati
 ## Illustration asset
 
 Built-in imagegen produced `docs/assets/specialty-illustrations.png` using `timer-illustrations.jpg` as a style reference. Prompt: one 4-column by 5-row sprite sheet, clean heavy black ink outlines, cream ground, red and teal fills, centered subjects, no text or borders. Row-major subjects: six stopwatches; running shoe; swim goggles/lane rope; kettlebell; carabiner/chalk bag; sailboat/start flag; archery target; scoreboard/whistle; dice/hourglass; paired microphones; exam clipboard; networking badges; film/developing tray; coffee dripper/kettle; bread/oven mitt; laboratory vessels; wrench/job clock; escape key/padlock; ground-preparation parachute/checklist; meeting table/chairs. Original artwork remains unchanged.
+
+
+## Stage cues and timeline alarms
+Stage transition ticks default on independently of alarm/gong settings and can be muted in sound settings/Customize. A separate Set alarm range selects an elapsed-time checkpoint without seeking. Alarms save locally and through account preference synchronization; Test alarm unlocks and verifies browser audio. Main meeting uses its elapsed meeting time; independent clocks have separate alarm controls. New Year retains its dedicated midnight alarm. Closing or suspending a tab still does not guarantee delivery. Favorite and start controls now sit beside the title; the secondary row contains favorites only.

@@ -1,3 +1,4 @@
+import {stageTick} from './transition-sound.js';
 import {timerArt} from './timer-art.js';
 import { specialtyTimers } from './specialty-catalog.js';
 import { createBoard, act, settle, display, elapsed, seekCard } from './board-engine.js';
@@ -73,7 +74,7 @@ function tick(){
  const now=Date.now();let changed=false;
  board=board.map((c,i)=>{
   const n=settle(c,profile.mode,now),phase=n.stages[n.index],time=elapsed(n,now)/1000,remaining=phase.seconds-time,second=Math.ceil(remaining);
-  if(n.index!==c.index||n.done!==c.done||n.waiting!==c.waiting){changed=true;cue(c.stages[c.index].cueEnd||'bell');if(!n.done&&!n.waiting&&phase.cueStart&&phase.cueStart!=='off')setTimeout(()=>cue(phase.cueStart),250);note.textContent=`${n.name}: ${n.done?'Finished':n.waiting?'Ready for next stage':phase.name}`;}
+  if(n.index!==c.index||n.done!==c.done||n.waiting!==c.waiting){changed=true;stageTick();cue(c.stages[c.index].cueEnd||'bell');if(!n.done&&!n.waiting&&phase.cueStart&&phase.cueStart!=='off')setTimeout(()=>cue(phase.cueStart),250);note.textContent=`${n.name}: ${n.done?'Finished':n.waiting?'Ready for next stage':phase.name}`;}
   else if(n.anchor!==null&&second!==lastSeconds[i]){if(second>0&&second===(phase.warning??10))cue('beep');if(phase.repeatCue>0&&Math.floor(time)>0&&Math.floor(time)%phase.repeatCue===0){cue('bell');note.textContent=`${n.name}: ${slug==='darkroom-timer'?'Agitate gently':'Checkpoint'} · ${phase.name}`;}if(profile.ticking&&second>0&&second<=10)cue('click');}
   lastSeconds[i]=second;
   const card=root.querySelector(`[data-card="${i}"]`);card.dataset.active=String(n.anchor!==null);card.querySelector('.board-clock').dataset.phase=phase.color||'work';
@@ -84,14 +85,14 @@ document.querySelector(`#state-${i}`).textContent=n.done?'Finished':n.waiting?'R
   document.querySelector(`#instruction-${i}`).textContent=phase.note||'';document.querySelector(`#next-${i}`).textContent=n.stages[n.index+1]?`Next: ${n.stages[n.index+1].name}`:n.laps.length?`Last split: ${((n.laps.at(-1)-(n.laps.at(-2)||0))/1000).toFixed(2)} s`:'';
   const laps=card.querySelector('[data-laps]');if(laps.children.length!==n.laps.length)laps.innerHTML=n.laps.map((v,j)=>`<li>Lap ${j+1}: ${(v/1000).toFixed(2)} s total · ${((v-(n.laps[j-1]||0))/1000).toFixed(2)} s split</li>`).join('');
   const toggle=card.querySelector('[data-action="toggle"]');toggle.textContent=n.anchor!==null?'Pause':n.elapsed||n.index?'Resume':'Start';toggle.disabled=n.done||n.waiting;card.querySelectorAll('[data-stage]').forEach(f=>f.disabled=n.anchor!==null);
-  const total=n.stages.reduce((sum,s)=>sum+s.seconds,0),value=n.stages.slice(0,n.index).reduce((sum,s)=>sum+s.seconds,0)+time;timelines[i]?.update(profile.mode==='up'?time:value,profile.mode==='up'?Math.max(600,Math.ceil(time/600)*600):total,profile.mode==='up'?[]:n.stages);return n;
+  const total=n.stages.reduce((sum,s)=>sum+s.seconds,0),value=n.stages.slice(0,n.index).reduce((sum,s)=>sum+s.seconds,0)+time;timelines[i]?.update(profile.mode==='up'?time:value,profile.mode==='up'?Math.max(600,Math.ceil(time/600)*600):total,profile.mode==='up'?[]:n.stages,n.anchor!==null||c.anchor!==null);return n;
  });if(changed)save();
 }
 root.onclick=async e=>{
  const full=e.target.closest('[data-fullscreen]');if(full){toggleFullscreen(full.closest('.board-clock'),full);return;}
  const remove=e.target.closest('[data-remove-clock]');if(remove){const i=+remove.dataset.removeClock;if(board[i].anchor!==null){note.textContent='Stop this clock before removing it.';return;}board.splice(i,1);save();render();return;}
  const b=e.target.closest('[data-action]');if(!b)return;const index=+b.dataset.index,action=b.dataset.action;
- await arm();const previous=board[index];board=act(board,index,action,profile.mode,Date.now());if(action==='toggle'&&previous.anchor===null)cue(previous.stages[previous.index].cueStart||'off');if(action==='lap'&&profile.lapSound)cue('click');if(action==='next')cue(profile.mode==='turn'?'click':previous.stages[previous.index].cueEnd||'bell');save();tick();
+ await arm();const previous=board[index];board=act(board,index,action,profile.mode,Date.now());if(action==='toggle'&&previous.anchor===null)cue(previous.stages[previous.index].cueStart||'off');if(action==='lap')stageTick();if(action==='lap'&&profile.lapSound)cue('click');if(action==='next'){stageTick();}if(action==='next')cue(profile.mode==='turn'?'click':previous.stages[previous.index].cueEnd||'bell');save();tick();
 };
 root.onchange=e=>{const el=e.target;if(el.dataset.name!==undefined)board[+el.dataset.name].name=el.value.slice(0,80);if(el.dataset.stage){const [i,j,field]=el.dataset.stage.split(':');if(board[i].anchor!==null){render();return;}if(field==='name')board[i].stages[j].name=el.value.slice(0,80);else if(el.checkValidity())board[i].stages[j].seconds=+el.value;else{render();return;}}save();tick();};
 document.querySelector('#board-start').onclick=async()=>{await arm();const now=Date.now();board=board.map(c=>settle(c,profile.mode,now)).map((c,i)=>({...c,elapsed:elapsed(c,now),anchor:!c.done&&!c.waiting&&(profile.mode!=='turn'||i===0)?now:null}));cue(board[0].stages[board[0].index].cueStart||'off');save();tick();};

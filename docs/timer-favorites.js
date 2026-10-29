@@ -1,5 +1,5 @@
 import {writeSetting,localSettings} from './timer-store.js';
-import { timers as builtins } from "./timer-catalog.js?v=18";
+import { timers as builtins } from "./timer-catalog.js?v=19";
 const customTimers=localSettings().filter(r=>r.key.startsWith('corptimer.custom.')).map(r=>({slug:'custom:'+r.key.slice('corptimer.custom.'.length),title:JSON.parse(r.value).title}));
 let timers=[...builtins,...customTimers];
 const key = "corptimer.favorites.v1";
@@ -50,7 +50,7 @@ function save() {
 }
 function draw() {
   panel.replaceChildren();
-  const create=document.createElement('a');create.href=new URL('./custom-timer/',import.meta.url).href;create.textContent='Make your own timer';create.className='create-inline';panel.append(create);
+  let actions=document.querySelector('.title-preferences');if(!actions){actions=document.createElement('span');actions.className='title-preferences';let title=document.querySelector('.meeting-title-group');if(!title){const h=document.querySelector('.tool-heading h1');if(h){title=h.closest('.timer-title-line');if(!title){title=document.createElement('div');title.className='timer-title-line';h.before(title);title.append(h);}}}title?.append(actions);}actions.replaceChildren();
   if (current) {
     for (const [label, fn] of [
       [
@@ -80,7 +80,7 @@ function draw() {
         b.className='favorite-star';b.title=label;b.setAttribute('aria-label',label);b.setAttribute('aria-pressed',String(prefs.favorites.includes(current.slug)));b.innerHTML='<svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true"><path d="m12 3 2.8 5.7 6.3.9-4.5 4.4 1 6.2-5.6-3-5.6 3 1-6.2L3 9.6l6.2-.9Z"/></svg>';
       }else{b.textContent=label;b.className='start-preference';}
       b.onclick = fn;
-      panel.append(b);
+      actions.append(b);
     }
   }
   if (prefs.favorites.length) {
