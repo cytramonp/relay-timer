@@ -15,7 +15,9 @@ def adb(*args):
     return subprocess.check_output(['adb', *args], text=True, timeout=35)
 
 def tree():
-    adb('shell', 'uiautomator', 'dump', '/sdcard/corptimer-ui.xml')
+    # The floating timer is intentionally non-focusable. Include all windows,
+    # otherwise Android reports only the focused launcher behind the overlay.
+    adb('shell', 'uiautomator', 'dump', '--windows', '/sdcard/corptimer-ui.xml')
     return ET.fromstring(adb('shell', 'cat', '/sdcard/corptimer-ui.xml'))
 
 def bounds(node):
