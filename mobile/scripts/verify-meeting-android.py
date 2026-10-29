@@ -61,6 +61,13 @@ def scroll_to(identifier):
         swipe_up()
     raise AssertionError('Could not reach ' + identifier)
 
+def scroll_text(text):
+    for _ in range(12):
+        t = tree(); node = find(t, text=text)
+        if node is not None: return t, node
+        swipe_up()
+    raise AssertionError('Could not reach text ' + text)
+
 def open_path(path):
     adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW', '-d', 'corptimer://' + path, 'com.corptimer.app'); time.sleep(1)
 
@@ -102,6 +109,66 @@ try:
         adb('shell', 'appops', 'set', 'com.corptimer.app', 'SYSTEM_ALERT_WINDOW', 'allow')
         launch()
         capture(f'{form}-android-meeting-ready.png')
+        # A fresh install has one hour, five named people and a five-minute welcome.
+        assert find(tree(), identifier='meeting-remaining').attrib.get('text') == '5:00'
+        open_path('meeting-slot?id=welcome')
+        t, ring = scroll_to('duration-dial')
+        a, b, c, d = bounds(ring)
+        w, h = dimensions()
+        if d > h * .83:
+            adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .77)), str(w // 2), str(int(h * .48)), '500')
+            t = tree(); ring = find(t, identifier='duration-dial'); a, b, c, d = bounds(ring)
+        cx, cy = (a+c)//2, (b+d)//2
+        radius = int((c-a)*.44)
+        original = find(t, identifier='dial-value').attrib.get('text')
+        # The actual native rim gesture, not a surrogate plus-button tap.
+        adb('shell', 'input', 'swipe', str(cx), str(cy-radius), str(cx+radius), str(cy), '1600')
+        t = tree(); rotated = find(t, identifier='dial-value').attrib.get('text')
+        assert float(rotated) > float(original), 'Clockwise rotation did not add time'
+        capture(f'{form}-android-duration-dial.png')
+        adb('shell', 'input', 'swipe', str(cx+radius), str(cy), str(cx), str(cy-radius), '1600')
+        t = tree(); assert float(find(t, identifier='dial-value').attrib.get('text')) < float(rotated), 'Counterclockwise rotation did not subtract time'
+        tap_node(find(t, identifier='dial-value'))
+        adb('shell', 'input', 'text', '7'); adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        assert find(tree(), identifier='dial-value').attrib.get('text') == '7', 'Direct numeric entry failed'
+        adb('shell', 'input', 'keyevent', 'KEYCODE_BACK'); open_path('')
+        open_path('feedback')
+        t = tree()
+        assert find(t, identifier='feedback-message') is not None, 'Feedback opened outside the app'
+        for _ in range(6):
+            t = tree(); send = find(t, text='Send message')
+            if send is not None: break
+            swipe_up()
+        tap_node(send)
+        assert 'at least 10 characters' in ET.tostring(tree(), encoding='unicode'), 'Empty feedback lacked an actionable error'
+        capture(f'{form}-android-feedback-validation.png')
+        # No nonempty message is sent by the native regression harness.
+        adb('shell', 'input', 'keyevent', 'KEYCODE_BACK'); open_path('')
+        # Preserve intermediate decimal/empty input until the generic editor commits.
+        open_path('edit/meeting')
+        t = tree(); field = find(t, description='Duration · minutes')
+        if field is None:
+            swipe_up(); t = tree(); field = find(t, description='Duration · minutes')
+        tap_node(field)
+        adb('shell', 'input', 'keyevent', 'KEYCODE_DEL')
+        assert find(tree(), description='Duration · minutes').attrib.get('text') == '', 'Clearing the duration immediately became zero'
+        adb('shell', 'input', 'text', '2.')
+        assert find(tree(), description='Duration · minutes').attrib.get('text') == '2.', 'Decimal intermediate was normalized away'
+        adb('shell', 'input', 'text', '5'); adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        tap_node(find(tree(), text='Done'))
+        open_path('')
+        assert find(scroll_top(), identifier='meeting-remaining').attrib.get('text') == '2:30', '2.5 minutes did not save as 150 seconds'
+        open_path('meeting-options')
+        t, _ = scroll_to('dial-value'); tap_node(find(t, identifier='dial-value'))
+        adb('shell', 'input', 'text', '120'); adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        t, save = scroll_text('Save settings'); tap_node(save)
+        open_path(''); t, _ = scroll_to('drag-handle-1')
+        assert find(t, text='120') is not None, 'Long total did not retain all digits'
+        capture(f'{form}-android-total-long.png')
+        # The rest of the required matrix uses the untouched one-hour starter.
+        adb('shell', 'pm', 'clear', 'com.corptimer.app')
+        adb('shell', 'appops', 'set', 'com.corptimer.app', 'SYSTEM_ALERT_WINDOW', 'allow')
+        launch()
         # A horizontal resize handle must yield vertical motion to the page,
         # and still change planned budgets when dragged horizontally.
         t, boundary = scroll_to('boundary-1')

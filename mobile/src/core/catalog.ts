@@ -96,18 +96,16 @@ export function defaultConfig(kind: Kind): Config {
     first: 0,
     zone: "local",
     agenda: [
-      { id: "welcome", name: "Welcome", seconds: 120, kind: "topic" },
-      ...["Alex", "Morgan", "Jordan", "Sam", "Taylor", "Casey", "Robin"].map(
-        (name, i) => ({
-          id: `person-${i}`,
-          name,
-          seconds: 480,
-          kind: "person" as const,
-        }),
-      ),
+      { id: "welcome", name: "Welcome", seconds: 300, kind: "topic" },
+      ...["Alex", "Morgan", "Jordan", "Sam", "Taylor"].map((name, i) => ({
+        id: `person-${i}`,
+        name,
+        seconds: 660,
+        kind: "person" as const,
+      })),
     ],
     minimum: 15,
-    total: 3480,
+    total: 3600,
     autoSplit: true,
     keepProp: true,
     customRounds: false,

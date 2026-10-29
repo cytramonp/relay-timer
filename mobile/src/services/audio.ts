@@ -13,6 +13,28 @@ const sounds = {
   beep: require("../../assets/beep.wav"),
 };
 let player: AudioPlayer | null = null;
+let dialPlayer: AudioPlayer | null = null;
+let lastDetent = 0;
+export function dialFeedback(haptics: boolean, sound: boolean) {
+  if (Date.now() - lastDetent < 55) return;
+  lastDetent = Date.now();
+  if (haptics) void Haptics.selectionAsync().catch(() => {});
+  if (sound) playDialClick();
+}
+/** One reusable player; no allocation or audio-mode changes on every detent. */
+export function playDialClick() {
+  try {
+    dialPlayer ??= createAudioPlayer(require("../../assets/dial-click.wav"));
+    dialPlayer.volume = 0.32;
+    const click = dialPlayer;
+    void click
+      .seekTo(0)
+      .then(() => click.play())
+      .catch(() => {});
+  } catch {
+    /* Unsupported/silent audio must never block setting a duration. */
+  }
+}
 export async function playCue(config: Config, name = "", haptics = true) {
   if (haptics)
     void Haptics.notificationAsync(

@@ -6,7 +6,9 @@ The user's 28 October feedback rejects the first beta's catalog-first navigation
 
 | Surface | Native behavior | Verification status |
 |---|---|---|
-| Meeting (default tab) | Welcome 2 min, seven named participants, current/next budget, progress and segmented cells, manual/automatic handoff, pause/undo/reset/extend | Core tests pass; Android phone/tablet release APK launch and early handoff pass; iOS pending |
+| Meeting (default tab) | Welcome 5 min and five participants at 11 min each, current/next budget, six progress cells, manual/automatic handoff, pause/undo/reset/extend | Final 0.3 Android phone/tablet native checks pass; reviewer scored all three bounded corrections resolved, ship at Android emulator beta correction scope; iOS pending |
+| Duration editing | Rotary rim, central numeric entry, accessible +/- adjustment, persisted click mute and haptics | Both native classes passed clockwise/counterclockwise, empty/decimal intermediates, 2.5 minutes saved as 150 seconds, and complete 120-minute readout |
+| Support & feedback | In-app form with category, message, optional reply email, local draft and explicit send/error/success states | One owner-approved browser-preview submission reached the support inbox; native empty-form validation passes; no additional nonempty native message sent |
 | Run of show | Rename, minutes, person/topic, add/remove, pins, live drag reorder with auto-scroll and accessible move actions | Stable-ID core tests and actual Android phone/tablet drag reorder pass; physical devices/iOS pending |
 | Meeting timeline | Proportional plan, actual early/over segments, draggable boundaries, equal times, total/proportional allocation and clock correction | Core tests plus Android phone/tablet horizontal boundary edits and perpendicular page scroll pass; iOS/hardware pending |
 | Templates/library | Same seven website starters plus Welcome & participants; independent saved plans; edit, duplicate, remove, four colors/six icons, JSON transfer | Browser save/reload/library readback passes; native picker/share and exhaustive template interactions pending |

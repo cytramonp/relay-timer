@@ -11,6 +11,7 @@ import {
 } from "../components/ui";
 import { useApp } from "../state/app-store";
 import { allocate, editDuration } from "../core/meeting";
+import { DurationField } from "../components/duration-field";
 
 export default function SlotSheet() {
   const { id } = useLocalSearchParams<{ id: string }>(),
@@ -65,17 +66,21 @@ export default function SlotSheet() {
         Durations use minutes. With proportions on, other unfinished slots
         absorb the change.
       </Body>
-      <Field label="Speaker or topic" value={name} onChangeText={setName} />
       <Field
+        label="Speaker or topic"
+        value={name}
+        onChangeText={setName}
+        containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
+      />
+      <DurationField
         label="Duration · minutes"
+        unit="minutes"
+        expanded
         value={minutes}
         onChangeText={(value) => {
           setMinutes(value);
           setPinned(true);
         }}
-        inputMode="decimal"
-        keyboardType="decimal-pad"
-        selectTextOnFocus
       />
       <Row>
         {[1, 2, 3, 5, 8, 10].map((m) => (

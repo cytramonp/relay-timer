@@ -1,5 +1,5 @@
 ---
-name: "CorpTimer mobile 0.2"
+name: "CorpTimer mobile 0.3"
 description: "A Meeting-first native workspace in CorpTimer's cream, charcoal and dark teal."
 colors:
   bg: "#eeece5"
@@ -41,13 +41,13 @@ typography:
     fontFamily: "Manrope"
     fontSize: "80px"
     fontWeight: 600
-    lineHeight: "92px"
+    lineHeight: "108px"
     letterSpacing: "-2px"
   display-focus:
     fontFamily: "Manrope"
     fontSize: "128px"
     fontWeight: 600
-    lineHeight: "150px"
+    lineHeight: "164px"
     letterSpacing: "-2px"
   headline:
     fontFamily: "Cantata"
@@ -67,6 +67,14 @@ typography:
   clock-label:
     fontFamily: "Manrope"
     fontSize: "12px"
+  clock-name:
+    fontFamily: "Cantata"
+    fontSize: "25px"
+    lineHeight: "40px"
+  clock-name-focus:
+    fontFamily: "Cantata"
+    fontSize: "34px"
+    lineHeight: "50px"
 rounded:
   field: "6px"
   transport: "10px"
@@ -130,9 +138,15 @@ components:
     textColor: "{colors.on-teal}"
     rounded: "5px"
     height: "48px"
+  duration-dial:
+    backgroundColor: "{colors.clock}"
+    textColor: "{colors.cream}"
+    rounded: "132px"
+    width: "264px"
+    height: "264px"
 ---
 
-# Design System: CorpTimer mobile 0.2
+# Design System: CorpTimer mobile 0.3
 
 ## Overview
 
@@ -140,13 +154,17 @@ components:
 
 CorpTimer's native workspace carries the website's cream paper, charcoal ink, upright serif headings, original glasses and fine rules into a working meeting timer. A solid dark-teal clock anchors the interface. Clear names, tabular time and restrained color make the current turn, the next person's available budget and the remaining speakers easy to read together.
 
-This documents the built Meeting-first (0.2.0) system and replaces the catalog-first (0.1) mobile documentation. The website's `../DESIGN.md` remains separate. Direction comes from `PRODUCT.md` and `SURFACE.md`; implementation truth comes from `src/theme.tsx`, `src/components/{meeting-clock,meeting-timeline,agenda-row,ui}.tsx`, `src/screens/meeting.tsx`, `src/app/(tabs)/_layout.tsx` and `modules/corptimer-overlay`. Dimensions below are React Native logical units, represented as `px` only in portable frontmatter and HTML previews. They are not screenshot pixel measurements.
+This documents the built Meeting-first (0.3.0) source, preserving the established mobile identity. The website's `../DESIGN.md` remains separate. Direction comes from `PRODUCT.md` and `SURFACE.md`; implementation truth comes from `src/theme.tsx`, `src/components/{meeting-clock,meeting-timeline,agenda-row,duration-field,ui}.tsx`, `src/screens/{meeting,editor}.tsx`, `src/app/{feedback,meeting-options,meeting-slot}.tsx`, `src/services/{audio,feedback}.ts`, `src/app/(tabs)/_layout.tsx` and `modules/corptimer-overlay`. Dimensions below are React Native logical units, represented as `px` only in portable frontmatter and HTML previews. They are not screenshot pixel measurements.
 
-Native evidence is the repository-root `.impeccable/review/mobile-redesign/android/` packet (17 PNGs and 2 reorder MP4s). Final Android versionCode (4), source `1357cede23099a952b3910550c19c8e00de93f1c`, passed phone/tablet launch, vertical scroll through timeline handles, an actual horizontal boundary edit, drag reorder, early handoff and background overlay Next/Pause/Undo/Close in run `40805997754`. The original review returned **fix** for selected timeline text. `android-verdict.md` resolves that sole correction at approximately (8.41:1) and records **ship** for the Android emulator fix scope. This is not a new whole-surface review, physical-device approval or store approval. No native HTML/CSS detector ran.
+Current native evidence is the repository-root `.impeccable/review/meeting-dial-feedback/android/` packet (23 PNGs and 2 reorder MP4s), recaptured from the corrected (0.3.0), Android versionCode (5) binary in successful build and expanded QA run `40829694438`. Runtime source is `7927e48ffeb28880831230cf053920de48e2bc8a`; APK SHA256 is `E2CD7B77A5F76B435D756AF999809B5AF90E5152FE0E4E3B5087C41CB786A568`, and the existing signer was confirmed. The matrix covers phone/tablet meeting, duration dial, feedback validation, reorder, other timer/editor/history, dark large text, floating timer and tablet landscape, with added `phone-android-total-long.png` and `tablet-android-total-long.png` readout evidence. Both device classes preserved empty and `2.` input intermediates, saved `2.5` minutes as (150) seconds with a `2:30` root readout, and displayed all digits of a (120)-minute total. The reordered phone viewport scrolls its (60)-minute total above the header; the dedicated long-total capture shows the complete (120)-minute number, while tablet evidence shows both totals. Review records **ship** with all three scored corrections resolved, scoped to the Android emulator beta correction only. No native HTML/CSS detector ran.
 
-The final APK, native capture ZIP and provenance JSON are retained in the [Android beta 4 prerelease](https://github.com/cytramonp/relay-timer/releases/tag/mobile-v0.2.0-beta.4), beyond temporary Actions artifact retention. This distribution does not establish a store release.
+Initial (0.3.0) run `40826232688` passed its original (21)-PNG and (2)-MP4 matrix before review requested decimal-draft, total-readout and documentation corrections. Its captures in the current packet were superseded by the corrected binary's captures; retain the run as historical evidence, not current-build proof.
 
-`VALIDATION.md` governs evidence limits. iOS native compilation and an iPhone simulator launch/reorder were observed; full iOS/iPad flow and the later contrast correction remain pending. Native Google private-library sync is unimplemented. The owner has no store developer accounts. Browser previews and the browser live-share check do not establish native authentication, hardware performance, background alerts or store availability.
+Historical evidence remains in `.impeccable/review/mobile-redesign/android/` (17 PNGs and 2 reorder MP4s). Android versionCode (4), source `1357cede23099a952b3910550c19c8e00de93f1c`, passed its recorded emulator flows in run `40805997754`. Its selected-timeline-text correction was recorded as **ship** for that Android fix scope, not for this (0.3.0) refinement, a whole-surface review, physical devices or stores.
+
+The historical (0.2.0) APK, native capture ZIP and provenance JSON are retained in the [Android beta 4 prerelease](https://github.com/cytramonp/relay-timer/releases/tag/mobile-v0.2.0-beta.4), beyond temporary Actions artifact retention. This distribution does not establish a (0.3.0) release or store availability.
+
+`VALIDATION.md` records evidence limits. Earlier iOS compilation and iPhone simulator launch/reorder do not verify this refinement; current iOS/iPad flows, physical sound/haptic feel and physical-device performance remain unverified. Native Google private-library sync is unimplemented. The owner has no store developer accounts. One browser-preview feedback message was verified in the owner's Gmail; `.impeccable/review/meeting-dial-feedback/web-feedback-sent.png` is browser transport evidence only. Browser previews and live-share checks do not establish native delivery, authentication, hardware performance, background alerts or store availability.
 
 **Key Characteristics:**
 
@@ -154,6 +172,7 @@ The final APK, native capture ZIP and provenance JSON are retained in the [Andro
 - Upright Cantata headings, Manrope clock figures and native system body text.
 - Flat cream/charcoal surfaces, fine rules, teal utility actions and coral overtime/reset signals.
 - Dedicated gesture handles, native navigation and switches, explicit timer-state words.
+- A circular duration dial with direct typing and optional clicks, plus a local-draft support form.
 - Light by default; Dark and Use device are explicit preferences.
 
 ## Colors
@@ -184,9 +203,9 @@ Frontmatter extracts reused roles from `src/theme.tsx`. Unprefixed roles describ
 
 The upright heading/figure pairing gives the workspace an editorial character while time stays scannable. Root navigation waits for font readiness or a font error before mounting; Android captures show the intended bundled fonts.
 
-- **Clock display:** frontmatter display role, one line with size-to-fit and tabular numerals. Focus uses display-focus. Overtime changes digits to salmon; completion displays elapsed time.
+- **Clock display:** frontmatter display role, one line with size-to-fit and tabular numerals. Focus uses display-focus. Both use vertical padding (4) and Android font padding to retain glyph space. Overtime changes digits to salmon; completion displays elapsed time.
 - **Meeting title:** headline role, a plain editable title with minimum height (48). Preserve custom saved names.
-- **Section title:** title role; general Heading uses its declared line height. Current-speaker text uses Cantata at (25), line height (36); focus uses (34)/(46). Timeline title uses (21).
+- **Section title:** title role; general Heading uses its declared line height. Current-speaker text uses clock-name, or clock-name-focus in focus, with vertical padding (2) and Android font padding. Timeline title uses (21).
 - **Body:** body role. Next-speaker text uses Manrope at (16); budget explanation uses system text at (13), line height (20).
 - **Labels:** general actions and field labels use label. Clock status uses clock-label. Secondary transport uses Manrope at (13), weight (600); tabs use system text at (13), weight (600).
 - **Dense timeline/agenda text:** timeline names use Manrope at (11), durations (10); agenda names/planned durations use Manrope at (15), supporting state/budget text (11). Keep accessible labels and adjustment actions. This compact scale is not a general body-text scale.
@@ -195,11 +214,11 @@ The upright heading/figure pairing gives the workspace an editorial character wh
 
 ## Layout
 
-Meeting opens directly. The ready starter has Welcome at (2:00) followed by seven named participants. Title/share and Templates/New meeting rows precede the clock. Current time, next budget, remaining count, progress, proportional cells and transport form the first working view. Timeline and Run of show continue below. Eight cells describe the starter, not a fixed maximum; cells come from the agenda.
+Meeting opens directly. The ready starter is one hour: Welcome at (5:00), followed by Alex, Morgan, Jordan, Sam and Taylor at (11:00) each. Title/share and Templates/New meeting rows precede the clock. Current time, next budget, remaining count, progress, proportional cells and transport form the first working view. Timeline and Run of show continue below. Six cells describe the starter, not a fixed maximum; cells come from the agenda. Preserve custom saved names and agendas.
 
 The Meeting scroll container uses page padding (18), bottom padding (42), section gaps (24), full width and a centered maximum width (1200). Below window width (900), clock/timeline and agenda stack with a rule between them. At (900) or more they take equal columns with gap (26). For later items, private notes and further actions continue below. This breakpoint reads window width; it is not a claim about every tablet model.
 
-Run-of-show rows have fixed height (100), fine bottom rules, dedicated handles, editable names, state, planned/used/available time and menus. Current rows receive soft teal and rounded corners. Keep plan and available values separate. Timeline width is at least its measured container and otherwise `min(1000, agenda.length × 77)`, with horizontal scrolling. Its plan row is (48) high and actual row (18); segments are proportional to duration.
+Run-of-show rows have fixed height (100), fine bottom rules, dedicated handles, editable names, state, planned/used/available time and menus. Current rows receive soft teal and rounded corners. Keep plan and available values separate. The total-minutes control is at least (92) wide, cannot shrink, and uses a one-line fitting Manrope number with minimum width (68), line height (30), horizontal padding (4) and Android font padding. Final phone/tablet emulator QA verified a full (120)-minute readout; tablet evidence also shows (60), while the reordered phone viewport has scrolled that header above view. Timeline width is at least its measured container and otherwise `min(1000, agenda.length × 77)`, with horizontal scrolling. Its plan row is (48) high and actual row (18); segments are proportional to duration.
 
 Secondary screens use shared Page padding (20), bottom padding (48), gaps (20) and centered maximum width (850). Wrapping action rows use gaps (10); field wrappers grow from a (140) basis. These remain distinct from Meeting's container scale.
 
@@ -221,7 +240,7 @@ The clock uses stage corners. Focus removes the radius and increases padding to 
 
 ### Meeting clock and transport
 
-A complete working instrument on one dark ground. The stage uses padding (20), gap (14), explicit status, current name, main clock, a (9)-high progress track and a (7)-high proportional cell strip with gaps (3). Completed cells fill bright teal; the current cell fills with turn progress. Next name/budget and remaining count follow immediately.
+A complete working instrument on one dark ground. The stage uses padding (20), gap (14), explicit status, current name, main clock, a (9)-high progress track and a (7)-high proportional cell strip with gaps (3). The status/focus row stays in normal layout flow at minimum height (48), reserving space before the current name. Completed cells fill bright teal; the current cell fills with turn progress. Next name/budget and remaining count follow immediately.
 
 Start becomes Next speaker, Finish meeting or New meeting as state requires. Cream primary transport is at least (52) high with horizontal padding (16) and an arrow. Pause/Resume sits beside it with a clock-line outline. Undo, +1 min and salmon Reset occupy the second row at minimum height (48). Primary pressed opacity is (0.75), secondary (0.6), disabled (0.35). IconAction is at least (48 × 48) with (22)-size icons, accessible names and disabled state.
 
@@ -245,11 +264,27 @@ Generic Action variants use a (1)-width border, minimum height (48), frontmatter
 
 Fields have persistent labels, fine borders, themed placeholders, minimum height (48), type size (17), padding (12). Meeting title and agenda names are intentionally plain inline editors. Private notes use a multiline field, minimum height (120), padding (14) and control corners. Soft-teal notices use an alert role and minimum-height (48) Dismiss action. Switches use `@expo/ui` Host/Switch with teal seed and minimum host height (48). Native confirmations use system alerts.
 
+### Duration field and dial
+
+`DurationField` is shared by meeting totals, turn durations, timing settings and generic timer editors. The compact state keeps a labeled decimal field and Use dial action; expanded sheets show the dial immediately. The circular clock-ground face has (60) ticks, longer cream marks every fifth tick, clock-muted minor marks, a fine inner ring and a salmon pointer. Clockwise adds time; counterclockwise subtracts. Each detent changes one displayed minute or second. Rotation commits on gesture end; cancellation restores the source value. The center accepts decimal keyboard entry, with a unit label and “tap number to type” hint. Minus/plus actions and adjustable accessibility actions offer alternatives to rotation.
+
+Center numerals use Manrope, tabular figures, size (44), reduced to (30) beyond four characters, line height (60), vertical padding (6) and Android font padding. The generic agenda editor retains unfinished decimal text such as `2.` in a draft string and converts minutes to seconds only on Done before validation. Final phone/tablet emulator QA verified empty and `2.` intermediates and saved `2.5` minutes as (150) seconds, shown as `2:30` on the root surface.
+
+Clicks on/off persists through the app's settings, independently of the global Haptics toggle. Each feedback event is throttled to at least (55ms); a reusable audio player restarts the bundled synthesized `dial-click.wav` at volume (0.32), and selection haptics follow the global setting. The native packet shows the dial surface; it does not establish physical click loudness, tactile feel or frame performance.
+
+### Support and feedback
+
+Settings opens an in-app support form using the same Page, Field, Action and theme roles. Three category actions mark their selected state with primary styling. The message is a labeled multiline field, minimum height (170), with a visible (5,000)-character counter; reply email is optional. Persistent disclosure explains the fields sent and links to the delivery service's privacy page. No recipient email or mail-account credential is embedded in the client: delivery uses an owner-approved Web3Forms public form alias.
+
+Unsent message, email and category are restored from local AsyncStorage and saved after edits, with a pre-send save and removal after acceptance. During restore or sending, fields and actions are disabled; duplicate sends are guarded. Validation requires at least (10) trimmed message characters, no more than (5,000) characters, and a valid optional reply email. Errors use an alert and danger text, preserve the draft and explain invalid input, rate limiting, delivery rejection or connection failure. Sending shows “Sending…”. Success confirms delivery-service acceptance, offers Back to settings and does not promise a reply.
+
+The payload contains message, optional reply email, category, app version and platform, plus provider routing fields. Agendas, notes and history are excluded. The request has a (20-second) timeout. One browser-preview message reached the owner's Gmail; that proves only that transport path. The native packet records validation, not end-to-end native email delivery.
+
 ### Android floating timer and focus
 
 The native foreground service requires overlay permission. Its window uses dark clock ground, cream content, muted supporting text, clock-line outline and radius (14dp). Wide/square/strip widths are (290)/(240)/(300dp). A labeled grip moves the window; Close ends floating. Name uses Android serif (18sp); clock uses sans-serif-medium (54sp), or (38sp) in strip mode. Strip hides the name. A (6dp) segmented track, next budget and Next, Pause/Resume, Undo, +1 min remain. Buttons have minimum height/width (48dp), dark-teal fill and (8dp) corners. Progress uses module-specific native teal (`rgb(87,193,189)`), rather than theme-selected app teal.
 
-Final emulator verification observed controls above the launcher. Its overlay permission was granted before launch; that does not prove hardware consent, alarms, Doze, process-death recovery or uninterrupted background operation. iOS offers in-app focus; do not imply an iOS floating window or Live Activity.
+Recorded emulator verification observed controls above the launcher. Its overlay permission was granted before launch; that does not prove hardware consent, alarms, Doze, process-death recovery or uninterrupted background operation. iOS offers in-app focus; do not imply an iOS floating window or Live Activity.
 
 ### Identity and secondary surfaces
 
@@ -266,6 +301,8 @@ All twelve raster origins are embedded. The provenance scan and decoded RGBA com
 - **Do** keep current time, next budget, remaining count and segmented progress readable together.
 - **Do** preserve dedicated handles, accessible alternatives, stable speaker IDs and page scrolling.
 - **Do** retain Meeting, Timers, Library, History and Settings labels and explicit appearance preferences.
+- **Do** keep duration units visible, retain decimal draft text until commit and offer typing and plus/minus alongside rotation.
+- **Do** preserve feedback drafts, show explicit sending/error/success states and disclose the narrowly scoped payload.
 - **Do** consult VALIDATION.md for current native, network, hardware and release evidence boundaries.
 
 ### Don't:
@@ -274,5 +311,5 @@ All twelve raster origins are embedded. The provenance scan and decoded RGBA com
 - **Don't** use cream text on the dark theme's light-teal selected timeline surface.
 - **Don't** turn ruled rows into shadowed cards or replace native navigation, switches and menus with decorative chrome.
 - **Don't** treat sidecar HTML samples as native rendering or gesture proof.
-- **Don't** equate the Android correction's ship verdict with whole-iOS, physical-device or store approval.
+- **Don't** extend the corrected Android emulator beta ship verdict to native nonempty feedback delivery, iOS, physical devices or stores; keep historical builds' evidence separate.
 - **Don't** imply native Google private sync, iOS floating windows, Live Activities or guaranteed background alerts.

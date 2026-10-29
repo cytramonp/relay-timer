@@ -200,10 +200,14 @@ export function Action({
     </Pressable>
   );
 }
-export function Field({ label, ...props }: TextInputProps & { label: string }) {
+export function Field({
+  label,
+  containerStyle,
+  ...props
+}: TextInputProps & { label: string; containerStyle?: ViewStyle }) {
   const t = useTheme();
   return (
-    <View style={{ gap: 7, flexGrow: 1, flexBasis: 140 }}>
+    <View style={[{ gap: 7, flexGrow: 1, flexBasis: 140 }, containerStyle]}>
       <Text style={{ color: t.ink, fontSize: 15, fontWeight: "600" }}>
         {label}
       </Text>

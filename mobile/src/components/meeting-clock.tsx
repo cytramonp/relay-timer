@@ -104,7 +104,7 @@ export function MeetingClock({
           alignItems: "center",
           justifyContent: "space-between",
           gap: 10,
-          minHeight: focus ? 48 : 28,
+          minHeight: 48,
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
@@ -135,9 +135,6 @@ export function MeetingClock({
             label={focus ? "Close focus view" : "Open focus view"}
             dark
             onPress={onFocus}
-            style={
-              focus ? undefined : { position: "absolute", right: -8, top: -10 }
-            }
           />
         ) : (
           <Text style={{ color: t.clockMuted, fontSize: 12 }}>
@@ -151,7 +148,9 @@ export function MeetingClock({
         style={{
           fontFamily: "Cantata",
           fontSize: focus ? 34 : 25,
-          lineHeight: focus ? 46 : 36,
+          lineHeight: focus ? 50 : 40,
+          includeFontPadding: true,
+          paddingVertical: 2,
           color: t.cream,
         }}
       >
@@ -166,7 +165,9 @@ export function MeetingClock({
         style={{
           fontFamily: "Manrope",
           fontSize: focus ? 128 : 80,
-          lineHeight: focus ? 150 : 92,
+          lineHeight: focus ? 164 : 108,
+          includeFontPadding: true,
+          paddingVertical: 4,
           fontWeight: "600",
           color: over ? t.salmon : t.cream,
           letterSpacing: -2,

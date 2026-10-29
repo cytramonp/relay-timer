@@ -1,16 +1,9 @@
 import React, { useState } from "react";
 import { Stack, router } from "expo-router";
-import {
-  Action,
-  Body,
-  Field,
-  Heading,
-  Page,
-  Row,
-  Toggle,
-} from "../components/ui";
+import { Action, Body, Heading, Page, Row, Toggle } from "../components/ui";
 import { useApp } from "../state/app-store";
 import { allocate, totalSeconds } from "../core/meeting";
+import { DurationField } from "../components/duration-field";
 
 export default function MeetingOptions() {
   const { store, editMeeting } = useApp(),
@@ -65,12 +58,12 @@ export default function MeetingOptions() {
         }}
       />
       <Heading>One shared finish.</Heading>
-      <Field
+      <DurationField
         label="Total meeting · minutes"
+        unit="minutes"
+        expanded
         value={total}
         onChangeText={setTotal}
-        keyboardType="decimal-pad"
-        inputMode="decimal"
       />
       <Toggle
         label="Split participants' time equally"
@@ -86,19 +79,15 @@ export default function MeetingOptions() {
         value={c.keepProp}
         onChange={(keepProp) => setC({ ...c, keepProp })}
       />
-      <Field
+      <DurationField
         label="Minimum turn · seconds"
         value={minimum}
         onChangeText={setMinimum}
-        inputMode="numeric"
-        keyboardType="number-pad"
       />
-      <Field
+      <DurationField
         label="Warning before time is up · seconds"
         value={warning}
         onChangeText={setWarning}
-        inputMode="numeric"
-        keyboardType="number-pad"
       />
       <Toggle
         label="Automatically move to the next speaker"

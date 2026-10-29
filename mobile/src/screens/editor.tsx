@@ -19,6 +19,7 @@ import { validateConfig } from "../core/backup";
 import { playCue } from "../services/audio";
 import type { Config, Kind } from "../core/types";
 import { clone } from "../core/clone";
+import { DurationField } from "../components/duration-field";
 
 export function EditorScreen({ kind }: { kind: Kind }) {
   const { programId } = useLocalSearchParams<{ programId?: string }>();
@@ -38,6 +39,9 @@ export function EditorScreen({ kind }: { kind: Kind }) {
     ),
   );
   const [error, setError] = useState("");
+  const [agendaMinutes, setAgendaMinutes] = useState<Record<string, string>>(
+    {},
+  );
   const patch = (value: Partial<Config>) => {
     setConfig((c) => ({ ...c, ...value }));
     setNumbers((n) => ({
@@ -49,20 +53,34 @@ export function EditorScreen({ kind }: { kind: Kind }) {
       ),
     }));
   };
-  const numeric = (key: keyof Config, label: string) => (
-    <Field
-      key={key}
-      label={label}
-      keyboardType="decimal-pad"
-      inputMode="decimal"
-      value={numbers[key] ?? ""}
-      onChangeText={(v) => setNumbers((n) => ({ ...n, [key]: v }))}
-    />
-  );
+  const numeric = (key: keyof Config, label: string) =>
+    label.includes("seconds") ? (
+      <DurationField
+        key={key}
+        label={label}
+        value={numbers[key] ?? ""}
+        onChangeText={(v) => setNumbers((n) => ({ ...n, [key]: v }))}
+      />
+    ) : (
+      <Field
+        key={key}
+        label={label}
+        keyboardType="decimal-pad"
+        inputMode="decimal"
+        value={numbers[key] ?? ""}
+        onChangeText={(v) => setNumbers((n) => ({ ...n, [key]: v }))}
+      />
+    );
   function done() {
     try {
       const converted = {
         ...config,
+        agenda: config.agenda.map((slot) => {
+          const minutes = agendaMinutes[slot.id];
+          if (minutes === undefined) return slot;
+          if (!minutes.trim()) throw Error("Fill in every turn duration.");
+          return { ...slot, seconds: Number(minutes) * 60 };
+        }),
         ...Object.fromEntries(
           Object.entries(numbers).map(([k, v]) => {
             if (!v.trim()) throw Error("Fill in all timing fields.");
@@ -154,17 +172,12 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                   })
                 }
               />
-              <Field
+              <DurationField
                 label="Duration · minutes"
-                inputMode="decimal"
-                keyboardType="decimal-pad"
-                defaultValue={String(slot.seconds / 60)}
+                unit="minutes"
+                value={agendaMinutes[slot.id] ?? String(slot.seconds / 60)}
                 onChangeText={(v) =>
-                  patch({
-                    agenda: config.agenda.map((a) =>
-                      a.id === slot.id ? { ...a, seconds: Number(v) * 60 } : a,
-                    ),
-                  })
+                  setAgendaMinutes((drafts) => ({ ...drafts, [slot.id]: v }))
                 }
               />
               <Row>
@@ -300,16 +313,14 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                       onChangeText={(name) => edit({ name })}
                     />
                     <Row>
-                      <Field
+                      <DurationField
                         label="Work · seconds"
-                        inputMode="numeric"
-                        defaultValue={String(round.work)}
+                        value={String(round.work)}
                         onChangeText={(v) => edit({ work: Number(v) })}
                       />
-                      <Field
+                      <DurationField
                         label="Rest · seconds"
-                        inputMode="numeric"
-                        defaultValue={String(round.rest)}
+                        value={String(round.rest)}
                         onChangeText={(v) => edit({ rest: Number(v) })}
                       />
                     </Row>

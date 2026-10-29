@@ -33,13 +33,19 @@ const setup = () => ({
   total: 600,
 });
 const start = () => toggleRun(createRun("meeting", setup(), "test", 0), 0);
-test("default meeting starts with a two-minute topic and named participants", () => {
+test("default meeting is one hour: five-minute welcome and five equal participants", () => {
   const c = defaultConfig("meeting");
   assert.equal(c.title, "Meeting");
   assert.equal(c.agenda[0].name, "Welcome");
-  assert.equal(c.agenda[0].seconds, 120);
+  assert.equal(c.agenda[0].seconds, 300);
   assert.equal(c.agenda[1].name, "Alex");
-  assert.equal(c.agenda.length, 8);
+  assert.equal(c.agenda.length, 6);
+  assert.equal(c.total, 3600);
+  assert.equal(
+    c.agenda.reduce((sum, slot) => sum + slot.seconds, 0),
+    3600,
+  );
+  assert.ok(c.agenda.slice(1).every((slot) => slot.seconds === 660));
 });
 test("next budget uses shared deadline and changes if the current speaker stops now", () => {
   const r = start();
