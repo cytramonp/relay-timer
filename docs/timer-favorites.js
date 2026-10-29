@@ -1,4 +1,7 @@
-import { timers } from "./timer-catalog.js?v=14";
+import {writeSetting,localSettings} from './timer-store.js';
+import { timers as builtins } from "./timer-catalog.js?v=16";
+const customTimers=localSettings().filter(r=>r.key.startsWith('corptimer.custom.')).map(r=>({slug:'custom:'+r.key.slice('corptimer.custom.'.length),title:JSON.parse(r.value).title}));
+const timers=[...builtins,...customTimers];
 const key = "corptimer.favorites.v1";
 let prefs = { favorites: [], home: null };
 try {
@@ -10,14 +13,14 @@ try {
     };
 } catch {}
 const path = location.pathname.replace(/\/$/, "");
-const current = timers.find((t) =>
+const current = timers.find((t) => t.slug.startsWith('custom:') ? path.endsWith('/custom-timer') && new URLSearchParams(location.search).get('id')===t.slug.slice(7) :
   t.slug
     ? path.endsWith("/" + t.slug)
     : path === "" || path.endsWith("/index.html"),
 );
 const href = (t) =>
   new URL(
-    t.slug ? t.slug + "/" : "./",
+    t.slug.startsWith('custom:') ? 'custom-timer/?id='+encodeURIComponent(t.slug.slice(7)) : t.slug ? t.slug + '/' : './',
     new URL(
       document.body.dataset.timerSlug || path.endsWith("/timers")
         ? "../"
@@ -45,7 +48,7 @@ else {
 
 function save() {
   try {
-    localStorage.setItem(key, JSON.stringify(prefs));
+    writeSetting(key, prefs);
   } catch {
     panel.append(" Preferences cannot be saved in this browser.");
   }

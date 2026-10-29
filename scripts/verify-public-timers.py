@@ -42,7 +42,7 @@ def check_page(url):
 with ThreadPoolExecutor(max_workers=4) as pool:
     pages = list(pool.map(check_page, urls))
 assets = []
-for asset in ['/special-timers.css', '/special-timers.js', '/timer-menu.js', '/timer-engine.js', '/assets/timer-illustrations.jpg', '/board-engine.js', '/specialty-catalog.js', '/specialty-board.js', '/timer-favorites.js', '/assets/multi-stopwatch.png']:
+for asset in ['/special-timers.css', '/special-timers.js', '/timer-menu.js', '/timer-engine.js', '/assets/timer-illustrations.jpg', '/board-engine.js', '/specialty-catalog.js', '/specialty-board.js', '/timer-favorites.js', '/assets/multi-stopwatch.png', '/assets/specialty-illustrations.png', '/assets/gong.wav', '/timer-account.js', '/timer-store.js', '/cue-player.js', '/timer-timeline.js', '/board-editor.js', '/fullscreen.js']:
     status, _, body = fetch(ORIGIN + asset)
     assert status == 200 and body == (ROOT / 'docs' / asset.lstrip('/')).read_bytes(), asset
     assets.append({'path': asset, 'status': status, 'sha256': hashlib.sha256(body).hexdigest()})

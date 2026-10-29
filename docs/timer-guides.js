@@ -5,7 +5,7 @@ const guides = {
     paragraphs: [
       'The CorpTimer Meeting Timer turns an agenda into a shared schedule. Add speakers, discussion topics or both, give each slot a duration and choose the total meeting length. Start with a template for a standup, retrospective, planning session or workshop, or build your own agenda.',
       'Slots end at milestones measured from the meeting start. If an 8-minute turn ends after 7 minutes, the next speaker gets that spare minute. An overrun uses time from later slots. Use Next speaker to hand over, Pause to stop the meeting clock and Undo to reverse the last switch. You can wait for the host at zero or enable automatic transitions.',
-      'Float timer opens a compact display where the browser supports it. Share live creates an audience link; keep the host tab open. Notes and reports remain private. Meetings are saved in this browser, with optional Google sign-in for a synchronized meeting library.'
+      'Float timer opens a compact display where the browser supports it. Live Link creates an audience link; keep the host tab open. Notes and reports remain private. Meetings are saved in this browser, with optional Google sign-in for a synchronized meeting library.'
     ],
     advice: [
       'Name agenda slots after the decision or topic, so everyone can see what the current time is for.',

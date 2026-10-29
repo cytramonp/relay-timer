@@ -44,6 +44,6 @@
 - [Other Timers](https://corptimer.com/timers/): Browse all activities and preset countdowns.
 - Each timer page contains a public, expandable How it works and advice guide in its HTML.
 - JavaScript is required to operate the clocks; an account is not required.
-- Standalone setups stay in browser storage. Optional Google synchronization belongs to the Meeting Timer.
+- Timer settings, custom timers, templates and favorites save locally, with optional Google account synchronization.
 - Keep the tab open for alarms; background and mobile delivery depend on the browser.
 - Live audience links are temporary session views, not indexable timer guides.

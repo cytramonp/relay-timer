@@ -1,3 +1,4 @@
+import { timerArt } from '../docs/timer-art.js';
 import fs from "node:fs";
 import { specialtyTimers } from "../docs/specialty-catalog.js";
 const esc = (s) =>
@@ -21,11 +22,11 @@ export function groupedDirectory(timers) {
   return ["Sports", "Professional", "Learning & events", "Everyday"]
     .map(
       (g) =>
-        `<details class="directory-category"><summary>${esc(g)} <span>${timers.filter((t) => category(t) === g).length} timers</span></summary><div class="directory-list">${timers
+        `<details class="directory-category" open><summary>${esc(g)} <span>${timers.filter((t) => category(t) === g).length} timers</span></summary><div class="directory-list">${timers
           .filter((t) => category(t) === g)
           .map(
             (t) =>
-              `<a class="directory-link" href="../${t.slug ? t.slug + "/" : ""}"><h3>${esc(t.title)}</h3><p>${esc(t.description)}</p><p class="directory-detail">${esc(t.detail)}</p></a>`,
+              `<a class="directory-link" href="../${t.slug ? t.slug + "/" : ""}">${timerArt(t,'directory-art')}<h3>${esc(t.title)}</h3><p>${esc(t.description)}</p><p class="directory-detail">${esc(t.detail)}</p></a>`,
           )
           .join("")}</div></details>`,
     )
@@ -34,15 +35,15 @@ export function groupedDirectory(timers) {
 export function buildSpecialtyPages(shell) {
   for (const t of specialtyTimers) {
     const image = `https://corptimer.com/assets/${t.slug}.png`;
-    const body = `<div class="tool-heading"><h1>${esc(t.title)}</h1><p>${esc(t.description)}</p></div><div class="board-actions"><button id="board-start">${t.mode === "turn" ? "Start first player" : "Start all"}</button><button id="board-pause">Pause all</button><button id="board-add">Add clock</button><button id="board-export">Export CSV</button><button id="board-sound">Enable sound</button><button id="board-fullscreen">Fullscreen board</button></div><p id="board-note" role="status">Keep this page open. Clocks restore paused after a reload. Stage cues require sound enabled.</p><div id="specialty-board" class="specialty-board"></div><details class="timer-guide"><summary>How it works and advice</summary><div class="guide-content"><img class="specialty-diagram" src="../assets/${t.slug}.png" alt="${esc(t.title)} timing diagram: ${esc(t.stages.map((s) => s.name).join(" → "))}" width="1200" height="630"><h2>How the ${esc(t.title)} works</h2><p>${esc(t.description)}</p><h2>How to use it</h2><ol><li>${esc(t.use)}</li><li>Open Edit stages to name each phase and change its duration in seconds while the clock is paused. Each clock starts independently.</li><li>Pause to hold the current stage, use Next stage to finish early, or Reset to start that clock again. Export CSV for your elapsed times and lap splits.</li></ol><h2>Practical advice</h2><ul><li>${esc(t.tip)}</li><li>Test the setup before the session.</li></ul><p>Try one short test before your session. Keep the device awake and the tab visible; browser alarms are not guaranteed while the device is locked.</p><h2>Can I use this timer offline?</h2><p>The clocks run without a server after the page loads. Opening an uncached page still requires a connection. No account is required; this board stays in this browser.</p></div></details><section class="related-timers"><h2>More ${esc(t.category.toLowerCase())} timers</h2>${specialtyTimers
+    const body = `<div class="tool-heading illustrated-heading">${timerArt(t)}<h1>${esc(t.title)}</h1><p>${esc(t.description)}</p></div><div class="board-actions"><button id="board-start">${t.mode === "turn" ? "Start first player" : "Start all"}</button><button id="board-pause">Pause all</button><button id="board-add">Add clock</button><button id="board-export">Export CSV</button><button id="board-sound">Enable sound</button><button id="board-fullscreen">Fullscreen board</button></div><p id="board-note" role="status">Keep this page open. Clocks restore paused after a reload. Stage cues require sound enabled.</p><div id="specialty-board" class="specialty-board"></div><details class="timer-guide"><summary>How it works and advice</summary><div class="guide-content"><img class="specialty-diagram" src="../assets/${t.slug}.png" alt="${esc(t.title)} timing diagram: ${esc(t.stages.map((s) => s.name).join(" → "))}" width="1200" height="630"><h2>How the ${esc(t.title)} works</h2><p>${esc(t.description)}</p><h2>How to use it</h2><ol><li>${esc(t.use)}</li><li>Open Edit stages to name each phase and change its duration in seconds while the clock is paused. Each clock starts independently.</li><li>Pause to hold the current stage, use Next stage to finish early, or Reset to start that clock again. Export CSV for your elapsed times and lap splits.</li></ol><h2>Practical advice</h2><ul><li>${esc(t.tip)}</li><li>Test the setup before the session.</li></ul><p>Try one short test before your session. Keep the device awake and the tab visible; browser alarms are not guaranteed while the device is locked.</p><h2>Can I use this timer offline?</h2><p>The clocks run without a server after the page loads. Opening an uncached page still requires a connection. No account is required; this board stays in this browser.</p></div></details><section class="related-timers"><h2>More ${esc(t.category.toLowerCase())} timers</h2>${specialtyTimers
       .filter((x) => x.category === t.category && x.slug !== t.slug)
       .map((x) => `<a href="../${x.slug}/">${esc(x.title)}</a>`)
       .join(
         " · ",
       )}<p><a href="../timers/">Browse all timers</a></p></section><noscript>Enable JavaScript to operate this board. The instructions above remain available.</noscript>`;
     let html = shell({ ...t, body }).replace(
-      '<script type="module" src="../special-timers.js?v=13"></script>',
-      '<script type="module" src="../specialty-board.js?v=1"></script>',
+      '<script type="module" src="../special-timers.js?v=16"></script>',
+      '<script type="module" src="../specialty-board.js?v=2"></script>',
     );
     html = html.replace(
       "</head>",

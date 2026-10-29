@@ -1,3 +1,8 @@
+import {intervalCue} from './interval-cues.js';
+import {CuePlayer} from './cue-player.js';
+import {createTimeline} from './timer-timeline.js';
+import {writeSetting} from './timer-store.js';
+import {toggleFullscreen} from './fullscreen.js';
 import { buildSequence, IntervalClock, ChessClock, formatTime, clamp, newYearTarget } from './timer-engine.js';
 import { defaults } from './timer-forms.js';
 
@@ -15,11 +20,11 @@ const initialSaved = readStorage(key);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 let config = structuredClone(base), clock, audio, gain, wake, lastIndex = -1, lastSecond = -1, lastDone = false;
 let stopwatch = { elapsed: 0, anchor: null, running: false, laps: [] }, yearTarget, lastSave = 0;
-let presetRows = [], audioReported = false;
+let presetRows = [], audioReported = false, initializing=true;
 function notice(message) { $('runtime-note').textContent = message; }
 function readStorage(storageKey) { try { return JSON.parse(localStorage.getItem(storageKey)); } catch { return null; } }
 function writeStorage(storageKey, value) {
-  try { localStorage.setItem(storageKey, JSON.stringify(value)); return true; }
+  try { return writeSetting(storageKey,value,{localOnly:initializing||(storageKey===key&&isRunning())}); }
   catch { notice('Browser storage is unavailable or full. Export your setup to keep a copy.'); return false; }
 }
 function cleanConfig(raw) {
@@ -85,7 +90,7 @@ function setConfig(next) {
   resetClock();
 }
 function updateConfig(event) {
-  if (isLocked() && !['sound','volume','hideDigits'].includes(event.target.name)) return;
+  if (isLocked() && !['sound','volume','hideDigits','gong'].includes(event.target.name)) return;
   if (!form.checkValidity()) { $('form-error').textContent='Check the highlighted settings before starting.'; return; }
   const c = readForm();
   if (fields.hours && (c.duration <= 0 || c.duration > 86400)) { $('form-error').textContent='Choose a duration from 1 second to 24 hours.'; return; }
@@ -107,7 +112,7 @@ function resetClock() {
 }
 function lockFields() {
   const locked = !!isLocked();
-  Array.from(fields).forEach(f => { if (['sound','volume','hideDigits'].includes(f.name) || f.id==='test-sound') return; f.disabled=locked; });
+  Array.from(fields).forEach(f => { if (['sound','volume','hideDigits','gong'].includes(f.name) || f.id==='test-sound') return; f.disabled=locked; });
   $('delete-setup').disabled=locked||$('saved-presets').value==='';
   $('settings-notice').textContent=locked?'Reset the timer to edit this setup. Sound and volume can be changed while it runs.':'';
   form.querySelectorAll('[data-preset]').forEach(button=>{
@@ -147,42 +152,29 @@ function restore() {
     renderLaps(); lockFields(); render(); save();
   } catch { config=structuredClone(base); syncForm(); resetClock(); notice('The saved setup could not be loaded. A fresh timer is ready.'); }
 }
+const cuePlayer=new CuePlayer();
 async function armAudio() {
-  if (config.sound==='off' || !config.volume) return;
-  try {
-    audio ||= new (window.AudioContext||window.webkitAudioContext)();
-    gain ||= audio.createGain(); gain.gain.value=config.volume/100*.35; gain.connect(audio.destination);
-    if (audio.state==='suspended') await audio.resume();
-  } catch { notice('Sound is unavailable in this browser. Use the visual countdown.'); }
+  if(config.sound==='off'||!config.volume)return;
+  try{await cuePlayer.arm();}catch{notice('Sound could not load. Check your connection and try Test sound.');}
 }
-function tone(type = config.sound) {
-  if (!audio || audio.state!=='running' || type==='off' || config.sound==='off' || !config.volume) return;
-  gain.gain.value=config.volume/100*.35;
-  const now=audio.currentTime;
-  const pitches=type==='gong'?[180,271,419,641,873]:type==='bell'?[660,990,1320]:type==='warning'?[440,440]:[880];
-  pitches.forEach((freq,i)=>{
-    const o=audio.createOscillator(),g=audio.createGain(); o.type=type==='beep'?'sine':'sine'; o.frequency.value=freq;
-    const start=now+(type==='warning'?i*.16:0), length=type==='gong'?1.8:type==='bell'?.9:.14;
-    g.gain.setValueAtTime(.001,start);g.gain.exponentialRampToValueAtTime(.45/(i+1),start+.008);g.gain.exponentialRampToValueAtTime(.001,start+length);
-    o.connect(g);g.connect(gain);o.start(start);o.stop(start+length+.03);o.onended=()=>{o.disconnect();g.disconnect();};
-  });
+function tone(type=config.sound) {
+  if(config.sound==='off'||!config.volume||(type==='gong'&&config.gong===false))return;
+  cuePlayer.play(type,config.volume);
 }
 async function acquireWake() { try { if ('wakeLock' in navigator && !document.hidden && !wake) { wake=await navigator.wakeLock.request('screen');wake.addEventListener('release',()=>{wake=null;}); } } catch { /* Browser may deny wake lock in low power mode. */ } }
 function releaseWake() { if (wake) { wake.release().catch(()=>{}); wake=null; } }
 function audioCues(previousIndex, previousRemaining, wasDone) {
-  if (!clock?.sequence) return;
-  const current=clock.sequence[clock.index], remaining=clock.remaining(), second=Math.ceil(remaining/1000);
-  if ((clock.done&&!wasDone) || clock.index!==previousIndex || (clock.waiting && previousRemaining>0)) tone();
-  else if (clock.running && current.type==='work' && config.warning>0 && previousRemaining>config.warning*1000 && remaining<=config.warning*1000) tone('warning');
-  else if (clock.running && second>0 && second<=config.finalCue && second!==lastSecond) tone('beep');
-  lastSecond=second;
+  const type=intervalCue(clock,{index:previousIndex,remaining:previousRemaining,done:wasDone},config,lastSecond);
+  if(type)tone(type);
+  lastSecond=Math.ceil(clock.remaining()/1000);
 }
+
 function tick() {
   const now=Date.now();
   if (kind==='stopwatch') { if (stopwatch.running) { stopwatch.elapsed+=Math.max(0,now-stopwatch.anchor);stopwatch.anchor=Math.max(now,stopwatch.anchor); } }
   else if (kind==='chess') { const wasFlag=clock.flag;clock.update(now);if(wasFlag===null&&clock.flag!==null)tone(); }
   else if (kind!=='newyear') { const idx=clock.index,remaining=clock.remaining(),done=clock.done;clock.update(now);audioCues(idx,remaining,done); }
-  render();
+  updateTimeline();render();
   if (now-lastSave>2000 && (isRunning()||kind==='newyear')) save();
   if (!isRunning()) releaseWake();
 }
@@ -284,7 +276,7 @@ for(let i=0;i<2;i++)if($(`player-${i}`))$(`player-${i}`).onclick=async()=>{await
 if($('swap-chess'))$('swap-chess').onclick=()=>{const players=$('chess-players');players.classList.toggle('swapped');players.style.direction=players.classList.contains('swapped')?'rtl':'ltr';};
 if($('next-year'))$('next-year').onclick=()=>{resetClock();};
 if($('enable-newyear-sound'))$('enable-newyear-sound').onclick=async()=>{await armAudio();tone();notice('Midnight alarm enabled for this open tab.');};
-$('fullscreen-timer').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await stage.requestFullscreen();}catch{notice('Fullscreen is unavailable here. Open this page in a browser that supports fullscreen.');}};
+$('fullscreen-timer').onclick=()=>toggleFullscreen(stage,$('fullscreen-timer'));
 document.addEventListener('fullscreenchange',()=>{$('fullscreen-timer').textContent=document.fullscreenElement?'Exit fullscreen':'Fullscreen';});
 $('save-setup').onclick=()=>{if(!form.reportValidity()||$('form-error').textContent)return;$('preset-dialog').showModal();$('preset-name').focus();};
 $('preset-cancel').onclick=()=>$('preset-dialog').close();
@@ -297,7 +289,26 @@ $('import-file').onchange=async()=>{const file=$('import-file').files[0];if(!fil
 document.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea,button,summary,a,dialog')||e.altKey||e.ctrlKey||e.metaKey||e.repeat)return;if(e.code==='Space'&&kind!=='newyear'){e.preventDefault();if(kind==='chess'&&clock.running){clock.switch(Date.now());render();save();}else startPause();}if(kind==='stopwatch'&&e.key.toLowerCase()==='l')addLap();});
 window.addEventListener('pagehide',()=>{tick();save();});
 document.addEventListener('visibilitychange',()=>{tick();save();if(!document.hidden&&isRunning())acquireWake();if(!document.hidden&&audio?.state==='suspended'&&!audioReported){audioReported=true;notice('The browser suspended audio while hidden. Test sound again if you need an alarm.');}});
-syncForm();resetClock();restore();renderPresets();
+syncForm();resetClock();restore();renderPresets();initializing=false;
 setInterval(tick,100);
 document.body.dataset.timerReady='true';
 if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});
+
+const timelines=[];
+if(kind==='chess') {
+  for(let i=0;i<2;i++)timelines.push(createTimeline(stage,{label:(i?'Black':'White')+' time bank',seek:value=>{clock.pause(Date.now());clock.times[i]=value*1000;clock.flag=null;render();save();}}));
+} else timelines.push(createTimeline(stage,{label:kind==='newyear'?'Adjust midnight target (hours around chosen midnight)':'Timeline',seek:value=>{
+  if(kind==='stopwatch'){stopwatch.running=false;stopwatch.anchor=null;stopwatch.elapsed=value*1000;stopwatch.laps=stopwatch.laps.filter(v=>v<=stopwatch.elapsed);renderLaps();}
+  else if(kind==='newyear'){yearTarget.target=midnightBase+(value-43200)*1000;}
+  else{clock.pause(Date.now());let ms=value*1000;clock.index=0;while(clock.index<clock.sequence.length-1&&ms>=clock.sequence[clock.index].ms){ms-=clock.sequence[clock.index].ms;clock.index++;}clock.elapsed=ms;clock.done=false;clock.waiting=false;clock.anchor=null;lastIndex=-1;clock.update(Date.now());}
+  render();lockFields();save();notice('Time adjusted. Press Resume when ready.');
+}}));
+let midnightBase=kind==='newyear'?yearTarget.target:0;
+function updateTimeline(){
+  if(!timelines.length)return;
+  if(kind==='chess')timelines.forEach((t,i)=>t.update(clock.times[i]/1000,Math.max(clock.initial,clock.times[i])/1000));
+  else if(kind==='newyear')timelines[0].update(43200+(yearTarget.target-midnightBase)/1000,86400);
+  else if(kind==='stopwatch')timelines[0].update(stopwatch.elapsed/1000,Math.max(600,Math.ceil(stopwatch.elapsed/600000)*600));
+  else{const total=clock.sequence.reduce((n,s)=>n+s.ms,0);timelines[0].update((clock.done?total:clock.sequence.slice(0,clock.index).reduce((n,s)=>n+s.ms,0)+clock.elapsed)/1000,total/1000,clock.sequence.map(s=>({name:s.name,seconds:s.ms/1000})));}
+}
+updateTimeline();

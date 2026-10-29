@@ -5,7 +5,7 @@ import {removeRecord} from './storage.js?v=8';
 
 const $=id=>document.getElementById(id);
 const el=(tag,cls,text)=>{const node=document.createElement(tag);if(cls)node.className=cls;if(text!=null)node.textContent=text;return node;};
-const builtins=[['daily','people','citron','A quick team check-in.'],['retro','loop','lilac','Reflect, discuss, improve.'],['planning','grid','mint','Turn a goal into a plan.'],['workshop','spark','peach','Make space for good ideas.'],['focus','focus','citron','Deep work, then a breather.'],['pomodoro','loop','peach','Four focus rounds with automatic breaks.'],['countdown','focus','mint','One timer. Set your duration and start.']];
+const builtins=[['daily','people','citron','A quick team check-in.'],['retro','loop','lilac','Reflect, discuss, improve.'],['planning','grid','mint','Turn a goal into a plan.'],['workshop','spark','peach','Make space for good ideas.'],['participants','people','mint','Equal time for eight participants.']];
 
 export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
   let draft=null,editingId=null,revision=null,dirty=false;
