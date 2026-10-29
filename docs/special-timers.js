@@ -19,7 +19,7 @@ const presetKey = `corptimer:presets:${slug}:v1`;
 const initialSaved = readStorage(key);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 let config = structuredClone(base), clock, audio, gain, wake, lastIndex = -1, lastSecond = -1, lastDone = false;
-let stopwatch = { elapsed: 0, anchor: null, running: false, laps: [] }, yearTarget, lastSave = 0;
+let stopwatch = { elapsed: 0, anchor: null, running: false, laps: [] }, yearTarget, lastSave = 0, midnightBase=0;
 let presetRows = [], audioReported = false, initializing=true;
 function notice(message) { $('runtime-note').textContent = message; }
 function readStorage(storageKey) { try { return JSON.parse(localStorage.getItem(storageKey)); } catch { return null; } }
@@ -104,7 +104,7 @@ function resetClock() {
   if (kind === 'chess') { clock = new ChessClock(config.duration,config.increment,config.delay); clock.active=Number(config.first)===1?1:0; }
   else if (kind === 'newyear') {
     const zone = config.zone==='local'?Intl.DateTimeFormat().resolvedOptions().timeZone:config.zone;
-    yearTarget = { ...newYearTarget(Date.now(),zone), zone };
+    yearTarget = { ...newYearTarget(Date.now(),zone), zone };midnightBase=yearTarget.target;
   } else if (kind === 'stopwatch') stopwatch={elapsed:0,anchor:null,running:false,laps:[]};
   else clock=new IntervalClock(buildSequence(kind,config),config.automatic);
   lastIndex=-1; lastSecond=-1; lastDone=false;
@@ -303,7 +303,7 @@ if(kind==='chess') {
   else{clock.pause(Date.now());let ms=value*1000;clock.index=0;while(clock.index<clock.sequence.length-1&&ms>=clock.sequence[clock.index].ms){ms-=clock.sequence[clock.index].ms;clock.index++;}clock.elapsed=ms;clock.done=false;clock.waiting=false;clock.anchor=null;lastIndex=-1;clock.update(Date.now());}
   render();lockFields();save();notice('Time adjusted. Press Resume when ready.');
 }}));
-let midnightBase=kind==='newyear'?yearTarget.target:0;
+if(kind==='newyear')midnightBase=yearTarget.target;
 function updateTimeline(){
   if(!timelines.length)return;
   if(kind==='chess')timelines.forEach((t,i)=>t.update(clock.times[i]/1000,Math.max(clock.initial,clock.times[i])/1000));

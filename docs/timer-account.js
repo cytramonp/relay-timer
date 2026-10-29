@@ -13,11 +13,11 @@ const error=e=>{status.textContent='Saved locally · sync unavailable';status.ti
 async function flush(){if(!user||!cloud||!ready)return;const uid=user.uid,version=generation;status.textContent='Syncing…';try{for(const [key,row]of pending){await cloud.writeSetting(uid,row);if(version!==generation)return;if(pending.get(key)===row)pending.delete(key);}status.textContent='Saved to your account';}catch(e){error(e);}}
 window.addEventListener('timer-setting-written',e=>{if(!user){status.textContent='Saved locally';return;}pending.set(e.detail.key,e.detail);clearTimeout(flushTimer);flushTimer=setTimeout(flush,650);});
 async function authChanged(next){
-  generation++;stop?.();stop=null;ready=false;pending.clear();user=next;
+  const authVersion=++generation;stop?.();stop=null;ready=false;pending.clear();user=next;
   if(selectAccount(user?.uid)){location.reload();return;}
   button.textContent=user?`Sign out · ${user.displayName||user.email||'Google account'}`:'Sign in with Google';
   if(!user){status.textContent='Saved locally';return;}
-  cloud=await loadCloud();status.textContent='Syncing…';
+  cloud=await loadCloud();if(authVersion!==generation||!user)return;status.textContent='Syncing…';
   let first=true;
   stop=cloud.watchSettings(user.uid,rows=>{
     const local=new Map(localSettings().map(r=>[r.key,r]));let changed=false;
