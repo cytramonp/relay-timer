@@ -1,0 +1,21 @@
+# Mobile 0.2 data inventory
+
+Technical evidence for preparing store privacy forms and the publisher's notice. This is not a completed privacy notice or a declaration that the store forms have been approved. Sources: `src/services/storage.ts`, `src/state/app-store.tsx`, `src/state/live-store.tsx`, `src/services/live.ts`, `src/core/meeting.ts`, `src/services/files.ts`, `src/services/notifications.ts`, `app.json` and the local overlay module.
+
+| Data | Trigger and destination | Retention / deletion |
+|---|---|---|
+| Drafts, participants, timer settings, active run, private notes and follow-ups | Local app storage; SQLite-backed on native | Until local deletion/reset. History keeps the last 100 results; the program limit is 200. |
+| Saved reusable plans | Local app storage; exported JSON only when requested | Local deletion/reset or the user's handling of exported files. Reusable imports/exports exclude active sessions, notes and reports. |
+| Device backup, CSV, copied report and PDF/print output | Explicit export/copy/print/share actions | The user controls the resulting file, clipboard, print destination and share-sheet recipient. A full device-data export contains private local data. |
+| Anonymous Firebase identity and authentication persistence | Creating a live link, or restoring an earlier opted-in host session; Firebase Authentication | Credentials persist locally using AsyncStorage. The app does not delete the anonymous provider account when a room stops. Provider account retention has not been administratively verified. |
+| Public title, agenda names/durations/status, current and next speaker, countdown, total, timing policy and update timestamp | Explicit Create live link; Firebase Firestore in the existing `relay-timer-web-7c39` project | Stop sharing deletes the projection, pending commands and room owner. Access expires after 24 hours. Physical deletion on expiry is **not** established: the numeric expiry/access rule is not proof of a server cleanup policy. |
+| Room owner UID, random controller capability and expiry | Explicit live hosting; owner-protected Firestore record and separate local host persistence | Deleted locally and from the room-owner collection when Stop sharing succeeds. These values are excluded from reusable plan/device-store exports. |
+| Next/Pause/Undo/Extend commands, controller capability and command timestamp | A holder of the separate controller link; existing Firestore command protocol | The host consumes and deletes commands. Stopping the room deletes remaining commands. Only recent commands are executed. |
+| Local notification schedule | Owner enables notification permission; OS notification scheduler | Replaced/cancelled on timer changes. At most 48 upcoming alerts. No push registration token is sent to a remote push service by app code. |
+| Current speaker/timer displayed above other Android apps | Owner grants special display permission and opens floating mode; local native foreground service/window | Visible until Close, service shutdown or OS/process termination. The persistent notification describes floating mode. No recording of other apps is implemented. |
+
+The public projection excludes private notes, follow-up owners/items, reports and internal slot identifiers. Anyone holding a valid viewer link can read its projection; a separate capability link grants timer control. Public collection enumeration is denied by the existing rules. Hosting requires a live app connection; arbitrary background JavaScript execution is not promised.
+
+There is no implemented native Google/Apple private-library synchronization, advertising, payment, analytics or remote push integration in this app. Audio cues and voice output do not require microphone recording; microphone permission/background recording are disabled in the audio plugin configuration. Bundled fonts, images and sound cues do not require runtime downloads.
+
+Before store submission, the owner must verify provider storage region/retention and account handling, generated OS backup rules and privacy manifests, publisher/contact details and applicable store-form classifications. No provider administration, OAuth configuration or store-account change was performed by this inventory.

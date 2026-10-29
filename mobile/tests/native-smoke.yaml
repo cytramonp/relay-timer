@@ -19,14 +19,14 @@ appId: com.corptimer.app
     duration: 1600
     waitToSettleTimeoutMs: 500
 - assertVisible:
-    id: agenda-name-1
-    text: Morgan
+    id: drag-handle-1
+    text: Reorder Morgan
 - takeScreenshot: '${DEVICE_CLASS}-ios-agenda-reordered'
 - scrollUntilVisible:
     element:
-      id: meeting-next
+      text: Meeting name
     direction: UP
-    centerElement: true
+    centerElement: false
     timeout: 20000
 - tapOn:
     id: meeting-next

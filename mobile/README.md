@@ -55,6 +55,8 @@ npx expo-doctor
 
 See [VALIDATION.md](VALIDATION.md) for what was actually checked and what remains unverified. The root website keeps its own test/check commands and deployment boundary.
 
+[store/data-inventory.md](store/data-inventory.md) records the implemented local/cloud data paths for preparing accurate privacy disclosures. Store metadata is a draft, not a completed submission.
+
 ## Android installation build
 
 The repository's **Android APK** GitHub Actions workflow builds a standalone arm64 test APK with embedded JavaScript. Download the `corptimer-android-test-apk` artifact from a successful run, unzip it and install the APK on a compatible Android device. No Metro server is needed.

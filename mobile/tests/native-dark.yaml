@@ -6,8 +6,8 @@ appId: com.corptimer.app
 - tapOn: Meeting
 - scrollUntilVisible:
     element:
-      id: meeting-next
+      text: Meeting name
     direction: UP
-    centerElement: true
+    centerElement: false
     timeout: 15000
 - takeScreenshot: '${DEVICE_CLASS}-ios-dark-large-text'
