@@ -69,8 +69,8 @@ export function Heading({ children }: { children: React.ReactNode }) {
       accessibilityRole="header"
       style={{
         fontFamily: "Cantata",
-        fontSize: 26,
-        lineHeight: 35,
+        fontSize: 25,
+        lineHeight: 34,
         color: t.ink,
         marginTop: 8,
       }}
@@ -177,7 +177,7 @@ export function Action({
         minHeight: 48,
         paddingHorizontal: 17,
         paddingVertical: 12,
-        borderRadius: 6,
+        borderRadius: 12,
         borderWidth: 1,
         borderColor:
           tone === "danger" ? t.salmon : tone === "cream" ? t.cream : t.teal,

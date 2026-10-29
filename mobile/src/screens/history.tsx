@@ -13,6 +13,8 @@ import { formatTime } from "../core/clock";
 import { csv } from "../core/backup";
 import { useApp } from "../state/app-store";
 import { exportFile } from "../services/files";
+import { meetingCSV } from "../core/meeting-report";
+import { router } from "expo-router";
 import type { Report } from "../core/types";
 
 export function HistoryScreen() {
@@ -40,6 +42,14 @@ function ReportRow({ report: r }: { report: Report }) {
   const { removeReport, notify } = useApp(),
     [open, setOpen] = useState(false);
   async function download() {
+    if (r.kind === "meeting") {
+      try {
+        await exportFile("corptimer-meeting.csv", meetingCSV(r), "text/csv");
+      } catch (e) {
+        notify(e instanceof Error ? e.message : "Could not export report.");
+      }
+      return;
+    }
     const rows: (string | number)[][] = [
       ["CorpTimer", r.title],
       ["Finished", new Date(r.finishedAt).toISOString()],
@@ -72,7 +82,14 @@ function ReportRow({ report: r }: { report: Report }) {
       <Row>
         <Action
           label={open ? "Hide results" : "View results"}
-          onPress={() => setOpen(!open)}
+          onPress={() =>
+            r.kind === "meeting"
+              ? router.push({
+                  pathname: "/meeting-report",
+                  params: { reportId: r.id },
+                })
+              : setOpen(!open)
+          }
         />
         <Action label="Export CSV" onPress={() => void download()} />
         <Action

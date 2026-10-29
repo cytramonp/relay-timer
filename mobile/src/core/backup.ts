@@ -42,6 +42,7 @@ export function validateConfig(kind: Kind, value: unknown): Config {
     delay: [0, 300],
     first: [0, 1],
     minimum: [0, 1800],
+    total: [0, 17280000],
   };
   for (const [key, range] of Object.entries(ranges))
     if (raw[key] !== undefined)
@@ -61,6 +62,8 @@ export function validateConfig(kind: Kind, value: unknown): Config {
     "voice",
     "hideDigits",
     "customRounds",
+    "autoSplit",
+    "keepProp",
   ] as const)
     if (raw[key] !== undefined) {
       if (typeof raw[key] !== "boolean") throw Error("Invalid toggle value.");
@@ -90,7 +93,8 @@ export function validateConfig(kind: Kind, value: unknown): Config {
       return {
         id,
         name: text(a.name) || `Slot ${i + 1}`,
-        seconds: num(a.seconds, 1, 86400),
+        seconds: num(a.seconds, 0, 86400),
+        kind: a.kind === "topic" ? "topic" : "person",
         ...(a.pinned === true ? { pinned: true } : {}),
       };
     });
@@ -114,6 +118,8 @@ export function validateConfig(kind: Kind, value: unknown): Config {
       throw Error("Choose a valid time zone.");
     }
   if (!c.title) c.title = defaultConfig(kind).title;
+  if (raw.total === undefined && raw.agenda !== undefined)
+    c.total = c.agenda.reduce((n, a) => n + a.seconds, 0);
   return c;
 }
 export function readBackup(
@@ -141,6 +147,14 @@ export function readBackup(
           ? text(p.name)
           : validateConfig(p.kind, p.config).title,
       config: validateConfig(p.kind, p.config),
+      ...(typeof p.color === "string" &&
+      ["citron", "peach", "lilac", "mint"].includes(p.color)
+        ? { color: p.color as Program["color"] }
+        : {}),
+      ...(typeof p.icon === "string" &&
+      ["people", "loop", "grid", "spark", "focus", "coffee"].includes(p.icon)
+        ? { icon: p.icon as Program["icon"] }
+        : {}),
       updatedAt: now,
     };
   };
@@ -173,10 +187,19 @@ export function readBackup(
           name: text(a.name),
           seconds: num(a.min, 0.01, 1440) * 60,
           pinned: a.pin === true,
+          kind: a.kind === "topic" ? ("topic" as const) : ("person" as const),
         };
       });
       c.automatic = state.endPolicy === "auto";
       c.minimum = typeof state.floor === "number" ? state.floor * 60 : 15;
+      c.autoSplit = state.autoSplit !== false;
+      c.keepProp = state.keepProp !== false;
+      c.total =
+        typeof state.total === "number"
+          ? state.total * 60
+          : c.agenda.reduce((n, a) => n + a.seconds, 0);
+      c.warning = typeof state.warn === "number" ? state.warn * 60 : 60;
+      c.sound = state.sound ? "beep" : "off";
       return {
         id: makeId(),
         kind: "meeting",
@@ -191,10 +214,12 @@ export function writeBackup(programs: Program[]) {
     {
       format: "corptimer-mobile",
       version: 1,
-      programs: programs.map(({ kind, name, config }) => ({
+      programs: programs.map(({ kind, name, config, color, icon }) => ({
         kind,
         name,
         config,
+        color,
+        icon,
       })),
     },
     null,

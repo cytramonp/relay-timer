@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Text, View } from "react-native";
-import { router, Stack } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import * as Crypto from "expo-crypto";
 import {
   Action,
@@ -21,9 +21,15 @@ import type { Config, Kind } from "../core/types";
 import { clone } from "../core/clone";
 
 export function EditorScreen({ kind }: { kind: Kind }) {
-  const { store, updateDraft, notify } = useApp(),
+  const { programId } = useLocalSearchParams<{ programId?: string }>();
+  const { store, updateDraft, reviseProgram, notify } = useApp(),
     t = useTheme();
-  const [config, setConfig] = useState<Config>(() => clone(store.drafts[kind]));
+  const savedProgram = store.programs.find(
+    (p) => p.id === programId && p.kind === kind,
+  );
+  const [config, setConfig] = useState<Config>(() =>
+    clone(savedProgram?.config ?? store.drafts[kind]),
+  );
   const [numbers, setNumbers] = useState<Record<string, string>>(() =>
     Object.fromEntries(
       Object.entries(config)
@@ -64,7 +70,13 @@ export function EditorScreen({ kind }: { kind: Kind }) {
           }),
         ),
       };
-      if (!updateDraft(kind, validateConfig(kind, converted))) return;
+      const valid = validateConfig(kind, converted);
+      if (savedProgram) {
+        if (
+          !reviseProgram({ ...savedProgram, name: valid.title, config: valid })
+        )
+          return;
+      } else if (!updateDraft(kind, valid)) return;
       notify("Setup saved for your next run.");
       router.back();
     } catch (e) {

@@ -19,8 +19,15 @@ import { importFile, exportFile } from "../services/files";
 import { useTheme } from "../theme";
 
 export function ProgramsScreen() {
-  const { store, updateDraft, deleteProgram, importPrograms, notify, act } =
-      useApp(),
+  const {
+      store,
+      updateDraft,
+      deleteProgram,
+      duplicateProgram,
+      importPrograms,
+      notify,
+      act,
+    } = useApp(),
     t = useTheme(),
     [query, setQuery] = useState(""),
     [busy, setBusy] = useState(false);
@@ -81,7 +88,10 @@ export function ProgramsScreen() {
               ? "Try another name or clear the search."
               : "Open a timer, edit its setup and choose Save program. You can also import a setup or meeting backup from corptimer.com."}
           </Body>
-          <Action label="Browse timers" onPress={() => router.navigate("/")} />
+          <Action
+            label="Browse timers"
+            onPress={() => router.navigate("/(tabs)/timers")}
+          />
         </>
       )}
       {programs.map((p) => (
@@ -135,6 +145,23 @@ export function ProgramsScreen() {
                 })
               }
             />
+          </Row>
+          <Row>
+            <Action
+              label="Edit"
+              onPress={() =>
+                p.kind === "meeting"
+                  ? router.push({
+                      pathname: "/save-meeting",
+                      params: { id: p.id },
+                    })
+                  : router.push({
+                      pathname: "/edit/[kind]",
+                      params: { kind: p.kind, programId: p.id },
+                    })
+              }
+            />
+            <Action label="Duplicate" onPress={() => duplicateProgram(p.id)} />
           </Row>
           <Rule />
         </View>

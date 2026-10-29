@@ -1,5 +1,13 @@
 import type { Config, Entry, Kind, Phase, Report, Run } from "./types";
 import { clone } from "./clone.ts";
+import {
+  advanceMeeting,
+  handoffMeeting,
+  slotId,
+  deadlineFor,
+  editMeetingRun,
+} from "./meeting.ts";
+import { meetingReport } from "./meeting-report.ts";
 
 export function formatTime(ms: number, tenths = false): string {
   const negative = ms < 0,
@@ -44,7 +52,16 @@ export function sequence(kind: Kind, c: Config): Phase[] {
       phases.push({ name, ms: Math.round(s * 1000), type, round, set });
   };
   if (kind === "meeting")
-    c.agenda.forEach((s, i) => add(s.name, s.seconds, "work", i + 1));
+    c.agenda.forEach((s, i) =>
+      phases.push({
+        id: s.id,
+        name: s.name,
+        ms: s.seconds * 1000,
+        type: "work",
+        round: i + 1,
+        set: 1,
+      }),
+    );
   else if (kind === "boxing" || kind === "fitness") {
     add("Get ready", c.prepare, "prepare");
     for (let s = 1; s <= (kind === "fitness" ? c.sets : 1); s++)
@@ -103,6 +120,9 @@ export function createRun(
     target: kind === "newyear" ? newYearTarget(now, config.zone) : null,
     finishedAt: null,
     notes: "",
+    ...(kind === "meeting"
+      ? { originalAgenda: clone(config.agenda), planChanges: [], parking: [] }
+      : {}),
   };
 }
 export function elapsed(run: Run, now: number) {
@@ -115,9 +135,11 @@ export function elapsed(run: Run, now: number) {
 }
 export function phaseDeadline(run: Run) {
   if (run.kind === "meeting")
-    return Math.max(
-      run.phases.slice(0, run.index + 1).reduce((n, p) => n + p.ms, 0),
-      run.phaseStart + run.config.minimum * 1000,
+    return deadlineFor(
+      run.config.agenda,
+      slotId(run)!,
+      run.phaseStart,
+      run.config.minimum,
     );
   return run.phaseStart + (run.phases[run.index]?.ms ?? 0);
 }
@@ -128,6 +150,8 @@ export function remaining(run: Run, now: number): number {
   return run.status === "done" ? 0 : phaseDeadline(run) - elapsed(run, now);
 }
 function logPhase(run: Run, end: number): Entry {
+  if (run.kind === "meeting")
+    return handoffMeeting(run, Date.now(), end).entries.at(-1)!;
   return {
     name: run.phases[run.index]?.name ?? run.config.title,
     planned: sequence(run.kind, run.config)[run.index]?.ms ?? 0,
@@ -136,6 +160,7 @@ function logPhase(run: Run, end: number): Entry {
 }
 export function advance(input: Run, now: number): Run {
   if (input.status !== "running") return input;
+  if (input.kind === "meeting") return advanceMeeting(input, now);
   let r: Run = {
     ...input,
     elapsed: elapsed(input, now),
@@ -195,6 +220,7 @@ export function toggleRun(input: Run, now: number): Run {
 }
 export function nextPhase(input: Run, now: number): Run {
   const r = advance(input, now);
+  if (r.kind === "meeting") return handoffMeeting(r, now);
   if (
     r.status === "done" ||
     r.kind === "chess" ||
@@ -243,6 +269,18 @@ export function switchSide(input: Run, side: number, now: number): Run {
 export function extendRun(input: Run, ms: number, now: number): Run {
   const r = advance(input, now);
   if (r.status === "done" || !r.phases[r.index]) return r;
+  if (r.kind === "meeting") {
+    const agenda = r.config.agenda.map((a) =>
+      a.id === slotId(r)
+        ? { ...a, seconds: Math.max(0, a.seconds + ms / 1000), pinned: true }
+        : a,
+    );
+    return editMeetingRun(
+      r,
+      { ...r.config, agenda, total: agenda.reduce((n, a) => n + a.seconds, 0) },
+      now,
+    );
+  }
   return {
     ...r,
     phases: r.phases.map((p, i) =>
@@ -265,6 +303,8 @@ export function finishRun(input: Run, now: number): Run {
   };
 }
 export function report(run: Run): Report {
+  if (run.kind === "meeting")
+    return meetingReport(run, run.finishedAt ?? Date.now());
   return {
     id: run.id,
     kind: run.kind,
@@ -274,6 +314,9 @@ export function report(run: Run): Report {
     entries: run.entries,
     laps: run.laps,
     notes: run.notes,
+    originalAgenda: run.originalAgenda,
+    planChanges: run.planChanges,
+    parking: run.parking,
   };
 }
 export type Alarm = { at: number; title: string; body: string };

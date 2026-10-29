@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
-import { Platform, useColorScheme } from "react-native";
+import { Platform } from "react-native";
 import { NavigationBar } from "expo-navigation-bar";
 import * as SystemUI from "expo-system-ui";
 import {
@@ -12,15 +12,18 @@ import {
   DefaultTheme,
 } from "expo-router/react-navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AppProvider } from "../state/app-store";
 import { ThemeProvider, useTheme } from "../theme";
+import { LiveProvider } from "../state/live-store";
+import { OverlayProvider } from "../state/overlay-store";
 
 export const unstable_settings = { initialRouteName: "(tabs)" };
 void SplashScreen.preventAutoHideAsync();
 
 function Navigation() {
   const t = useTheme();
-  const dark = useColorScheme() === "dark";
+  const dark = t.isDark;
   useEffect(() => {
     void SystemUI.setBackgroundColorAsync(t.bg).catch(() => {});
   }, [t.bg]);
@@ -73,12 +76,18 @@ export default function RootLayout() {
   }, [fontsReady, fontError]);
   if (!fontsReady && !fontError) return null;
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
         <AppProvider>
-          <Navigation />
+          <ThemeProvider>
+            <OverlayProvider>
+              <LiveProvider>
+                <Navigation />
+              </LiveProvider>
+            </OverlayProvider>
+          </ThemeProvider>
         </AppProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

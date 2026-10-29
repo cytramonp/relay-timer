@@ -15,6 +15,7 @@ export type Slot = {
   name: string;
   seconds: number;
   pinned?: boolean;
+  kind?: "person" | "topic";
 };
 export type Config = {
   title: string;
@@ -42,17 +43,37 @@ export type Config = {
   zone: string;
   agenda: Slot[];
   minimum: number;
+  total: number;
+  autoSplit: boolean;
+  keepProp: boolean;
   customRounds: boolean;
   overrides: { name: string; work: number; rest: number }[];
 };
 export type Phase = {
+  id?: string;
   name: string;
   ms: number;
   type: string;
   round: number;
   set: number;
 };
-export type Entry = { name: string; planned: number; actual: number };
+export type Entry = {
+  id?: string;
+  name: string;
+  planned: number;
+  actual: number;
+  start?: number;
+  end?: number;
+  deadline?: number;
+  state?: string;
+};
+export type ParkingItem = {
+  id: string;
+  text: string;
+  owner: string;
+  done: boolean;
+};
+export type PlanChange = { at: number; agenda: Slot[] };
 export type Run = {
   id: string;
   kind: Kind;
@@ -73,6 +94,9 @@ export type Run = {
   target: number | null;
   finishedAt: number | null;
   notes: string;
+  originalAgenda?: Slot[];
+  planChanges?: PlanChange[];
+  parking?: ParkingItem[];
 };
 export type Program = {
   id: string;
@@ -80,6 +104,8 @@ export type Program = {
   name: string;
   config: Config;
   updatedAt: number;
+  color?: "citron" | "peach" | "lilac" | "mint";
+  icon?: "people" | "loop" | "grid" | "spark" | "focus" | "coffee";
 };
 export type Report = {
   id: string;
@@ -90,11 +116,16 @@ export type Report = {
   entries: Entry[];
   laps: number[];
   notes: string;
+  originalAgenda?: Slot[];
+  planChanges?: PlanChange[];
+  parking?: ParkingItem[];
 };
 export type Settings = {
   notifications: boolean;
   keepAwake: boolean;
   haptics: boolean;
+  appearance?: "light" | "dark" | "system";
+  floatingShape?: "wide" | "strip" | "square";
 };
 export type Store = {
   version: 1;
@@ -103,4 +134,5 @@ export type Store = {
   programs: Program[];
   history: Report[];
   settings: Settings;
+  meetingParking?: ParkingItem[];
 };

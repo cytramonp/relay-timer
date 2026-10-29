@@ -25,6 +25,7 @@ import type {
   Program,
   Run,
   Settings,
+  ParkingItem,
   Store,
 } from "../core/types";
 import { emptyStore, loadStore, saveStore } from "../services/storage";
@@ -32,19 +33,41 @@ import { syncNotifications } from "../services/notifications";
 import { playCue } from "../services/audio";
 import { clone } from "../core/clone";
 import { applyRun, recoverStore } from "../core/recovery";
+import { editMeetingRun, nudgeMeeting, undoMeeting } from "../core/meeting";
+import { validateConfig } from "../core/backup";
 
 type Action =
-  "toggle" | "next" | "extend" | "finish" | "lap" | "undo" | "reset";
+  | "toggle"
+  | "next"
+  | "extend"
+  | "finish"
+  | "lap"
+  | "undo"
+  | "reset"
+  | "clock-back"
+  | "clock-forward";
 type ContextValue = {
   store: Store;
+  snapshot: () => Store;
+  refreshRun: () => void;
+  seekMeeting: (ms: number) => void;
   notice: string;
   notify: (text: string) => void;
   updateDraft: (kind: Kind, config: Config) => boolean;
+  editMeeting: (config: Config) => void;
+  parking: (items: ParkingItem[]) => void;
+  duplicateProgram: (id: string) => void;
+  reviseProgram: (program: Program) => boolean;
   start: (kind: Kind) => void;
   act: (action: Action) => void;
   chess: (side: number) => void;
   notes: (text: string) => void;
-  saveProgram: (kind: Kind, name: string) => void;
+  saveProgram: (
+    kind: Kind,
+    name: string,
+    appearance?: Pick<Program, "color" | "icon">,
+    config?: Config,
+  ) => boolean;
   deleteProgram: (id: string) => void;
   importPrograms: (programs: Program[]) => void;
   removeReport: (id: string) => void;
@@ -154,9 +177,74 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
   const value: ContextValue = {
     store,
+    snapshot: () => current.current,
+    refreshRun: () => commit(recoverStore(current.current, Date.now())),
+    seekMeeting(ms) {
+      const r = current.current.run,
+        now = Date.now();
+      if (r?.kind === "meeting" && Number.isFinite(ms))
+        setRun(nudgeMeeting(r, ms - elapsed(r, now), now));
+    },
     notice,
     notify,
-    canUndo,
+    canUndo:
+      store.run?.kind === "meeting" ? store.run.entries.length > 0 : canUndo,
+    editMeeting(config) {
+      const c = validateConfig("meeting", config),
+        s = current.current;
+      const run =
+        s.run?.kind === "meeting" && s.run.status !== "done"
+          ? editMeetingRun(advance(s.run, Date.now()), c, Date.now())
+          : s.run;
+      commit({ ...s, drafts: { ...s.drafts, meeting: c }, run });
+    },
+    parking(items) {
+      const s = current.current;
+      if (s.run?.kind === "meeting")
+        commit(
+          { ...s, run: { ...s.run, parking: items.slice(0, 2000) } },
+          false,
+        );
+      else commit({ ...s, meetingParking: items.slice(0, 2000) }, false);
+    },
+    duplicateProgram(id) {
+      const s = current.current,
+        p = s.programs.find((p) => p.id === id);
+      if (!p || s.programs.length >= 200) return;
+      commit(
+        {
+          ...s,
+          programs: [
+            {
+              ...clone(p),
+              id: Crypto.randomUUID(),
+              name: `${p.name.slice(0, 110)} copy`,
+              updatedAt: Date.now(),
+            },
+            ...s.programs,
+          ],
+        },
+        false,
+      );
+    },
+    reviseProgram(program) {
+      const s = current.current;
+      return commit(
+        {
+          ...s,
+          programs: s.programs.map((p) =>
+            p.id === program.id
+              ? {
+                  ...program,
+                  updatedAt: Date.now(),
+                  config: validateConfig(program.kind, program.config),
+                }
+              : p,
+          ),
+        },
+        false,
+      );
+    },
     updateDraft(kind, config) {
       return commit(
         {
@@ -179,6 +267,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         createRun(kind, s.drafts[kind], Crypto.randomUUID()),
         Date.now(),
       );
+      if (kind === "meeting") r.parking = clone(s.meetingParking ?? []);
       commit({ ...s, run: r, history });
       void playCue(
         r.config,
@@ -192,6 +281,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const now = Date.now(),
         r = advance(s.run, now);
       if (action === "undo") {
+        if (r.kind === "meeting") {
+          const restored = undoMeeting(r, now);
+          commit({
+            ...s,
+            run: restored,
+            history: s.history.filter((h) => h.id !== r.id),
+          });
+          return;
+        }
         const old = undo.current.pop();
         if (old) {
           const restored = {
@@ -217,13 +315,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
                 ...s.history.filter((h) => h.id !== r.id),
               ].slice(0, 100)
             : s.history;
-        commit({ ...s, run: null, history });
+        commit({
+          ...s,
+          run: null,
+          history,
+          ...(r.kind === "meeting" ? { meetingParking: [] } : {}),
+        });
         return;
       }
       if (action === "toggle") setRun(toggleRun(r, now));
       if (action === "next") setRun(nextPhase(r, now), true);
       if (action === "extend") setRun(extendRun(r, 60000, now), true);
       if (action === "finish") setRun(finishRun(r, now), true);
+      if (action === "clock-back" || action === "clock-forward")
+        setRun(nudgeMeeting(r, action === "clock-back" ? -60000 : 60000, now));
       if (action === "lap" && r.kind === "stopwatch" && r.status === "running")
         setRun({ ...r, laps: [...r.laps, elapsed(r, now)].slice(-500) }, false);
     },
@@ -236,21 +341,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (s.run)
         commit({ ...s, run: { ...s.run, notes: text.slice(0, 10000) } }, false);
     },
-    saveProgram(kind, name) {
+    saveProgram(kind, name, appearance, config) {
       const s = current.current;
       if (s.programs.length >= 200) {
         notify("You have 200 saved programs. Export or remove one first.");
-        return;
+        return false;
       }
       const program = {
         id: Crypto.randomUUID(),
         kind,
         name: name.trim().slice(0, 120) || s.drafts[kind].title,
-        config: clone(s.drafts[kind]),
+        config: clone(
+          config ??
+            (kind === "meeting" && s.run?.kind === "meeting"
+              ? s.run.config
+              : s.drafts[kind]),
+        ),
+        ...appearance,
         updatedAt: Date.now(),
       };
-      if (commit({ ...s, programs: [program, ...s.programs] }, false))
-        notify(`Saved “${program.name}” on this device.`);
+      const saved = commit({ ...s, programs: [program, ...s.programs] }, false);
+      if (saved) notify(`Saved “${program.name}” on this device.`);
+      return saved;
     },
     deleteProgram(id) {
       commit(

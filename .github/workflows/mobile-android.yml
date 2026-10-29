@@ -2,14 +2,14 @@ name: Android APK
 on:
   push:
     branches: ['codex/corptimer-mobile']
-    paths: ['.github/workflows/mobile-android.yml', 'mobile/src/**', 'mobile/app.json', 'mobile/package*.json']
+    paths: ['.github/workflows/mobile-android.yml', 'mobile/src/**', 'mobile/modules/**', 'mobile/scripts/verify-meeting-android.py', 'mobile/app.json', 'mobile/package*.json']
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 50
     defaults:
       run:
         working-directory: mobile
@@ -51,9 +51,9 @@ jobs:
           target: google_apis
           profile: pixel_7_pro
           disable-animations: true
-          script: python3 mobile/scripts/capture-android.py
+          script: python3 mobile/scripts/verify-meeting-android.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: corptimer-android-native-captures
-          path: mobile/native-captures/*
+          path: mobile/native-captures/**

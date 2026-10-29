@@ -96,16 +96,32 @@ export function defaultConfig(kind: Kind): Config {
     first: 0,
     zone: "local",
     agenda: [
-      { id: "a", name: "Welcome", seconds: 120 },
-      { id: "b", name: "Updates", seconds: 480 },
-      { id: "c", name: "Next steps", seconds: 300 },
+      { id: "welcome", name: "Welcome", seconds: 120, kind: "topic" },
+      ...["Alex", "Morgan", "Jordan", "Sam", "Taylor", "Casey", "Robin"].map(
+        (name, i) => ({
+          id: `person-${i}`,
+          name,
+          seconds: 480,
+          kind: "person" as const,
+        }),
+      ),
     ],
     minimum: 15,
+    total: 3480,
+    autoSplit: true,
+    keepProp: true,
     customRounds: false,
     overrides: [],
   };
   if (kind === "meeting")
-    return { ...base, title: "Team meeting", automatic: false, warning: 60 };
+    return {
+      ...base,
+      title: "Meeting",
+      automatic: false,
+      warning: 60,
+      minimum: 60,
+      sound: "off",
+    };
   if (kind === "boxing")
     return { ...base, warning: 60, finalCue: 10, sound: "gong" };
   if (kind === "fitness")

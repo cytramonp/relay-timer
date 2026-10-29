@@ -6,6 +6,7 @@ import {
   confirm,
   Heading,
   Page,
+  Row,
   Rule,
   Toggle,
 } from "../components/ui";
@@ -46,6 +47,27 @@ export function SettingsScreen() {
   return (
     <Page>
       <Heading>Your timer, your rhythm.</Heading>
+      <Body muted>Appearance</Body>
+      <Row>
+        {(["light", "dark", "system"] as const).map((appearance) => (
+          <Action
+            key={appearance}
+            label={
+              appearance === "system"
+                ? "Use device"
+                : appearance === "light"
+                  ? "Light"
+                  : "Dark"
+            }
+            tone={
+              (store.settings.appearance ?? "light") === appearance
+                ? "primary"
+                : "outline"
+            }
+            onPress={() => settings({ appearance })}
+          />
+        ))}
+      </Row>
       <Toggle
         label="Keep screen awake while a timer is running"
         value={store.settings.keepAwake}

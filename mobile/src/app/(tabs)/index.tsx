@@ -1,1 +1,1 @@
-export { HomeScreen as default } from "../../screens/home";
+export { MeetingScreen as default } from "../../screens/meeting";
