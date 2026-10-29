@@ -23,4 +23,4 @@
 
 ## Later integrations from the full product plan
 
-Website identity/library synchronization, Sign in with Apple, native live audience/control, AlarmKit/Live Activities and Android overlay require implementation and platform/device verification. They are not included in beta 0.1.0's store promises.
+Website identity/private-library synchronization, Sign in with Apple and AlarmKit/Live Activities remain unimplemented. Beta 0.2.0 adds explicit anonymous live audience/control and a native Android overlay; the worklist and VALIDATION.md distinguish source implementation from completed network, simulator and physical-device checks. Arbitrary system overlays are unavailable on iOS.

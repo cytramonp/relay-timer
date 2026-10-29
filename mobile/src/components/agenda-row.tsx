@@ -197,6 +197,7 @@ export const AgendaRow = memo(function AgendaRow({
             maxLength={120}
             onChangeText={setName}
             onEndEditing={() => onRename(item.id, name.trim() || item.name)}
+            onBlur={Platform.OS === "web" ? () => onRename(item.id, name.trim() || item.name) : undefined}
             selectTextOnFocus
             style={{
               color: t.ink,

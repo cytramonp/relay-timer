@@ -102,13 +102,13 @@ try:
         record.wait(timeout=20); adb('pull', f'/sdcard/{form}-reorder.mp4', str(output / f'{form}-android-reorder.mp4'))
         open_path('')
         # Return to the top using native scrolling; re-opening a tab can retain its offset.
-        for _ in range(4):
+        for _ in range(10):
             t = tree()
-            if find(t, identifier='meeting-next') is not None: break
+            if find(t, description='Meeting name') is not None: break
             adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '400')
         t = tree(); go = find(t, identifier='meeting-next'); pause = find(t, description='Pause meeting')
         tap_node(go); time.sleep(1); tap_node(pause)
-        t = tree(); assert 'PAUSED' in ET.tostring(t, encoding='unicode')
+        t = tree(); assert find(t, description='Resume meeting') is not None, 'Pause did not expose Resume'
         # Welcome finishes early; reordered Morgan receives the spare time.
         tap_node(find(t, identifier='meeting-next')); tap_node(pause)
         t = tree(); current = find(t, identifier='current-speaker')

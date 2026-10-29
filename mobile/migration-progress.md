@@ -13,7 +13,7 @@ The user's 28 October feedback rejects the first beta's catalog-first navigation
 | For later | Private text, owner, completion, edit/remove | Source implemented; private projection test passes |
 | Report | Immutable original plan by slot ID, actual/pending/skipped slots, plan changes, follow-ups, CSV/copy/print | Core and export tests pass; native share/print pending |
 | Focus | Large current/next clock and transport, wake lock | Source implemented; native portrait/landscape pending |
-| Live sharing | Existing Firebase rules and web audience/control protocol; anonymous host, QR, separate capabilities, heartbeat, revoke/expiry, reconnect | Source implemented; network/native tests pending |
+| Live sharing | Existing Firebase rules and web audience/control protocol; anonymous host, QR, separate capabilities, heartbeat, revoke/expiry, reconnect | Browser host-to-Firebase-to-public-viewer updates and revocation passed after owner approval; native identity and remote command flow pending |
 | Other timers | Preserve all nine modes; separate Timers tab; shared brand tokens | Prior beta engine tests pass; new native regression pending |
 | Appearance | Light website palette by default; Light/Dark/Use device preference | Browser source running; native chrome/large type pending |
 

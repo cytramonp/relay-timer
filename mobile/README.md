@@ -1,6 +1,6 @@
 # CorpTimer mobile
 
-Native React Native / Expo SDK 58 application for iPhone, iPad and Android, in the same repository as corptimer.com. Version 0.1.0 is a local-first beta.
+Native React Native / Expo SDK 58 application for iPhone, iPad and Android, in the same repository as corptimer.com. Version 0.2.0 rebuilds the app around the Meeting workspace. See VALIDATION.md for the verified binary and remaining gates.
 
 ## Run
 
@@ -11,7 +11,7 @@ npm ci
 npm start
 ```
 
-Open with a compatible Expo Go app on a phone. For the web-based UI preview:
+Use a native development or standalone build for full functionality: the Android floating timer includes a local Expo module and is unavailable in Expo Go. For the browser UI preview:
 
 ```sh
 npm run export:web
@@ -23,7 +23,11 @@ Open http://127.0.0.1:4176. A browser preview checks UI and portable logic; it d
 ## Included
 
 - Nine timer modes: Meeting, Boxing, Fitness, Pomodoro, Classroom, Chess, Stopwatch, Countdown, New Year.
-- Meeting cumulative deadlines, early-time carryover, overtime, minimum turns, Next, Undo, +1 minute and private notes.
+- Meeting opens with Welcome (2 minutes), seven named participants, current/next budgets, filled segmented cells, Next, Pause, Undo and +1 minute. Drag agenda handles to reorder while preserving the current speaker's identity.
+- A proportional timeline with draggable boundaries, clock correction, equal times, pinned durations, automatic split and keep proportions; manual and automatic handoff.
+- Website starter templates, editable saved plans, duplicate/color/icon controls, private follow-ups and notes, original-plan versus actual reports, CSV/copy/print.
+- Explicit live viewer/control sharing through the existing Firebase protocol; QR links, heartbeat, expiry and revocation. Hosting requires the app to stay active. End-to-end network validation is pending.
+- Android floating timer with special-permission opt-in, draggable native window, foreground notification and Next/Pause/Undo/Extend controls. Device verification is tracked separately. iOS has an in-app focus view.
 - Workout presets, sets, custom rounds, preparation/cooldown, automatic or manual transitions.
 - Pomodoro long-break frequency and optional final break; classroom visual-only mode.
 - Two-sided chess clock with increment, per-turn delay, selectable first player and flag stopping.
@@ -36,7 +40,7 @@ Open http://127.0.0.1:4176. A browser preview checks UI and portable logic; it d
 - Light/dark palettes, system font scaling, safe-area-aware navigation and English interface.
 - Original CorpTimer glasses, derived illustrations, fonts and licenses.
 
-No private data is uploaded by this mobile application. Its data does not automatically synchronize with the website. The website's saved plans can be imported, but active runs, reports and private notes are intentionally excluded from reusable program imports.
+Programs, notes and reports are local by default. Creating a live link explicitly uploads only the meeting title, public agenda, timing state and an anonymous host identity to Firebase. Anyone holding the viewer link can read that projection; a separate capability link grants timer control. Notes, follow-up owners and reports are excluded. Private-library synchronization and native Google sign-in are not implemented. Website plans can be imported without importing active runs, reports or private notes.
 
 ## Verification
 
@@ -75,8 +79,8 @@ Cloud build resources have plan limits. Production distribution needs owner-cont
 - Background notification sounds use system volume. The app's volume slider only affects foreground audio. Android notification channels can be controlled or silenced by the device owner.
 - Schedule at most 48 upcoming alerts (warnings included) to stay below the iOS pending-notification ceiling. Programs with more alerts require foreground replenishment; uninterrupted background cues for arbitrarily long programs are not guaranteed.
 - Speech and final-countdown beeps run in the foreground. Local notifications signal scheduled phase boundaries and work warnings.
-- No AlarmKit, Live Activity, Apple Watch or system overlay is implemented in 0.1.0. No silent background audio workaround is used.
-- Website Google/Firebase library sync, Sign in with Apple and live audience/co-host rooms are not implemented in this native beta. They require a separate identity/host-lifecycle integration; they are not simulated with success messages.
+- No AlarmKit, Live Activity, Apple Watch or arbitrary iOS system overlay is implemented. No silent background audio workaround is used.
+- Website Google/Firebase private-library sync and Sign in with Apple require a separate identity integration. The available Firebase CLI session is unauthenticated; no OAuth clients, signing configuration or provider permissions have been changed.
 - There is no payment, advertising, analytics or remote push service in this version.
 
 ## Assets

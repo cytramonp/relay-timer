@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  Platform,
   Pressable,
   Text,
   TextInput,
@@ -406,6 +407,20 @@ export function MeetingScreen() {
           accessibilityLabel="Meeting name"
           key={config.title}
           defaultValue={config.title}
+          onBlur={
+            Platform.OS === "web"
+              ? (e) => {
+                  // react-native-web supplies text on blur; native commits on end editing below.
+                  const event = e.nativeEvent as typeof e.nativeEvent & {
+                    text?: string;
+                  };
+                  change({
+                    ...config,
+                    title: event.text?.trim() || config.title,
+                  });
+                }
+              : undefined
+          }
           onEndEditing={(e) =>
             change({
               ...config,

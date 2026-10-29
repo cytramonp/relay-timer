@@ -1,14 +1,17 @@
 {
-  "status": "Draft for beta 0.1.0; review against the tested native binary before submission",
+  "status": "Draft for beta 0.2.0; native validation and owner store accounts still required",
   "name": "CorpTimer",
   "appleSubtitle": "Meetings, workouts & focus",
   "googleShortDescription": "Timers for meetings, boxing, workouts, focus and everyday routines.",
-  "description": "Make time for it with CorpTimer.\n\nBuild a meeting agenda, set up your next training session or start a quick countdown. Save your programs and come back to them whenever you need a little structure.\n\nMEETINGS\nGive every speaker a place in the agenda. Early finishes pass spare time forward; overruns reduce the time left for later turns. Pause, move to the next speaker, extend a turn and keep private notes.\n\nWORKOUTS\nConfigure boxing rounds, rest, preparation and cool-down. Start from HIIT, Tabata, EMOM and AMRAP presets or customize individual rounds and sets.\n\nFOCUS AND EVERYDAY TIMERS\nUse Pomodoro focus sessions, classroom visual timers, two-player chess clocks, a stopwatch with laps, countdowns and a New Year timer with a selected time zone.\n\nMAKE IT YOURS\nSave named programs on your device. Import and export JSON setups, and export session results as CSV. Choose bundled sounds, optional in-app spoken cues and haptic feedback.\n\nNo account, ads or subscription. Programs and history stay on your device. Background alerts require notification permission and follow your phone's settings; spoken cues play while the app is open.",
+  "description": "Make time for it with CorpTimer.\n\nBuild a meeting agenda, set up your next training session or start a quick countdown. Save your programs and come back to them whenever you need a little structure.\n\nMEETINGS\nGive every speaker a place in the agenda. Early finishes pass spare time forward; overruns reduce the time left for later turns. Drag participants into order, see the next speaker budget and segmented progress, resize the plan, save templates and review original-plan versus actual reports. Pause, hand off, extend a turn and keep private notes.\n\nWORKOUTS\nConfigure boxing rounds, rest, preparation and cool-down. Start from HIIT, Tabata, EMOM and AMRAP presets or customize individual rounds and sets.\n\nFOCUS AND EVERYDAY TIMERS\nUse Pomodoro focus sessions, classroom visual timers, two-player chess clocks, a stopwatch with laps, countdowns and a New Year timer with a selected time zone.\n\nMAKE IT YOURS\nSave named programs on your device. Import and export JSON setups, and export session results as CSV. Choose bundled sounds, optional in-app spoken cues and haptic feedback.\n\nNo paid account, ads or subscription. Programs, notes and history stay on your device. Optional live sharing publishes the meeting title, public agenda and countdown through Firebase with anonymous authentication; private notes and reports are excluded. Keep the app open while hosting. Background alerts require notification permission and follow your phone's settings; spoken cues play while the app is open.",
   "appleKeywords": "timer,meeting,boxing,interval,tabata,hiit,pomodoro,focus,chess,stopwatch,countdown",
-  "categoryProposal": { "apple": "Utilities", "google": "Tools" },
-  "releaseNotes": "First mobile beta: nine timer modes, editable programs, local history and import/export.",
+  "categoryProposal": {
+    "apple": "Utilities",
+    "google": "Tools"
+  },
+  "releaseNotes": "Meeting-first redesign: Welcome and named participants, drag reorder, segmented progress, next-speaker budgets, timeline, templates, reports, optional live sharing and Android floating controls.",
   "supportUrl": "https://github.com/cytramonp/relay-timer/issues",
   "marketingUrl": "https://corptimer.com/",
   "privacyUrl": null,
-  "reviewNotes": "No account or login required. Start from Timers. For a short transition check, edit Boxing to 2 rounds of 2 seconds work, 1 second rest and 0 seconds preparation. Native notification/device QA must be completed before using these notes for a submission."
+  "reviewNotes": "No owner account is required for local timers. The app opens on Meeting with Welcome (2 minutes) and seven synthetic example participants. Start, pause, hand off early and drag agenda handles to reorder. Live sharing is explicit and uses anonymous Firebase authentication. Android floating mode needs special display-over-other-apps permission. Native UI and device validation must be completed before submission."
 }

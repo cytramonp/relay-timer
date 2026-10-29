@@ -14,7 +14,18 @@ Checked 26 October 2026 (America/Los_Angeles). These statuses describe the devel
 
 ## Dependency audit
 
-The current Expo SDK 58 dependency tree reports five high-severity transitive findings, involving Expo CLI, its signing-certificate tooling, node-forge and zod. The reported automatic fix downgrades Expo to SDK 44 and is not appropriate. The registry did not provide the attempted node-forge 1.4.1 version, so no unverified override is retained. The app does not enable OTA code signing, a backend or public development tooling. These findings remain an explicit assessment/update gate before production release; no clean dependency-audit claim is made.
+The 0.2.0 tree reports 13 findings (8 high, 5 low), involving Expo tooling, node-forge, zod and Firebase's transitive Node gRPC dependencies. Automatic fixes propose incompatible Expo/Firebase major downgrades; no forced downgrade or unverified override is applied. The app does not enable OTA code signing or expose development tooling. These findings remain an assessment/update gate before production release; no clean dependency-audit claim is made.
+
+Expo Doctor currently passes 19/20 checks. Fourteen installed SDK 58 packages are behind newly available compatible patch versions. The lockfile makes the tested build reproducible; patch alignment and another native build remain required before a production release.
+
+## Meeting redesign 0.2.0 — current checks
+
+- Source `8db6413` replaces catalog-first entry with Meeting, Welcome (2 minutes) and seven named participants. It adds stable-ID drag reorder, cumulative next-speaker budgets, segmented progress, a resizable timeline, templates, private follow-ups, original-plan reports, explicit anonymous live sharing and an Android overlay module.
+- TypeScript and lint pass. All 34 mobile tests pass. GitHub run `40798939793` passes typecheck, lint, tests and both browser/native JavaScript exports. These do not establish a compiled native app or a native UI pass.
+- Browser checks on the production export establish early handoff, pause/Undo, timer persistence after reload, private follow-up creation and report readback. Browser-specific text-field blur persistence was corrected separately from the initial native build.
+- Android native compilation/emulator flow is running in `40798934523`; native evidence and APK hash must be recorded after completion. iPhone/iPad compilation and Meeting-first Maestro flow are running in `40799413913`. Neither is claimed successful in this entry.
+- After explicit owner approval, a synthetic TEST QA meeting was shared through the existing Firebase rules. The public viewer showed Welcome, updated to Alex after native-app-source Next/Pause actions in the browser export, and excluded the private follow-up. Stop sharing completed; reloading the viewer showed that the link was unavailable. This verifies the browser host-to-Firebase-to-viewer/revoke path, not native authentication or remote co-host commands. The separate private Google identity/library synchronization is unimplemented, and the Firebase administration CLI is unauthenticated.
+- The section below is historical evidence for 0.1.0 and does not approve the redesigned interface.
 
 ## Still requiring native and account verification
 
