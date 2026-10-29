@@ -42,7 +42,7 @@ export function buildSpecialtyPages(shell) {
         " · ",
       )}<p><a href="../timers/">Browse all timers</a></p></section><noscript>Enable JavaScript to operate this board. The instructions above remain available.</noscript>`;
     let html = shell({ ...t, body }).replace(
-      '<script type="module" src="../special-timers.js?v=16"></script>',
+      '<script type="module" src="../special-timers.js?v=17"></script>',
       '<script type="module" src="../specialty-board.js?v=2"></script>',
     );
     html = html.replace(

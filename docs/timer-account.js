@@ -2,11 +2,11 @@ import {loadCloud} from './cloud.js';
 import {localSettings,receiveSetting,selectAccount,writeSetting} from './timer-store.js';
 import {toggleFullscreen} from './fullscreen.js';
 const bar=document.createElement('div');bar.className='timer-account';
-const status=document.createElement('span');status.role='status';status.textContent='Saved locally';
+const status=document.createElement('span');status.className='account-save-status';status.role='status';status.textContent='Saved locally';
 const button=document.createElement('button');button.type='button';button.textContent='Sign in with Google';
 const reload=document.createElement('button');reload.type='button';reload.textContent='Load synced settings';reload.hidden=true;reload.onclick=()=>location.reload();
 if(document.querySelector('#account-button'))button.hidden=true;
-bar.append(status,button,reload);document.querySelector('.tool-heading,.meeting-heading')?.after(bar);
+bar.append(status,button,reload);document.querySelector('.app-header nav')?.append(bar);
 let cloud,user,stop,ready=false,generation=0;
 const pending=new Map();let flushTimer;
 const error=e=>{status.textContent='Saved locally · sync unavailable';status.title=e?.message||'Retry signing in when connected.';};
@@ -33,7 +33,7 @@ window.addEventListener('online',flush);
 const full=document.querySelector('#meeting-fullscreen');if(full)full.onclick=()=>toggleFullscreen(full.closest('.timer-block'),full);
 const own=document.createElement('details');own.className='custom-library';bar.append(own);
 function drawCustomLibrary(){
-  own.replaceChildren();const summary=document.createElement('summary');summary.textContent='Your custom timers';own.append(summary);
+  own.replaceChildren();const summary=document.createElement('summary');summary.textContent='My timers';own.append(summary);
   const entries=localSettings().filter(r=>r.key.startsWith('corptimer.custom.'));
   const list=document.createElement('div');list.className='custom-timer-list';
   for(const row of entries){const timer=JSON.parse(row.value);if(!timer||!timer.title)continue;const id=row.key.slice('corptimer.custom.'.length);const a=document.createElement('a');a.textContent=timer.title;a.href=new URL(`./custom-timer/?id=${encodeURIComponent(id)}`,import.meta.url).href;list.append(a);}

@@ -35,6 +35,10 @@ let lastCueAt=0;function cue(name){if(profile.sound&&Date.now()-lastCueAt>80){if
 const controls=document.createElement('div');controls.className='board-workspace-tools';
 controls.innerHTML='<div class="board-actions"><button data-edit>Edit</button><button data-templates>Templates</button><button data-save-custom>Save as custom timer</button><button data-duplicate>Duplicate</button><a href="../custom-timer/">Make your own timer</a></div><div class="template-shelf" hidden></div><div class="board-editor-host"></div><form class="save-custom-form" hidden><label>Save timer as<input name="name" maxlength="80" required></label><button type="submit">Save timer</button><button type="button" data-save-cancel>Cancel</button></form>';
 root.before(controls);
+const toolActions=controls.querySelector('.board-actions');const tools=document.createElement('details');tools.className='compact-tools';const toolsSummary=document.createElement('summary');toolsSummary.textContent='Customize';tools.append(toolsSummary,toolActions);controls.prepend(tools);document.querySelector('#board-note').textContent='';
+
+const createLink=controls.querySelector('a[href="../custom-timer/"]');const favoriteRow=document.querySelector('.favorite-panel');if(createLink&&favoriteRow)createLink.remove();
+
 if(customId||!custom){root.after(controls.querySelector('.board-editor-host'));}
 
 function applyProfile(next){if(board.some(c=>c.anchor!==null)){note.textContent='Pause all clocks before applying a new setup.';return;}profile=next;board=fresh();configSave();save();editor=mountEditor(editorHost,profile,applyProfile);render();}

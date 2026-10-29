@@ -1,5 +1,5 @@
 import {writeSetting,localSettings} from './timer-store.js';
-import { timers as builtins } from "./timer-catalog.js?v=16";
+import { timers as builtins } from "./timer-catalog.js?v=17";
 const customTimers=localSettings().filter(r=>r.key.startsWith('corptimer.custom.')).map(r=>({slug:'custom:'+r.key.slice('corptimer.custom.'.length),title:JSON.parse(r.value).title}));
 const timers=[...builtins,...customTimers];
 const key = "corptimer.favorites.v1";
@@ -55,6 +55,7 @@ function save() {
 }
 function draw() {
   panel.replaceChildren();
+  const create=document.createElement('a');create.href=new URL('./custom-timer/',import.meta.url).href;create.textContent='Make your own timer';create.className='create-inline';panel.append(create);
   if (current) {
     for (const [label, fn] of [
       [
@@ -79,7 +80,9 @@ function draw() {
       ],
     ]) {
       const b = document.createElement("button");
-      b.textContent = label;
+      if(label==='Add to favorites'||label==='Remove favorite'){
+        b.className='favorite-star';b.title=label;b.setAttribute('aria-label',label);b.setAttribute('aria-pressed',String(prefs.favorites.includes(current.slug)));b.innerHTML='<svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true"><path d="m12 3 2.8 5.7 6.3.9-4.5 4.4 1 6.2-5.6-3-5.6 3 1-6.2L3 9.6l6.2-.9Z"/></svg>';
+      }else{b.textContent=label;b.className='start-preference';}
       b.onclick = fn;
       panel.append(b);
     }
