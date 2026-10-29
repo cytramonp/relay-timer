@@ -281,7 +281,7 @@ export function MeetingTimeline({
                   style={{
                     fontSize: 11,
                     fontFamily: "Manrope",
-                    color: a.state === "current" ? t.cream : t.ink,
+                    color: a.state === "current" ? t.onTeal : t.ink,
                   }}
                 >
                   {i + 1} {a.name}
@@ -290,7 +290,7 @@ export function MeetingTimeline({
                   numberOfLines={1}
                   style={{
                     fontSize: 10,
-                    color: a.state === "current" ? t.cream : t.muted,
+                    color: a.state === "current" ? t.onTeal : t.muted,
                   }}
                 >
                   {formatTime(a.seconds * 1000)}
