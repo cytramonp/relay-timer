@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Linking, Platform } from "react-native";
+import { router } from "expo-router";
+import Constants from "expo-constants";
 import {
   Action,
   Body,
@@ -79,6 +81,11 @@ export function SettingsScreen() {
         onChange={(haptics) => settings({ haptics })}
       />
       <Toggle
+        label="Dial click sounds"
+        value={store.settings.dialSound !== false}
+        onChange={(dialSound) => settings({ dialSound })}
+      />
+      <Toggle
         label={busy ? "Enabling alerts…" : "Background alerts"}
         value={store.settings.notifications}
         onChange={(v) => {
@@ -130,7 +137,7 @@ export function SettingsScreen() {
       />
       <Rule />
       <Heading>About CorpTimer</Heading>
-      <Body>Version 0.1.0 · mobile beta</Body>
+      <Body>Version {Constants.expoConfig?.version} · mobile beta</Body>
       <Body>
         Meeting, Boxing, Fitness, Pomodoro, Classroom, Chess, Stopwatch,
         Countdown and New Year. No account, advertising or subscription.
@@ -144,16 +151,12 @@ export function SettingsScreen() {
         }
       />
       <Body muted>
-        For support, use this project’s GitHub Issues. Do not include private
-        meeting notes or personal data.
+        Send a message to the team without leaving the app. Your meeting notes
+        and history are never attached.
       </Body>
       <Action
         label="Support & feedback"
-        onPress={() =>
-          void Linking.openURL(
-            "https://github.com/cytramonp/relay-timer/issues",
-          ).catch(() => notify("Could not open your browser."))
-        }
+        onPress={() => router.push("/feedback")}
       />
     </Page>
   );

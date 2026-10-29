@@ -7,6 +7,7 @@ import { useTheme } from "../theme";
 import type { Program } from "../core/types";
 import { validateConfig } from "../core/backup";
 import * as Crypto from "expo-crypto";
+import { DurationField } from "../components/duration-field";
 export default function SaveMeeting() {
   const { id } = useLocalSearchParams<{ id?: string }>(),
     { store, saveProgram, reviseProgram } = useApp(),
@@ -135,14 +136,13 @@ export default function SaveMeeting() {
                   })
                 }
               />
-              <Field
+              <DurationField
                 label="Minutes"
+                unit="minutes"
                 value={timings[a.id] ?? ""}
                 onChangeText={(value) =>
                   setTimings({ ...timings, [a.id]: value })
                 }
-                inputMode="decimal"
-                keyboardType="decimal-pad"
               />
               <Row>
                 <Action

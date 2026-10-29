@@ -124,6 +124,7 @@ export type Settings = {
   notifications: boolean;
   keepAwake: boolean;
   haptics: boolean;
+  dialSound?: boolean;
   appearance?: "light" | "dark" | "system";
   floatingShape?: "wide" | "strip" | "square";
 };

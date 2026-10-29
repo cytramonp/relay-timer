@@ -19,6 +19,7 @@ import { validateConfig } from "../core/backup";
 import { playCue } from "../services/audio";
 import type { Config, Kind } from "../core/types";
 import { clone } from "../core/clone";
+import { DurationField } from "../components/duration-field";
 
 export function EditorScreen({ kind }: { kind: Kind }) {
   const { programId } = useLocalSearchParams<{ programId?: string }>();
@@ -49,16 +50,24 @@ export function EditorScreen({ kind }: { kind: Kind }) {
       ),
     }));
   };
-  const numeric = (key: keyof Config, label: string) => (
-    <Field
-      key={key}
-      label={label}
-      keyboardType="decimal-pad"
-      inputMode="decimal"
-      value={numbers[key] ?? ""}
-      onChangeText={(v) => setNumbers((n) => ({ ...n, [key]: v }))}
-    />
-  );
+  const numeric = (key: keyof Config, label: string) =>
+    label.includes("seconds") ? (
+      <DurationField
+        key={key}
+        label={label}
+        value={numbers[key] ?? ""}
+        onChangeText={(v) => setNumbers((n) => ({ ...n, [key]: v }))}
+      />
+    ) : (
+      <Field
+        key={key}
+        label={label}
+        keyboardType="decimal-pad"
+        inputMode="decimal"
+        value={numbers[key] ?? ""}
+        onChangeText={(v) => setNumbers((n) => ({ ...n, [key]: v }))}
+      />
+    );
   function done() {
     try {
       const converted = {
@@ -154,11 +163,10 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                   })
                 }
               />
-              <Field
+              <DurationField
                 label="Duration · minutes"
-                inputMode="decimal"
-                keyboardType="decimal-pad"
-                defaultValue={String(slot.seconds / 60)}
+                unit="minutes"
+                value={String(slot.seconds / 60)}
                 onChangeText={(v) =>
                   patch({
                     agenda: config.agenda.map((a) =>
@@ -300,16 +308,14 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                       onChangeText={(name) => edit({ name })}
                     />
                     <Row>
-                      <Field
+                      <DurationField
                         label="Work · seconds"
-                        inputMode="numeric"
-                        defaultValue={String(round.work)}
+                        value={String(round.work)}
                         onChangeText={(v) => edit({ work: Number(v) })}
                       />
-                      <Field
+                      <DurationField
                         label="Rest · seconds"
-                        inputMode="numeric"
-                        defaultValue={String(round.rest)}
+                        value={String(round.rest)}
                         onChangeText={(v) => edit({ rest: Number(v) })}
                       />
                     </Row>

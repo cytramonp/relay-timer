@@ -17,6 +17,7 @@ export function emptyStore(): Store {
       notifications: false,
       keepAwake: true,
       haptics: true,
+      dialSound: true,
       appearance: "light",
     },
   };
@@ -40,6 +41,33 @@ export function loadStore(): { store: Store; error: string } {
     // Upgrade only the untouched beta starter. Preserve every custom plan and active session.
     const old = initial.drafts.meeting;
     if (old.title === "Daily relay") old.title = "Meeting";
+    if (
+      !saved.run &&
+      old.title === "Meeting" &&
+      old.total === 3480 &&
+      old.agenda.length === 8 &&
+      old.agenda.every(
+        (a, i) =>
+          a.name ===
+            [
+              "Welcome",
+              "Alex",
+              "Morgan",
+              "Jordan",
+              "Sam",
+              "Taylor",
+              "Casey",
+              "Robin",
+            ][i] &&
+          a.seconds === (i === 0 ? 120 : 480) &&
+          !a.pinned,
+      )
+    )
+      initial.drafts.meeting = {
+        ...old,
+        agenda: defaultConfig("meeting").agenda,
+        total: 3600,
+      };
     if (
       !saved.run &&
       old.title === "Team meeting" &&
@@ -66,6 +94,7 @@ export function loadStore(): { store: Store; error: string } {
       notifications: saved.settings?.notifications === true,
       keepAwake: saved.settings?.keepAwake !== false,
       haptics: saved.settings?.haptics !== false,
+      dialSound: saved.settings?.dialSound !== false,
       appearance:
         saved.settings?.appearance === "dark" ||
         saved.settings?.appearance === "system"

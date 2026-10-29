@@ -102,6 +102,41 @@ try:
         adb('shell', 'appops', 'set', 'com.corptimer.app', 'SYSTEM_ALERT_WINDOW', 'allow')
         launch()
         capture(f'{form}-android-meeting-ready.png')
+        # A fresh install has one hour, five named people and a five-minute welcome.
+        assert find(tree(), identifier='meeting-remaining').attrib.get('text') == '05:00'
+        open_path('meeting-slot?id=welcome')
+        t, ring = scroll_to('duration-dial')
+        a, b, c, d = bounds(ring)
+        w, h = dimensions()
+        if d > h * .83:
+            adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .77)), str(w // 2), str(int(h * .48)), '500')
+            t = tree(); ring = find(t, identifier='duration-dial'); a, b, c, d = bounds(ring)
+        cx, cy = (a+c)//2, (b+d)//2
+        radius = int((c-a)*.44)
+        original = find(t, identifier='dial-value').attrib.get('text')
+        # The actual native rim gesture, not a surrogate plus-button tap.
+        adb('shell', 'input', 'swipe', str(cx), str(cy-radius), str(cx+radius), str(cy), '1600')
+        t = tree(); rotated = find(t, identifier='dial-value').attrib.get('text')
+        assert float(rotated) > float(original), 'Clockwise rotation did not add time'
+        capture(f'{form}-android-duration-dial.png')
+        adb('shell', 'input', 'swipe', str(cx+radius), str(cy), str(cx), str(cy-radius), '1600')
+        t = tree(); assert float(find(t, identifier='dial-value').attrib.get('text')) < float(rotated), 'Counterclockwise rotation did not subtract time'
+        tap_node(find(t, identifier='dial-value'))
+        adb('shell', 'input', 'text', '7'); adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        assert find(tree(), identifier='dial-value').attrib.get('text') == '7', 'Direct numeric entry failed'
+        adb('shell', 'input', 'keyevent', 'KEYCODE_BACK'); open_path('')
+        open_path('feedback')
+        t = tree()
+        assert find(t, identifier='feedback-message') is not None, 'Feedback opened outside the app'
+        for _ in range(6):
+            t = tree(); send = find(t, text='Send message')
+            if send is not None: break
+            swipe_up()
+        tap_node(send)
+        assert 'at least 10 characters' in ET.tostring(tree(), encoding='unicode'), 'Empty feedback lacked an actionable error'
+        capture(f'{form}-android-feedback-validation.png')
+        # No nonempty message is sent by the native regression harness.
+        adb('shell', 'input', 'keyevent', 'KEYCODE_BACK'); open_path('')
         # A horizontal resize handle must yield vertical motion to the page,
         # and still change planned budgets when dragged horizontally.
         t, boundary = scroll_to('boundary-1')
