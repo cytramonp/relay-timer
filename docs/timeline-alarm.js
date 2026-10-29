@@ -13,9 +13,9 @@ export function createAlarm(host,id){
  function draw(){rangeLabel.hidden=!state.enabled;test.hidden=!state.enabled;out.textContent=state.enabled?`Alarm at ${fmt(state.at)}${armed?'':' · tap Test alarm to enable sound'}`:'';range.value=state.at;}
  async function arm(){try{await player.arm();armed=true;}catch{out.textContent='Sound unavailable. Check connection and test again.';return false;}return true;}
  function save(){fired=false;pending=false;writeSetting(key,state);draw();}
- check.onchange=async()=>{state.enabled=check.checked;await arm();save();};
+ check.onchange=async()=>{state.enabled=check.checked;save();if(await arm())draw();};
  range.oninput=()=>{state.at=+range.value;out.textContent=`Alarm at ${fmt(state.at)}`;};
- range.onchange=async()=>{state.at=+range.value;await arm();save();};
+ range.onchange=async()=>{state.at=+range.value;save();if(await arm())draw();};
  test.onclick=async()=>{if(await arm()){player.play('bell',85);draw();}};
  // Start gestures unlock audio for an alarm restored from a previous visit.
  const unlock=()=>{if(!box.isConnected){host.ownerDocument.removeEventListener('pointerdown',unlock,true);host.ownerDocument.removeEventListener('keydown',unlock,true);return;}if(state.enabled&&!armed)arm();};host.ownerDocument.addEventListener('pointerdown',unlock,true);host.ownerDocument.addEventListener('keydown',unlock,true);
