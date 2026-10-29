@@ -1,5 +1,5 @@
 import { timerArt } from './timer-art.js';
-import { timers, timerHref } from './timer-catalog.js?v=19';
+import { timers, timerHref } from './timer-catalog.js?v=20';
 
 const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 export function renderTimerMenu(current='',prefix='../',label='Other Timers') {

@@ -32,3 +32,7 @@ Built-in imagegen produced `docs/assets/specialty-illustrations.png` using `time
 
 ## Stage cues and timeline alarms
 Stage transition ticks default on independently of alarm/gong settings and can be muted in sound settings/Customize. A separate Set alarm range selects an elapsed-time checkpoint without seeking. Alarms save locally and through account preference synchronization; Test alarm unlocks and verifies browser audio. Main meeting uses its elapsed meeting time; independent clocks have separate alarm controls. New Year retains its dedicated midnight alarm. Closing or suspending a tab still does not guarantee delivery. Favorite and start controls now sit beside the title; the secondary row contains favorites only.
+
+
+## Rotary duration editor
+Click an unlocked duration number to open a circular editor around the value. Clockwise increases and counterclockwise decreases; seam crossing is continuous and duration min/max/step are retained. Apply dispatches the same input/change events as typing. Close/Escape discards the draft. Keyboard arrows, plus/minus and direct numerical entry remain available. Counts and volume controls are excluded. Gesture checks cover clockwise/reverse, persistence, cancel and minimum bounds, plus mobile layout and meeting-minute controls.
