@@ -1,6 +1,6 @@
 // One reusable editor for durations. Counts, volume and other numeric settings stay ordinary fields.
 const timeNames=new Set(['hours','minutes','seconds','duration','work','rest','longRest','setRest','prepare','cooldown','increment','delay','warning','finalCue','floor','warn']);
-const eligible=el=>el?.matches?.('input[type="number"]')&&!el.disabled&&!el.readOnly&&(timeNames.has(el.name)||['work','rest'].includes(el.dataset.key)||el.id==='totalMin'||el.classList.contains('mn')||el.closest('.template-slot')||el.dataset.field==='seconds'||el.dataset.stage?.endsWith(':seconds')||['setFloor','setWarn'].includes(el.id));
+const eligible=el=>el?.matches?.('input[type="number"]')&&!el.disabled&&!el.readOnly&&(el.hasAttribute('data-time-field')||timeNames.has(el.name)||['work','rest'].includes(el.dataset.key)||el.id==='totalMin'||el.classList.contains('mn')||el.closest('.template-slot')||el.dataset.field==='seconds'||el.dataset.stage?.endsWith(':seconds')||['setFloor','setWarn'].includes(el.id));
 export function dialDelta(previous,next){let d=next-previous;while(d>Math.PI)d-=2*Math.PI;while(d< -Math.PI)d+=2*Math.PI;return d;}
 export function dialValue(value,steps,step,min,max){return Math.min(max,Math.max(min,Math.round((value+steps*step)*10000)/10000));}
 if(typeof document!=='undefined'){
@@ -16,7 +16,7 @@ if(typeof document!=='undefined'){
   if(dialog.open)return;source=input;source.focus({preventScroll:true});step=Number(input.step)||1;min=input.min===''?0:Number(input.min);max=input.max===''?86400:Number(input.max);value=Math.min(max,Math.max(min,Number(input.value)||0));turnSteps=input.name==='hours'?24:60;
   number.min=min;number.max=max;number.step=step;
   const label=input.getAttribute('aria-label')||input.closest('label')?.textContent.trim().split('\n')[0]||'Time';
-  unit.textContent=/hour/i.test(label)?'Hours':/second|sec|work|rest|prepare|cooldown|warning|increment|delay/i.test(label)||input.dataset.field==='seconds'||input.dataset.stage?.endsWith(':seconds')?'Seconds':'Minutes';
+  unit.textContent=input.hasAttribute('data-time-field')?'Seconds':/hour/i.test(label)?'Hours':/second|sec|work|rest|prepare|cooldown|warning|increment|delay/i.test(label)||input.dataset.field==='seconds'||input.dataset.stage?.endsWith(':seconds')?'Seconds':'Minutes';
   if(input.id==='setWarn')unit.textContent='Minutes';
   if(document.body.dataset.timerKind==='pomodoro'&&['work','rest','longRest'].includes(input.name))unit.textContent='Minutes';
   dialog.querySelector('.dial-help').textContent=`Clockwise + · counterclockwise −. One turn = ${turnSteps*step} ${unit.textContent.toLowerCase()}.`;

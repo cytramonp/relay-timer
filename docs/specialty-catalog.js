@@ -1,5 +1,282 @@
 export const specialtyTimers = [
   {
+    "slug": "kitchen-timer",
+    "title": "Kitchen Timer",
+    "short": "Kitchen",
+    "kind": "specialty",
+    "category": "Everyday",
+    "mode": "sequence",
+    "count": 3,
+    "stages": [
+      {
+        "name": "Cook",
+        "seconds": 600
+      },
+      {
+        "name": "Rest before serving",
+        "seconds": 120
+      }
+    ],
+    "description": "Cook several dishes independently, with named steps and separate alarms.",
+    "use": "Name each dish, start its clock independently and set alarms for turning, checking or resting. The example timings are editable.",
+    "tip": "Use your recipe timings. A timer cannot measure food temperature or confirm doneness.",
+    "detail": "Independent stages · editable timings"
+  },
+  {
+    "slug": "meditation-timer",
+    "title": "Meditation Timer",
+    "short": "Meditation",
+    "kind": "specialty",
+    "category": "Everyday",
+    "mode": "sequence",
+    "count": 1,
+    "stages": [
+      {
+        "name": "Settle in",
+        "seconds": 30
+      },
+      {
+        "name": "Meditation",
+        "seconds": 600
+      },
+      {
+        "name": "Finish gently",
+        "seconds": 60
+      }
+    ],
+    "description": "A quiet meditation timer with preparation, interval bells and a gentle finish.",
+    "use": "Choose the session length, enable a soft bell and optionally hide the digits. Add interval reminders under slot signals.",
+    "tip": "Start with a comfortable session length. Bells and the display can be switched off independently.",
+    "detail": "Independent stages · editable timings"
+  },
+  {
+    "slug": "tea-brewing-timer",
+    "title": "Tea Brewing Timer",
+    "short": "Tea Brewing",
+    "kind": "specialty",
+    "category": "Everyday",
+    "mode": "sequence",
+    "count": 1,
+    "stages": [
+      {
+        "name": "First infusion",
+        "seconds": 180
+      },
+      {
+        "name": "Second infusion",
+        "seconds": 120
+      },
+      {
+        "name": "Third infusion",
+        "seconds": 180
+      }
+    ],
+    "description": "Time repeated tea infusions with editable brewing stages and temperature notes.",
+    "use": "Choose or edit an infusion, add a note from your tea package and start. At zero the timer waits for you before the next infusion.",
+    "tip": "These are example timings, not universal tea instructions. Follow the tea producer’s guidance and adjust each infusion.",
+    "detail": "Independent stages · editable timings"
+  },
+  {
+    "slug": "toothbrushing-timer",
+    "title": "Toothbrushing Timer",
+    "short": "Toothbrushing",
+    "kind": "specialty",
+    "category": "Everyday",
+    "mode": "sequence",
+    "count": 1,
+    "stages": [
+      {
+        "name": "Upper left",
+        "seconds": 30
+      },
+      {
+        "name": "Upper right",
+        "seconds": 30
+      },
+      {
+        "name": "Lower right",
+        "seconds": 30
+      },
+      {
+        "name": "Lower left",
+        "seconds": 30
+      }
+    ],
+    "description": "Follow a visible brushing-zone sequence with gentle handoff cues.",
+    "use": "Start the routine and follow the highlighted zone. Edit the zone durations or use the child-friendly illustration view.",
+    "tip": "This is a routine aid. Follow your dental professional’s instructions for your brushing technique.",
+    "detail": "Independent stages · editable timings"
+  },
+  {
+    "slug": "breathing-timer",
+    "title": "Breathing Timer",
+    "short": "Breathing",
+    "kind": "specialty",
+    "category": "Everyday",
+    "mode": "sequence",
+    "count": 1,
+    "stages": [
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      },
+      {
+        "name": "Inhale",
+        "seconds": 4
+      },
+      {
+        "name": "Exhale",
+        "seconds": 6
+      }
+    ],
+    "description": "Follow an editable breathing rhythm with a gently expanding and contracting visual.",
+    "use": "Start and follow the phase names and circle. Edit the phase lengths, remove unwanted phases or change the number of cycles.",
+    "tip": "The rhythm is illustrative. Choose a comfortable pace; the timer makes no health-effect claims.",
+    "detail": "Independent stages · editable timings"
+  },
+  {
+    "slug": "yoga-stretching-timer",
+    "title": "Yoga Timer",
+    "short": "Yoga",
+    "kind": "specialty",
+    "category": "Sports",
+    "mode": "sequence",
+    "count": 1,
+    "stages": [
+      {
+        "name": "Prepare",
+        "seconds": 10
+      },
+      {
+        "name": "Standing stretch",
+        "seconds": 30
+      },
+      {
+        "name": "Left side",
+        "seconds": 30
+      },
+      {
+        "name": "Right side",
+        "seconds": 30
+      },
+      {
+        "name": "Forward stretch",
+        "seconds": 30
+      },
+      {
+        "name": "Rest",
+        "seconds": 30
+      }
+    ],
+    "description": "Name your poses, time each hold and see which side or movement comes next.",
+    "use": "Edit the pose list for your own routine. Include left and right sides separately and allow time to change position.",
+    "tip": "Use a routine and hold lengths appropriate to you. Stop any movement that feels uncomfortable.",
+    "detail": "Independent stages · editable timings"
+  },
+  {
+    "slug": "speech-timer",
+    "title": "Speech Timer",
+    "short": "Speech",
+    "kind": "specialty",
+    "category": "Learning & events",
+    "mode": "up",
+    "count": 1,
+    "stages": [
+      {
+        "name": "Speech rehearsal",
+        "seconds": 0
+      }
+    ],
+    "description": "Rehearse a speech with editable green, amber and red timing signals.",
+    "use": "Set the three signal thresholds, start speaking and watch the signal change. Stop to retain the actual rehearsal duration; record checkpoints with Lap.",
+    "tip": "Use your event’s allotted time. Signal thresholds are editable examples, not competition rules.",
+    "detail": "Independent starts · laps · export"
+  },
+  {
     "slug": "egg-timer",
     "title": "Egg Timer",
     "short": "Egg",

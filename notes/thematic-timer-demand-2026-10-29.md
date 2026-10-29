@@ -38,3 +38,9 @@ Captured evidence: outputs/niche-timers/thematic-google-trends-us.json and thema
 - Toastmasters provides timer-role resources: https://www.toastmasters.org/resources/resource-library?t=timer
 
 Contraction, feeding and fasting timers are further thematic possibilities, but require separate tracking/history flows. No Google ranking for them was established in this comparison. No new timer categories were implemented as part of this research.
+
+## Implementation after approval
+
+All seven proposed categories are now implemented on the web. The dropdown uses a curated popularity order informed by this research; Yoga and Speech remain product hypotheses rather than measured Google leaders.
+
+New art asset: docs/assets/routine-illustrations.png, generated with the built-in imagegen tool. Prompt: a coordinated 4 by 2 sprite sheet of warm cream editorial timer illustrations, charcoal linework and restrained red and teal accents: saucepan with timer, meditation singing bowl, teapot and cup, toothbrush and tooth, breathing balloon with arrows, yoga mat and block, microphone with traffic lights, and alarm bell. No lettering. Existing site illustrations retained.

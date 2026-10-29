@@ -1,5 +1,5 @@
 import {writeSetting,localSettings} from './timer-store.js';
-import { timers as builtins } from "./timer-catalog.js?v=20";
+import { timers as builtins } from "./timer-catalog.js?v=21";
 const customTimers=localSettings().filter(r=>r.key.startsWith('corptimer.custom.')).map(r=>({slug:'custom:'+r.key.slice('corptimer.custom.'.length),title:JSON.parse(r.value).title}));
 let timers=[...builtins,...customTimers];
 const key = "corptimer.favorites.v1";

@@ -19,6 +19,13 @@
 - [20 Minute Timer](https://corptimer.com/20-minute-timer/): Start a 20 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [25 Minute Timer](https://corptimer.com/25-minute-timer/): Start a 25 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [30 Minute Timer](https://corptimer.com/30-minute-timer/): Start a 30 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [Kitchen Timer](https://corptimer.com/kitchen-timer/): Cook several dishes independently, with named steps and separate alarms.
+- [Meditation Timer](https://corptimer.com/meditation-timer/): A quiet meditation timer with preparation, interval bells and a gentle finish.
+- [Tea Brewing Timer](https://corptimer.com/tea-brewing-timer/): Time repeated tea infusions with editable brewing stages and temperature notes.
+- [Toothbrushing Timer](https://corptimer.com/toothbrushing-timer/): Follow a visible brushing-zone sequence with gentle handoff cues.
+- [Breathing Timer](https://corptimer.com/breathing-timer/): Follow an editable breathing rhythm with a gently expanding and contracting visual.
+- [Yoga Timer](https://corptimer.com/yoga-stretching-timer/): Name your poses, time each hold and see which side or movement comes next.
+- [Speech Timer](https://corptimer.com/speech-timer/): Rehearse a speech with editable green, amber and red timing signals.
 - [Egg Timer](https://corptimer.com/egg-timer/): Follow egg doneness milestones from runny to hard-boiled with a visible yolk guide.
 - [Multi Stopwatch](https://corptimer.com/multi-stopwatch/): Time six people independently, with individual starts, laps and finishes.
 - [Running Coach Timer](https://corptimer.com/running-coach-timer/): Manage independent running efforts and recovery for a group.
