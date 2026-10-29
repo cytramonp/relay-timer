@@ -68,6 +68,7 @@ function draw() {
             : [...prefs.favorites, current.slug];
           save();
           draw();
+          const message=document.createElement('div');message.className='favorite-message';message.role='status';message.textContent=prefs.favorites.includes(current.slug)?'Added to favorites':'Removed from favorites';document.body.append(message);setTimeout(()=>message.remove(),1800);
         },
       ],
       [
