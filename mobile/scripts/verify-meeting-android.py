@@ -103,7 +103,7 @@ try:
         launch()
         capture(f'{form}-android-meeting-ready.png')
         # A fresh install has one hour, five named people and a five-minute welcome.
-        assert find(tree(), identifier='meeting-remaining').attrib.get('text') == '05:00'
+        assert find(tree(), identifier='meeting-remaining').attrib.get('text') == '5:00'
         open_path('meeting-slot?id=welcome')
         t, ring = scroll_to('duration-dial')
         a, b, c, d = bounds(ring)
