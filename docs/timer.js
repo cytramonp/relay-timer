@@ -9,7 +9,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
   let uid = 0;
   const mkId = () => "s" + Date.now().toString(36) + (uid++).toString(36);
   const mk = (name, min, kind) => ({ id: mkId(), kind: kind || "person", name, min });
-  const defaults = () => ({ agenda: NAMES.map(n => mk(n, 8)), floor: 1, warn: 1, sound: false, autoSplit: true, keepProp: true, clock: 70, shape: "wide", endPolicy:'manual',parking:[],reports:[],run: null });
+  const defaults = () => ({ agenda: [mk('Welcome',3,'topic'),...NAMES.slice(0,5).map(n=>mk(n,3)),mk('Blockers',10,'topic'),mk('Wrap-up',2,'topic')],total:30, floor: 1, warn: 1, sound: false, autoSplit: true, keepProp: true, clock: 70, shape: "wide", endPolicy:'manual',parking:[],reports:[],run: null });
   let S = load();
   S.agenda.forEach(a => { if (!a.id) a.id = mkId(); if (!a.kind) a.kind = "person"; });
   if (!(S.total > 0)) S.total = round2(S.agenda.reduce((s, a) => s + (+a.min || 0), 0));

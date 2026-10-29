@@ -19,6 +19,7 @@
 - [20 Minute Timer](https://corptimer.com/20-minute-timer/): Start a 20 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [25 Minute Timer](https://corptimer.com/25-minute-timer/): Start a 25 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [30 Minute Timer](https://corptimer.com/30-minute-timer/): Start a 30 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [Egg Timer](https://corptimer.com/egg-timer/): Follow egg doneness milestones from runny to hard-boiled with a visible yolk guide.
 - [Multi Stopwatch](https://corptimer.com/multi-stopwatch/): Time six people independently, with individual starts, laps and finishes.
 - [Running Coach Timer](https://corptimer.com/running-coach-timer/): Manage independent running efforts and recovery for a group.
 - [Swimming Timer](https://corptimer.com/swimming-timer/): Record elapsed times and lap splits across six swimming lanes.

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 // Shared editorial data is copied into the native source tree by build:timers.
 const rows = [
+ ['egg-timer','Egg Timer','Everyday','sequence',1,[['Heating · not ready',300],['Runny yolk · 5 minutes',60],['Soft yolk · 6 minutes',60],['Sticky yolk · 7 minutes',60],['Soft-set yolk · 8 minutes',120]],'Follow egg doneness milestones from runny to hard-boiled with a visible yolk guide.','Lower large room-temperature eggs into boiling water and start immediately. Take an egg out at your preferred milestone: 5, 6, 7, 8 or 10 minutes.','Times are starting points for large eggs at room temperature; size, temperature and altitude affect results. Cool eggs promptly after removal.'],
   [
     "multi-stopwatch",
     "Multi Stopwatch",

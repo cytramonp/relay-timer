@@ -294,10 +294,10 @@ setInterval(tick,100);
 document.body.dataset.timerReady='true';
 if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});
 
-const timelines=[];
+const timelineHost=document.createElement('div');stage.after(timelineHost);const timelines=[];
 if(kind==='chess') {
-  for(let i=0;i<2;i++)timelines.push(createTimeline(stage,{label:(i?'Black':'White')+' time bank',seek:value=>{clock.pause(Date.now());clock.times[i]=value*1000;clock.flag=null;render();save();}}));
-} else timelines.push(createTimeline(stage,{label:kind==='newyear'?'Adjust midnight target (hours around chosen midnight)':'Timeline',seek:value=>{
+  for(let i=0;i<2;i++)timelines.push(createTimeline(timelineHost,{label:(i?'Black':'White')+' time bank',seek:value=>{clock.pause(Date.now());clock.times[i]=value*1000;clock.flag=null;render();save();}}));
+} else timelines.push(createTimeline(timelineHost,{label:kind==='newyear'?'Adjust midnight target (hours around chosen midnight)':'Timeline',seek:value=>{
   if(kind==='stopwatch'){stopwatch.running=false;stopwatch.anchor=null;stopwatch.elapsed=value*1000;stopwatch.laps=stopwatch.laps.filter(v=>v<=stopwatch.elapsed);renderLaps();}
   else if(kind==='newyear'){yearTarget.target=midnightBase+(value-43200)*1000;}
   else{clock.pause(Date.now());let ms=value*1000;clock.index=0;while(clock.index<clock.sequence.length-1&&ms>=clock.sequence[clock.index].ms){ms-=clock.sequence[clock.index].ms;clock.index++;}clock.elapsed=ms;clock.done=false;clock.waiting=false;clock.anchor=null;lastIndex=-1;clock.update(Date.now());}

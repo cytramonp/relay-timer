@@ -1,7 +1,7 @@
 import {writeSetting,localSettings} from './timer-store.js';
-import { timers as builtins } from "./timer-catalog.js?v=17";
+import { timers as builtins } from "./timer-catalog.js?v=18";
 const customTimers=localSettings().filter(r=>r.key.startsWith('corptimer.custom.')).map(r=>({slug:'custom:'+r.key.slice('corptimer.custom.'.length),title:JSON.parse(r.value).title}));
-const timers=[...builtins,...customTimers];
+let timers=[...builtins,...customTimers];
 const key = "corptimer.favorites.v1";
 let prefs = { favorites: [], home: null };
 try {
@@ -21,12 +21,7 @@ const current = timers.find((t) => t.slug.startsWith('custom:') ? path.endsWith(
 const href = (t) =>
   new URL(
     t.slug.startsWith('custom:') ? 'custom-timer/?id='+encodeURIComponent(t.slug.slice(7)) : t.slug ? t.slug + '/' : './',
-    new URL(
-      document.body.dataset.timerSlug || path.endsWith("/timers")
-        ? "../"
-        : "./",
-      location.href,
-    ),
+    new URL('./',import.meta.url),
   ).href;
 if (
   current?.slug === "" &&
@@ -92,7 +87,7 @@ function draw() {
     const nav = document.createElement("nav");
     nav.setAttribute("aria-label", "Favorites");
     for (const slug of prefs.favorites) {
-      const t = timers.find((t) => t.slug === slug),
+      const t = timers.find((t) => t.slug === slug);if(!t)continue;const
         a = document.createElement("a");
       a.href = href(t) + (slug === "" ? "?home=meeting" : "");
       a.textContent = t.title;
@@ -125,3 +120,5 @@ function draw() {
   }
 }
 draw();
+
+window.addEventListener('timer-settings-received',()=>{try{timers=[...builtins,...localSettings().filter(r=>r.key.startsWith('corptimer.custom.')).map(r=>({slug:'custom:'+r.key.slice('corptimer.custom.'.length),title:JSON.parse(r.value).title}))];const saved=JSON.parse(localStorage.getItem(key));if(saved?.favorites){prefs=saved;draw();}}catch{}});

@@ -1,5 +1,40 @@
 export const specialtyTimers = [
   {
+    "slug": "egg-timer",
+    "title": "Egg Timer",
+    "short": "Egg",
+    "kind": "specialty",
+    "category": "Everyday",
+    "mode": "sequence",
+    "count": 1,
+    "stages": [
+      {
+        "name": "Heating · not ready",
+        "seconds": 300
+      },
+      {
+        "name": "Runny yolk · 5 minutes",
+        "seconds": 60
+      },
+      {
+        "name": "Soft yolk · 6 minutes",
+        "seconds": 60
+      },
+      {
+        "name": "Sticky yolk · 7 minutes",
+        "seconds": 60
+      },
+      {
+        "name": "Soft-set yolk · 8 minutes",
+        "seconds": 120
+      }
+    ],
+    "description": "Follow egg doneness milestones from runny to hard-boiled with a visible yolk guide.",
+    "use": "Lower large room-temperature eggs into boiling water and start immediately. Take an egg out at your preferred milestone: 5, 6, 7, 8 or 10 minutes.",
+    "tip": "Times are starting points for large eggs at room temperature; size, temperature and altitude affect results. Cool eggs promptly after removal.",
+    "detail": "Independent stages · editable timings"
+  },
+  {
     "slug": "multi-stopwatch",
     "title": "Multi Stopwatch",
     "short": "Multi Stopwatch",
