@@ -1,4 +1,4 @@
-import { timers, timerHref } from './timer-catalog.js';
+import { timers, timerHref } from './timer-catalog.js?v=14';
 
 const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 export function renderTimerMenu(current='',prefix='../',label='Other Timers') {
