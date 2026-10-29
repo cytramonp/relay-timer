@@ -23,6 +23,8 @@ if(typeof document!=='undefined'){
   remainder=0;angle=null;draw();dialog.showModal();
   const r=input.getBoundingClientRect(),w=Math.min(280,innerWidth-24),h=Math.min(dialog.getBoundingClientRect().height,innerHeight-24);dialog.style.width=w+'px';dialog.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left+r.width/2-w/2))+'px';dialog.style.top=Math.max(12,Math.min(innerHeight-h-12,r.top+r.height/2-h/2))+'px';ring.focus({preventScroll:true});
  }
+ function fit(){if(!dialog.open)return;const v=window.visualViewport,top=v?.offsetTop||0,height=v?.height||innerHeight;dialog.style.maxHeight=Math.max(160,height-24)+'px';dialog.style.top=Math.max(top+12,Math.min(parseFloat(dialog.style.top)||top+12,top+height-dialog.getBoundingClientRect().height-12))+'px';}
+ window.addEventListener('resize',fit);window.visualViewport?.addEventListener('resize',fit);
  function close(){dialog.close();angle=null;if(source?.isConnected)source.focus({preventScroll:true});}
  function pointerAngle(e){const r=ring.getBoundingClientRect();return Math.atan2(e.clientY-r.top-r.height/2,e.clientX-r.left-r.width/2);}
  ring.onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();angle=pointerAngle(e);remainder=0;ring.setPointerCapture(e.pointerId);};
@@ -32,7 +34,7 @@ if(typeof document!=='undefined'){
  ring.addEventListener('wheel',e=>{e.preventDefault();adjust(e.deltaY<0?1:-1);},{passive:false});
  number.oninput=()=>{if(number.value!==''&&number.checkValidity()){value=+number.value;draw();}};
  dialog.querySelector('[data-minus]').onclick=()=>adjust(-1);dialog.querySelector('[data-plus]').onclick=()=>adjust(1);dialog.querySelector('[data-close]').onclick=close;
- dialog.querySelector('[data-apply]').onclick=()=>{if(!number.reportValidity()||!source?.isConnected||source.disabled)return;const target=source;target.value=number.value;target.dispatchEvent(new Event('input',{bubbles:true}));target.dispatchEvent(new Event('change',{bubbles:true}));close();};
+ dialog.querySelector('[data-apply]').onclick=()=>{if(!number.reportValidity())return;if(!source?.isConnected||source.disabled){dialog.querySelector('.dial-help').textContent='This time field is no longer editable. Close and select another.';return;}const target=source;target.value=number.value;target.dispatchEvent(new Event('input',{bubbles:true}));target.dispatchEvent(new Event('change',{bubbles:true}));close();};
  dialog.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target===ring||e.target===number)){e.preventDefault();dialog.querySelector('[data-apply]').click();}});
  dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)close();}});
  document.addEventListener('pointerdown',e=>{if(!dialog.contains(e.target)&&eligible(e.target)){e.preventDefault();open(e.target);}},true);
