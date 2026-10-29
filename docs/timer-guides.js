@@ -139,6 +139,7 @@ const durationIdeas = {
   30: { task:'a longer work or activity session', examples:'a study block, a writing session, quiet reading or a half-hour independent task', advice:['Break the task into a few checkpoints before starting the half-hour countdown.', 'Make room for a final review or wrap-up within the thirty minutes.', 'For several speakers or discussion stages, choose Meeting Timer rather than dividing the time mentally.'] }
 };
 export function guideFor(timer) {
+  if(timer.kind==='specialty')return {paragraphs:[timer.description,timer.use],advice:[timer.tip,'Test the setup before your session.','Keep the screen awake.','Export results before clearing browser storage.'],question:'Does this timer require an account?',answer:'No. The timer runs in this browser without an account.'};
   if (!timer.minutes) return { ...guides[timer.kind], question:guides[timer.kind].question || timer.faq?.[0], answer:guides[timer.kind].answer || timer.faq?.[1] };
   const m=timer.minutes, idea=durationIdeas[m];
   return {

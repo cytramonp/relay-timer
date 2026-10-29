@@ -1,4 +1,5 @@
 import React from "react";
+import { SpecialtyLibrary } from "../components/timer-library";
 import { Image, Pressable, Text, View } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -117,6 +118,7 @@ export function HomeScreen() {
           </Pressable>
         ))}
       </View>
+      <SpecialtyLibrary />
       <Heading>Just a few minutes?</Heading>
       <Row>
         {[5, 10, 15, 20, 25, 30].map((m) => (

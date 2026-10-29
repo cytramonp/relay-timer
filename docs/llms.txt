@@ -19,6 +19,25 @@
 - [20 Minute Timer](https://corptimer.com/20-minute-timer/): Start a 20 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [25 Minute Timer](https://corptimer.com/25-minute-timer/): Start a 25 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [30 Minute Timer](https://corptimer.com/30-minute-timer/): Start a 30 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [Multi Stopwatch](https://corptimer.com/multi-stopwatch/): Time six people independently, with individual starts, laps and finishes.
+- [Running Coach Timer](https://corptimer.com/running-coach-timer/): Manage independent running efforts and recovery for a group.
+- [Swimming Timer](https://corptimer.com/swimming-timer/): Record elapsed times and lap splits across six swimming lanes.
+- [Circuit Training Timer](https://corptimer.com/circuit-training-timer/): Run separate work and recovery clocks for training stations.
+- [Climbing Timer](https://corptimer.com/climbing-timer/): Keep climbing attempts and rest periods visible for several climbers.
+- [Sailing Start Timer](https://corptimer.com/sailing-start-timer/): Practice a regatta start with an editable visual countdown.
+- [Archery Timer](https://corptimer.com/archery-timer/): Show preparation, shooting and changeover periods for archery practice.
+- [Sports Timekeeper](https://corptimer.com/sports-scoreboard-timer/): Keep game, attack, timeout and penalty countdowns on one board.
+- [Multiplayer Board Game Timer](https://corptimer.com/board-game-timer/): Give up to six players their own time bank and pass the turn.
+- [Debate Timer](https://corptimer.com/debate-timer/): Run editable speech sequences for two sides of a practice debate.
+- [Exam Station Timer](https://corptimer.com/exam-station-timer/): Track task and transition time for parallel exam stations.
+- [Speed Networking Timer](https://corptimer.com/speed-networking-timer/): Keep networking conversations and partner changeovers on schedule.
+- [Darkroom Timer](https://corptimer.com/darkroom-timer/): Follow separate development sequences for photographic batches.
+- [Coffee Brewing Timer](https://corptimer.com/coffee-brewing-timer/): Follow an editable bloom, pour and draw-down sequence for coffee.
+- [Bakery Batch Timer](https://corptimer.com/bakery-timer/): Track independent bakery batches through mixing, resting, proofing and baking.
+- [Laboratory Sample Timer](https://corptimer.com/laboratory-timer/): Run independent sample countdowns with named processing stages.
+- [Workshop Job Timer](https://corptimer.com/workshop-job-timer/): Measure active work separately for several jobs or clients.
+- [Escape Room Timer](https://corptimer.com/escape-room-timer/): Run independent room countdowns and adjust time during a game.
+- [Skydiving Ground Preparation Timer](https://corptimer.com/skydiving-ground-timer/): Coordinate briefing and ground preparation for several skydiving groups.
 
 ## Directory and usage
 
