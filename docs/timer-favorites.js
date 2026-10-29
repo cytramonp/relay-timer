@@ -1,4 +1,4 @@
-import { timers } from "./timer-catalog.js";
+import { timers } from "./timer-catalog.js?v=14";
 const key = "corptimer.favorites.v1";
 let prefs = { favorites: [], home: null };
 try {

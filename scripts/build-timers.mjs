@@ -20,12 +20,12 @@ function documentShell({title,description,slug,body,kind='',minutes=''}){
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eeece5"><meta name="description" content="${escape(description)}"><meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <title>${escape(title)} — Free Online Timer | CorpTimer</title><link rel="canonical" href="${canonical}">
 <meta property="og:title" content="${escape(title)} | CorpTimer"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${canonical}"><meta property="og:type" content="website">
-<link rel="icon" href="../icon.svg?v=9" type="image/svg+xml"><link rel="manifest" href="../manifest.webmanifest"><link rel="stylesheet" href="../base.css"><link rel="stylesheet" href="../workspace.css?v=8"><link rel="stylesheet" href="../editorial.css?v=9"><link rel="stylesheet" href="../blocks.css?v=10"><link rel="stylesheet" href="../special-timers.css?v=13">
+<link rel="icon" href="../icon.svg?v=9" type="image/svg+xml"><link rel="manifest" href="../manifest.webmanifest"><link rel="stylesheet" href="../base.css"><link rel="stylesheet" href="../workspace.css?v=8"><link rel="stylesheet" href="../editorial.css?v=9"><link rel="stylesheet" href="../blocks.css?v=10"><link rel="stylesheet" href="../special-timers.css?v=14">
 <script type="application/ld+json">${JSON.stringify(schema)}</script></head>
 <body class="tool-page" data-timer-kind="${kind}" data-timer-slug="${slug}" data-timer-title="${escape(title)}" data-minutes="${minutes}">
 <a class="skip" href="#timer-main">Skip to timer</a><header class="app-header"><a href="../" class="wordmark" aria-label="CorpTimer home"><img class="brand-mark" src="../assets/corptimer-mark.svg" width="64" height="30" alt=""><span>Corp<span class="brand-timer">Timer</span></span></a><nav aria-label="Timers"><a class="nav-link" href="../?home=meeting">Meeting Timer</a>${renderTimerMenu(slug)}</nav></header>
 <main id="timer-main" class="tool-wrap">${body}<footer class="tool-footer"><span>Free to use. No sign-in needed.<br>Timer setups are saved in this browser.</span><span><a href="../?home=meeting">Meeting Timer</a> · <a href="../timers/">All timers</a> · <a href="https://github.com/cytramonp/relay-timer" target="_blank" rel="noopener">Source</a></span></footer></main>
-<script type="module" src="../timer-menu.js?v=13"></script><script type="module" src="../timer-favorites.js?v=1"></script>${kind?'<script type="module" src="../special-timers.js?v=13"></script>':''}</body></html>\n`;
+<script type="module" src="../timer-menu.js?v=14"></script><script type="module" src="../timer-favorites.js?v=1"></script>${kind?'<script type="module" src="../special-timers.js?v=13"></script>':''}</body></html>\n`;
 }
 const mainClock=`<div id="clock-time" class="big-clock" role="timer" aria-label="Time remaining">5:00</div><div id="clock-progressbar" class="clock-bar" role="progressbar" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="clock-progress"></i></div><div id="clock-next" class="clock-next">Ready when you are.</div>`;
 const start=`<button type="button" id="start-timer" class="start-button">Start</button>`;
@@ -67,7 +67,7 @@ fs.writeFileSync(path.join(root,'sitemap.xml'),`<?xml version="1.0" encoding="UT
 fs.writeFileSync(path.join(root,'robots.txt'),'User-agent: *\nAllow: /\nDisallow: /live.html\n\nUser-agent: OAI-SearchBot\nAllow: /\nDisallow: /live.html\n\nSitemap: https://corptimer.com/sitemap.xml\n');
 fs.writeFileSync(path.join(root,'llms.txt'),'# CorpTimer\n\n> Free browser-based timers for meetings, focus, classrooms, workouts and everyday activities.\n\n## Public timer pages\n\n'+timers.map(t=>`- [${t.title}](https://corptimer.com/${t.slug?t.slug+'/':''}): ${t.description}`).join('\n')+'\n\n## Directory and usage\n\n- [Other Timers](https://corptimer.com/timers/): Browse all activities and preset countdowns.\n- Each timer page contains a public, expandable How it works and advice guide in its HTML.\n- JavaScript is required to operate the clocks; an account is not required.\n- Standalone setups stay in browser storage. Optional Google synchronization belongs to the Meeting Timer.\n- Keep the tab open for alarms; background and mobile delivery depend on the browser.\n- Live audience links are temporary session views, not indexable timer guides.\n');
 const meetingFile=path.join(root,'index.html');
-let meeting=fs.readFileSync(meetingFile,'utf8');
+let meeting=fs.readFileSync(meetingFile,'utf8').replaceAll('special-timers.css?v=13','special-timers.css?v=14').replaceAll('timer-menu.js?v=13','timer-menu.js?v=14');
 const meetingGuide=`<!-- timer-guide:start -->\n${renderTimerGuide(timers[0])}\n<!-- timer-guide:end -->\n`;
 const guidePattern=/<!-- timer-guide:start -->[\s\S]*?<!-- timer-guide:end -->\n?/;
 meeting=guidePattern.test(meeting)?meeting.replace(guidePattern,meetingGuide):meeting.replace('<footer class="app-footer">',meetingGuide+'<footer class="app-footer">');
@@ -75,7 +75,7 @@ if(!meeting.includes('name="robots"'))meeting=meeting.replace('<link rel="canoni
 const meetingMenu=`<!-- timer-menu:start -->${renderTimerMenu('','./')}<!-- timer-menu:end -->`;
 const menuPattern=/<!-- timer-menu:start -->[\s\S]*?<!-- timer-menu:end -->/;
 meeting=menuPattern.test(meeting)?meeting.replace(menuPattern,meetingMenu):meeting.replace('<a class="nav-link other-timers" href="./timers/">Other Timers</a>',meetingMenu);
-if(!meeting.includes('src="./timer-menu.js'))meeting=meeting.replace('</body>','<script type="module" src="./timer-menu.js?v=13"></script>\n</body>');
+if(!meeting.includes('src="./timer-menu.js'))meeting=meeting.replace('</body>','<script type="module" src="./timer-menu.js?v=14"></script>\n</body>');
 if(!meeting.includes('src="./timer-favorites.js'))meeting=meeting.replace('</body>','<script type="module" src="./timer-favorites.js?v=1"></script></body>');
 fs.writeFileSync(meetingFile,meeting);
 console.log(`Generated ${timers.length-1} timer pages, directory, sitemap and robots.txt.`);
