@@ -64,6 +64,22 @@ def scroll_to(identifier):
 def open_path(path):
     adb('shell', 'am', 'start', '-W', '-a', 'android.intent.action.VIEW', '-d', 'corptimer://' + path, 'com.corptimer.app'); time.sleep(1)
 
+def scroll_top():
+    w, h = dimensions()
+    for _ in range(12):
+        t = tree()
+        if find(t, description='Meeting name') is not None: return t
+        adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '400')
+    raise AssertionError('Could not return to the meeting heading')
+
+def planned_label(t, name):
+    for node in t.iter('node'):
+        label = node.attrib.get('content-desc', '')
+        if label.startswith(name + ', ') and ' planned, ' in label:
+            a, b, c, d = bounds(node)
+            if c > a and d > b: return label
+    raise AssertionError('Visible timeline label missing: ' + name)
+
 def launch():
     adb('shell', 'am', 'force-stop', 'com.corptimer.app')
     adb('shell', 'am', 'start', '-W', '-n', 'com.corptimer.app/.MainActivity')
@@ -86,6 +102,20 @@ try:
         adb('shell', 'appops', 'set', 'com.corptimer.app', 'SYSTEM_ALERT_WINDOW', 'allow')
         launch()
         capture(f'{form}-android-meeting-ready.png')
+        # A horizontal resize handle must yield vertical motion to the page,
+        # and still change planned budgets when dragged horizontally.
+        t, boundary = scroll_to('boundary-1')
+        w, h = dimensions(); x, y = center(boundary)
+        adb('shell', 'input', 'swipe', str(x), str(y), str(x), str(y - int(h * .14)), '700')
+        t = tree(); boundary = find(t, identifier='boundary-1')
+        assert boundary is not None and center(boundary)[1] < y - 20, 'Timeline handle swallowed vertical scrolling'
+        before = (planned_label(t, 'Welcome'), planned_label(t, 'Alex'))
+        x, y = center(boundary)
+        adb('shell', 'input', 'swipe', str(x), str(y), str(x + int(w * .12)), str(y), '1000'); time.sleep(.5)
+        t = tree()
+        assert (planned_label(t, 'Welcome'), planned_label(t, 'Alex')) != before, 'Horizontal boundary did not change the plan'
+        # Restore the unmodified starter for the rest of the screenshot matrix.
+        tap_node(find(scroll_top(), text='New meeting'))
         t, _ = scroll_to('drag-handle-2')
         w, h = dimensions()
         node = find(t, identifier='drag-handle-2')
@@ -104,11 +134,7 @@ try:
         record.wait(timeout=20); adb('pull', f'/sdcard/{form}-reorder.mp4', str(output / f'{form}-android-reorder.mp4'))
         open_path('')
         # Return to the top using native scrolling; re-opening a tab can retain its offset.
-        for _ in range(10):
-            t = tree()
-            if find(t, description='Meeting name') is not None: break
-            adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '400')
-        t = tree(); go = find(t, identifier='meeting-next'); pause = find(t, description='Pause meeting')
+        t = scroll_top(); go = find(t, identifier='meeting-next'); pause = find(t, description='Pause meeting')
         tap_node(go); time.sleep(1); tap_node(pause)
         t = tree(); assert find(t, description='Resume meeting') is not None, 'Pause did not expose Resume'
         # Welcome finishes early; reordered Morgan receives the spare time.
@@ -136,7 +162,7 @@ try:
         if form == 'tablet':
             adb('shell', 'wm', 'size', '1920x1200'); time.sleep(1); capture('tablet-android-landscape.png')
         adb('shell', 'settings', 'put', 'system', 'font_scale', '1.0')
-        print(f'{form}: launch, actual drag reorder, early handoff and background overlay Next/Pause/Undo passed', flush=True)
+        print(f'{form}: launch, perpendicular timeline scroll, horizontal boundary edit, actual drag reorder, early handoff and background overlay Next/Pause/Undo passed', flush=True)
 except Exception:
     capture('native-flow-failed.png')
     try: (output / 'failure-ui.xml').write_text(ET.tostring(tree(), encoding='unicode'))

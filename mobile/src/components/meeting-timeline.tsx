@@ -33,7 +33,9 @@ function Boundary({
     dx = useSharedValue(0);
   const pan = Gesture.Pan()
     .enabled(!disabled)
-    .minDistance(3)
+    // Resize horizontally; let the page own a vertical swipe through this handle.
+    .activeOffsetX([-6, 6])
+    .failOffsetY([-8, 8])
     .onUpdate((e) => {
       dx.value = e.translationX;
     })
@@ -117,7 +119,8 @@ function ClockCursor({
     dx = useSharedValue(0),
     left = Math.min(1, at / scale) * width;
   const pan = Gesture.Pan()
-    .minDistance(3)
+    .activeOffsetX([-6, 6])
+    .failOffsetY([-8, 8])
     .onUpdate((e) => {
       dx.value = e.translationX;
     })

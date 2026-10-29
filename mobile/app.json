@@ -3,7 +3,7 @@
     "icon": "./assets/icon.png",
     "version": "0.2.0",
     "ios": {
-      "buildNumber": "3",
+      "buildNumber": "4",
       "bundleIdentifier": "com.corptimer.app",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -11,7 +11,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#eeece5"
