@@ -2,14 +2,14 @@ name: iOS simulator build
 on:
   push:
     branches: ['codex/corptimer-mobile']
-    paths: ['.github/workflows/mobile-ios.yml', 'mobile/scripts/capture-ios.py']
+    paths: ['.github/workflows/mobile-ios.yml', 'mobile/scripts/capture-ios.py', 'mobile/tests/native-*.yaml']
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   simulator:
     runs-on: macos-26
-    timeout-minutes: 45
+    timeout-minutes: 60
     defaults:
       run:
         working-directory: mobile
@@ -28,10 +28,12 @@ jobs:
       - name: Compile unsigned iOS simulator app
         run: |
           xcodebuild -workspace ios/CorpTimer.xcworkspace -scheme CorpTimer -configuration Release -sdk iphonesimulator -derivedDataPath ios-build CODE_SIGNING_ALLOWED=NO build > xcodebuild.log 2>&1 || { tail -n 100 xcodebuild.log; exit 1; }
+      - name: Preserve simulator executable permissions in an archive
+        run: ditto -c -k --sequesterRsrc --keepParent ios-build/Build/Products/Release-iphonesimulator/CorpTimer.app corptimer-ios-simulator.zip
       - uses: actions/upload-artifact@v4
         with:
           name: corptimer-ios-simulator
-          path: mobile/ios-build/Build/Products/Release-iphonesimulator/CorpTimer.app
+          path: mobile/corptimer-ios-simulator.zip
           if-no-files-found: error
           retention-days: 14
       - name: Install native UI test driver from its official distribution

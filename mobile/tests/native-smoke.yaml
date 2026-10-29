@@ -2,17 +2,46 @@ appId: com.corptimer.app
 ---
 - launchApp:
     clearState: true
-- assertVisible: 'Make time for it.'
-- takeScreenshot: '${DEVICE_CLASS}-ios-home'
+- assertVisible:
+    id: current-speaker
+    text: Welcome
+- takeScreenshot: '${DEVICE_CLASS}-ios-meeting-ready'
+- scrollUntilVisible:
+    element:
+      id: drag-handle-1
+    direction: DOWN
+    centerElement: true
+    timeout: 20000
+- swipe:
+    from:
+      id: drag-handle-1
+    direction: DOWN
+    duration: 1600
+    waitToSettleTimeoutMs: 500
+- assertVisible:
+    id: agenda-name-1
+    text: Morgan
+- takeScreenshot: '${DEVICE_CLASS}-ios-agenda-reordered'
+- scrollUntilVisible:
+    element:
+      id: meeting-next
+    direction: UP
+    centerElement: true
+    timeout: 20000
 - tapOn:
-    text: 'Boxing.*'
-- assertVisible: 'Start timer'
-- takeScreenshot: '${DEVICE_CLASS}-ios-timer'
-- tapOn: 'Edit'
-- assertVisible: 'Work & rest'
-- takeScreenshot: '${DEVICE_CLASS}-ios-edit'
-- launchApp:
-    clearState: true
-- tapOn: 'History'
-- assertVisible: 'A little time well spent.'
-- takeScreenshot: '${DEVICE_CLASS}-ios-history'
+    id: meeting-next
+    waitToSettleTimeoutMs: 500
+- tapOn:
+    text: Pause meeting
+    waitToSettleTimeoutMs: 500
+- assertVisible: 'PAUSED.*'
+- tapOn:
+    id: meeting-next
+    waitToSettleTimeoutMs: 500
+- tapOn:
+    text: Pause meeting
+    waitToSettleTimeoutMs: 500
+- assertVisible:
+    id: current-speaker
+    text: Morgan
+- takeScreenshot: '${DEVICE_CLASS}-ios-meeting-active'
