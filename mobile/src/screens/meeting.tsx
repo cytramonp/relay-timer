@@ -1,3 +1,4 @@
+import { TimerFavoriteControls } from "../components/timer-library";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Platform,
@@ -394,6 +395,7 @@ export function MeetingScreen() {
         alignSelf: "center",
       }}
     >
+      <TimerFavoriteControls id="meeting" />
       <Notice />
       <View
         style={{

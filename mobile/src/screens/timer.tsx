@@ -1,3 +1,4 @@
+import { TimerFavoriteControls } from "../components/timer-library";
 import React, { useEffect, useMemo, useState } from "react";
 import { Text, TextInput, View, Pressable } from "react-native";
 import { Stack, router } from "expo-router";
@@ -87,6 +88,7 @@ export function TimerScreen({ kind }: { kind: Kind }) {
             : "Running";
   return (
     <Page>
+      <TimerFavoriteControls id={kind} />
       <Stack.Screen
         options={{
           title: catalog.find((c) => c.kind === kind)!.title,

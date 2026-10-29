@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { favoritesKey, openTimer } from "../components/timer-library";
 import React, { useEffect } from "react";
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
@@ -24,6 +26,16 @@ void SplashScreen.preventAutoHideAsync();
 function Navigation() {
   const t = useTheme();
   const dark = t.isDark;
+  useEffect(() => {
+    AsyncStorage.getItem(favoritesKey)
+      .then((s) => {
+        if (s) {
+          const p = JSON.parse(s);
+          if (p.home && p.home !== "meeting") openTimer(p.home, true);
+        }
+      })
+      .catch(() => {});
+  }, []);
   useEffect(() => {
     void SystemUI.setBackgroundColorAsync(t.bg).catch(() => {});
   }, [t.bg]);
