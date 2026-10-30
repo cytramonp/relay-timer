@@ -43,6 +43,7 @@ import { MeetingTimeline } from "../components/meeting-timeline";
 import { AgendaRow } from "../components/agenda-row";
 import type { Config } from "../core/types";
 import { useLive } from "../state/live-store";
+import { PlanStatus } from "../components/plan-status";
 
 export function MeetingScreen() {
   const live = useLive();
@@ -410,6 +411,7 @@ export function MeetingScreen() {
       }}
     >
       <Notice />
+      <PlanStatus />
       <View
         style={{
           flexDirection: "row",

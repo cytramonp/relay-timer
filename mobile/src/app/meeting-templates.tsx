@@ -33,10 +33,13 @@ export default function TemplatesSheet() {
         return;
       act("reset");
     }
-    editMeeting({
-      ...c,
-      agenda: c.agenda.map((a) => ({ ...a, id: Crypto.randomUUID() })),
-    });
+    editMeeting(
+      {
+        ...c,
+        agenda: c.agenda.map((a) => ({ ...a, id: Crypto.randomUUID() })),
+      },
+      true,
+    );
     router.back();
   }
   return (

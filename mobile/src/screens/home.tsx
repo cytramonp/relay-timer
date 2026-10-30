@@ -1,4 +1,5 @@
 import React from "react";
+import { SpecialtyLibrary } from "../components/timer-library";
 import { Image, Pressable, Text, View } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,6 +8,7 @@ import { formatTime, remaining } from "../core/clock";
 import { Action, Body, Heading, Page, Row, Rule } from "../components/ui";
 import { useApp } from "../state/app-store";
 import { useTheme } from "../theme";
+import { PlanStatus } from "../components/plan-status";
 
 const images = [
   require("../../assets/boxing.jpg"),
@@ -24,6 +26,7 @@ export function HomeScreen() {
     active = store.run;
   return (
     <Page>
+      <PlanStatus />
       <View style={{ gap: 8 }}>
         <Heading>Make time for it.</Heading>
         <Body muted>
@@ -117,6 +120,7 @@ export function HomeScreen() {
           </Pressable>
         ))}
       </View>
+      <SpecialtyLibrary />
       <Heading>Just a few minutes?</Heading>
       <Row>
         {[5, 10, 15, 20, 25, 30].map((m) => (
@@ -134,10 +138,14 @@ function QuickMinute({ minutes }: { minutes: number }) {
     <Action
       label={`${minutes} min`}
       onPress={() => {
-        updateDraft("simple", {
-          ...store.drafts.simple,
-          duration: minutes * 60,
-        });
+        updateDraft(
+          "simple",
+          {
+            ...store.drafts.simple,
+            duration: minutes * 60,
+          },
+          true,
+        );
         router.push("/timer/simple");
       }}
     />

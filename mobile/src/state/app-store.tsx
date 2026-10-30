@@ -35,6 +35,7 @@ import { clone } from "../core/clone";
 import { applyRun, recoverStore } from "../core/recovery";
 import { editMeetingRun, nudgeMeeting, undoMeeting } from "../core/meeting";
 import { validateConfig } from "../core/backup";
+import { requireCustomization, reserveSession } from "../services/billing";
 
 type Action =
   | "toggle"
@@ -53,12 +54,12 @@ type ContextValue = {
   seekMeeting: (ms: number) => void;
   notice: string;
   notify: (text: string) => void;
-  updateDraft: (kind: Kind, config: Config) => boolean;
-  editMeeting: (config: Config) => void;
+  updateDraft: (kind: Kind, config: Config, preset?: boolean) => boolean;
+  editMeeting: (config: Config, preset?: boolean) => void;
   parking: (items: ParkingItem[]) => void;
   duplicateProgram: (id: string) => void;
   reviseProgram: (program: Program) => boolean;
-  start: (kind: Kind) => void;
+  start: (kind: Kind) => Promise<boolean>;
   act: (action: Action) => void;
   chess: (side: number) => void;
   notes: (text: string) => void;
@@ -82,6 +83,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [notice, notify] = useState(loaded.error),
     [canUndo, setCanUndo] = useState(false);
   const current = useRef(store),
+    starting = useRef(false),
+    pendingStart = useRef<{ kind: Kind; id: string } | null>(null),
     undo = useRef<Run[]>([]),
     protectedData = useRef(!!loaded.error);
   function commit(next: Store, schedule = true) {
@@ -117,6 +120,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       undo.current = undo.current.slice(-20);
     }
     commit(applyRun(s, run));
+  }
+  function canCustomize() {
+    try {
+      requireCustomization();
+      return true;
+    } catch (e) {
+      notify(
+        e instanceof Error ? e.message : "Check your plan before editing.",
+      );
+      return false;
+    }
   }
   useEffect(() => {
     let lastSecond = -1;
@@ -189,7 +203,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     notify,
     canUndo:
       store.run?.kind === "meeting" ? store.run.entries.length > 0 : canUndo,
-    editMeeting(config) {
+    editMeeting(config, preset = false) {
+      if (!preset && !canCustomize()) return;
       const c = validateConfig("meeting", config),
         s = current.current;
       const run =
@@ -208,6 +223,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       else commit({ ...s, meetingParking: items.slice(0, 2000) }, false);
     },
     duplicateProgram(id) {
+      if (!canCustomize()) return;
       const s = current.current,
         p = s.programs.find((p) => p.id === id);
       if (!p || s.programs.length >= 200) return;
@@ -228,6 +244,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       );
     },
     reviseProgram(program) {
+      if (!canCustomize()) return false;
       const s = current.current;
       return commit(
         {
@@ -245,7 +262,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         false,
       );
     },
-    updateDraft(kind, config) {
+    updateDraft(kind, config, preset = false) {
+      if (!preset && !canCustomize()) return false;
       return commit(
         {
           ...current.current,
@@ -254,7 +272,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         false,
       );
     },
-    start(kind) {
+    async start(kind) {
+      if (starting.current) return false;
+      starting.current = true;
+      if (pendingStart.current?.kind !== kind)
+        pendingStart.current = { kind, id: Crypto.randomUUID() };
+      const id = pendingStart.current.id;
+      try {
+        await reserveSession(id);
+      } catch (e) {
+        notify(
+          e instanceof Error
+            ? e.message
+            : "Reconnect to start a new timer. Your current timer can continue.",
+        );
+        starting.current = false;
+        return false;
+      }
       undo.current = [];
       const s = current.current;
       let history = s.history;
@@ -263,17 +297,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           0,
           100,
         );
-      const r = toggleRun(
-        createRun(kind, s.drafts[kind], Crypto.randomUUID()),
-        Date.now(),
-      );
+      const r = toggleRun(createRun(kind, s.drafts[kind], id), Date.now());
       if (kind === "meeting") r.parking = clone(s.meetingParking ?? []);
       commit({ ...s, run: r, history });
+      pendingStart.current = null;
+      starting.current = false;
       void playCue(
         r.config,
         r.kind === "chess" ? "" : r.phases[0]?.name,
         s.settings.haptics,
       ).catch(() => {});
+      return true;
     },
     act(action) {
       const s = current.current;
@@ -342,6 +376,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         commit({ ...s, run: { ...s.run, notes: text.slice(0, 10000) } }, false);
     },
     saveProgram(kind, name, appearance, config) {
+      if (!canCustomize()) return false;
       const s = current.current;
       if (s.programs.length >= 200) {
         notify("You have 200 saved programs. Export or remove one first.");
@@ -374,6 +409,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       );
     },
     importPrograms(programs) {
+      if (!canCustomize()) return;
       const s = current.current;
       if (s.programs.length + programs.length > 200)
         throw Error(

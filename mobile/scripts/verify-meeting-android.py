@@ -108,6 +108,12 @@ try:
         # Grant only on this disposable emulator. Hardware permission consent is a separate test.
         adb('shell', 'appops', 'set', 'com.corptimer.app', 'SYSTEM_ALERT_WINDOW', 'allow')
         launch()
+        # This release checks server-backed trial/free access before editing.
+        # Wait for the actual network result, never replace it with a UI fixture.
+        for _ in range(20):
+            if find(tree(), text='Full access · trial') is not None: break
+            time.sleep(2)
+        else: raise AssertionError('The release APK could not initialize real trial access')
         capture(f'{form}-android-meeting-ready.png')
         # A fresh install has one hour, five named people and a five-minute welcome.
         assert find(tree(), identifier='meeting-remaining').attrib.get('text') == '5:00'
@@ -169,6 +175,10 @@ try:
         adb('shell', 'pm', 'clear', 'com.corptimer.app')
         adb('shell', 'appops', 'set', 'com.corptimer.app', 'SYSTEM_ALERT_WINDOW', 'allow')
         launch()
+        for _ in range(20):
+            if find(tree(), text='Full access · trial') is not None: break
+            time.sleep(2)
+        else: raise AssertionError('Trial access did not initialize after emulator reset')
         # A horizontal resize handle must yield vertical motion to the page,
         # and still change planned budgets when dragged horizontally.
         t, boundary = scroll_to('boundary-1')

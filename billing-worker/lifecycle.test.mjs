@@ -1,0 +1,60 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync} from 'node:fs';
+import {createHmac} from 'node:crypto';
+import worker from './worker.js';
+import {readAccount,updateAccount,reserve} from './store.js';
+import {access,DAY} from '../docs/pro-policy.js';
+
+test('accelerated trial, signed subscription webhook, quota unlock and expiry',async t=>{
+ const sql=new DatabaseSync(':memory:');
+ t.after(()=>sql.close());
+ sql.exec(readFileSync(new URL('./schema.sql',import.meta.url),'utf8'));
+ const DB={prepare(query){return {bind(...args){return {async first(){return sql.prepare(query).get(...args);},async run(){return {meta:sql.prepare(query).run(...args)};}};}};}};
+ const now=Date.now(),uid='disposable_local_fixture',customer='cus_fixture';
+ const env={DB,APP_ORIGIN:'https://corptimer.com',STRIPE_SECRET:'sk_test_local_fixture',STRIPE_WEBHOOK:'whsec_local_fixture',STRIPE_PRICE:'price_fixture'};
+ await updateAccount(DB,uid,()=>({customer,firstUsedAt:now-9*DAY,uses:10}));
+ assert.equal(access((await readAccount(DB,uid)).state,now).tier,'trial');
+ await updateAccount(DB,uid,s=>({...s,firstUsedAt:now-11*DAY,uses:9}));
+ assert.equal(access((await readAccount(DB,uid)).state,now).tier,'trial');
+ await updateAccount(DB,uid,s=>({...s,uses:10}));
+ assert.equal(access((await readAccount(DB,uid)).state,now).customize,false);
+ assert((await reserve(DB,uid,'session_one',now)).allowed);
+ assert((await reserve(DB,uid,'session_two',now)).allowed);
+ assert.equal((await reserve(DB,uid,'session_three',now)).allowed,false);
+ assert((await reserve(DB,uid,'session_two',now)).allowed);
+ let sub={id:'sub_fixture',customer,metadata:{corptimerUid:uid},status:'active',items:{data:[{price:{id:env.STRIPE_PRICE},current_period_end:Math.floor(now/1000)+3600}]}};
+ t.mock.method(globalThis,'fetch',async url=>{
+  assert.equal(String(url),'https://api.stripe.com/v1/subscriptions/sub_fixture');
+  return Response.json(sub);
+ });
+ async function webhook(type,created){
+  const payload=JSON.stringify({id:'evt_fixture_'+created,type,created,data:{object:{id:sub.id}}});
+  const timestamp=Math.floor(Date.now()/1000);
+  const signature=createHmac('sha256',env.STRIPE_WEBHOOK).update(`${timestamp}.${payload}`).digest('hex');
+  const r=await worker.fetch(new Request('https://billing.example/billing/webhook',{method:'POST',body:payload,headers:{'stripe-signature':`t=${timestamp},v1=${signature}`}}),env);
+  assert.equal(r.status,200);
+ }
+ await webhook('customer.subscription.created',100);
+ assert.equal(access((await readAccount(DB,uid)).state,now).tier,'pro');
+ assert.equal(access((await readAccount(DB,uid)).state,now).customize,true);
+ assert((await reserve(DB,uid,'session_three',now)).allowed);
+ await webhook('customer.subscription.created',100);
+ assert.equal((await readAccount(DB,uid)).state.uses,13);
+ sub={...sub,cancel_at_period_end:true};
+ await webhook('customer.subscription.updated',101);
+ assert.equal(access((await readAccount(DB,uid)).state,now).tier,'pro');
+ assert.equal(access((await readAccount(DB,uid)).state,now+2*3600000).tier,'free');
+ sub={...sub,status:'canceled'};
+ await webhook('customer.subscription.deleted',102);
+ assert.equal(access((await readAccount(DB,uid)).state,now).tier,'free');
+ assert.equal((await reserve(DB,uid,'session_four',now)).allowed,false);
+ assert((await reserve(DB,uid,'session_four',now+DAY)).allowed);
+ sub={...sub,status:'active'};
+ await webhook('customer.subscription.updated',99);
+ assert.equal(access((await readAccount(DB,uid)).state,now).tier,'free');
+ sub={...sub,customer:'cus_wrong'};
+ await webhook('customer.subscription.updated',103);
+ assert.equal(access((await readAccount(DB,uid)).state,now).tier,'free');
+});

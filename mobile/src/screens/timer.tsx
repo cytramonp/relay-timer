@@ -1,3 +1,5 @@
+import { TimerFavoriteControls } from "../components/timer-library";
+import { PlanStatus } from "../components/plan-status";
 import React, { useEffect, useMemo, useState } from "react";
 import { Text, TextInput, View, Pressable } from "react-native";
 import { Stack, router } from "expo-router";
@@ -95,7 +97,9 @@ export function TimerScreen({ kind }: { kind: Kind }) {
           ),
         }}
       />
+      <PlanStatus />
       <Heading>{r.config.title}</Heading>
+      <TimerFavoriteControls id={kind} />
       <View
         style={{
           backgroundColor: t.clock,

@@ -1,9 +1,9 @@
 {
   "expo": {
     "icon": "./assets/icon.png",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "ios": {
-      "buildNumber": "5",
+      "buildNumber": "6",
       "bundleIdentifier": "com.corptimer.app",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -11,14 +11,24 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 6,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#eeece5"
       },
       "predictiveBackGestureEnabled": true,
-      "permissions": ["android.permission.SCHEDULE_EXACT_ALARM"],
-      "package": "com.corptimer.app"
+      "permissions": [
+        "android.permission.SCHEDULE_EXACT_ALARM"
+      ],
+      "package": "com.corptimer.app",
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
+      "allowBackup": false
     },
     "slug": "corptimer",
     "orientation": "default",
@@ -65,7 +75,18 @@
         {
           "enforceContrast": false
         }
-      ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 37,
+            "targetSdkVersion": 36,
+            "buildToolsVersion": "37.0.0"
+          }
+        }
+      ],
+      "./plugins/with-play-release.cjs"
     ],
     "web": {
       "bundler": "metro",

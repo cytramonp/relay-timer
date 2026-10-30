@@ -1,0 +1,8 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+group = 'com.corptimer'
+version = '0.4.0'
+android { namespace 'expo.modules.corptimerbilling' }
+dependencies { implementation 'com.android.billingclient:billing:9.1.0' }

@@ -120,7 +120,7 @@ export function ProgramsScreen() {
                       return;
                     act("reset");
                   }
-                  updateDraft(p.kind, p.config);
+                  updateDraft(p.kind, p.config, true);
                   router.push(`/timer/${p.kind}`);
                 })()
               }

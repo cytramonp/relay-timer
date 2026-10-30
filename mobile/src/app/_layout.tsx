@@ -3,7 +3,9 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
-import { Platform } from "react-native";
+import { Platform, Linking } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { favoritesKey, openTimer } from "../components/timer-library";
 import { NavigationBar } from "expo-navigation-bar";
 import * as SystemUI from "expo-system-ui";
 import {
@@ -17,11 +19,30 @@ import { AppProvider } from "../state/app-store";
 import { ThemeProvider, useTheme } from "../theme";
 import { LiveProvider } from "../state/live-store";
 import { OverlayProvider } from "../state/overlay-store";
+import { initializeBilling } from "../services/billing";
 
 export const unstable_settings = { initialRouteName: "(tabs)" };
 void SplashScreen.preventAutoHideAsync();
 
 function Navigation() {
+  useEffect(initializeBilling, []);
+  useEffect(() => {
+    let live = true;
+    void Promise.all([
+      Linking.getInitialURL(),
+      AsyncStorage.getItem(favoritesKey),
+    ])
+      .then(([url, saved]) => {
+        if (!live || url || !saved) return;
+        const preference = JSON.parse(saved);
+        if (typeof preference.home === "string")
+          openTimer(preference.home, true);
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
   const t = useTheme();
   const dark = t.isDark;
   useEffect(() => {

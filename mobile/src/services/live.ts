@@ -39,6 +39,7 @@ function init() {
 function api() {
   return (client ??= init());
 }
+export const getFirebaseClient = api;
 export async function createRoom(
   id: string,
   controlToken: string,

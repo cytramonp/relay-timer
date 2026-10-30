@@ -1,3 +1,4 @@
+import { CustomizationGate } from "../components/plan-status";
 import React, { useState } from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
@@ -54,58 +55,60 @@ export default function SlotSheet() {
   }
   return (
     <Page>
-      <Stack.Screen
-        options={{
-          title: "Edit turn",
-          presentation: "formSheet",
-          headerRight: () => <Action label="Done" onPress={save} />,
-        }}
-      />
-      <Heading>{slot?.name ?? "Turn removed"}</Heading>
-      <Body muted>
-        Durations use minutes. With proportions on, other unfinished slots
-        absorb the change.
-      </Body>
-      <Field
-        label="Speaker or topic"
-        value={name}
-        onChangeText={setName}
-        containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
-      />
-      <DurationField
-        label="Duration · minutes"
-        unit="minutes"
-        expanded
-        value={minutes}
-        onChangeText={(value) => {
-          setMinutes(value);
-          setPinned(true);
-        }}
-      />
-      <Row>
-        {[1, 2, 3, 5, 8, 10].map((m) => (
-          <Action
-            key={m}
-            label={`${m} min`}
-            onPress={() => {
-              setMinutes(String(m));
-              setPinned(true);
-            }}
-          />
-        ))}
-      </Row>
-      <Toggle
-        label="Topic rather than participant"
-        value={topic}
-        onChange={setTopic}
-      />
-      <Toggle
-        label="Pin this duration during automatic split"
-        value={pinned}
-        onChange={setPinned}
-      />
-      {error ? <Body>{error}</Body> : null}
-      <Action label="Apply changes" tone="primary" onPress={save} />
+      <CustomizationGate>
+        <Stack.Screen
+          options={{
+            title: "Edit turn",
+            presentation: "formSheet",
+            headerRight: () => <Action label="Done" onPress={save} />,
+          }}
+        />
+        <Heading>{slot?.name ?? "Turn removed"}</Heading>
+        <Body muted>
+          Durations use minutes. With proportions on, other unfinished slots
+          absorb the change.
+        </Body>
+        <Field
+          label="Speaker or topic"
+          value={name}
+          onChangeText={setName}
+          containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
+        />
+        <DurationField
+          label="Duration · minutes"
+          unit="minutes"
+          expanded
+          value={minutes}
+          onChangeText={(value) => {
+            setMinutes(value);
+            setPinned(true);
+          }}
+        />
+        <Row>
+          {[1, 2, 3, 5, 8, 10].map((m) => (
+            <Action
+              key={m}
+              label={`${m} min`}
+              onPress={() => {
+                setMinutes(String(m));
+                setPinned(true);
+              }}
+            />
+          ))}
+        </Row>
+        <Toggle
+          label="Topic rather than participant"
+          value={topic}
+          onChange={setTopic}
+        />
+        <Toggle
+          label="Pin this duration during automatic split"
+          value={pinned}
+          onChange={setPinned}
+        />
+        {error ? <Body>{error}</Body> : null}
+        <Action label="Apply changes" tone="primary" onPress={save} />
+      </CustomizationGate>
     </Page>
   );
 }

@@ -49,6 +49,10 @@ export function SettingsScreen() {
   return (
     <Page>
       <Heading>Your timer, your rhythm.</Heading>
+      <Action
+        label="Your plan · Trial, Free & Pro"
+        onPress={() => router.push("/pro")}
+      />
       <Body muted>Appearance</Body>
       <Row>
         {(["light", "dark", "system"] as const).map((appearance) => (
@@ -137,10 +141,11 @@ export function SettingsScreen() {
       />
       <Rule />
       <Heading>About CorpTimer</Heading>
-      <Body>Version {Constants.expoConfig?.version} · mobile beta</Body>
+      <Body>Version {Constants.expoConfig?.version}</Body>
       <Body>
         Meeting, Boxing, Fitness, Pomodoro, Classroom, Chess, Stopwatch,
-        Countdown and New Year. No account, advertising or subscription.
+        Countdown, New Year and 27 specialty timers. No advertising. Trial, Free
+        and optional Pro access.
       </Body>
       <Action
         label="Open corptimer.com"

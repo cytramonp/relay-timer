@@ -1,3 +1,4 @@
+import { CustomizationGate } from "../components/plan-status";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Stack, router, useLocalSearchParams } from "expo-router";
@@ -54,165 +55,167 @@ export default function SaveMeeting() {
   }
   return (
     <Page>
-      <Stack.Screen
-        options={{
-          title: original ? "Edit template" : "Save template",
-          presentation: "formSheet",
-          headerRight: () => <Action label="Save" onPress={save} />,
-        }}
-      />
-      <Heading>Make it your own.</Heading>
-      <Field
-        label="Template name"
-        value={name}
-        onChangeText={setName}
-        autoFocus
-      />
-      <Body muted>
-        A reusable plan contains timing and participants. Session results, notes
-        and private follow-ups are kept separate.
-      </Body>
-      <Heading>Color</Heading>
-      <Row>
-        {(["citron", "peach", "lilac", "mint"] as const).map((value) => (
-          <Pressable
-            key={value}
-            accessibilityRole="button"
-            accessibilityLabel={value}
-            accessibilityState={{ selected: color === value }}
-            onPress={() => setColor(value)}
-            style={{
-              width: 60,
-              height: 52,
-              borderRadius: 12,
-              backgroundColor: t[value],
-              borderWidth: color === value ? 2 : 0,
-              borderColor: t.teal,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ color: t.onSignal }}>
-              {color === value ? "Selected" : value}
-            </Text>
-          </Pressable>
-        ))}
-      </Row>
-      <Heading>Icon</Heading>
-      <Row>
-        {(["people", "loop", "grid", "spark", "focus", "coffee"] as const).map(
-          (value) => (
+      <CustomizationGate>
+        <Stack.Screen
+          options={{
+            title: original ? "Edit template" : "Save template",
+            presentation: "formSheet",
+            headerRight: () => <Action label="Save" onPress={save} />,
+          }}
+        />
+        <Heading>Make it your own.</Heading>
+        <Field
+          label="Template name"
+          value={name}
+          onChangeText={setName}
+          autoFocus
+        />
+        <Body muted>
+          A reusable plan contains timing and participants. Session results,
+          notes and private follow-ups are kept separate.
+        </Body>
+        <Heading>Color</Heading>
+        <Row>
+          {(["citron", "peach", "lilac", "mint"] as const).map((value) => (
+            <Pressable
+              key={value}
+              accessibilityRole="button"
+              accessibilityLabel={value}
+              accessibilityState={{ selected: color === value }}
+              onPress={() => setColor(value)}
+              style={{
+                width: 60,
+                height: 52,
+                borderRadius: 12,
+                backgroundColor: t[value],
+                borderWidth: color === value ? 2 : 0,
+                borderColor: t.teal,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: t.onSignal }}>
+                {color === value ? "Selected" : value}
+              </Text>
+            </Pressable>
+          ))}
+        </Row>
+        <Heading>Icon</Heading>
+        <Row>
+          {(
+            ["people", "loop", "grid", "spark", "focus", "coffee"] as const
+          ).map((value) => (
             <Action
               key={value}
               label={value}
               tone={icon === value ? "primary" : "outline"}
               onPress={() => setIcon(value)}
             />
-          ),
-        )}
-      </Row>
-      <Heading>The plan</Heading>
-      {
-        <View style={{ gap: 12 }}>
-          {plan.agenda.map((a, i) => (
-            <View
-              key={a.id}
-              style={{
-                gap: 10,
-                paddingVertical: 12,
-                borderBottomWidth: 1,
-                borderColor: t.line,
-              }}
-            >
-              <Field
-                label={`Slot ${i + 1}`}
-                value={a.name}
-                onChangeText={(name) =>
-                  setPlan({
-                    ...plan,
-                    agenda: plan.agenda.map((s) =>
-                      s.id === a.id ? { ...s, name } : s,
-                    ),
-                  })
-                }
-              />
-              <DurationField
-                label="Minutes"
-                unit="minutes"
-                value={timings[a.id] ?? ""}
-                onChangeText={(value) =>
-                  setTimings({ ...timings, [a.id]: value })
-                }
-              />
-              <Row>
-                <Action
-                  label="Move up"
-                  disabled={i === 0}
-                  onPress={() => {
-                    const agenda = [...plan.agenda];
-                    [agenda[i - 1], agenda[i]] = [agenda[i], agenda[i - 1]];
-                    setPlan({ ...plan, agenda });
-                  }}
-                />
-                <Action
-                  label="Move down"
-                  disabled={i === plan.agenda.length - 1}
-                  onPress={() => {
-                    const agenda = [...plan.agenda];
-                    [agenda[i + 1], agenda[i]] = [agenda[i], agenda[i + 1]];
-                    setPlan({ ...plan, agenda });
-                  }}
-                />
-                <Action
-                  label="Remove"
-                  disabled={plan.agenda.length < 2}
-                  onPress={() =>
+          ))}
+        </Row>
+        <Heading>The plan</Heading>
+        {
+          <View style={{ gap: 12 }}>
+            {plan.agenda.map((a, i) => (
+              <View
+                key={a.id}
+                style={{
+                  gap: 10,
+                  paddingVertical: 12,
+                  borderBottomWidth: 1,
+                  borderColor: t.line,
+                }}
+              >
+                <Field
+                  label={`Slot ${i + 1}`}
+                  value={a.name}
+                  onChangeText={(name) =>
                     setPlan({
                       ...plan,
-                      agenda: plan.agenda.filter((s) => s.id !== a.id),
+                      agenda: plan.agenda.map((s) =>
+                        s.id === a.id ? { ...s, name } : s,
+                      ),
                     })
                   }
                 />
-              </Row>
-            </View>
+                <DurationField
+                  label="Minutes"
+                  unit="minutes"
+                  value={timings[a.id] ?? ""}
+                  onChangeText={(value) =>
+                    setTimings({ ...timings, [a.id]: value })
+                  }
+                />
+                <Row>
+                  <Action
+                    label="Move up"
+                    disabled={i === 0}
+                    onPress={() => {
+                      const agenda = [...plan.agenda];
+                      [agenda[i - 1], agenda[i]] = [agenda[i], agenda[i - 1]];
+                      setPlan({ ...plan, agenda });
+                    }}
+                  />
+                  <Action
+                    label="Move down"
+                    disabled={i === plan.agenda.length - 1}
+                    onPress={() => {
+                      const agenda = [...plan.agenda];
+                      [agenda[i + 1], agenda[i]] = [agenda[i], agenda[i + 1]];
+                      setPlan({ ...plan, agenda });
+                    }}
+                  />
+                  <Action
+                    label="Remove"
+                    disabled={plan.agenda.length < 2}
+                    onPress={() =>
+                      setPlan({
+                        ...plan,
+                        agenda: plan.agenda.filter((s) => s.id !== a.id),
+                      })
+                    }
+                  />
+                </Row>
+              </View>
+            ))}
+            <Body muted>
+              Only the reusable plan is saved. Existing session results stay
+              unchanged.
+            </Body>
+          </View>
+        }
+        <Row>
+          {(["person", "topic"] as const).map((kind) => (
+            <Action
+              key={kind}
+              label={kind === "person" ? "Add speaker" : "Add topic"}
+              disabled={plan.agenda.length >= 200}
+              onPress={() => {
+                const id = Crypto.randomUUID();
+                setPlan({
+                  ...plan,
+                  agenda: [
+                    ...plan.agenda,
+                    {
+                      id,
+                      name: kind === "person" ? "New speaker" : "Discussion",
+                      seconds: 120,
+                      kind,
+                    },
+                  ],
+                });
+                setTimings({ ...timings, [id]: "2" });
+              }}
+            />
           ))}
-          <Body muted>
-            Only the reusable plan is saved. Existing session results stay
-            unchanged.
-          </Body>
-        </View>
-      }
-      <Row>
-        {(["person", "topic"] as const).map((kind) => (
-          <Action
-            key={kind}
-            label={kind === "person" ? "Add speaker" : "Add topic"}
-            disabled={plan.agenda.length >= 200}
-            onPress={() => {
-              const id = Crypto.randomUUID();
-              setPlan({
-                ...plan,
-                agenda: [
-                  ...plan.agenda,
-                  {
-                    id,
-                    name: kind === "person" ? "New speaker" : "Discussion",
-                    seconds: 120,
-                    kind,
-                  },
-                ],
-              });
-              setTimings({ ...timings, [id]: "2" });
-            }}
-          />
-        ))}
-      </Row>
-      {error ? <Body>{error}</Body> : null}
-      <Action
-        label={original ? "Save template" : "Save current agenda"}
-        tone="primary"
-        onPress={save}
-      />
+        </Row>
+        {error ? <Body>{error}</Body> : null}
+        <Action
+          label={original ? "Save template" : "Save current agenda"}
+          tone="primary"
+          onPress={save}
+        />
+      </CustomizationGate>
     </Page>
   );
 }
