@@ -9,6 +9,7 @@ dist/
 dist-native/
 ios-build/
 native-captures/
+play-demo/
 web-build/
 expo-env.d.ts
 
