@@ -1,0 +1,1535 @@
+{
+  "stopwatch": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Lap",
+        "meaning": "Record a split while running.",
+        "tx": 398,
+        "ty": 339,
+        "x": 398,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 559,
+        "ty": 339,
+        "x": 559,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 191,
+        "x": 803,
+        "y": 171
+      }
+    ],
+    "width": 1270,
+    "image": "stopwatch.jpg"
+  },
+  "meeting": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Next speaker",
+        "meaning": "Begin the agenda or hand over to the next slot.",
+        "tx": 99,
+        "ty": 290,
+        "x": 99,
+        "y": 269
+      },
+      {
+        "label": "Pause",
+        "meaning": "Hold the meeting clock.",
+        "tx": 99,
+        "ty": 341,
+        "x": 99,
+        "y": 320
+      },
+      {
+        "label": "Undo",
+        "meaning": "Reverse the last handoff.",
+        "tx": 303,
+        "ty": 341,
+        "x": 303,
+        "y": 320
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the planned beginning.",
+        "tx": 507,
+        "ty": 341,
+        "x": 507,
+        "y": 320
+      }
+    ],
+    "width": 1270,
+    "image": "meeting.jpg"
+  },
+  "boxing-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 559,
+        "ty": 339,
+        "x": 559,
+        "y": 318
+      }
+    ],
+    "width": 1270,
+    "image": "boxing-timer.jpg"
+  },
+  "fitness-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 559,
+        "ty": 339,
+        "x": 559,
+        "y": 318
+      }
+    ],
+    "width": 1270,
+    "image": "fitness-timer.jpg"
+  },
+  "pomodoro-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 559,
+        "ty": 339,
+        "x": 559,
+        "y": 318
+      }
+    ],
+    "width": 1270,
+    "image": "pomodoro-timer.jpg"
+  },
+  "classroom-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 505,
+        "ty": 339,
+        "x": 505,
+        "y": 318
+      }
+    ],
+    "width": 1270,
+    "image": "classroom-timer.jpg"
+  },
+  "chess-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 559,
+        "ty": 339,
+        "x": 559,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 504,
+        "x": 803,
+        "y": 483
+      }
+    ],
+    "width": 1270,
+    "image": "chess-timer.jpg"
+  },
+  "simple-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 505,
+        "ty": 339,
+        "x": 505,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 540,
+        "x": 803,
+        "y": 520
+      }
+    ],
+    "width": 1270,
+    "image": "simple-timer.jpg"
+  },
+  "new-year-countdown": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Enable midnight alarm",
+        "meaning": "Unlock the alarm for this open tab.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 240,
+        "x": 803,
+        "y": 219
+      }
+    ],
+    "width": 1270,
+    "image": "new-year-countdown.jpg"
+  },
+  "5-minute-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 505,
+        "ty": 339,
+        "x": 505,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 540,
+        "x": 803,
+        "y": 520
+      }
+    ],
+    "width": 1270,
+    "image": "5-minute-timer.jpg"
+  },
+  "10-minute-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 505,
+        "ty": 339,
+        "x": 505,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 540,
+        "x": 803,
+        "y": 520
+      }
+    ],
+    "width": 1270,
+    "image": "10-minute-timer.jpg"
+  },
+  "15-minute-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 505,
+        "ty": 339,
+        "x": 505,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 540,
+        "x": 803,
+        "y": 520
+      }
+    ],
+    "width": 1270,
+    "image": "15-minute-timer.jpg"
+  },
+  "20-minute-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 505,
+        "ty": 339,
+        "x": 505,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 540,
+        "x": 803,
+        "y": 520
+      }
+    ],
+    "width": 1270,
+    "image": "20-minute-timer.jpg"
+  },
+  "25-minute-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 505,
+        "ty": 339,
+        "x": 505,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 540,
+        "x": 803,
+        "y": 520
+      }
+    ],
+    "width": 1270,
+    "image": "25-minute-timer.jpg"
+  },
+  "30-minute-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run, hold or resume this clock.",
+        "tx": 105,
+        "ty": 339,
+        "x": 105,
+        "y": 318
+      },
+      {
+        "label": "Reset",
+        "meaning": "Return to the configured beginning.",
+        "tx": 505,
+        "ty": 339,
+        "x": 505,
+        "y": 318
+      },
+      {
+        "label": "Test sound",
+        "meaning": "Check the selected sound and device volume.",
+        "tx": 803,
+        "ty": 540,
+        "x": 803,
+        "y": 520
+      }
+    ],
+    "width": 1270,
+    "image": "30-minute-timer.jpg"
+  },
+  "kitchen-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "kitchen-timer.jpg"
+  },
+  "meditation-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "meditation-timer.jpg"
+  },
+  "tea-brewing-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "tea-brewing-timer.jpg"
+  },
+  "toothbrushing-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "toothbrushing-timer.jpg"
+  },
+  "breathing-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "breathing-timer.jpg"
+  },
+  "yoga-stretching-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "yoga-stretching-timer.jpg"
+  },
+  "speech-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Lap",
+        "meaning": "Record elapsed and split time without stopping.",
+        "tx": 214,
+        "ty": 340,
+        "x": 214,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 277,
+        "ty": 340,
+        "x": 277,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "speech-timer.jpg"
+  },
+  "egg-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "egg-timer.jpg"
+  },
+  "multi-stopwatch": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Lap",
+        "meaning": "Record elapsed and split time without stopping.",
+        "tx": 214,
+        "ty": 340,
+        "x": 214,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 277,
+        "ty": 340,
+        "x": 277,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "multi-stopwatch.jpg"
+  },
+  "running-coach-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "running-coach-timer.jpg"
+  },
+  "swimming-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Lap",
+        "meaning": "Record elapsed and split time without stopping.",
+        "tx": 214,
+        "ty": 340,
+        "x": 214,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 277,
+        "ty": 340,
+        "x": 277,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "swimming-timer.jpg"
+  },
+  "circuit-training-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "circuit-training-timer.jpg"
+  },
+  "climbing-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "climbing-timer.jpg"
+  },
+  "sailing-start-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "sailing-start-timer.jpg"
+  },
+  "archery-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "archery-timer.jpg"
+  },
+  "sports-scoreboard-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "sports-scoreboard-timer.jpg"
+  },
+  "board-game-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next player",
+        "meaning": "Hand the clock to the next player.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 319,
+        "ty": 340,
+        "x": 319,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "board-game-timer.jpg"
+  },
+  "debate-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "debate-timer.jpg"
+  },
+  "exam-station-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "exam-station-timer.jpg"
+  },
+  "speed-networking-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "speed-networking-timer.jpg"
+  },
+  "darkroom-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "darkroom-timer.jpg"
+  },
+  "coffee-brewing-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "coffee-brewing-timer.jpg"
+  },
+  "bakery-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "bakery-timer.jpg"
+  },
+  "laboratory-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "laboratory-timer.jpg"
+  },
+  "workshop-job-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Lap",
+        "meaning": "Record elapsed and split time without stopping.",
+        "tx": 214,
+        "ty": 340,
+        "x": 214,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 277,
+        "ty": 340,
+        "x": 277,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "workshop-job-timer.jpg"
+  },
+  "escape-room-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "escape-room-timer.jpg"
+  },
+  "skydiving-ground-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "skydiving-ground-timer.jpg"
+  },
+  "custom-timer": {
+    "height": 714,
+    "items": [
+      {
+        "label": "Start / Pause",
+        "meaning": "Run or hold this card only.",
+        "tx": 92,
+        "ty": 340,
+        "x": 92,
+        "y": 319
+      },
+      {
+        "label": "Stop",
+        "meaning": "Pause without clearing elapsed time.",
+        "tx": 156,
+        "ty": 340,
+        "x": 156,
+        "y": 319
+      },
+      {
+        "label": "Next stage",
+        "meaning": "Finish the current slot early and move to the next.",
+        "tx": 225,
+        "ty": 340,
+        "x": 225,
+        "y": 319
+      },
+      {
+        "label": "Reset",
+        "meaning": "Clear this card\u00e2\u20ac\u2122s run and return to its first slot.",
+        "tx": 318,
+        "ty": 340,
+        "x": 318,
+        "y": 319
+      }
+    ],
+    "width": 1270,
+    "image": "custom-timer.jpg"
+  }
+}

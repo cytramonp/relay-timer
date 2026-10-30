@@ -11,7 +11,7 @@ export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
   let draft=null,editingId=null,revision=null,dirty=false;
   const dialog=$('templates-dialog');
   const select=$('template-select');
-  function shelf(){draft=null;dirty=false;$('template-shelf').hidden=false;$('template-editor').hidden=true;$('templates-title').textContent='A good meeting starts here.';render();dialog.scrollTop=0;}
+  function shelf(){draft=null;dirty=false;$('template-shelf').hidden=false;$('template-editor').hidden=true;$('templates-title').textContent='Meeting templates';render();dialog.scrollTop=0;}
   function preview(state,color){const track=el('div','template-preview');track.dataset.color=color;track.setAttribute('aria-hidden','true');for(const a of state.agenda){const bar=el('i');bar.style.flexGrow=Math.max(.25,a.min);track.append(bar);}return track;}
   function card(record,appearance,description,builtin=false){
     const article=el('article','template-card');article.dataset.color=appearance.color;
@@ -41,7 +41,7 @@ export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
   }
   function editDraft(record,builtin=false){
     editingId=builtin?null:record.id||null;revision=record.updatedAt??null;draft={title:record.title,state:freshPlan(record.state),appearance:{color:record.state.template?.color||'citron',icon:record.state.template?.icon||'grid'}};dirty=false;$('template-error').textContent='';
-    $('template-shelf').hidden=true;$('template-editor').hidden=false;$('templates-title').textContent=editingId?'Make it your own.':'Create your next go-to.';
+    $('template-shelf').hidden=true;$('template-editor').hidden=false;$('templates-title').textContent=editingId?'Edit template':'New template';
     $('template-name').value=draft.title;$('template-policy').value=draft.state.endPolicy;$('template-split').checked=draft.state.autoSplit;
     $('template-delete').hidden=!editingId;$('template-duplicate').hidden=!editingId;
     renderChoices();renderSlots();updatePreview();$('template-name').focus();dialog.scrollTop=0;
@@ -88,7 +88,7 @@ export function templateUI({getRecords,commit,apply,getCurrent,toast,confirm}){
     const next=existing?reviseTemplate(existing,title,draft.state,draft.appearance):makeTemplate(title,draft.state,draft.appearance);
     commit(next);dirty=false;shelf();toast('Template saved. Use it whenever you need a fresh meeting.');
   }catch(error){$('template-error').textContent=error.message;}};
-  $('template-duplicate').onclick=()=>{editingId=null;revision=null;draft.title+=' copy';$('template-name').value=draft.title;dirty=true;$('template-delete').hidden=true;$('template-duplicate').hidden=true;$('templates-title').textContent='Create your next go-to.';};
+  $('template-duplicate').onclick=()=>{editingId=null;revision=null;draft.title+=' copy';$('template-name').value=draft.title;dirty=true;$('template-delete').hidden=true;$('template-duplicate').hidden=true;$('templates-title').textContent='New template';};
   $('template-delete').onclick=()=>{const existing=getRecords().find(r=>r.id===editingId);if(existing)confirm('Delete this template?','Meetings already created from this template stay in your library.',()=>{commit(removeRecord(existing));dirty=false;shelf();toast('Template deleted.');});};
   dialog.addEventListener('close',()=>{$('template-error').textContent='';});
   return {render,close(){dirty=false;dialog.close();}};

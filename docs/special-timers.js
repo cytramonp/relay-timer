@@ -200,7 +200,7 @@ function render() {
   $('clock-progress').style.transform=`scaleX(${clock.done?0:Math.min(1,remaining/(s?.ms||1))})`;
   $('clock-progressbar').setAttribute('aria-valuenow',String(Math.round(clock.done?0:remaining/(s?.ms||1)*100)));
   const next=clock.sequence[clock.index+1];
-  $('clock-next').textContent=clock.done?'Reset to go again.':clock.waiting?'Press Next interval when you are ready.':next?`Up next: ${next.name} · ${formatTime(next.ms)}`:'Make this time yours.';
+  $('clock-next').textContent=clock.done?'Reset to go again.':clock.waiting?'Press Next interval when you are ready.':next?`Up next: ${next.name} · ${formatTime(next.ms)}`:'No more intervals.';
   $('start-timer').textContent=clock.done?'Start again':clock.running?'Pause':clock.waiting?'Continue':isLocked()?'Resume':'Start';
   if ($('next-interval')) $('next-interval').disabled=clock.done;
   $('extend-timer').disabled=clock.done;

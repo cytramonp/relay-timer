@@ -31,7 +31,7 @@ const rows = [
       ["Recovery", 90],
     ],
     "Manage independent running efforts and recovery for a group.",
-    "Start each athlete as they leave. Next stage records their finish and begins recovery.",
+    "Start each athlete as they leave. Next stage finishes the run slot early and begins recovery.",
     "These sample intervals are editable, not a training prescription.",
   ],
   [
@@ -178,7 +178,7 @@ const rows = [
     ],
     "Follow separate development sequences for photographic batches.",
     "Label batches and replace every example duration with your chemistry instructions.",
-    "No agitation cues are included. Screen light may affect light-sensitive materials.",
+    "Agitation reminders can be configured under Slot signals. Screen light may affect light-sensitive materials.",
   ],
   [
     "coffee-brewing-timer",
