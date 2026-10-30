@@ -1,10 +1,14 @@
 name: Google Play floating timer demo
 on:
+  push:
+    branches: ['codex/android-play-release']
+    paths: ['.github/workflows/mobile-play-demo.yml']
   workflow_dispatch:
     inputs:
       apk_run_id:
         description: 'Build run containing the exact APK to record'
         required: true
+        default: '41053160974'
 permissions:
   contents: read
   actions: read
@@ -19,7 +23,7 @@ jobs:
           name: corptimer-android-test-apk
           path: mobile/android/app/build/outputs/apk/release
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ inputs.apk_run_id }}
+          run-id: ${{ inputs.apk_run_id || '41053160974' }}
       - name: Enable emulator acceleration
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -27,7 +31,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - uses: reactivecircus/android-emulator-runner@v2
         env:
-          APK_RUN_ID: ${{ inputs.apk_run_id }}
+          APK_RUN_ID: ${{ inputs.apk_run_id || '41053160974' }}
         with:
           api-level: 36
           arch: x86_64
