@@ -68,7 +68,10 @@ def scroll_to(identifier):
 def scroll_text(text):
     for _ in range(12):
         t = tree(); node = find(t, text=text)
-        if node is not None: return t, node
+        # Edge-to-edge windows can report text behind the gesture/navigation
+        # area as visible. Bring the complete control above that area first.
+        _, h = dimensions()
+        if node is not None and bounds(node)[3] <= h - max(48, int(h * .03)): return t, node
         swipe_up()
     raise AssertionError('Could not reach text ' + text)
 
@@ -277,7 +280,7 @@ try:
             adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '300')
         t, edit_clock = scroll_text('Edit clock'); tap_node(edit_clock)
         t, apply_clock = scroll_text('Apply clock changes'); tap_node(apply_clock)
-        assert find(tree(), text='Clock updated.') is not None, 'Stopwatch editor rejected its zero-second stage'
+        scroll_text('Clock updated.')  # Feedback can appear just below the fold.
         open_path('specialty/sports-scoreboard-timer')
         t, plus = scroll_text('+1 point'); tap_node(plus)
         assert find(tree(), text='Score 1') is not None, 'Scoreboard did not count a point'
@@ -291,7 +294,7 @@ try:
             tap_node(field); adb('shell', 'input', 'text', seconds)
             adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
         t, apply_signals = scroll_text('Apply signals'); tap_node(apply_signals)
-        assert find(tree(), text='Speech signals saved.') is not None, 'Speech thresholds did not save'
+        scroll_text('Speech signals saved.')
         for _ in range(12):
             adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '300')
         t, start = scroll_text('Start')
