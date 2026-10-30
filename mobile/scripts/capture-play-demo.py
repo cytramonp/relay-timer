@@ -53,7 +53,7 @@ adb('shell','am','start','-W','-a','android.intent.action.VIEW','-d','corptimer:
 button=find(tree(),text='Open floating timer')
 w,h=map(int,re.findall(r'(\d+)x(\d+)',adb('shell','wm','size'))[-1])
 height=min(1920,int(h*720/w)//2*2)
-record=subprocess.Popen(['adb','shell','screenrecord','--size',f'720x{height}','--time-limit','30','/sdcard/floating-service-demo.mp4'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+record=subprocess.Popen(['adb','shell','screenrecord','--size',f'720x{height}','--time-limit','45','/sdcard/floating-service-demo.mp4'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 try:
     time.sleep(1); tap(button)
     adb('shell','input','keyevent','KEYCODE_HOME'); time.sleep(2)
@@ -63,7 +63,7 @@ try:
     tap(find(tree(),text='Undo')); find(tree(),text='Welcome')
     capture('floating-service-demo.png')
     tap(find(tree(),text='Close'))
-    record.wait(timeout=40)
+    record.wait(timeout=55)
     adb('pull','/sdcard/floating-service-demo.mp4',str(output/'floating-service-demo.mp4'))
     (output/'demo-provenance.json').write_text(json.dumps({'apkRunId':os.environ['APK_RUN_ID'],'apkSha256':hashlib.sha256(apk.read_bytes()).hexdigest(),'scriptRevision':os.environ['GITHUB_SHA'],'scope':'Actual API36 emulator recording: user opens overlay; Home; Next/Pause/Undo/Close over launcher. Overlay permission pre-granted on disposable emulator, not real-device consent.'},indent=2)+'\n',encoding='utf-8')
 finally:

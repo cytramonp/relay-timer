@@ -2,7 +2,7 @@ name: Google Play floating timer demo
 on:
   push:
     branches: ['codex/android-play-release']
-    paths: ['.github/workflows/mobile-play-demo.yml']
+    paths: ['.github/workflows/mobile-play-demo.yml', 'mobile/scripts/capture-play-demo.py']
   workflow_dispatch:
     inputs:
       apk_run_id:
