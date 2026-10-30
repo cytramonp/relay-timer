@@ -270,6 +270,34 @@ try:
         else: raise AssertionError('Native stopwatch lap not recorded')
         assert 'Elapsed · Paused / ready' in ET.tostring(t, encoding='unicode'), 'Stopwatch did not pause'
         capture(f'{form}-android-multi-stopwatch.png')
+        # A stopwatch has a zero-second hidden stage. Applying its unchanged
+        # editor must preserve both timing and recorded laps.
+        w, h = dimensions()
+        for _ in range(8):
+            adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '300')
+        t, edit_clock = scroll_text('Edit clock'); tap_node(edit_clock)
+        t, apply_clock = scroll_text('Apply clock changes'); tap_node(apply_clock)
+        assert find(tree(), text='Clock updated.') is not None, 'Stopwatch editor rejected its zero-second stage'
+        open_path('specialty/sports-scoreboard-timer')
+        t, plus = scroll_text('+1 point'); tap_node(plus)
+        assert find(tree(), text='Score 1') is not None, 'Scoreboard did not count a point'
+        open_path('specialty/speech-timer')
+        for color, seconds in [('Green', '2'), ('Amber', '4'), ('Red', '6')]:
+            for _ in range(16):
+                t = tree(); field = find(t, description=color + ' · seconds')
+                if field is not None: break
+                swipe_up()
+            else: raise AssertionError('Speech signal field missing: ' + color)
+            tap_node(field); adb('shell', 'input', 'text', seconds)
+            adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
+        t, apply_signals = scroll_text('Apply signals'); tap_node(apply_signals)
+        assert find(tree(), text='Speech signals saved.') is not None, 'Speech thresholds did not save'
+        for _ in range(12):
+            adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '300')
+        t, start = scroll_text('Start')
+        tap_node(start); time.sleep(20); tap_node(start)
+        assert find(tree(), text='Red signal') is not None, 'Speech timer ignored edited thresholds'
+        capture(f'{form}-android-speech-edited.png')
         open_path('pro')
         t = tree(); assert 'Your timer. Your way.' in ET.tostring(t, encoding='unicode')
         capture(f'{form}-android-plan.png')

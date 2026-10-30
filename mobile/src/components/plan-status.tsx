@@ -4,11 +4,11 @@ import { Action, Body, Row } from "./ui";
 import { useBilling, refreshBilling } from "../services/billing";
 import { BrandLogo } from "./brand-logo";
 
-export function PlanStatus() {
+export function PlanStatus({ showLogo = true }: { showLogo?: boolean }) {
   const { access, error, loading } = useBilling();
   return (
     <Row>
-      <BrandLogo />
+      {showLogo ? <BrandLogo /> : null}
       <Body muted>
         {loading
           ? "Checking access…"

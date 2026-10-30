@@ -25,6 +25,9 @@ import {
   servingBoard,
   boardCsv,
   customProfile,
+  boardOptions,
+  validateSignals,
+  speechSignal,
   type BoardProfile,
 } from "../../core/board";
 import {
@@ -40,6 +43,8 @@ import {
 import { DurationField } from "../../components/duration-field";
 import { TimerFavoriteControls } from "../../components/timer-library";
 import { PlanStatus } from "../../components/plan-status";
+import { BrandLogo } from "../../components/brand-logo";
+import { BreathingOrb } from "../../components/breathing-orb";
 import {
   reserveSession,
   requireCustomization,
@@ -47,7 +52,7 @@ import {
 } from "../../services/billing";
 import { exportFile, importFile } from "../../services/files";
 import { defaultConfig } from "../../core/catalog";
-import { playCue } from "../../services/audio";
+import { playCue, dialFeedback } from "../../services/audio";
 import { useApp } from "../../state/app-store";
 import { useTheme } from "../../theme";
 
@@ -78,10 +83,26 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     [now, setNow] = useState(() => Date.now());
   const [edit, setEdit] = useState<number | null>(null),
     [guide, setGuide] = useState(false);
-  const [note, setNote] = useState(""),
-    [sound, setSound] = useState(p.sound !== false);
-  const [hideDigits, setHideDigits] = useState(!!p.hideDigits),
-    [serve, setServe] = useState("60");
+  const [note, setNote] = useState("");
+  const [options, setOptions] = useState(() => boardOptions(undefined, p));
+  const { sound, hideDigits, kidsView } = options;
+  const [signalDraft, setSignalDraft] = useState(() => ({
+    green: String(options.green),
+    amber: String(options.amber),
+    red: String(options.red),
+  }));
+  const [signalMessage, setSignalMessage] = useState("");
+  const [serve, setServe] = useState("60");
+  const cueMarkers = useRef<Record<string, string>>({});
+  function restoreOptions(raw: unknown) {
+    const value = boardOptions(raw, p);
+    setOptions(value);
+    setSignalDraft({
+      green: String(value.green),
+      amber: String(value.amber),
+      red: String(value.red),
+    });
+  }
   const [pending, setPending] = useState(false);
   const session = useRef<string | null>(null),
     busy = useRef(false),
@@ -90,13 +111,21 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   const key = `corptimer.board.${p.slug}`;
   current.current = board;
   const running = board.some((c) => c.anchor !== null || !!c.scheduledAt);
-  function cue(name: string) {
-    if (sound)
-      void playCue(
-        { ...defaultConfig("simple"), sound: "bell", voice: false },
-        name,
-        store.settings.haptics,
-      ).catch(() => {});
+  function cue(name: string, which = "bell") {
+    if (!sound || which === "off") return;
+    if (which === "click") {
+      dialFeedback(store.settings.haptics, true);
+      return;
+    }
+    void playCue(
+      {
+        ...defaultConfig("simple"),
+        sound: which === "gong" || which === "beep" ? which : "bell",
+        voice: false,
+      },
+      name,
+      store.settings.haptics,
+    ).catch(() => {});
   }
   useEffect(() => {
     let live = true;
@@ -112,6 +141,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
           ),
         );
         session.current = Array.isArray(saved) ? null : saved.session || null;
+        restoreOptions(saved.options);
       })
       .catch(() => {
         if (live) {
@@ -127,13 +157,19 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     return () => {
       live = false;
     };
+    // The profile is fixed for this keyed screen instance.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, p.mode]);
   useEffect(() => {
     if (!ready || !persist.current) return;
     const save = () =>
       AsyncStorage.setItem(
         key,
-        JSON.stringify({ board: current.current, session: session.current }),
+        JSON.stringify({
+          board: current.current,
+          session: session.current,
+          options,
+        }),
       ).catch(() => setNote("Could not save this board. Export a backup."));
     void save();
     const sub = AppState.addEventListener("change", () => {
@@ -142,13 +178,34 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     return () => {
       sub.remove();
     };
-  }, [board, ready, key]);
+  }, [board, ready, key, options]);
   useFocusEffect(
     useCallback(() => {
       const id = setInterval(() => {
         const time = Date.now();
         setNow(time);
         const before = current.current;
+        before.forEach((card, i) => {
+          const stage = card.stages[card.index];
+          const seconds = elapsed(card, time) / 1000;
+          const marker =
+            p.slug === "speech-timer"
+              ? speechSignal(seconds, options)
+              : stage.repeatCue && stage.repeatCue > 0
+                ? `${card.index}:${Math.floor(seconds / stage.repeatCue)}`
+                : "";
+          const previous = cueMarkers.current[String(i)];
+          if (
+            marker &&
+            previous &&
+            marker !== previous &&
+            card.anchor !== null &&
+            AppState.currentState === "active" &&
+            (p.slug === "speech-timer" || !marker.endsWith(":0"))
+          )
+            cue(stage.name, stage.cueEnd ?? "bell");
+          cueMarkers.current[String(i)] = marker;
+        });
         const next = before.map((c) =>
           settle(
             c.scheduledAt && c.scheduledAt <= time
@@ -167,14 +224,23 @@ function Board({ profile: p }: { profile: BoardProfile }) {
               c.anchor !== before[i].anchor,
           )
         ) {
-          if (AppState.currentState === "active") cue("Stage changed");
+          if (AppState.currentState === "active") {
+            const old = before.find(
+              (c, i) =>
+                c.index !== next[i].index ||
+                c.done !== next[i].done ||
+                c.waiting !== next[i].waiting,
+            );
+            if (old)
+              cue("Stage changed", old.stages[old.index].cueEnd ?? "bell");
+          }
           setBoard(next);
         }
       }, 200);
       return () => clearInterval(id);
       // Latest board is read from a ref; reinstall only for the sound preference.
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [p.mode, sound, store.settings.haptics]),
+    }, [p.mode, options, store.settings.haptics]),
   );
   useEffect(() => {
     if (running && store.settings.keepAwake)
@@ -207,7 +273,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
         await AsyncStorage.removeItem(key + ".reservation");
       }
       setBoard((b) => fn(b, Date.now()));
-      cue("Start");
+      cue("Start", "off");
     } catch (e) {
       setNote(e instanceof Error ? e.message : "Reconnect to start a timer.");
     } finally {
@@ -227,8 +293,14 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       void start((b, time) => act(b, i, action, p.mode, time));
       return;
     }
-    setBoard((b) => act(b, i, action, p.mode, Date.now()));
-    if (action === "next") cue("Next stage");
+    setBoard((b) =>
+      act(b, i, action, p.mode, Date.now()).map((c) => ({
+        ...c,
+        laps: c.laps.slice(-500),
+      })),
+    );
+    if (action === "next")
+      cue("Next stage", board[i].stages[board[i].index].cueEnd ?? "bell");
   }
   async function resetAll() {
     session.current = null;
@@ -261,15 +333,13 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   return (
     <Page>
       <Stack.Screen options={{ title: p.title }} />
-      <PlanStatus />
-      <Heading>{p.title}</Heading>
-      <Body muted>{p.description}</Body>
-      <TimerFavoriteControls id={p.slug} />
-      <Body muted>
-        Clocks continue by elapsed time while away. Keep the app open for sounds
-        and scheduled dish starts; specialty boards do not schedule background
-        alarms.
-      </Body>
+      <View style={{ gap: 6 }}>
+        <Body muted>{p.description}</Body>
+        <Body muted style={{ fontSize: 14, lineHeight: 20 }}>
+          Keep the app open for stage sounds.
+        </Body>
+      </View>
+      <BrandLogo />
       {note ? <Body>{note}</Body> : null}
       <Row>
         <Action
@@ -322,15 +392,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
           const spent = elapsed(c, now) / 1000,
             phase = c.stages[c.index];
           const signal =
-            p.slug === "speech-timer"
-              ? spent >= (p.red ?? 180)
-                ? "Red"
-                : spent >= (p.amber ?? 150)
-                  ? "Amber"
-                  : spent >= (p.green ?? 120)
-                    ? "Green"
-                    : "Ready"
-              : "";
+            p.slug === "speech-timer" ? speechSignal(spent, options) : "";
           return (
             <View key={i} style={{ gap: 12 }}>
               <View
@@ -366,6 +428,9 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                   <Text
                     accessibilityRole="timer"
                     testID={`board-clock-${i}`}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.5}
                     style={{
                       color: t.cream,
                       fontFamily: "Manrope",
@@ -399,27 +464,9 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                   </Text>
                 ) : null}
                 {p.slug === "breathing-timer" ? (
-                  <View
-                    accessibilityLabel={phase.name}
-                    style={{
-                      width: 90,
-                      height: 90,
-                      borderRadius: 45,
-                      backgroundColor: t.bright,
-                      alignSelf: "center",
-                      transform: [
-                        {
-                          scale: /inhale/i.test(phase.name)
-                            ? 0.55 + 0.45 * Math.min(1, spent / phase.seconds)
-                            : /exhale/i.test(phase.name)
-                              ? 1 - 0.45 * Math.min(1, spent / phase.seconds)
-                              : 1,
-                        },
-                      ],
-                    }}
-                  />
+                  <BreathingOrb card={c} />
                 ) : null}
-                {p.slug === "toothbrushing-timer" ? (
+                {p.slug === "toothbrushing-timer" && kidsView ? (
                   <Row>
                     {[
                       "Upper left",
@@ -438,6 +485,33 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                       </Text>
                     ))}
                   </Row>
+                ) : null}
+                {p.slug === "sports-scoreboard-timer" ? (
+                  <>
+                    <Text style={{ color: t.cream, fontSize: 24 }}>
+                      Score {Number(c.score) || 0}
+                    </Text>
+                    <Row>
+                      <Action
+                        label="−1 point"
+                        tone="cream"
+                        onPress={() =>
+                          patch(i, {
+                            score: Math.max(0, (Number(c.score) || 0) - 1),
+                          })
+                        }
+                      />
+                      <Action
+                        label="+1 point"
+                        tone="cream"
+                        onPress={() =>
+                          patch(i, {
+                            score: Math.min(999, (Number(c.score) || 0) + 1),
+                          })
+                        }
+                      />
+                    </Row>
+                  </>
                 ) : null}
                 {p.mode !== "up" ? (
                   <View
@@ -535,6 +609,15 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       ) : (
         <Body>Restoring clocks…</Body>
       )}
+      <Rule />
+      <Heading>Setup & options</Heading>
+      <PlanStatus showLogo={false} />
+      <TimerFavoriteControls id={p.slug} />
+      <Body muted>
+        Clocks continue by elapsed time while away. Keep this screen open for
+        stage sounds; specialty background alerts are not scheduled. Up to 500
+        recent laps are kept.
+      </Body>
       <Action
         label="Add clock"
         disabled={!ready || board.length >= 12}
@@ -554,17 +637,60 @@ function Board({ profile: p }: { profile: BoardProfile }) {
         <Toggle
           label="Hide clock digits"
           value={hideDigits}
-          onChange={setHideDigits}
+          onChange={(hideDigits) => setOptions((o) => ({ ...o, hideDigits }))}
         />
       ) : null}
       <Toggle
         label="Stage sounds while the app is open"
         value={sound}
-        onChange={setSound}
+        onChange={(sound) => setOptions((o) => ({ ...o, sound }))}
       />
+      {p.slug === "toothbrushing-timer" ? (
+        <Toggle
+          label="Show brushing zones"
+          value={kidsView}
+          onChange={(kidsView) => setOptions((o) => ({ ...o, kidsView }))}
+        />
+      ) : null}
+      {p.slug === "speech-timer" ? (
+        <>
+          <Heading>Speech signals</Heading>
+          {(["green", "amber", "red"] as const).map((color) => (
+            <DurationField
+              key={color}
+              label={`${color[0].toUpperCase() + color.slice(1)} · seconds`}
+              value={signalDraft[color]}
+              onChangeText={(v) =>
+                setSignalDraft((d) => ({ ...d, [color]: v }))
+              }
+            />
+          ))}
+          <Action
+            label="Apply signals"
+            tone="primary"
+            onPress={() =>
+              customize(() => {
+                try {
+                  const signals = validateSignals(
+                    Number(signalDraft.green),
+                    Number(signalDraft.amber),
+                    Number(signalDraft.red),
+                  );
+                  setOptions((o) => ({ ...o, ...signals }));
+                  setSignalMessage("Speech signals saved.");
+                } catch (e) {
+                  setSignalMessage((e as Error).message);
+                }
+              })
+            }
+          />
+          {signalMessage ? <Body>{signalMessage}</Body> : null}
+        </>
+      ) : null}
       {p.slug === "kitchen-timer" ? (
         <>
           <Heading>Serve dishes together</Heading>
+          <Body muted>Keep this screen open for scheduled dish starts.</Body>
           <DurationField
             label="Serve in · minutes"
             unit="minutes"
@@ -601,7 +727,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                 void files(async () => {
                   await AsyncStorage.setItem(
                     key + ".setup",
-                    JSON.stringify(setup()),
+                    JSON.stringify({ board: setup(), options }),
                   );
                   setNote("Setup saved on this device.");
                 }),
@@ -614,7 +740,13 @@ function Board({ profile: p }: { profile: BoardProfile }) {
             void files(async () => {
               const s = await AsyncStorage.getItem(key + ".setup");
               if (!s) throw Error("Save a setup first.");
-              const b = restoreBoard(JSON.parse(s), p.mode, Date.now());
+              const saved = JSON.parse(s);
+              const b = restoreBoard(
+                Array.isArray(saved) ? saved : saved.board,
+                p.mode,
+                Date.now(),
+              );
+              restoreOptions(saved.options);
               session.current = null;
               setBoard(b);
             })
@@ -626,7 +758,12 @@ function Board({ profile: p }: { profile: BoardProfile }) {
             void files(() =>
               exportFile(
                 `${p.slug}.json`,
-                JSON.stringify({ version: 1, mode: p.mode, board: setup() }),
+                JSON.stringify({
+                  version: 1,
+                  mode: p.mode,
+                  board: setup(),
+                  options,
+                }),
               ),
             )
           }
@@ -646,6 +783,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                     (c) => ({ ...c, anchor: null, scheduledAt: null }),
                   );
                   session.current = null;
+                  restoreOptions(s.options);
                   setBoard(b);
                 }),
             )
@@ -765,6 +903,10 @@ function ClockEditor({
           setTimes((a) => [...a, "60"]);
         }}
       />
+      <Body muted>
+        Changing durations or the number of stages resets this clock and its
+        laps. Renaming keeps the current timing.
+      </Body>
       <Action
         label="Apply clock changes"
         tone="primary"
@@ -774,23 +916,34 @@ function ClockEditor({
               (v) =>
                 !v.trim() ||
                 !Number.isFinite(Number(v)) ||
-                Number(v) < 1 ||
+                Number(v) < (mode === "up" ? 0 : 1) ||
                 Number(v) > 86400,
             )
           ) {
             setError("Enter durations from 1 to 86400 seconds.");
             return;
           }
+          const nextStages = stages.map((s, j) => ({
+            ...s,
+            seconds: Number(times[j]),
+          }));
+          const timingChanged =
+            nextStages.length !== card.stages.length ||
+            nextStages.some((s, j) => s.seconds !== card.stages[j]?.seconds);
           onChange({
             name: name.trim() || card.name,
-            stages: stages.map((s, j) => ({ ...s, seconds: Number(times[j]) })),
-            index: 0,
-            elapsed: 0,
-            anchor: null,
-            scheduledAt: null,
-            done: false,
-            waiting: false,
-            laps: [],
+            stages: nextStages,
+            ...(timingChanged
+              ? {
+                  index: 0,
+                  elapsed: 0,
+                  anchor: null,
+                  scheduledAt: null,
+                  done: false,
+                  waiting: false,
+                  laps: [],
+                }
+              : {}),
           });
           setError("Clock updated.");
         }}

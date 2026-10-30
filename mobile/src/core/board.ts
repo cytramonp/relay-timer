@@ -19,6 +19,63 @@ export type BoardProfile = {
   amber?: number;
   red?: number;
 };
+export type BoardOptions = {
+  sound: boolean;
+  hideDigits: boolean;
+  kidsView: boolean;
+  green: number;
+  amber: number;
+  red: number;
+};
+export function validateSignals(green: number, amber: number, red: number) {
+  if (
+    ![green, amber, red].every(Number.isFinite) ||
+    green < 1 ||
+    !(green < amber && amber < red) ||
+    red > 86400
+  )
+    throw Error(
+      "Use positive times with Green < Amber < Red, up to 86400 seconds.",
+    );
+  return { green, amber, red };
+}
+export function boardOptions(
+  value: unknown,
+  profile: BoardProfile,
+): BoardOptions {
+  const v =
+    value && typeof value === "object" ? (value as Partial<BoardOptions>) : {};
+  let signals = {
+    green: profile.green ?? 120,
+    amber: profile.amber ?? 150,
+    red: profile.red ?? 180,
+  };
+  try {
+    signals = validateSignals(v.green!, v.amber!, v.red!);
+  } catch {
+    /* Keep the published defaults for corrupt or older option records. */
+  }
+  return {
+    sound: typeof v.sound === "boolean" ? v.sound : profile.sound !== false,
+    hideDigits:
+      typeof v.hideDigits === "boolean" ? v.hideDigits : !!profile.hideDigits,
+    kidsView:
+      typeof v.kidsView === "boolean" ? v.kidsView : profile.kidsView !== false,
+    ...signals,
+  };
+}
+export function speechSignal(
+  seconds: number,
+  options: Pick<BoardOptions, "green" | "amber" | "red">,
+) {
+  return seconds >= options.red
+    ? "Red"
+    : seconds >= options.amber
+      ? "Amber"
+      : seconds >= options.green
+        ? "Green"
+        : "Ready";
+}
 export const customProfile: BoardProfile = {
   slug: "custom-timer",
   title: "Custom timer",
@@ -90,7 +147,7 @@ export function boardCsv(board: Card[], now: number) {
     return `"${(/^[=+@\-\t\r]/.test(text) ? "'" + text : text).replace(/"/g, '""')}"`;
   };
   return [
-    "Clock,Stage,Planned seconds,Elapsed seconds,Status",
+    "Clock,Stage,Planned seconds,Elapsed seconds,Status,Lap,Split seconds,Score",
     ...board.flatMap((c) =>
       c.stages.map((s, j) =>
         [
@@ -107,6 +164,25 @@ export function boardCsv(board: Card[], now: number) {
                 ).toFixed(2)
               : 0,
           c.done ? "Finished" : c.anchor === null ? "Paused" : "Running",
+          "",
+          "",
+          Number.isFinite(c.score) ? c.score : "",
+        ]
+          .map(quote)
+          .join(","),
+      ),
+    ),
+    ...board.flatMap((c) =>
+      c.laps.map((ms, i) =>
+        [
+          c.name,
+          "Lap record",
+          "",
+          (ms / 1000).toFixed(2),
+          "Recorded",
+          i + 1,
+          ((ms - (c.laps[i - 1] || 0)) / 1000).toFixed(2),
+          "",
         ]
           .map(quote)
           .join(","),
