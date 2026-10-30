@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { AppState, Text, View } from "react-native";
+import { AppState, Keyboard, Text, View } from "react-native";
 import { Image } from "expo-image";
 import {
   Stack,
@@ -259,6 +259,9 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   }
   async function start(fn: (b: Card[], time: number) => Card[]) {
     if (!ready || busy.current) return;
+    // Release input focus before pending/access updates resize the controls.
+    // Otherwise Android can scroll back to an offscreen duration field.
+    Keyboard.dismiss();
     busy.current = true;
     setPending(true);
     setNote("");
@@ -670,6 +673,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
             tone="primary"
             onPress={() =>
               customize(() => {
+                Keyboard.dismiss();
                 try {
                   const signals = validateSignals(
                     Number(signalDraft.green),

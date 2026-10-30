@@ -298,7 +298,10 @@ try:
         for _ in range(12):
             adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '300')
         t, start = scroll_text('Start')
-        tap_node(start); time.sleep(20); tap_node(start)
+        capture(f'{form}-android-speech-before-start.png')
+        tap_node(start); time.sleep(20)
+        capture(f'{form}-android-speech-running.png')
+        tap_node(start)
         assert find(tree(), text='Red signal') is not None, 'Speech timer ignored edited thresholds'
         capture(f'{form}-android-speech-edited.png')
         open_path('pro')
