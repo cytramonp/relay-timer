@@ -69,6 +69,7 @@ function Navigation() {
       )}
       <Stack
         screenOptions={{
+          freezeOnBlur: true,
           headerStyle: { backgroundColor: t.bg },
           headerTintColor: t.ink,
           contentStyle: { backgroundColor: t.bg },

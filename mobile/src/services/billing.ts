@@ -1,6 +1,13 @@
 import { useSyncExternalStore } from "react";
 import { AppState, Platform } from "react-native";
-import { signInAnonymously } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  linkWithCredential,
+  onAuthStateChanged,
+  signInAnonymously,
+  signInWithCredential,
+  signOut,
+} from "firebase/auth";
 import * as Crypto from "expo-crypto";
 import { getFirebaseClient } from "./live";
 import Play, {
@@ -21,8 +28,15 @@ type Status = {
   loading: boolean;
   error: string;
   product: PlayProduct | null;
+  account: { email: string | null; name: string | null } | null;
 };
-let status: Status = { access: null, loading: true, error: "", product: null };
+let status: Status = {
+  access: null,
+  loading: true,
+  error: "",
+  product: null,
+  account: null,
+};
 const listeners = new Set<() => void>();
 let refresh: Promise<Access> | null = null;
 let initialized = false;
@@ -47,6 +61,40 @@ export function billingAccess() {
 export function purchasesEnabled() {
   return Platform.OS === "android" && config.purchasesEnabled && !!Play;
 }
+export function googleSignInEnabled() {
+  return Platform.OS === "android" && !!config.googleWebClientId && !!Play;
+}
+export async function signInGoogle() {
+  if (!googleSignInEnabled())
+    throw Error(
+      "Google account sign-in needs the publisher's Android OAuth configuration.",
+    );
+  const user = await identity();
+  const token = await Play!.signIn(config.googleWebClientId);
+  const credential = GoogleAuthProvider.credential(token);
+  if (user.isAnonymous) {
+    try {
+      await linkWithCredential(user, credential);
+    } catch (e) {
+      if ((e as { code?: string }).code !== "auth/credential-already-in-use")
+        throw e;
+      await signInWithCredential(getFirebaseClient().auth, credential);
+    }
+  } else await signInWithCredential(getFirebaseClient().auth, credential);
+  const signedIn = getFirebaseClient().auth.currentUser;
+  refresh = null;
+  publish({
+    account:
+      signedIn && !signedIn.isAnonymous
+        ? { email: signedIn.email, name: signedIn.displayName }
+        : null,
+  });
+  await refreshBilling();
+}
+export async function signOutAccount() {
+  await signOut(getFirebaseClient().auth);
+  await refreshBilling();
+}
 async function identity() {
   const { auth } = getFirebaseClient();
   await auth.authStateReady();
@@ -68,6 +116,8 @@ async function request(path: string, body: object = {}) {
       body: JSON.stringify(body),
     });
     const data = await response.json();
+    if (getFirebaseClient().auth.currentUser?.uid !== user.uid)
+      throw Error("The account changed. Refresh your plan and try again.");
     if (data.access && ["trial", "free", "pro"].includes(data.access.tier))
       publish({ access: data.access, error: "", loading: false });
     if (!response.ok)
@@ -144,6 +194,10 @@ export async function buyPro() {
   if (!purchasesEnabled())
     throw Error("Google Play purchases are not connected in this build yet.");
   const user = await identity();
+  if (user.isAnonymous)
+    throw Error(
+      "Sign in with Google before subscribing so your Pro access can follow your account.",
+    );
   const account = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     user.uid,
@@ -153,6 +207,17 @@ export async function buyPro() {
 export function initializeBilling() {
   if (initialized) return;
   initialized = true;
+  onAuthStateChanged(getFirebaseClient().auth, (user) => {
+    refresh = null;
+    publish({
+      account:
+        user && !user.isAnonymous
+          ? { email: user.email, name: user.displayName }
+          : null,
+      access: null,
+      loading: true,
+    });
+  });
   const check = () => {
     void refreshBilling().catch(() => {});
     if (purchasesEnabled())

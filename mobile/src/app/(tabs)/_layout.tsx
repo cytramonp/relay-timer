@@ -11,6 +11,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        freezeOnBlur: true,
         tabBarPosition: expanded ? "left" : "bottom",
         tabBarActiveTintColor: t.red,
         tabBarInactiveTintColor: t.muted,

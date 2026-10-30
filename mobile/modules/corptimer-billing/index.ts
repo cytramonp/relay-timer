@@ -6,6 +6,7 @@ declare class CorpTimerBillingModule extends NativeModule<{
   onPurchases: (event: { code: number; purchases: PlayPurchase[] }) => void;
 }> {
   product(id: string, basePlan: string): Promise<PlayProduct>;
+  signIn(webClientId: string): Promise<string>;
   buy(id: string, basePlan: string, accountId: string): Promise<void>;
   restore(): Promise<PlayPurchase[]>;
 }

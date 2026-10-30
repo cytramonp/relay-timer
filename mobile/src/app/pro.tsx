@@ -13,12 +13,17 @@ import {
   refreshBilling,
   restorePurchases,
   useBilling,
+  googleSignInEnabled,
+  signInGoogle,
+  signOutAccount,
 } from "../services/billing";
+import { useLive } from "../state/live-store";
 import { useTheme } from "../theme";
 
 export default function ProScreen() {
+  const live = useLive();
   const { settings } = useApp();
-  const { access, product, error } = useBilling(),
+  const { access, product, error, account } = useBilling(),
     t = useTheme();
   const [busy, setBusy] = useState(false),
     [message, setMessage] = useState("");
@@ -46,6 +51,42 @@ export default function ProScreen() {
         {access ? `YOUR PLAN · ${access.tier.toUpperCase()}` : "YOUR PLAN"}
       </Body>
       <Heading>Your timer. Your way.</Heading>
+      {account ? (
+        <>
+          <Body>
+            Signed in as{" "}
+            {account.email || account.name || "your Google account"}.
+          </Body>
+          <Action
+            label="Sign out"
+            disabled={busy}
+            onPress={() =>
+              void task(async () => {
+                if (live.host) await live.stop();
+                await signOutAccount();
+              })
+            }
+          />
+        </>
+      ) : (
+        <>
+          <Action
+            label="Sign in with Google"
+            disabled={busy || !googleSignInEnabled()}
+            onPress={() =>
+              void task(async () => {
+                if (live.host) await live.stop();
+                await signInGoogle();
+              })
+            }
+          />
+          <Body muted>
+            {googleSignInEnabled()
+              ? "Use the same Google account as the website to check your Pro access. Your local timers stay on this device."
+              : "Google account linking is awaiting the publisher's app-certificate setup. You can use the trial without signing in."}
+          </Body>
+        </>
+      )}
       <Body>
         One library for meetings, training, focus and everyday routines.
       </Body>

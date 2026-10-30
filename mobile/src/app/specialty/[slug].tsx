@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AppState, Text, View } from "react-native";
 import { Image } from "expo-image";
-import { Stack, router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import {
+  Stack,
+  router,
+  useFocusEffect,
+  useLocalSearchParams,
+} from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Crypto from "expo-crypto";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
@@ -138,37 +143,39 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       sub.remove();
     };
   }, [board, ready, key]);
-  useFocusEffect(useCallback(() => {
-    const id = setInterval(() => {
-      const time = Date.now();
-      setNow(time);
-      const before = current.current;
-      const next = before.map((c) =>
-        settle(
-          c.scheduledAt && c.scheduledAt <= time
-            ? { ...c, anchor: c.scheduledAt, scheduledAt: null }
-            : c,
-          p.mode,
-          time,
-        ),
-      );
-      if (
-        next.some(
-          (c, i) =>
-            c.index !== before[i].index ||
-            c.done !== before[i].done ||
-            c.waiting !== before[i].waiting ||
-            c.anchor !== before[i].anchor,
-        )
-      ) {
-        if (AppState.currentState === "active") cue("Stage changed");
-        setBoard(next);
-      }
-    }, 200);
-    return () => clearInterval(id);
-    // Latest board is read from a ref; reinstall only for the sound preference.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [p.mode, sound, store.settings.haptics]));
+  useFocusEffect(
+    useCallback(() => {
+      const id = setInterval(() => {
+        const time = Date.now();
+        setNow(time);
+        const before = current.current;
+        const next = before.map((c) =>
+          settle(
+            c.scheduledAt && c.scheduledAt <= time
+              ? { ...c, anchor: c.scheduledAt, scheduledAt: null }
+              : c,
+            p.mode,
+            time,
+          ),
+        );
+        if (
+          next.some(
+            (c, i) =>
+              c.index !== before[i].index ||
+              c.done !== before[i].done ||
+              c.waiting !== before[i].waiting ||
+              c.anchor !== before[i].anchor,
+          )
+        ) {
+          if (AppState.currentState === "active") cue("Stage changed");
+          setBoard(next);
+        }
+      }, 200);
+      return () => clearInterval(id);
+      // Latest board is read from a ref; reinstall only for the sound preference.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [p.mode, sound, store.settings.haptics]),
+  );
   useEffect(() => {
     if (running && store.settings.keepAwake)
       void activateKeepAwakeAsync("specialty").catch(() => {});

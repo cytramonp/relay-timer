@@ -59,6 +59,11 @@ class CorpTimerBillingModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("CorpTimerBilling")
     Events("onPurchases")
+    AsyncFunction("signIn") { clientId: String, promise: Promise ->
+      val activity = appContext.currentActivity
+      if (activity == null) promise.reject("NO_ACTIVITY", "Open CorpTimer to sign in.", null)
+      else CorpTimerAccount.signIn(activity, clientId, promise)
+    }
     AsyncFunction("product") { id: String, basePlan: String, promise: Promise ->
       connected(promise) { billing -> details(billing, id, basePlan, promise) { _, offer ->
         val phase = offer.pricingPhases.pricingPhaseList.last()

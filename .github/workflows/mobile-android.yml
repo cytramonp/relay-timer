@@ -80,7 +80,9 @@ jobs:
         if: steps.signing.outputs.configured != 'true'
         with:
           name: corptimer-google-play-unsigned
-          path: mobile/android/app/build/outputs/bundle/release/CorpTimer-0.4.0-unsigned.aab
+          path: |
+            mobile/android/app/build/outputs/bundle/release/CorpTimer-0.4.0-unsigned.aab
+            mobile/play-artifact-report.json
           if-no-files-found: error
           retention-days: 30
       - name: Validate signed bundle with Google's bundletool
