@@ -2,7 +2,7 @@
 
 **Not publication-ready.** Confirm the operator's full legal name, contact and jurisdiction, intended markets/age range, lawful bases, vendor regions/agreements, access controls, account/billing retention, deletion process and backup handling before publishing. Prepared 2026-10-30. Public notice must identify the same operator as the Play listing.
 
-CorpTimer provides meeting, workout and everyday timers. [PUBLISHER LEGAL NAME AND CONTACT] is responsible for the personal data described here. This notice covers the native mobile app; the website also has optional Google sign-in and private cloud-library synchronization that are not implemented in this native release.
+CorpTimer provides meeting, workout and everyday timers. [PUBLISHER LEGAL NAME AND CONTACT] is responsible for the personal data described here. This notice covers the native mobile app; the website also has optional Google sign-in and private cloud-library synchronization. Native Google linking is prepared but disabled in this release; native private-library synchronization is not implemented.
 
 ## Your timer data
 
@@ -14,7 +14,7 @@ Firebase Authentication creates a persistent anonymous identity when the app che
 
 When activated, optional Google account linking uses Android Credential Manager for your basic Google identity/profile and Firebase Authentication to verify and persist sign-in. This allows the same Firebase account to check access on web and Android. No Drive, Gmail, calendar or other Google API permission is requested. This preparation build does not have an OAuth client configured, so the button is disabled. [CONFIRM ACCOUNT DELETION ROUTES AND ASSOCIATED-DATA HANDLING BEFORE ACTIVATION].
 
-If enabled for your store release, Google Play processes optional annual subscriptions and payment information under its own terms and privacy policy. CorpTimer receives a purchase token, product and subscription status/expiry so its server can verify access with Google. The server stores the token and a token hash linked to the current anonymous app identity; restoring the verified purchase to another install reassigns current access. Card data is not entered into CorpTimer. Cancelling retains access until paid expiry; deleting app data does not cancel the store subscription. [CONFIRM TRANSACTION-RECORD RETENTION AND LEGAL REQUIREMENTS]. The 0.4.0 preparation build cannot charge for Pro.
+If enabled for your store release, Google Play processes optional annual subscriptions and payment information under its own terms and privacy policy. CorpTimer receives a purchase token, product and subscription status/expiry so its server can verify access with Google. The server stores the token and a token hash linked to the signed-in Firebase identity; restoring the verified purchase to another install reassigns current access. Card data is not entered into CorpTimer. Cancelling retains access until paid expiry; deleting app data does not cancel the store subscription. [CONFIRM TRANSACTION-RECORD RETENTION AND LEGAL REQUIREMENTS]. The 0.4.0 preparation build cannot charge for Pro.
 
 ## Optional live links
 

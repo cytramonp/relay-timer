@@ -27,7 +27,7 @@ CI workflow: `.github/workflows/mobile-android.yml`. It compiles the APK, checks
 4. Connect a least-privilege Play Developer API service account to the existing billing Worker. Store its JSON only as `PLAY_SERVICE_ACCOUNT` in the server's secret store. Apply the additional `play_purchases` table to the **existing** D1 database. Deploy the merged Worker without replacing Stripe secrets or account data. No deployment of this native extension is implied by committing it.
 5. For license testing only, set server `PLAY_ALLOW_TEST=true`. Test success, decline, pending → paid, cancellation through expiry, restore/reinstall, refund, grace, hold, repeated taps and network interruption through the actual Play-installed build. Disable test entitlements for the public production server after the agreed testing configuration is separated.
 6. Set `mobile/src/config/billing-public.json` `purchasesEnabled:true` **only after** the product and verification endpoint are working. This 0.4.0 preparation build deliberately has purchases disabled. Rebuild with a higher version code for the payment-enabled release.
-7. Complete the publisher's support email (Play requires one), privacy URL, audience, content rating, ads declaration, data-safety and foreground-service declaration. Public contact details belong in the Play publisher profile; the app's feedback recipient is still hidden.
+7. Complete the publisher's support email (Play requires one), privacy URL, audience, content rating, ads declaration, data-safety, Health apps and foreground-service declarations. Review the Health form against the actual workout, yoga, meditation and breathing timer features; there is no Health Connect, body-vital measurement or clinical advice in the code. Do not automatically declare that the app has no relevant features merely because it does not collect health measurements. [Google’s Health declaration guide](https://support.google.com/googleplay/android-developer/answer/14738291). Public contact details belong in the Play publisher profile; the app's feedback recipient is still hidden.
 8. Complete applicable account testing / production-access requirements and review the pre-launch report. New personal accounts currently require at least 12 opted-in testers continuously for 14 days before applying for production access. Internal testing does not itself satisfy this requirement.
 
 **Production blockers:** developer-account status, Android OAuth/app-signing certificate setup and real shared-account login test, live Play subscription configuration and credential connection, real store purchase tests, account-deletion readiness for enabled sign-in, finalized publisher identity/privacy/contact and live policy URL, store declarations and any mandatory closed test. A valid signed AAB alone does not clear these gates.
@@ -38,15 +38,20 @@ CI workflow: `.github/workflows/mobile-android.yml`. It compiles the APK, checks
 - `assets/icon-512.png`: Play icon.
 - `assets/feature-graphic.png`: 1024×500 feature graphic.
 - `screenshots/`: actual native captures, populated after the release APK passes CI. Do not substitute web screenshots for native evidence.
+- `videos/floating-service-demo.mp4`: actual API36 emulator demonstration from the final APK; the adjacent provenance records its APK digest. Use a reviewer-accessible video link in the FGS declaration. Overlay permission is pre-granted on the disposable emulator; real-device permission consent remains a separate check.
 - `privacy-notice.draft.md`: code-based notice; unresolved publisher/vendor retention facts are marked. Do not submit the draft as a final policy.
 - `data-safety.draft.json`: proposed answers to reconcile with the publisher's vendor settings and Play definitions.
 
-Foreground service review description: “When the user taps Open floating timer and grants display-over-other-apps permission, CorpTimer shows a movable countdown with Next, Pause/Resume, Undo and Close above another app. A persistent notification indicates this service. It stops when closed or when the task ends. It does not record the screen, other apps or audio.” Attach the actual native floating-mode demonstration and verify the physical-device experience.
+Foreground service review description: “When the user taps Open floating timer and grants display-over-other-apps permission, CorpTimer shows a movable countdown with Next, Pause/Resume, Undo and Close above another app. A persistent notification indicates this service. It stops when closed or when the task ends. It does not record the screen, other apps or audio.” Attach the actual native floating-mode demonstration and verify the physical-device experience. [Google’s FGS declaration requirements](https://support.google.com/googleplay/android-developer/answer/13392821).
+
+Deferred/interrupted service impact: the user loses the visible countdown and quick meeting controls while using another app, and must return to CorpTimer. The service is explicitly opened and closable. Verify OS interruption/recovery on a real device before production; the emulator's Home/Next/Pause/Undo/Close flow does not establish process-kill or battery-management behavior.
 
 ## Sources checked for this release
 
 - https://support.google.com/googleplay/android-developer/answer/9859152
 - https://support.google.com/googleplay/android-developer/answer/14151465
+- https://support.google.com/googleplay/android-developer/answer/14738291
+- https://support.google.com/googleplay/android-developer/answer/13392821
 - https://developer.android.com/google/play/requirements/target-sdk
 - https://developer.android.com/guide/practices/page-sizes
 - https://developer.android.com/google/play/billing/integrate
