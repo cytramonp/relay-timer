@@ -1,0 +1,685 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T06:59:41.669060Z",
+  "title": "Design System: CorpTimer mobile 0.3",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Bg",
+        "tonalRamp": [
+          "#0c0b07",
+          "#272520",
+          "#44423c",
+          "#63615b",
+          "#84827c",
+          "#a7a59e",
+          "#cbc9c2",
+          "#f0eee7"
+        ]
+      },
+      "field": {
+        "role": "neutral",
+        "displayName": "Field",
+        "tonalRamp": [
+          "#0c0b07",
+          "#262521",
+          "#43423d",
+          "#63615c",
+          "#84827d",
+          "#a7a59f",
+          "#cbc9c3",
+          "#f0eee8"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "#0b0c09",
+          "#242522",
+          "#41423f",
+          "#60625e",
+          "#82837f",
+          "#a4a6a2",
+          "#c8cac6",
+          "#eeefeb"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "#0b0c08",
+          "#252621",
+          "#42433e",
+          "#61625d",
+          "#82837e",
+          "#a5a6a0",
+          "#c9cac4",
+          "#eeefe9"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "tonalRamp": [
+          "#0b0c07",
+          "#252620",
+          "#42433c",
+          "#61625b",
+          "#82837c",
+          "#a5a69e",
+          "#c9cac2",
+          "#eeefe7"
+        ]
+      },
+      "red": {
+        "role": "primary",
+        "displayName": "Red",
+        "tonalRamp": [
+          "#3a0000",
+          "#610000",
+          "#880009",
+          "#b0202d",
+          "#d84a4d",
+          "#ff6f6f",
+          "#ff9592",
+          "#ffbab6"
+        ]
+      },
+      "teal": {
+        "role": "primary",
+        "displayName": "Teal",
+        "tonalRamp": [
+          "#001217",
+          "#002f33",
+          "#004d51",
+          "#206e72",
+          "#479094",
+          "#6bb3b7",
+          "#8fd8dc",
+          "#b4feff"
+        ],
+        "purpose": "Tonal ramps are illustrative eight-step OKLCH lightness samples, preserving source a/b with sRGB clipping; production colors remain normative in DESIGN.md."
+      },
+      "soft": {
+        "role": "neutral",
+        "displayName": "Soft",
+        "tonalRamp": [
+          "#040d0c",
+          "#1c2826",
+          "#394543",
+          "#576462",
+          "#788683",
+          "#9aa9a6",
+          "#becdca",
+          "#e3f2ef"
+        ]
+      },
+      "clock": {
+        "role": "neutral",
+        "displayName": "Clock",
+        "tonalRamp": [
+          "#000e12",
+          "#14292d",
+          "#31464b",
+          "#50666a",
+          "#70878c",
+          "#92aaaf",
+          "#b6ced4",
+          "#dbf4f9"
+        ]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Cream",
+        "tonalRamp": [
+          "#0d0b06",
+          "#27251e",
+          "#44423b",
+          "#646159",
+          "#85827a",
+          "#a8a59c",
+          "#ccc9c0",
+          "#f1eee5"
+        ]
+      },
+      "salmon": {
+        "role": "secondary",
+        "displayName": "Salmon",
+        "tonalRamp": [
+          "#2e0000",
+          "#510000",
+          "#751e1b",
+          "#9a413a",
+          "#c0635a",
+          "#e7867b",
+          "#ffaa9e",
+          "#ffcfc2"
+        ]
+      },
+      "bright": {
+        "role": "secondary",
+        "displayName": "Bright",
+        "tonalRamp": [
+          "#001415",
+          "#003230",
+          "#00514e",
+          "#00726e",
+          "#269490",
+          "#52b8b3",
+          "#79ddd8",
+          "#9ffffe"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel",
+        "tonalRamp": [
+          "#0c0b07",
+          "#262521",
+          "#43423d",
+          "#63615c",
+          "#84827d",
+          "#a7a59f",
+          "#cbc9c3",
+          "#f0eee8"
+        ]
+      },
+      "clock-muted": {
+        "role": "neutral",
+        "displayName": "Clock Muted",
+        "tonalRamp": [
+          "#000f0f",
+          "#132929",
+          "#304746",
+          "#4f6766",
+          "#6f8887",
+          "#91abaa",
+          "#b5cfce",
+          "#daf5f4"
+        ]
+      },
+      "clock-track": {
+        "role": "neutral",
+        "displayName": "Clock Track",
+        "tonalRamp": [
+          "#000f13",
+          "#0c2a2f",
+          "#2a474c",
+          "#49676c",
+          "#6a898e",
+          "#8cacb1",
+          "#afd0d6",
+          "#d4f6fc"
+        ]
+      },
+      "clock-line": {
+        "role": "neutral",
+        "displayName": "Clock Line",
+        "tonalRamp": [
+          "#000f14",
+          "#0e2a2f",
+          "#2b474d",
+          "#4a676d",
+          "#6b888f",
+          "#8dabb2",
+          "#b0d0d7",
+          "#d5f5fc"
+        ]
+      },
+      "on-signal": {
+        "role": "neutral",
+        "displayName": "On Signal",
+        "tonalRamp": [
+          "#000f12",
+          "#0d2a2d",
+          "#2b484b",
+          "#4a676a",
+          "#6a898c",
+          "#8cacaf",
+          "#b0d0d4",
+          "#d4f6f9"
+        ]
+      },
+      "on-teal": {
+        "role": "neutral",
+        "displayName": "On Teal",
+        "tonalRamp": [
+          "#0d0b06",
+          "#27251e",
+          "#44423b",
+          "#646159",
+          "#85827a",
+          "#a8a59c",
+          "#ccc9c0",
+          "#f1eee5"
+        ]
+      },
+      "success": {
+        "role": "secondary",
+        "displayName": "Success",
+        "tonalRamp": [
+          "#001400",
+          "#00310e",
+          "#01502b",
+          "#2e7149",
+          "#519369",
+          "#74b78b",
+          "#98dcae",
+          "#bcffd3"
+        ]
+      },
+      "danger-text": {
+        "role": "secondary",
+        "displayName": "Danger Text",
+        "tonalRamp": [
+          "#310000",
+          "#560000",
+          "#7b1414",
+          "#a03a34",
+          "#c75d54",
+          "#ef8176",
+          "#ffa599",
+          "#ffcabd"
+        ]
+      },
+      "dark-bg": {
+        "role": "neutral",
+        "displayName": "Dark Bg",
+        "tonalRamp": [
+          "#050d0f",
+          "#1d272a",
+          "#394447",
+          "#586467",
+          "#798588",
+          "#9ba8ab",
+          "#bfccd0",
+          "#e4f1f5"
+        ]
+      },
+      "dark-field": {
+        "role": "neutral",
+        "displayName": "Dark Field",
+        "tonalRamp": [
+          "#020d10",
+          "#19282b",
+          "#364548",
+          "#546568",
+          "#758689",
+          "#97a9ac",
+          "#bbcdd1",
+          "#e0f3f6"
+        ]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Dark Ink",
+        "tonalRamp": [
+          "#0d0b06",
+          "#27251e",
+          "#44423b",
+          "#646159",
+          "#85827a",
+          "#a8a59c",
+          "#ccc9c0",
+          "#f1eee5"
+        ]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "Dark Muted",
+        "tonalRamp": [
+          "#050d0b",
+          "#1d2825",
+          "#3a4542",
+          "#596462",
+          "#798583",
+          "#9ca8a5",
+          "#bfccc9",
+          "#e4f2ef"
+        ]
+      },
+      "dark-line": {
+        "role": "neutral",
+        "displayName": "Dark Line",
+        "tonalRamp": [
+          "#010e0d",
+          "#172927",
+          "#334644",
+          "#526663",
+          "#738784",
+          "#95aaa7",
+          "#b8cfcb",
+          "#ddf4f1"
+        ]
+      },
+      "dark-red": {
+        "role": "primary",
+        "displayName": "Dark Red",
+        "tonalRamp": [
+          "#2e0000",
+          "#510000",
+          "#751e1b",
+          "#9a413a",
+          "#c0635a",
+          "#e7867b",
+          "#ffaa9e",
+          "#ffcfc2"
+        ]
+      },
+      "dark-teal": {
+        "role": "primary",
+        "displayName": "Dark Teal",
+        "tonalRamp": [
+          "#001312",
+          "#00302d",
+          "#004f4b",
+          "#14706b",
+          "#40928d",
+          "#65b5b0",
+          "#89dad4",
+          "#aefffa"
+        ]
+      },
+      "dark-on-teal": {
+        "role": "neutral",
+        "displayName": "Dark On Teal",
+        "tonalRamp": [
+          "#000f12",
+          "#0d2a2d",
+          "#2b484b",
+          "#4a676a",
+          "#6a898c",
+          "#8cacaf",
+          "#b0d0d4",
+          "#d4f6f9"
+        ]
+      },
+      "dark-soft": {
+        "role": "neutral",
+        "displayName": "Dark Soft",
+        "tonalRamp": [
+          "#001011",
+          "#082b2c",
+          "#274849",
+          "#476869",
+          "#678a8b",
+          "#89adae",
+          "#add1d2",
+          "#d1f7f8"
+        ]
+      },
+      "dark-panel": {
+        "role": "neutral",
+        "displayName": "Dark Panel",
+        "tonalRamp": [
+          "#000e11",
+          "#15292c",
+          "#324649",
+          "#506669",
+          "#71878b",
+          "#93aaae",
+          "#b6ced2",
+          "#dbf4f8"
+        ]
+      },
+      "dark-success": {
+        "role": "secondary",
+        "displayName": "Dark Success",
+        "tonalRamp": [
+          "#001303",
+          "#002f19",
+          "#134e36",
+          "#376e54",
+          "#589075",
+          "#7bb497",
+          "#9fd9bb",
+          "#c3ffdf"
+        ]
+      },
+      "dark-danger-text": {
+        "role": "secondary",
+        "displayName": "Dark Danger Text",
+        "tonalRamp": [
+          "#270000",
+          "#490a06",
+          "#6b2b23",
+          "#8f4b42",
+          "#b46c62",
+          "#d98e83",
+          "#ffb2a6",
+          "#ffd7cb"
+        ]
+      },
+      "action-cream-ink": {
+        "role": "neutral",
+        "displayName": "Action Cream Ink",
+        "tonalRamp": [
+          "#000f12",
+          "#10292d",
+          "#2e474b",
+          "#4c676b",
+          "#6d888d",
+          "#8fabb0",
+          "#b2cfd4",
+          "#d7f5fa"
+        ]
+      },
+      "action-danger-ink": {
+        "role": "secondary",
+        "displayName": "Action Danger Ink",
+        "tonalRamp": [
+          "#210000",
+          "#411410",
+          "#62322c",
+          "#85514b",
+          "#a9726b",
+          "#ce948d",
+          "#f4b8b0",
+          "#ffddd4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Meeting clock",
+        "purpose": "Normal clock: 80/108, vertical padding 4, Android font padding, one-line fitting tabular figures."
+      },
+      "display-focus": {
+        "displayName": "Focus clock",
+        "purpose": "Focus clock: 128/164, vertical padding 4, Android font padding."
+      },
+      "headline": {
+        "displayName": "Meeting name",
+        "purpose": "Plain editable Cantata title."
+      },
+      "title": {
+        "displayName": "Section title",
+        "purpose": "Upright Cantata section headings."
+      },
+      "body": {
+        "displayName": "Native body",
+        "purpose": "Platform system text."
+      },
+      "label": {
+        "displayName": "Control label",
+        "purpose": "Generic native actions and persistent field labels."
+      },
+      "clock-label": {
+        "displayName": "Clock status",
+        "purpose": "Explicit timer-state words."
+      },
+      "clock-name": {
+        "displayName": "clock-name",
+        "purpose": "Cantata 25/40, vertical padding 2, Android font padding."
+      },
+      "clock-name-focus": {
+        "displayName": "clock-name-focus",
+        "purpose": "Cantata 34/50, vertical padding 2, Android font padding."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "agenda-neighbor-spring",
+        "value": "withSpring(offset, { duration: 400, dampingRatio: 1 })",
+        "purpose": "Source-derived Reanimated neighbor-row displacement. Reduced motion applies the offset directly."
+      },
+      {
+        "name": "agenda-drag",
+        "value": "scale 1.02; opacity 0.96",
+        "purpose": "Source-derived active drag state. Reduced motion disables scale."
+      },
+      {
+        "name": "duration-pointer",
+        "value": "rotate(value × 6deg)",
+        "purpose": "Reanimated pointer for 60 detents. No physical performance claim."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "android-navigation-rail",
+        "value": "768px"
+      },
+      {
+        "name": "meeting-two-columns",
+        "value": "900px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "action-primary",
+      "description": "Light-appearance translation of the native generic Action variant; HTML preview only, not Meeting transport.",
+      "html": "<button class=\"ds-action-primary\">Float timer</button>",
+      "css": ".ds-action-primary{min-height:48px;padding:12px 17px;border-radius:12px;border:1px solid;font:600 15px system-ui;cursor:pointer;background:#17676b;color:#eeece5;border-color:#17676b}.ds-action-primary:hover,.ds-action-primary:active{opacity:.7}.ds-action-primary:focus-visible{outline:2px solid #eeece5;outline-offset:3px}.ds-action-primary:disabled{opacity:.45;cursor:default}"
+    },
+    {
+      "name": "Outline action",
+      "kind": "button",
+      "refersTo": "action-outline",
+      "description": "Light-appearance translation of the native generic Action variant; HTML preview only, not Meeting transport.",
+      "html": "<button class=\"ds-action-outline\">Equal times</button>",
+      "css": ".ds-action-outline{min-height:48px;padding:12px 17px;border-radius:12px;border:1px solid;font:600 15px system-ui;cursor:pointer;background:transparent;color:#17676b;border-color:#17676b}.ds-action-outline:hover,.ds-action-outline:active{opacity:.7}.ds-action-outline:focus-visible{outline:2px solid #17676b;outline-offset:3px}.ds-action-outline:disabled{opacity:.45;cursor:default}"
+    },
+    {
+      "name": "Cream action",
+      "kind": "button",
+      "refersTo": "action-cream",
+      "description": "Light-appearance translation of the native generic Action variant; HTML preview only, not Meeting transport.",
+      "html": "<button class=\"ds-action-cream\">Continue</button>",
+      "css": ".ds-action-cream{min-height:48px;padding:12px 17px;border-radius:12px;border:1px solid;font:600 15px system-ui;cursor:pointer;background:#f5f2e9;color:#132c30;border-color:#f5f2e9}.ds-action-cream:hover,.ds-action-cream:active{opacity:.7}.ds-action-cream:focus-visible{outline:2px solid #132c30;outline-offset:3px}.ds-action-cream:disabled{opacity:.45;cursor:default}"
+    },
+    {
+      "name": "Danger action",
+      "kind": "button",
+      "refersTo": "action-danger",
+      "description": "Light-appearance translation of the native generic Action variant; HTML preview only, not Meeting transport.",
+      "html": "<button class=\"ds-action-danger\">Reset</button>",
+      "css": ".ds-action-danger{min-height:48px;padding:12px 17px;border-radius:12px;border:1px solid;font:600 15px system-ui;cursor:pointer;background:#ff9b90;color:#431612;border-color:#ff9b90}.ds-action-danger:hover,.ds-action-danger:active{opacity:.7}.ds-action-danger:focus-visible{outline:2px solid #431612;outline-offset:3px}.ds-action-danger:disabled{opacity:.45;cursor:default}"
+    },
+    {
+      "name": "Feedback fields",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Native feedback fields translated to HTML reference only. Actual source restores local drafts and implements validation, sending, error and success. No preview submission handler or native delivery evidence.",
+      "html": "<section class=\"ds-feedback\"><label class=\"ds-field\">Your message<textarea maxlength=\"5000\" placeholder=\"What happened? What did you expect?\"></textarea></label><small>0/5,000</small><label class=\"ds-field\">Email for a reply · optional<input type=\"email\" placeholder=\"you@example.com\" /></label><p>Only your message, optional reply email, category, app version and platform are sent through Web3Forms to CorpTimer support. Your agendas, notes and history stay on this device.</p><button class=\"ds-feedback-send\">Send message</button><small>Your unsent draft is saved on this device.</small></section>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:7px;color:#20211e;font:600 15px system-ui}.ds-field input,.ds-field textarea{min-height:48px;padding:12px;border:1px solid #bbbcb4;border-radius:6px;background:#f6f4ee;color:#20211e;font:17px system-ui}.ds-field input::placeholder,.ds-field textarea::placeholder{color:#62635e}.ds-field input:hover,.ds-field textarea:hover{border-color:#17676b}.ds-field input:focus-visible,.ds-field textarea:focus-visible{outline:2px solid #17676b;outline-offset:2px}.ds-feedback{display:flex;flex-direction:column;gap:16px;max-width:480px;padding:20px;background:#eeece5}.ds-field textarea{min-height:170px;resize:vertical}.ds-feedback small,.ds-feedback p{color:#62635e;font:13px/20px system-ui;margin:0}.ds-feedback-send{min-height:48px;padding:12px 17px;border:1px solid #17676b;border-radius:12px;background:#17676b;color:#eeece5;font:600 15px system-ui;cursor:pointer}.ds-feedback-send:hover,.ds-feedback-send:active{opacity:.7}.ds-feedback-send:focus-visible{outline:2px solid #17676b;outline-offset:2px}.ds-feedback-send:disabled{opacity:.45;cursor:default}"
+    },
+    {
+      "name": "Meeting navigation",
+      "kind": "nav",
+      "description": "Five-destination native tab semantics, shown as text buttons for this preview. Actual Expo Router uses icons, bottom tabs or the separate Android rail.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"CorpTimer\"><button aria-current=\"page\">Meeting</button><button>Timers</button><button>Library</button><button>History</button><button>Settings</button></nav>",
+      "css": ".ds-nav{display:flex;flex-wrap:wrap;background:#eeece5;border-top:1px solid #bbbcb4}.ds-nav button{min-height:48px;padding:8px 12px;border:0;background:transparent;color:#62635e;font:600 13px system-ui;cursor:pointer}.ds-nav button[aria-current]{background:#d6e5e2;color:#b82933}.ds-nav button:hover{opacity:.7}.ds-nav button:focus-visible{outline:2px solid #17676b;outline-offset:-2px}"
+    },
+    {
+      "name": "Meeting clock",
+      "kind": "card",
+      "refersTo": "meeting-stage",
+      "description": "Six-slot one-hour starter with padded name/digits and status row in normal flow. HTML reference only; no native rendering or interaction proof.",
+      "html": "<section class=\"ds-clock\"><div class=\"ds-status\">● READY</div><h3>Welcome</h3><div class=\"ds-time\">5:00</div><div class=\"ds-track\"></div><div class=\"ds-cells\"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class=\"ds-next\">Next: Alex</div><p>gets 11:00 · 5 remaining</p><div class=\"ds-main\"><button>Start meeting <span>→</span></button><button aria-label=\"Pause meeting\" disabled>Ⅱ</button></div><div class=\"ds-extra\"><button disabled>Undo</button><button disabled>+1 min</button><button disabled>Reset</button></div></section>",
+      "css": ".ds-clock{max-width:430px;background:#061a1e;color:#f5f2e9;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px}.ds-status{min-height:48px;display:flex;align-items:center;color:#a8c2c1;font:12px Manrope,system-ui}.ds-clock h3{font:25px/40px Cantata,Georgia,serif;margin:0;padding:2px 0}.ds-time{padding:4px 0;font:600 80px/108px Manrope,system-ui;letter-spacing:-2px;font-variant-numeric:tabular-nums}.ds-track{height:9px;border-radius:3px;background:#29464b}.ds-cells{display:flex;gap:3px;height:7px;margin-top:-10px}.ds-cells i{flex:11;background:#29464b;border-radius:1px}.ds-cells i:first-child{flex:5}.ds-next{font:16px Manrope,system-ui}.ds-clock p{font:13px/20px system-ui;color:#a8c2c1;margin:-10px 0 0}.ds-main,.ds-extra{display:flex;gap:8px}.ds-clock button{min-height:48px;border:1px solid #355157;border-radius:10px;background:transparent;color:#f5f2e9;font:600 13px Manrope,system-ui;cursor:pointer;flex:1}.ds-main button{min-height:52px}.ds-main button:first-child{flex:4;display:flex;align-items:center;justify-content:space-between;background:#f5f2e9;color:#112e31;border-color:#f5f2e9;padding:0 16px;font-size:15px;font-weight:700}.ds-extra button:last-child{background:#ff9b90;color:#112e31;border-color:#ff9b90}.ds-clock button:hover,.ds-clock button:active{opacity:.75}.ds-clock button:disabled{opacity:.35;cursor:default}.ds-clock button:focus-visible{outline:2px solid #64c9c4;outline-offset:3px}"
+    },
+    {
+      "name": "Dark selected timeline",
+      "kind": "custom",
+      "refersTo": "timeline-current",
+      "description": "Dark-theme onTeal contrast example. Real native timeline is proportional and draggable; this HTML excerpt is a static specimen with a focusable preview boundary.",
+      "html": "<div class=\"ds-timeline\"><div class=\"ds-plan\"><div>1 Welcome<small>5:00</small></div><div class=\"ds-current\">2 Morgan<small>11:00</small></div><div>3 Alex<small>11:00</small></div></div><button class=\"ds-boundary\" aria-label=\"Preview boundary after Morgan\"></button><div class=\"ds-actual\"><i></i></div><p>Plan above · actual below</p></div>",
+      "css": ".ds-timeline{position:relative;background:#182225;padding:16px;color:#f5f2e9;max-width:430px}.ds-plan{display:flex;gap:2px;height:48px}.ds-plan>div{flex:11;background:#1c3033;border-radius:5px;padding:0 5px;display:flex;flex-direction:column;justify-content:center;font:11px Manrope,system-ui;overflow:hidden}.ds-plan>div:first-child{flex:5;background:#28494a}.ds-plan .ds-current{background:#83d4ce;color:#112e31}.ds-plan small{font:10px system-ui;color:#b8c5c2}.ds-plan .ds-current small{color:#112e31}.ds-boundary{position:absolute;left:50%;top:12px;width:48px;height:60px;border:0;background:transparent;cursor:ew-resize}.ds-boundary:before{content:\"\";display:block;height:31px;width:4px;border-radius:2px;background:#83d4ce;margin:auto}.ds-boundary:after{content:\"\";position:absolute;left:18px;top:24px;width:8px;height:8px;border:2px solid #83d4ce;border-radius:50%;background:#1c3033}.ds-boundary:hover{opacity:.7}.ds-boundary:focus-visible{outline:2px solid #83d4ce;outline-offset:2px}.ds-actual{height:18px;background:#526663;border-radius:4px;margin-top:7px;overflow:hidden}.ds-actual i{display:block;width:12%;height:18px;background:#64c9c4}.ds-timeline p{font:12px system-ui;color:#b8c5c2}"
+    },
+    {
+      "name": "Current agenda row",
+      "kind": "custom",
+      "refersTo": "agenda-current",
+      "description": "Light current-row translation. Native source uses a dedicated 40-by-56 reorder handle, plain name editor, planned/used values and system menu; this sample has no reorder logic.",
+      "html": "<div class=\"ds-agenda\"><button aria-label=\"Reorder Morgan\">☰</button><label><input value=\"Morgan\" aria-label=\"Name for slot 2\" /><small>Speaking now</small></label><button class=\"ds-duration\">11:00<small>used 0:06</small></button><button aria-label=\"Actions for Morgan\">···</button></div>",
+      "css": ".ds-agenda{height:100px;background:#d6e5e2;border-radius:10px;border-bottom:1px solid #bbbcb4;display:flex;align-items:center;gap:4px;color:#20211e}.ds-agenda>button{width:40px;min-height:48px;border:0;background:transparent;color:#62635e;cursor:pointer;font:21px system-ui}.ds-agenda>button:first-child{min-height:56px}.ds-agenda label{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}.ds-agenda input{width:100%;min-height:44px;padding:8px 4px;border:0;background:#d6e5e2;color:#20211e;font:15px Manrope,system-ui}.ds-agenda small{display:block;font:11px system-ui;color:#17676b;padding-left:4px}.ds-agenda .ds-duration{width:72px;min-height:58px;font:600 15px Manrope,system-ui;text-align:right;color:#20211e;font-variant-numeric:tabular-nums}.ds-duration small{margin-top:5px}.ds-agenda button:hover{opacity:.65}.ds-agenda button:focus-visible,.ds-agenda input:focus-visible{outline:2px solid #17676b;outline-offset:-2px}"
+    },
+    {
+      "name": "Duration dial",
+      "kind": "custom",
+      "description": "264-unit native DurationField translated as HTML reference only. Native source has clockwise/counterclockwise detents, decimal typing, adjustable actions, plus/minus and persisted click mute. No preview gesture/audio/haptic runtime.",
+      "html": "<section class=\"ds-duration\"><h3>Total meeting · minutes</h3><div class=\"ds-dial\"><svg viewBox=\"0 0 264 264\" aria-hidden=\"true\"><circle cx=\"132\" cy=\"132\" r=\"101\" fill=\"none\" stroke=\"#355157\"/><line x1=\"132.00\" y1=\"24.00\" x2=\"132.00\" y2=\"10.00\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"144.02\" y1=\"17.63\" x2=\"144.75\" y2=\"10.67\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"155.91\" y1=\"19.51\" x2=\"157.37\" y2=\"12.67\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"167.54\" y1=\"22.63\" x2=\"169.70\" y2=\"15.97\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"178.77\" y1=\"26.94\" x2=\"181.62\" y2=\"20.55\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"186.00\" y1=\"38.47\" x2=\"193.00\" y2=\"26.34\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"199.60\" y1=\"38.96\" x2=\"203.71\" y2=\"33.30\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"208.95\" y1=\"46.54\" x2=\"213.63\" y2=\"41.34\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"217.46\" y1=\"55.05\" x2=\"222.66\" y2=\"50.37\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"225.04\" y1=\"64.40\" x2=\"230.70\" y2=\"60.29\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"225.53\" y1=\"78.00\" x2=\"237.66\" y2=\"71.00\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"237.06\" y1=\"85.23\" x2=\"243.45\" y2=\"82.38\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"241.37\" y1=\"96.46\" x2=\"248.03\" y2=\"94.30\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"244.49\" y1=\"108.09\" x2=\"251.33\" y2=\"106.63\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"246.37\" y1=\"119.98\" x2=\"253.33\" y2=\"119.25\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"240.00\" y1=\"132.00\" x2=\"254.00\" y2=\"132.00\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"246.37\" y1=\"144.02\" x2=\"253.33\" y2=\"144.75\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"244.49\" y1=\"155.91\" x2=\"251.33\" y2=\"157.37\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"241.37\" y1=\"167.54\" x2=\"248.03\" y2=\"169.70\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"237.06\" y1=\"178.77\" x2=\"243.45\" y2=\"181.62\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"225.53\" y1=\"186.00\" x2=\"237.66\" y2=\"193.00\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"225.04\" y1=\"199.60\" x2=\"230.70\" y2=\"203.71\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"217.46\" y1=\"208.95\" x2=\"222.66\" y2=\"213.63\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"208.95\" y1=\"217.46\" x2=\"213.63\" y2=\"222.66\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"199.60\" y1=\"225.04\" x2=\"203.71\" y2=\"230.70\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"186.00\" y1=\"225.53\" x2=\"193.00\" y2=\"237.66\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"178.77\" y1=\"237.06\" x2=\"181.62\" y2=\"243.45\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"167.54\" y1=\"241.37\" x2=\"169.70\" y2=\"248.03\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"155.91\" y1=\"244.49\" x2=\"157.37\" y2=\"251.33\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"144.02\" y1=\"246.37\" x2=\"144.75\" y2=\"253.33\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"132.00\" y1=\"240.00\" x2=\"132.00\" y2=\"254.00\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"119.98\" y1=\"246.37\" x2=\"119.25\" y2=\"253.33\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"108.09\" y1=\"244.49\" x2=\"106.63\" y2=\"251.33\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"96.46\" y1=\"241.37\" x2=\"94.30\" y2=\"248.03\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"85.23\" y1=\"237.06\" x2=\"82.38\" y2=\"243.45\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"78.00\" y1=\"225.53\" x2=\"71.00\" y2=\"237.66\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"64.40\" y1=\"225.04\" x2=\"60.29\" y2=\"230.70\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"55.05\" y1=\"217.46\" x2=\"50.37\" y2=\"222.66\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"46.54\" y1=\"208.95\" x2=\"41.34\" y2=\"213.63\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"38.96\" y1=\"199.60\" x2=\"33.30\" y2=\"203.71\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"38.47\" y1=\"186.00\" x2=\"26.34\" y2=\"193.00\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"26.94\" y1=\"178.77\" x2=\"20.55\" y2=\"181.62\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"22.63\" y1=\"167.54\" x2=\"15.97\" y2=\"169.70\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"19.51\" y1=\"155.91\" x2=\"12.67\" y2=\"157.37\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"17.63\" y1=\"144.02\" x2=\"10.67\" y2=\"144.75\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"24.00\" y1=\"132.00\" x2=\"10.00\" y2=\"132.00\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"17.63\" y1=\"119.98\" x2=\"10.67\" y2=\"119.25\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"19.51\" y1=\"108.09\" x2=\"12.67\" y2=\"106.63\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"22.63\" y1=\"96.46\" x2=\"15.97\" y2=\"94.30\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"26.94\" y1=\"85.23\" x2=\"20.55\" y2=\"82.38\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"38.47\" y1=\"78.00\" x2=\"26.34\" y2=\"71.00\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"38.96\" y1=\"64.40\" x2=\"33.30\" y2=\"60.29\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"46.54\" y1=\"55.05\" x2=\"41.34\" y2=\"50.37\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"55.05\" y1=\"46.54\" x2=\"50.37\" y2=\"41.34\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"64.40\" y1=\"38.96\" x2=\"60.29\" y2=\"33.30\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"78.00\" y1=\"38.47\" x2=\"71.00\" y2=\"26.34\" stroke=\"#f5f2e9\" stroke-width=\"2\"/><line x1=\"85.23\" y1=\"26.94\" x2=\"82.38\" y2=\"20.55\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"96.46\" y1=\"22.63\" x2=\"94.30\" y2=\"15.97\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"108.09\" y1=\"19.51\" x2=\"106.63\" y2=\"12.67\" stroke=\"#a8c2c1\" stroke-width=\"1\"/><line x1=\"119.98\" y1=\"17.63\" x2=\"119.25\" y2=\"10.67\" stroke=\"#a8c2c1\" stroke-width=\"1\"/></svg><i></i><label><input value=\"60\" inputmode=\"decimal\" aria-label=\"Total meeting minutes\"/><span>minutes</span><small>tap number to type</small></label></div><div class=\"ds-dial-actions\"><button>−1 min</button><button>+1 min</button><button>Clicks on</button></div><p>Turn the rim to adjust. One tick = 1 minute.</p></section>",
+      "css": ".ds-duration{max-width:430px;display:flex;flex-direction:column;gap:12px;color:#20211e;background:#eeece5;padding:20px;font:16px system-ui}.ds-duration h3{font:600 16px Manrope,system-ui;margin:0}.ds-dial{width:264px;height:264px;align-self:center;position:relative;background:#061a1e;border-radius:132px}.ds-dial svg{width:264px;height:264px;position:absolute;inset:0;pointer-events:none}.ds-dial>i{position:absolute;left:129.5px;top:8px;width:5px;height:22px;border-radius:3px;background:#ff9b90}.ds-dial label{position:absolute;inset:60px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px}.ds-dial input{width:140px;border:0;background:transparent;color:#f5f2e9;text-align:center;font:44px/60px Manrope,system-ui;font-variant-numeric:tabular-nums;padding:6px 0}.ds-dial span{color:#a8c2c1;font-size:14px}.ds-dial small{color:#a8c2c1;font-size:12px;margin-top:6px}.ds-dial-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}.ds-dial-actions button{min-height:48px;padding:12px 17px;border:1px solid #17676b;border-radius:12px;background:transparent;color:#17676b;font:600 15px system-ui;cursor:pointer}.ds-dial-actions button:hover,.ds-dial-actions button:active{opacity:.7}.ds-dial-actions button:focus-visible,.ds-dial input:focus-visible{outline:2px solid #17676b;outline-offset:3px}.ds-dial input:focus-visible{outline-color:#64c9c4}.ds-duration p{margin:0;text-align:center;font:13px/20px system-ui;color:#62635e}",
+      "refersTo": "duration-dial"
+    }
+  ],
+  "narrative": {
+    "northStar": "The meeting workbench",
+    "overview": "**Creative North Star: \"The meeting workbench\"**\n\nCorpTimer's native workspace carries the website's cream paper, charcoal ink, upright serif headings, original glasses and fine rules into a working meeting timer. A solid dark-teal clock anchors the interface. Clear names, tabular time and restrained color make the current turn, the next person's available budget and the remaining speakers easy to read together.\n\nThis documents the built Meeting-first (0.3.0) source, preserving the established mobile identity. The website's `../DESIGN.md` remains separate. Direction comes from `PRODUCT.md` and `SURFACE.md`; implementation truth comes from `src/theme.tsx`, `src/components/{meeting-clock,meeting-timeline,agenda-row,duration-field,ui}.tsx`, `src/screens/{meeting,editor}.tsx`, `src/app/{feedback,meeting-options,meeting-slot}.tsx`, `src/services/{audio,feedback}.ts`, `src/app/(tabs)/_layout.tsx` and `modules/corptimer-overlay`. Dimensions below are React Native logical units, represented as `px` only in portable frontmatter and HTML previews. They are not screenshot pixel measurements.\n\nCurrent native evidence is the repository-root `.impeccable/review/meeting-dial-feedback/android/` packet (23 PNGs and 2 reorder MP4s), recaptured from the corrected (0.3.0), Android versionCode (5) binary in successful build and expanded QA run `40829694438`. Runtime source is `7927e48ffeb28880831230cf053920de48e2bc8a`; APK SHA256 is `E2CD7B77A5F76B435D756AF999809B5AF90E5152FE0E4E3B5087C41CB786A568`, and the existing signer was confirmed. The matrix covers phone/tablet meeting, duration dial, feedback validation, reorder, other timer/editor/history, dark large text, floating timer and tablet landscape, with added `phone-android-total-long.png` and `tablet-android-total-long.png` readout evidence. Both device classes preserved empty and `2.` input intermediates, saved `2.5` minutes as (150) seconds with a `2:30` root readout, and displayed all digits of a (120)-minute total. The reordered phone viewport scrolls its (60)-minute total above the header; the dedicated long-total capture shows the complete (120)-minute number, while tablet evidence shows both totals. Review records **ship** with all three scored corrections resolved, scoped to the Android emulator beta correction only. No native HTML/CSS detector ran.\n\nInitial (0.3.0) run `40826232688` passed its original (21)-PNG and (2)-MP4 matrix before review requested decimal-draft, total-readout and documentation corrections. Its captures in the current packet were superseded by the corrected binary's captures; retain the run as historical evidence, not current-build proof.\n\nHistorical evidence remains in `.impeccable/review/mobile-redesign/android/` (17 PNGs and 2 reorder MP4s). Android versionCode (4), source `1357cede23099a952b3910550c19c8e00de93f1c`, passed its recorded emulator flows in run `40805997754`. Its selected-timeline-text correction was recorded as **ship** for that Android fix scope, not for this (0.3.0) refinement, a whole-surface review, physical devices or stores.\n\nThe historical (0.2.0) APK, native capture ZIP and provenance JSON are retained in the [Android beta 4 prerelease](https://github.com/cytramonp/relay-timer/releases/tag/mobile-v0.2.0-beta.4), beyond temporary Actions artifact retention. This distribution does not establish a (0.3.0) release or store availability.\n\n`VALIDATION.md` records evidence limits. Earlier iOS compilation and iPhone simulator launch/reorder do not verify this refinement; current iOS/iPad flows, physical sound/haptic feel and physical-device performance remain unverified. Native Google private-library sync is unimplemented. The owner has no store developer accounts. One browser-preview feedback message was verified in the owner's Gmail; `.impeccable/review/meeting-dial-feedback/web-feedback-sent.png` is browser transport evidence only. Browser previews and live-share checks do not establish native delivery, authentication, hardware performance, background alerts or store availability.",
+    "keyCharacteristics": [
+      "A dominant clock with visible next budget, remaining count and proportional turn cells.",
+      "Upright Cantata headings, Manrope clock figures and native system body text.",
+      "Flat cream/charcoal surfaces, fine rules, teal utility actions and coral overtime/reset signals.",
+      "Dedicated gesture handles, native navigation and switches, explicit timer-state words.",
+      "A circular duration dial with direct typing and optional clicks, plus a local-draft support form.",
+      "Light by default; Dark and Use device are explicit preferences."
+    ],
+    "rules": [
+      {
+        "name": "The Foreground Follows Its Surface Rule",
+        "body": "Selected teal cells use `onTeal`; the dark clock uses cream. Generic Action primary buttons currently use the page-ground foreground, while Meeting transport uses `onSignal` explicitly.",
+        "section": "colors"
+      },
+      {
+        "name": "The State Has Words Rule",
+        "body": "Keep READY, NOW, PAUSED, OVER TIME or COMPLETE, next-budget language, remaining counts and agenda state labels alongside color. The red lens sector of the original glasses remains identity artwork.",
+        "section": "colors"
+      },
+      {
+        "name": "The Clock Keeps Its Place Rule",
+        "body": "Use tabular numerals for clocks and plan/available values. Keep main-clock one-line fitting so its width does not displace controls.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Workbench Rule",
+        "body": "Use rules and tonal changes for hierarchy. Preserve native interruption and editing presentation instead of adding decorative floating cards.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** preserve original glasses, approved illustrations, upright Cantata headings and dark-teal clock.",
+      "**Do** use current theme roles, including onTeal for both selected timeline text rows.",
+      "**Do** keep current time, next budget, remaining count and segmented progress readable together.",
+      "**Do** preserve dedicated handles, accessible alternatives, stable speaker IDs and page scrolling.",
+      "**Do** retain Meeting, Timers, Library, History and Settings labels and explicit appearance preferences.",
+      "**Do** keep duration units visible, retain decimal draft text until commit and offer typing and plus/minus alongside rotation.",
+      "**Do** preserve feedback drafts, show explicit sending/error/success states and disclose the narrowly scoped payload.",
+      "**Do** consult VALIDATION.md for current native, network, hardware and release evidence boundaries."
+    ],
+    "donts": [
+      "**Don't** restore catalog-first entry or rename the Meeting starter; preserve custom saved names.",
+      "**Don't** use cream text on the dark theme's light-teal selected timeline surface.",
+      "**Don't** turn ruled rows into shadowed cards or replace native navigation, switches and menus with decorative chrome.",
+      "**Don't** treat sidecar HTML samples as native rendering or gesture proof.",
+      "**Don't** extend the corrected Android emulator beta ship verdict to native nonempty feedback delivery, iOS, physical devices or stores; keep historical builds' evidence separate.",
+      "**Don't** imply native Google private sync, iOS floating windows, Live Activities or guaranteed background alerts."
+    ]
+  }
+}

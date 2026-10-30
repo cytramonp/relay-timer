@@ -1,5 +1,9 @@
 # CorpTimer
 
+## Mobile application
+
+The iOS/iPadOS and Android application lives in [`mobile/`](mobile/README.md), in this same repository. It includes nine native timer modes, local programs/history, imports from web plans, CSV exports, audio and local notification scheduling. See its README and release checklist for installation, build commands and the beta's current limits. Mobile source publication and native/store release are separate statuses.
+
 Public app: **https://corptimer.com/**
 
 Source repository: **https://github.com/cytramonp/relay-timer**. The Codex project uses the existing local checkout, `D:\Codex_C\Personal\relay-timer`.

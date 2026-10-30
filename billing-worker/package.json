@@ -1,0 +1,1 @@
+{"name":"corptimer-free-billing","private":true,"type":"module","scripts":{"test":"node --test *.test.mjs","check":"wrangler deploy --dry-run"},"dependencies":{"jose":"^6.0.0","stripe":"^23.1.0"},"devDependencies":{"wrangler":"^4.0.0"}}

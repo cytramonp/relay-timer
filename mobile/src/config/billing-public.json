@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "apiBase": "https://corptimer-billing.cytramonp.workers.dev",
+  "productId": "corptimer_pro_yearly",
+  "basePlanId": "annual",
+  "purchasesEnabled": false,
+  "googleWebClientId": ""
+}

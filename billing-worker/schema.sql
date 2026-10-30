@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS accounts (
+ uid TEXT PRIMARY KEY,
+ version INTEGER NOT NULL DEFAULT 0,
+ state TEXT NOT NULL DEFAULT '{}'
+);
+CREATE TABLE IF NOT EXISTS play_purchases (
+ token_hash TEXT PRIMARY KEY,
+ uid TEXT NOT NULL
+);

@@ -1,0 +1,104 @@
+{
+  "status": "Draft; reconcile with publisher settings and Play Console definitions before submission",
+  "version": "0.4.0",
+  "encryptedInTransit": true,
+  "ads": false,
+  "collection": [
+    {
+      "category": "Personal info / User IDs",
+      "data": "Persistent anonymous Firebase ID",
+      "required": true,
+      "purposes": [
+        "App functionality",
+        "Fraud prevention and security"
+      ],
+      "providers": [
+        "Firebase Authentication",
+        "Cloudflare Workers / D1"
+      ]
+    },
+    {
+      "category": "App activity / App interactions",
+      "data": "Random session IDs, start timestamps and quota counters",
+      "required": true,
+      "purposes": [
+        "App functionality"
+      ],
+      "providers": [
+        "Cloudflare Workers / D1"
+      ]
+    },
+    {
+      "category": "Financial info / Purchase history",
+      "data": "Optional Google Play subscription token, product, status and expiry",
+      "required": false,
+      "currentlyEnabled": false,
+      "purposes": [
+        "App functionality",
+        "Fraud prevention and security"
+      ],
+      "providers": [
+        "Google Play",
+        "Cloudflare Workers / D1"
+      ]
+    },
+    {
+      "category": "Personal info / Email address",
+      "data": "Optional reply email supplied in feedback",
+      "required": false,
+      "purposes": [
+        "Developer communications"
+      ],
+      "providers": [
+        "Web3Forms",
+        "Support mailbox"
+      ]
+    },
+    {
+      "category": "App activity / Other user-generated content",
+      "data": "Explicit feedback message; separately explicit live agenda projection",
+      "required": false,
+      "purposes": [
+        "App functionality",
+        "Developer communications"
+      ],
+      "providers": [
+        "Web3Forms",
+        "Firebase Firestore",
+        "Support mailbox"
+      ]
+    },
+    {
+      "category": "Personal info / Name, Email address, User IDs",
+      "data": "Optional Google basic profile and authentication identity when account linking is activated",
+      "required": false,
+      "currentlyEnabled": false,
+      "purposes": [
+        "Account management",
+        "App functionality"
+      ],
+      "providers": [
+        "Google Credential Manager",
+        "Firebase Authentication"
+      ]
+    }
+  ],
+  "notCollectedByBilling": [
+    "Agenda contents",
+    "Private notes",
+    "History",
+    "Company logo",
+    "Card details"
+  ],
+  "sharing": "Evaluate processor/service-provider exceptions in Play definitions; user-directed live links and exports require separate classification. Do not automatically mark all vendor processing as sold/shared.",
+  "deletionRoute": "In-app Support & feedback; public publisher deletion/contact route still required",
+  "unresolved": [
+    "Publisher legal identity and public support email",
+    "Final privacy URL",
+    "Provider retention and deletion",
+    "Region and transfer arrangements",
+    "Audience/content rating",
+    "Actual account-creation classification",
+    "Live Play purchase configuration"
+  ]
+}

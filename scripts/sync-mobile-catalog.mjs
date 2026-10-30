@@ -1,0 +1,12 @@
+import { readFile, writeFile, copyFile, mkdir } from 'node:fs/promises';
+import { specialtyTimers } from '../docs/specialty-catalog.js';
+import { themeDefaults } from '../docs/timer-themes.js';
+import { byPopularity } from '../docs/timer-popularity.js';
+const root = new URL('../', import.meta.url);
+const profiles = specialtyTimers.map(themeDefaults).sort(byPopularity);
+await mkdir(new URL('mobile/assets/specialty/', root), { recursive: true });
+await writeFile(new URL('mobile/src/core/specialty-catalog.json', root), JSON.stringify(profiles, null, 2) + '\n');
+await writeFile(new URL('mobile/src/core/specialty-art.ts', root), 'export const specialtyArt: Record<string, number> = {\n' + profiles.map(p => `  '${p.slug}': require('../../assets/specialty/${p.slug}.png'),`).join('\n') + '\n};\n');
+await copyFile(new URL('docs/board-engine.js', root), new URL('mobile/src/core/board-engine.js', root));
+for (const p of profiles) await copyFile(new URL(`docs/assets/${p.slug}.png`, root), new URL(`mobile/assets/specialty/${p.slug}.png`, root));
+console.log(`Synced ${profiles.length} specialty profiles, themed defaults and art from web.`);

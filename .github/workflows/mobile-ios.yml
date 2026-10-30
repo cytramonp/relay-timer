@@ -1,0 +1,54 @@
+name: iOS simulator build
+on:
+  push:
+    branches: ['codex/corptimer-mobile']
+    paths: ['.github/workflows/mobile-ios.yml', 'mobile/scripts/capture-ios.py', 'mobile/tests/native-*.yaml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  simulator:
+    runs-on: macos-26
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm ci
+      - run: npx expo prebuild --platform ios --no-install
+        env:
+          CI: '1'
+      - run: pod install --project-directory=ios
+      - name: Compile unsigned iOS simulator app
+        run: |
+          xcodebuild -workspace ios/CorpTimer.xcworkspace -scheme CorpTimer -configuration Release -sdk iphonesimulator -derivedDataPath ios-build CODE_SIGNING_ALLOWED=NO build > xcodebuild.log 2>&1 || { tail -n 100 xcodebuild.log; exit 1; }
+      - name: Preserve simulator executable permissions in an archive
+        run: ditto -c -k --sequesterRsrc --keepParent ios-build/Build/Products/Release-iphonesimulator/CorpTimer.app corptimer-ios-simulator.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: corptimer-ios-simulator
+          path: mobile/corptimer-ios-simulator.zip
+          if-no-files-found: error
+          retention-days: 14
+      - name: Install native UI test driver from its official distribution
+        run: curl -fsSL https://get.maestro.mobile.dev | bash
+      - name: Launch iPhone and iPad and capture native UI
+        run: python3 scripts/capture-ios.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: corptimer-ios-native-captures
+          path: mobile/native-captures/**
+          if-no-files-found: warn
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: corptimer-ios-build-log
+          path: mobile/xcodebuild.log
