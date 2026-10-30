@@ -1,5 +1,9 @@
 # Web-to-native worklist
 
+## 0.4 extension — 30 October 2026
+
+The current Android branch adds the 27-profile specialty library and web Trial/Free/Pro rules while retaining the verified 0.3 Meeting/dial/feedback flow. Current scope and differences are in `PARITY-0.4.md`; actual candidate/build evidence is in `VALIDATION.md`; publisher/Play activation gates are in `store/GOOGLE-PLAY.md`. Earlier rows below are historical, not a blanket verdict on the new code. No new physical-device, iOS runtime or production-store approval is implied.
+
 The user's 28 October feedback rejects the first beta's catalog-first navigation and missing meeting controls. The live site and `docs/timer.js`, `model.js`, `session.js`, `presets.js`, `features.js`, `templates.js` are the behavior references. Preserve the public website; change the native app in this branch.
 
 ## Native screens

@@ -1,6 +1,18 @@
 # Mobile beta validation
 
-Updated 28 October 2026 (America/Los_Angeles). Current 0.3 evidence is below; earlier release evidence remains historical. These statuses describe a development beta, not a store release.
+Updated 30 October 2026 (America/Los_Angeles). Current 0.4 evidence is recorded separately below; 0.3 and older evidence remains historical. These statuses describe development/internal-test preparation, not store approval.
+
+## 0.4 library and Play preparation
+
+- Runtime candidate `0678f0d8e44e13d94f77046b0d9d4c317794188a`, Android version `0.4.0`, code `6`. Code and artifacts are reviewed in PR #4. Final binary/capture hashes are recorded after that candidate completes.
+- 39 mobile core tests, local typecheck/lint and nine billing-worker tests pass. Backend tests cover accelerated trial/quota/idempotency and mocked provider receipt states, acknowledgement, invalid account/plan, pending/expired/test rejection and restore ownership. They are not a real Google Play purchase.
+- First 0.4 build at `8c026c1`, [run 41039750211](https://github.com/cytramonp/relay-timer/actions/runs/41039750211), passed API36 phone/tablet: original dial/decimal/120-minute corrections, scrolling/resizing, actual reorder, handoff and floating Next/Pause/Undo. Its manifest/ELF script confirmed target SDK36, 60 aligned native libraries, billing permission, no broad media/microphone permissions and no support recipient address in the bundle. This first pass predates subsequent branding/account/correction changes; it is not the final binary.
+- [Checks at 9c4cd47](https://github.com/cytramonp/relay-timer/actions/runs/41042395660) passed typecheck, lint, 39 tests and web/iOS+Android Hermes exports on Linux. Windows Hermes execution failed in the local sandbox; Linux CI is the native-export evidence. A local web export succeeded.
+- The final native driver additionally opens all 27 specialty profiles on the phone, representative profiles on the tablet, performs a real server-backed specialty start and records a stopwatch lap and the paywall. Its actual result is recorded after completion, not inferred from unit tests.
+- Current owner browser verification reached `play.google.com/console/u/0/signup` on 2026-10-30. No developer account was available for this Google identity. No registration, fee payment, Play product, new OAuth client/certificate, service-account permission or store upload was performed.
+- Google login and Play purchases are disabled in configuration. The account adapter and receipt server extension are source-prepared; real Google login, shared entitlement, pending/cancel/restore/refund/renewal and account-deletion readiness remain activation gates. The existing web billing service was not redeployed by this task.
+- Upload key: persistent RSA4096, local ignored backup, public certificate SHA256 `BC2A570E7F8A08509ACDFB0F9756E395C3EDD091A1FB276030A76E1FE8430BB2`. Automatic approval review rejected sending the private key/passwords to GitHub Secrets without separate explicit consent. Local signing is the safe alternative and does not transfer those materials.
+- Play icon/feature graphic, listing copy, data inventory and explicitly marked privacy/data-safety drafts are prepared. Publisher identity, support email, final live notice URL, applicable declarations and account testing requirements remain separate from binary validation. Physical hardware, OS alarms, logo picking and actual Google/Play interactions are not established by compile or mocked backend tests.
 
 ## 0.3 rotary controls and in-app feedback
 

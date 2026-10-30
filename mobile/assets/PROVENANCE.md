@@ -1,5 +1,8 @@
 # Bundled asset provenance
 
+- specialty/*.png (27 images): exact copies of this repository's `docs/assets/<slug>.png`, synchronized with the web catalog by `scripts/sync-mobile-catalog.mjs`. The web SVG/illustration sources and generation scripts are retained in `docs/assets/` and `scripts/build-library-art.mjs`; no external stock assets were downloaded for this port.
+- store/assets/icon-512.png: resized from this app's original glasses icon. store/assets/feature-graphic.png: deterministic rasterization of the accompanying original SVG by `scripts/prepare-play-assets.cjs`; no screenshot or photograph is presented as a captured device UI.
+
 - icon.png, adaptive-icon.png, splash-icon.png, favicon.png: rasterized/resized from the existing original CorpTimer glasses in repository `docs/icon.svg`. Source retained in the repository.
 - boxing.jpg, fitness.jpg, pomodoro.jpg, classroom.jpg, chess.jpg, stopwatch.jpg, simple.jpg, newyear.jpg: cropped and optimized from the previously approved AI-generated CorpTimer atlas at docs/assets/timer-illustrations.jpg. The exact original generation prompt is retained in outputs/timer-library/illustration-prompt.txt and the original JPEG metadata. Mobile crops carry the source in their JPEG comments.
 - bell.wav, gong.wav, beep.wav: short synthesized PCM tones produced by scripts/prepare-assets.py; no sampled third-party audio.

@@ -1,5 +1,9 @@
 # Mobile timer workspace
 
+## 0.4 extension
+
+The 0.4 Android candidate retains this visual system and adds 27 specialty timer boards, favorite/start controls, collapsed stage editors, JSON/CSV tools, optional local branding, a compact plan status and a dedicated Pro screen. Dark teal clock panels use the existing cream/teal/coral tokens. Trial/Free/Pro status is server-backed; Google account/purchase controls are visibly disabled until the publisher configures them. Private native library sync and specialty background alarms are not implied. Current implementation and verification boundaries are in `PARITY-0.4.md`, `VALIDATION.md` and `store/GOOGLE-PLAY.md`; the earlier 0.3 review below remains historical.
+
 ## Scope and visitor mode
 Operate. Native iOS/iPadOS and Android meeting workspace, with other timers, editors, templates, reports, settings and support. This (0.3.0) refinement preserves the established Meeting-first surface and the website's identity.
 

@@ -17,8 +17,12 @@ def adb(*args):
 def tree():
     # The floating timer is intentionally non-focusable. Include all windows,
     # otherwise Android reports only the focused launcher behind the overlay.
-    adb('shell', 'uiautomator', 'dump', '--windows', '/sdcard/corptimer-ui.xml')
-    return ET.fromstring(adb('shell', 'cat', '/sdcard/corptimer-ui.xml'))
+    for _ in range(3):
+        result = subprocess.run(['adb', 'shell', 'uiautomator', 'dump', '--windows', '/sdcard/corptimer-ui.xml'], text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=35)
+        if result.returncode == 0 and 'ERROR' not in result.stdout:
+            return ET.fromstring(adb('shell', 'cat', '/sdcard/corptimer-ui.xml'))
+        time.sleep(.3)
+    raise AssertionError('Android accessibility snapshot did not reach an idle state; stale XML is not evidence')
 
 def bounds(node):
     a, b, c, d = map(int, re.findall(r'\d+', node.attrib.get('bounds', '[0,0][0,0]')))
@@ -249,19 +253,22 @@ try:
             if profile['slug'] in ['kitchen-timer', 'breathing-timer', 'speech-timer']:
                 capture(f"{form}-android-{profile['slug']}.png")
         open_path('specialty/multi-stopwatch')
-        t, button = scroll_text('Start all'); tap_node(button)
-        t, _ = scroll_to('board-clock-0')
-        for _ in range(16):
-            t = tree()
-            if 'Running' in ET.tostring(t, encoding='unicode'): break
-            time.sleep(1)
-        else: raise AssertionError('Specialty start did not pass the real quota reservation')
-        t, button = scroll_text('Lap'); tap_node(button)
+        t, lap = scroll_text('Lap')
+        start = find(t, text='Start')
+        assert start is not None, 'Independent stopwatch start was not visible'
+        # All six live clocks emit accessibility updates faster than UIAutomator's
+        # idle threshold. Exercise one clock, then pause it before reading results.
+        # The pre-start Start and Lap controls stay in the same row and position.
+        tap_node(start)
+        time.sleep(20)  # The existing signed-in reservation has a 15-second timeout.
+        tap_node(lap)
+        tap_node(start)  # The same first control is now Pause.
         for _ in range(6):
             t = tree()
             if 'Lap 1:' in ET.tostring(t, encoding='unicode'): break
             swipe_up()
         else: raise AssertionError('Native stopwatch lap not recorded')
+        assert 'Elapsed · Paused / ready' in ET.tostring(t, encoding='unicode'), 'Stopwatch did not pause'
         capture(f'{form}-android-multi-stopwatch.png')
         open_path('pro')
         t = tree(); assert 'Your timer. Your way.' in ET.tostring(t, encoding='unicode')

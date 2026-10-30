@@ -1,5 +1,5 @@
 ---
-name: "CorpTimer mobile 0.3"
+name: "CorpTimer mobile 0.4"
 description: "A Meeting-first native workspace in CorpTimer's cream, charcoal and dark teal."
 colors:
   bg: "#eeece5"
