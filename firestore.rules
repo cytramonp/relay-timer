@@ -45,6 +45,14 @@ service cloud.firestore {
           && request.resource.data.at < request.time.toMillis() + 30000;
       }
     }
+    match /users/{userId}/timerSettings/{settingId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['key','value','updatedAt'])
+        && request.resource.data.key is string && request.resource.data.key.size() <= 180
+        && request.resource.data.value is string && request.resource.data.value.size() <= 200000
+        && request.resource.data.updatedAt is int;
+    }
     match /users/{userId}/meetings/{meetingId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow create, update: if request.auth != null && request.auth.uid == userId

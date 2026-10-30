@@ -1,11 +1,15 @@
-import { timers, timerHref } from './timer-catalog.js';
+import {byPopularity} from './timer-popularity.js';
+import { timerArt } from './timer-art.js';
+import { timers, timerHref } from './timer-catalog.js?v=22';
 
 const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 export function renderTimerMenu(current='',prefix='../',label='Other Timers') {
-  const activities=timers.filter(timer=>!timer.minutes);
+  const activities=timers.filter(timer=>!timer.minutes).sort(byPopularity);
   const durations=timers.filter(timer=>timer.minutes);
-  const link=timer=>`<a href="${timerHref(timer,prefix)}"${timer.slug===current?' aria-current="page"':''}>${escape(timer.title)}</a>`;
-  return `<details class="timer-switcher"><summary>${escape(label)}<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="timer-menu"><div class="menu-rule" aria-hidden="true"></div><p class="menu-label">By activity</p><ul class="timer-menu-list">${activities.map(timer=>`<li>${link(timer)}</li>`).join('')}</ul><p class="menu-label">A few minutes</p><div class="timer-menu-minutes">${durations.map(timer=>`<a href="${timerHref(timer,prefix)}"${timer.slug===current?' aria-current="page"':''}>${timer.minutes} min</a>`).join('')}</div><a class="timer-menu-all" href="${prefix}timers/"${current==='timers'?' aria-current="page"':''}>Browse all timers<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a></div></details>`;
+  const link=timer=>`<a href="${timerHref(timer,prefix)}"${timer.slug===current?' aria-current="page"':''}>${timerArt(timer,'menu-art')}<span>${escape(timer.title)}</span></a>`;
+  const groups=['Everyday','Sports','Professional','Learning & events'];
+  const category=t=>t.category||(['boxing','fitness'].includes(t.kind)?'Sports':t.kind==='meeting'?'Professional':t.kind==='classroom'?'Learning & events':'Everyday');
+  return `<details class="timer-switcher"><summary>${escape(label)}<svg class="menu-chevron" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></summary><div class="timer-menu"><div class="catalog-tools"><button type="button" data-menu-close aria-label="Close timer menu">Close</button><button type="button" data-collapse>Collapse to Groups</button><a href="${prefix}custom-timer/">Make your own timer</a></div><ul class="timer-menu-list timer-popular-list">${activities.map(t=>`<li>${link(t)}</li>`).join('')}</ul><div class="timer-group-list" hidden>${groups.map(g=>`<details class="timer-category"><summary>${escape(g)}</summary><ul class="timer-menu-list">${activities.filter(t=>category(t)===g).map(timer=>`<li>${link(timer)}</li>`).join('')}</ul></details>`).join('')}</div><details class="timer-category" open><summary>A few minutes</summary><div class="timer-menu-minutes">${durations.map(timer=>link(timer)).join('')}</div></details><a class="timer-menu-all" href="${prefix}timers/">Browse all timers</a></div></details>`;
 }
 
 if(typeof document!=='undefined') {
@@ -15,6 +19,9 @@ if(typeof document!=='undefined') {
     menus().forEach(menu=>{if(menu!==event.target)menu.open=false;});
   },true);
   document.addEventListener('click',event=>{
+    const close=event.target.closest('[data-menu-close]');if(close){close.closest('.timer-switcher').open=false;return;}
+    const collapse=event.target.closest('[data-collapse]');if(collapse){const scope=collapse.closest('.timer-menu,.directory-group');const closed=collapse.dataset.collapsed!=='true';const flat=scope.querySelector('.timer-popular-list'),grouped=scope.querySelector('.timer-group-list');if(flat)flat.hidden=closed;if(grouped)grouped.hidden=!closed;scope.querySelectorAll('.timer-category,.directory-category').forEach(group=>group.open=flat?false:!closed);collapse.dataset.collapsed=String(closed);collapse.textContent=closed?'Show All Timers':'Collapse to Groups';}
+
     menus().forEach(menu=>{if(!menu.contains(event.target))menu.open=false;});
   });
   document.addEventListener('keydown',event=>{

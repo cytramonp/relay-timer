@@ -4,27 +4,54 @@
 
 ## Public timer pages
 
-- [Meeting Timer](https://corptimer.com/): Give every speaker their time. Build an agenda, pass spare minutes forward and share a live audience screen.
-- [Boxing Timer](https://corptimer.com/boxing-timer/): Your rounds. Your rhythm. A flexible boxing round timer with rest periods, a gong and adjustable warning cues.
-- [Fitness Timer](https://corptimer.com/fitness-timer/): Make room for the next rep. Set up HIIT, Tabata, EMOM, AMRAP or your own interval workout.
-- [Pomodoro Timer](https://corptimer.com/pomodoro-timer/): One thing at a time. Focus sessions, short breaks and a longer pause, at a pace you choose.
-- [Classroom Timer](https://corptimer.com/classroom-timer/): A little structure for a room full of ideas. A clear activity countdown for lessons, group work and quiet reading.
-- [Chess Timer](https://corptimer.com/chess-timer/): Two players. Equal time. A chess clock with increment, delay and a clear handoff after every move.
-- [Online Stopwatch](https://corptimer.com/stopwatch/): Start now. See how long it takes. A simple stopwatch with laps, splits and an exportable record.
-- [Simple Timer](https://corptimer.com/simple-timer/): Just the time you need. An adjustable online countdown with an alarm, fullscreen and one-minute extensions.
-- [New Year Countdown](https://corptimer.com/new-year-countdown/): A fresh start, down to the second. Count down to midnight in the time zone you choose.
+- [Meeting Timer](https://corptimer.com/): Online meeting agenda timer with speaker slots, time carryover, templates and a live audience view.
+- [Boxing Timer](https://corptimer.com/boxing-timer/): Online boxing round timer with rest periods, a gong, individual round lengths and adjustable warning cues.
+- [Fitness Timer](https://corptimer.com/fitness-timer/): Online interval timer for HIIT, Tabata, EMOM, AMRAP and custom workouts with repeated sets and recovery.
+- [Pomodoro Timer](https://corptimer.com/pomodoro-timer/): Online Pomodoro timer with editable focus sessions, short and long breaks, sound cues and manual or automatic handoff.
+- [Classroom Timer](https://corptimer.com/classroom-timer/): Online classroom activity timer for lessons, group work and quiet reading, with optional visual-only progress.
+- [Chess Timer](https://corptimer.com/chess-timer/): Online two-player chess clock with editable time controls, increment, delay and turn handoff.
+- [Online Stopwatch](https://corptimer.com/stopwatch/): Online stopwatch with elapsed time, lap splits, pause and resume, and CSV results export.
+- [Simple Timer](https://corptimer.com/simple-timer/): Online countdown timer with a custom duration, adjustable alarm, fullscreen display and one-minute extensions.
+- [New Year Countdown](https://corptimer.com/new-year-countdown/): New Year countdown to January 1 at midnight in your chosen time zone, with an optional alarm and fullscreen display.
 - [5 Minute Timer](https://corptimer.com/5-minute-timer/): Start a 5 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [10 Minute Timer](https://corptimer.com/10-minute-timer/): Start a 10 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [15 Minute Timer](https://corptimer.com/15-minute-timer/): Start a 15 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [20 Minute Timer](https://corptimer.com/20-minute-timer/): Start a 20 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [25 Minute Timer](https://corptimer.com/25-minute-timer/): Start a 25 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
 - [30 Minute Timer](https://corptimer.com/30-minute-timer/): Start a 30 minute timer with one click. Pause, reset, add time or use a fullscreen countdown with an adjustable alarm.
+- [Kitchen Timer](https://corptimer.com/kitchen-timer/): Cook several dishes independently, with named steps and separate alarms.
+- [Meditation Timer](https://corptimer.com/meditation-timer/): A quiet meditation timer with preparation, interval bells and a gentle finish.
+- [Tea Brewing Timer](https://corptimer.com/tea-brewing-timer/): Time repeated tea infusions with editable brewing stages and temperature notes.
+- [Toothbrushing Timer](https://corptimer.com/toothbrushing-timer/): Follow a visible brushing-zone sequence with gentle handoff cues.
+- [Breathing Timer](https://corptimer.com/breathing-timer/): Follow an editable breathing rhythm with a gently expanding and contracting visual.
+- [Yoga Timer](https://corptimer.com/yoga-stretching-timer/): Name your poses, time each hold and see which side or movement comes next.
+- [Speech Timer](https://corptimer.com/speech-timer/): Rehearse a speech with editable green, amber and red timing signals.
+- [Egg Timer](https://corptimer.com/egg-timer/): Follow egg doneness milestones from runny to hard-boiled with a visible yolk guide.
+- [Multi Stopwatch](https://corptimer.com/multi-stopwatch/): Time six people independently, with individual starts, laps and finishes.
+- [Running Coach Timer](https://corptimer.com/running-coach-timer/): Manage independent running efforts and recovery for a group.
+- [Swimming Timer](https://corptimer.com/swimming-timer/): Record elapsed times and lap splits across six swimming lanes.
+- [Circuit Training Timer](https://corptimer.com/circuit-training-timer/): Run separate work and recovery clocks for training stations.
+- [Climbing Timer](https://corptimer.com/climbing-timer/): Keep climbing attempts and rest periods visible for several climbers.
+- [Sailing Start Timer](https://corptimer.com/sailing-start-timer/): Practice a regatta start with an editable visual countdown.
+- [Archery Timer](https://corptimer.com/archery-timer/): Show preparation, shooting and changeover periods for archery practice.
+- [Sports Timekeeper](https://corptimer.com/sports-scoreboard-timer/): Keep game, attack, timeout and penalty countdowns on one board.
+- [Multiplayer Board Game Timer](https://corptimer.com/board-game-timer/): Give up to six players their own time bank and pass the turn.
+- [Debate Timer](https://corptimer.com/debate-timer/): Run editable speech sequences for two sides of a practice debate.
+- [Exam Station Timer](https://corptimer.com/exam-station-timer/): Track task and transition time for parallel exam stations.
+- [Speed Networking Timer](https://corptimer.com/speed-networking-timer/): Keep networking conversations and partner changeovers on schedule.
+- [Darkroom Timer](https://corptimer.com/darkroom-timer/): Follow separate development sequences for photographic batches.
+- [Coffee Brewing Timer](https://corptimer.com/coffee-brewing-timer/): Follow an editable bloom, pour and draw-down sequence for coffee.
+- [Bakery Batch Timer](https://corptimer.com/bakery-timer/): Track independent bakery batches through mixing, resting, proofing and baking.
+- [Laboratory Sample Timer](https://corptimer.com/laboratory-timer/): Run independent sample countdowns with named processing stages.
+- [Workshop Job Timer](https://corptimer.com/workshop-job-timer/): Measure active work separately for several jobs or clients.
+- [Escape Room Timer](https://corptimer.com/escape-room-timer/): Run independent room countdowns and adjust time during a game.
+- [Skydiving Ground Preparation Timer](https://corptimer.com/skydiving-ground-timer/): Coordinate briefing and ground preparation for several skydiving groups.
 
 ## Directory and usage
 
 - [Other Timers](https://corptimer.com/timers/): Browse all activities and preset countdowns.
 - Each timer page contains a public, expandable How it works and advice guide in its HTML.
 - JavaScript is required to operate the clocks; an account is not required.
-- Standalone setups stay in browser storage. Optional Google synchronization belongs to the Meeting Timer.
+- Timer settings, custom timers, templates and favorites save locally, with optional Google account synchronization.
 - Keep the tab open for alarms; background and mobile delivery depend on the browser.
 - Live audience links are temporary session views, not indexable timer guides.

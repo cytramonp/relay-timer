@@ -1,3 +1,4 @@
+import {stageTick} from './transition-sound.js';
 import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState,equalizedAgenda} from "./model.js?v=8";
 import {iconMarkup} from "./icons.js?v=8";
 import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=8';
@@ -9,7 +10,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
   let uid = 0;
   const mkId = () => "s" + Date.now().toString(36) + (uid++).toString(36);
   const mk = (name, min, kind) => ({ id: mkId(), kind: kind || "person", name, min });
-  const defaults = () => ({ agenda: NAMES.map(n => mk(n, 8)), floor: 1, warn: 1, sound: false, autoSplit: true, keepProp: true, clock: 70, shape: "wide", endPolicy:'manual',parking:[],reports:[],run: null });
+  const defaults = () => ({ agenda: [mk('Welcome',3,'topic'),...NAMES.slice(0,5).map(n=>mk(n,3)),mk('Blockers',10,'topic'),mk('Wrap-up',2,'topic')],total:30, floor: 1, warn: 1, sound: false, autoSplit: true, keepProp: true, clock: 70, shape: "wide", endPolicy:'manual',parking:[],reports:[],run: null });
   let S = load();
   S.agenda.forEach(a => { if (!a.id) a.id = mkId(); if (!a.kind) a.kind = "person"; });
   if (!(S.total > 0)) S.total = round2(S.agenda.reduce((s, a) => s + (+a.min || 0), 0));
@@ -102,7 +103,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
     r.cur = null;
   }
   function next(){
-    initAudio();
+    initAudio();if(S.run)stageTick();
     const r = S.run;
     if (!r){
       const p = pending(); if (!p.length) return;
@@ -258,7 +259,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
   }
   let view = { state: "idle", pos: "", slotInfo: "", name: "", bar: 0, over: false, time: "", nextName: "", nextNote: "", blocks: [] };
   function tick(){
-    if(advanceAutomatic(S)){beep(2);save();renderRos();}
+    if(advanceAutomatic(S)){stageTick();beep(2);save();renderRos();}
     const r = S.run, e = elapsed(), n = N(), p = pending();
     const ov = $("ov");
     $("clk").textContent = fmt(e, "up");

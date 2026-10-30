@@ -59,11 +59,11 @@ test('every timer has a crawlable page, unique canonical, correct preset and wor
   const docs=path.resolve('docs');const titles=new Set();const canonicals=new Set();
   for(const timer of timers.filter(t=>t.slug)){
     const filename=path.join(docs,timer.slug,'index.html');const html=fs.readFileSync(filename,'utf8');
-    assert.ok(html.includes(`<h1>${timer.title}</h1>`),timer.slug);
+    assert.ok(html.includes(`<h1>${timer.title.replaceAll("&","&amp;")}</h1>`),timer.slug);
     const title=html.match(/<title>(.*?)<\/title>/)[1];assert.ok(!titles.has(title));titles.add(title);
     const canonical=html.match(/rel="canonical" href="([^"]+)"/)[1];assert.equal(canonical,`https://corptimer.com/${timer.slug}/`);assert.ok(!canonicals.has(canonical));canonicals.add(canonical);
     assert.ok(html.includes(guideFor(timer).paragraphs[0]));if(timer.minutes)assert.ok(html.includes(`>${timer.minutes}:00</div>`));
-    for(const id of ['timer-settings','save-setup','saved-presets','delete-setup','export-setup','import-setup','fullscreen-timer','runtime-note'])assert.ok(html.includes(`id="${id}"`),`${timer.slug}: missing required control ${id}`);
+    for(const id of timer.kind==='specialty'?['specialty-board','board-start','board-pause','board-export','board-fullscreen','board-note']:['timer-settings','save-setup','saved-presets','delete-setup','export-setup','import-setup','fullscreen-timer','runtime-note'])assert.ok(html.includes(`id="${id}"`),`${timer.slug}: missing required control ${id}`);
     for(const [,href]of html.matchAll(/(?:href|src)="([^"]+)"/g)){
       if(/^(?:https?:|#)/.test(href))continue;const clean=href.split(/[?#]/)[0];const target=path.resolve(path.dirname(filename),clean.endsWith('/')?clean+'index.html':clean);assert.ok(fs.existsSync(target),`${timer.slug}: ${href}`);
     }
@@ -71,12 +71,12 @@ test('every timer has a crawlable page, unique canonical, correct preset and wor
   const root=fs.readFileSync(path.join(docs,'index.html'),'utf8');assert.ok(root.includes('Other Timers'));assert.ok(!root.includes('help-open'));assert.ok(!root.includes('help-dialog'));
   const sitemap=fs.readFileSync(path.join(docs,'sitemap.xml'),'utf8');for(const canonical of canonicals)assert.ok(sitemap.includes(canonical));assert.ok(!sitemap.includes('live.html'));
 });
-test('all fifteen timers contain a closed, static, page-specific how-to and advice guide',()=>{
+test('all timers contain a closed, static, page-specific how-to and advice guide',()=>{
   const unique=new Set();
   for(const timer of timers){
     const html=fs.readFileSync(timer.slug?`docs/${timer.slug}/index.html`:'docs/index.html','utf8');
     const guide=html.match(/<details class="timer-guide">([\s\S]*?)<\/details>/)?.[1];
-    assert.ok(guide,timer.title);assert.ok(guide.includes('<summary>How it works and advice'));assert.ok(guide.includes(`<h2>How the ${timer.title} works</h2>`));assert.ok((guide.match(/<li>/g)||[]).length>=4);assert.ok(!unique.has(guide));unique.add(guide);
+    assert.ok(guide,timer.title);assert.ok(guide.includes('<summary>How it works and advice'));assert.ok(guide.includes(`<h2>How the ${timer.title.replaceAll("&","&amp;")} works</h2>`));assert.ok((guide.match(/<li>/g)||[]).length>=4);assert.ok(!unique.has(guide));unique.add(guide);
     assert.ok(!html.includes('<details class="timer-guide" open'));assert.ok(html.includes('name="robots" content="index,follow'));
   }
   const robots=fs.readFileSync('docs/robots.txt','utf8');assert.ok(robots.includes('User-agent: OAI-SearchBot'));assert.ok(robots.includes('Sitemap: https://corptimer.com/sitemap.xml'));
