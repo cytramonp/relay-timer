@@ -1,0 +1,47 @@
+appId: com.corptimer.app
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: current-speaker
+    text: Welcome
+- takeScreenshot: '${DEVICE_CLASS}-ios-meeting-ready'
+- scrollUntilVisible:
+    element:
+      id: drag-handle-1
+    direction: DOWN
+    centerElement: true
+    timeout: 20000
+- swipe:
+    from:
+      id: drag-handle-1
+    direction: DOWN
+    duration: 1600
+    waitToSettleTimeoutMs: 500
+- assertVisible:
+    id: drag-handle-1
+    text: Reorder Morgan
+- takeScreenshot: '${DEVICE_CLASS}-ios-agenda-reordered'
+- scrollUntilVisible:
+    element:
+      text: Meeting name
+    direction: UP
+    centerElement: false
+    timeout: 20000
+- tapOn:
+    id: meeting-next
+    waitToSettleTimeoutMs: 500
+- tapOn:
+    text: Pause meeting
+    waitToSettleTimeoutMs: 500
+- assertVisible: 'PAUSED.*'
+- tapOn:
+    id: meeting-next
+    waitToSettleTimeoutMs: 500
+- tapOn:
+    text: Pause meeting
+    waitToSettleTimeoutMs: 500
+- assertVisible:
+    id: current-speaker
+    text: Morgan
+- takeScreenshot: '${DEVICE_CLASS}-ios-meeting-active'
