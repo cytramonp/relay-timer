@@ -90,6 +90,7 @@ export async function signInGoogle() {
         : null,
   });
   await refreshBilling();
+  if (purchasesEnabled()) await restorePurchases();
 }
 export async function signOutAccount() {
   await signOut(getFirebaseClient().auth);

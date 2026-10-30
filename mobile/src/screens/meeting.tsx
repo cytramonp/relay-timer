@@ -44,6 +44,7 @@ import { AgendaRow } from "../components/agenda-row";
 import type { Config } from "../core/types";
 import { useLive } from "../state/live-store";
 import { PlanStatus } from "../components/plan-status";
+import { requireCustomization } from "../services/billing";
 
 export function MeetingScreen() {
   const live = useLive();
@@ -490,6 +491,16 @@ export function MeetingScreen() {
           accessibilityRole="button"
           onPress={() =>
             void (async () => {
+              try {
+                requireCustomization();
+              } catch (e) {
+                notify(
+                  e instanceof Error
+                    ? e.message
+                    : "Check your plan before creating a meeting.",
+                );
+                return;
+              }
               if (
                 run &&
                 run.status !== "done" &&
