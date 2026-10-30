@@ -114,6 +114,7 @@ export function SettingsScreen() {
       )}
       <Rule />
       <Heading>Your data</Heading>
+      <Action label="Privacy & data" onPress={() => router.push("/privacy")} />
       <Body>
         Programs, notes and session history are stored on this device. Export
         programs from My programs to move them to another device. This native

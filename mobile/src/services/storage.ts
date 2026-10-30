@@ -95,6 +95,12 @@ export function loadStore(): { store: Store; error: string } {
       keepAwake: saved.settings?.keepAwake !== false,
       haptics: saved.settings?.haptics !== false,
       dialSound: saved.settings?.dialSound !== false,
+      companyLogo:
+        typeof saved.settings?.companyLogo === "string" &&
+        saved.settings.companyLogo.length <= 2800000 &&
+        /^data:image\/(png|jpeg|webp);base64,/.test(saved.settings.companyLogo)
+          ? saved.settings.companyLogo
+          : undefined,
       appearance:
         saved.settings?.appearance === "dark" ||
         saved.settings?.appearance === "system"

@@ -22,6 +22,8 @@ test("restored running clocks catch up, manual tea holds, invalid imports fail w
   assert.equal(held.index, 0); assert.equal(held.waiting, true); assert.equal(held.anchor, null);
   assert.throws(() => restoreBoard([{ ...initial[0], stages: [{ name: "bad", seconds: -1 }] }], "sequence", 0));
   assert.throws(() => restoreBoard([{ ...initial[0], laps: ["bad"] }], "sequence", 0));
+  const up = freshBoard({ ...customProfile, mode: "up", stages: [{ name: "Lap", seconds: 0 }] });
+  assert.equal(restoreBoard(up, "up", 5000)[0].stages[0].seconds, 0);
 });
 test("serving planner aligns independent dish completion; CSV quotes names", () => {
   const board = freshBoard(customProfile), next = servingBoard(board, 900000, 0);

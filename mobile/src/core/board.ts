@@ -58,7 +58,7 @@ export function restoreBoard(
           typeof s.name === "string" &&
           s.name.length <= 80 &&
           Number.isFinite(s.seconds) &&
-          s.seconds >= 1 &&
+          s.seconds >= (mode === "up" ? 0 : 1) &&
           s.seconds <= 86400,
       ) ||
       !Number.isInteger(c.index) ||
@@ -85,7 +85,10 @@ export function restoreBoard(
   });
 }
 export function boardCsv(board: Card[], now: number) {
-  const quote = (v: unknown) => `"${String(v).replace(/"/g, '""')}"`;
+  const quote = (v: unknown) => {
+    const text = String(v);
+    return `"${(/^[=+@\-\t\r]/.test(text) ? "'" + text : text).replace(/"/g, '""')}"`;
+  };
   return [
     "Clock,Stage,Planned seconds,Elapsed seconds,Status",
     ...board.flatMap((c) =>

@@ -233,6 +233,39 @@ try:
         # Preserve ready-state regression captures for the other app surfaces.
         for path, suffix in [('timer/boxing', 'boxing'), ('edit/boxing', 'editor'), ('history', 'history')]:
             open_path(path); capture(f'{form}-android-{suffix}.png')
+        # The new library is checked in the installed APK, not only in a web export.
+        import json
+        profiles = json.loads((root / 'src/core/specialty-catalog.json').read_text())
+        selected = profiles if form == 'phone' else [p for p in profiles if p['slug'] in ['kitchen-timer', 'tea-brewing-timer', 'breathing-timer', 'speech-timer', 'multi-stopwatch']]
+        for profile in selected:
+            open_path('specialty/' + profile['slug'])
+            t = tree()
+            assert find(t, text=profile['title']) is not None, 'Specialty title missing: ' + profile['slug']
+            for _ in range(5):
+                clock = find(t, identifier='board-clock-0')
+                if clock is not None: break
+                swipe_up(); t = tree()
+            assert clock is not None, 'Specialty clock did not render: ' + profile['slug']
+            if profile['slug'] in ['kitchen-timer', 'breathing-timer', 'speech-timer']:
+                capture(f"{form}-android-{profile['slug']}.png")
+        open_path('specialty/multi-stopwatch')
+        t, button = scroll_text('Start all'); tap_node(button)
+        t, _ = scroll_to('board-clock-0')
+        for _ in range(16):
+            t = tree()
+            if 'Running' in ET.tostring(t, encoding='unicode'): break
+            time.sleep(1)
+        else: raise AssertionError('Specialty start did not pass the real quota reservation')
+        t, button = scroll_text('Lap'); tap_node(button)
+        for _ in range(6):
+            t = tree()
+            if 'Lap 1:' in ET.tostring(t, encoding='unicode'): break
+            swipe_up()
+        else: raise AssertionError('Native stopwatch lap not recorded')
+        capture(f'{form}-android-multi-stopwatch.png')
+        open_path('pro')
+        t = tree(); assert 'Your timer. Your way.' in ET.tostring(t, encoding='unicode')
+        capture(f'{form}-android-plan.png')
         open_path('settings'); tap_node(find(tree(), text='Dark'))
         adb('shell', 'settings', 'put', 'system', 'font_scale', '1.3')
         open_path(''); capture(f'{form}-android-dark-large-text.png')

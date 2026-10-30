@@ -275,8 +275,35 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     async start(kind) {
       if (starting.current) return false;
       starting.current = true;
+      if (!pendingStart.current) {
+        try {
+          const saved = JSON.parse(
+            localStorage.getItem("corptimer-start-reservation-v1") || "null",
+          );
+          if (
+            saved?.kind === kind &&
+            typeof saved.id === "string" &&
+            /^[a-zA-Z0-9_-]{8,100}$/.test(saved.id)
+          )
+            pendingStart.current = saved;
+        } catch {
+          /* A malformed pending ID is not timer data. */
+        }
+      }
       if (pendingStart.current?.kind !== kind)
         pendingStart.current = { kind, id: Crypto.randomUUID() };
+      try {
+        localStorage.setItem(
+          "corptimer-start-reservation-v1",
+          JSON.stringify(pendingStart.current),
+        );
+      } catch {
+        notify(
+          "Could not reserve this start safely. Free up device storage and try again.",
+        );
+        starting.current = false;
+        return false;
+      }
       const id = pendingStart.current.id;
       try {
         await reserveSession(id);
@@ -301,6 +328,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (kind === "meeting") r.parking = clone(s.meetingParking ?? []);
       commit({ ...s, run: r, history });
       pendingStart.current = null;
+      try {
+        localStorage.removeItem("corptimer-start-reservation-v1");
+      } catch {
+        /* The committed run already keeps the reserved ID. */
+      }
       starting.current = false;
       void playCue(
         r.config,

@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { Linking, View } from "react-native";
-import { Stack } from "expo-router";
+import { Linking, Platform, View } from "react-native";
+import { Stack, router } from "expo-router";
+import * as DocumentPicker from "expo-document-picker";
+import { File } from "expo-file-system";
+import { useApp } from "../state/app-store";
+import { BrandLogo } from "../components/brand-logo";
 import { Action, Body, Heading, Page, Rule } from "../components/ui";
 import {
+  requireCustomization,
   buyPro,
   purchasesEnabled,
   refreshBilling,
@@ -12,6 +17,7 @@ import {
 import { useTheme } from "../theme";
 
 export default function ProScreen() {
+  const { settings } = useApp();
   const { access, product, error } = useBilling(),
     t = useTheme();
   const [busy, setBusy] = useState(false),
@@ -98,6 +104,54 @@ export default function ProScreen() {
         </Body>
       ) : null}
       <Rule />
+      <Heading>Your logo</Heading>
+      <BrandLogo />
+      <Body muted>
+        PNG, JPEG or WebP, up to 2 MB. Stored on this device and in your
+        explicit device-data export; never attached to feedback or sent to
+        billing.
+      </Body>
+      <Action
+        label="Choose company logo"
+        disabled={busy || !access?.customize}
+        onPress={() =>
+          void task(async () => {
+            requireCustomization();
+            const pick = await DocumentPicker.getDocumentAsync({
+              type: ["image/png", "image/jpeg", "image/webp"],
+              copyToCacheDirectory: true,
+              multiple: false,
+            });
+            if (pick.canceled) return;
+            const asset = pick.assets[0];
+            if (
+              !asset.mimeType ||
+              !["image/png", "image/jpeg", "image/webp"].includes(
+                asset.mimeType,
+              ) ||
+              (asset.size ?? 3000000) > 2000000
+            )
+              throw Error("Choose PNG, JPEG or WebP up to 2 MB.");
+            let uri: string;
+            if (Platform.OS === "web" && asset.file)
+              uri = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(String(reader.result));
+                reader.onerror = reject;
+                reader.readAsDataURL(asset.file!);
+              });
+            else
+              uri = `data:${asset.mimeType};base64,${await new File(asset.uri).base64()}`;
+            if (uri.length > 2800000) throw Error("Choose a smaller image.");
+            settings({ companyLogo: uri });
+          })
+        }
+      />
+      <Action
+        label="Remove company logo"
+        onPress={() => settings({ companyLogo: undefined })}
+      />
+      <Rule />
       <Action
         label="Restore Google Play purchases"
         disabled={busy || !purchasesEnabled()}
@@ -131,10 +185,7 @@ export default function ProScreen() {
         Cancelling retains Pro until the end of the paid period. No payment is
         required to start the CorpTimer trial.
       </Body>
-      <Action
-        label="Privacy & data"
-        onPress={() => void Linking.openURL("https://corptimer.com/#privacy")}
-      />
+      <Action label="Privacy & data" onPress={() => router.push("/privacy")} />
       {message || error ? <Body>{message || error}</Body> : null}
     </Page>
   );

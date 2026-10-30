@@ -1,4 +1,4 @@
-# Mobile 0.2 data inventory
+# Mobile 0.4 data inventory
 
 Technical evidence for preparing store privacy forms and the publisher's notice. This is not a completed privacy notice or a declaration that the store forms have been approved. Sources: `src/services/storage.ts`, `src/state/app-store.tsx`, `src/state/live-store.tsx`, `src/services/live.ts`, `src/core/meeting.ts`, `src/services/files.ts`, `src/services/notifications.ts`, `app.json` and the local overlay module.
 
@@ -18,6 +18,20 @@ Technical evidence for preparing store privacy forms and the publisher's notice.
 
 The public projection excludes private notes, follow-up owners/items, reports and internal slot identifiers. Anyone holding a valid viewer link can read its projection; a separate capability link grants timer control. Public collection enumeration is denied by the existing rules. Hosting requires a live app connection; arbitrary background JavaScript execution is not promised.
 
-There is no implemented native Google/Apple private-library synchronization, advertising, payment, analytics or remote push integration in this app. Audio cues and voice output do not use microphone recording. The audio plugin disables iOS microphone permission and background recording; generated Android permission declarations must be checked separately before store submission. Bundled fonts, images and sound cues do not require runtime downloads.
+There is no implemented native Google/Apple private-library synchronization, advertising, analytics or remote push integration. Audio cues and voice output do not use microphone recording. The audio plugin disables iOS microphone permission and background recording. Android configuration explicitly blocks microphone and broad media/storage permissions; the artifact verification script checks the generated manifest. Bundled fonts, images and sound cues do not require runtime downloads.
+
+## 0.4 access and store additions
+
+| Data | Collection / purpose / source evidence | Retention, recipients and unresolved facts |
+|---|---|---|
+| Persistent anonymous Firebase identity | Required plan initialization and new-session checks; `src/services/billing.ts`, `src/services/live.ts` | Local Firebase auth persistence; Firebase Authentication and Cloudflare Workers/D1 receive UID. Provider region/account deletion and retention require owner confirmation. No Google profile sign-in is implemented in native. |
+| Random reserved session IDs, first-use timestamp, daily/total usage, UTC day | Trial and Free quota; `src/state/app-store.tsx`, specialty route, `billing-worker/store.js`, `docs/pro-policy.js` | Up to 500 recent IDs per account, plus aggregate counts; no implemented time-based account deletion. D1 holds these records. Native retries preserve a pending reservation ID. Running timer transitions do not send another reservation. |
+| Google Play receipt token, SHA-256 token hash, product, subscription expiry/state and current owner UID | Optional native product query/payment/restore; `modules/corptimer-billing`, `billing-worker/play.js` | Purchases disabled in this build. When configured, Google Play processes payment; server verifies/acknowledges, stores the token privately and assigns one current restore owner. No card details in the app. Retention/deletion and live credential settings require confirmation. No native token or private credential is bundled in the client. |
+| Specialty clocks, stages, laps, schedules, saved setup, favorites and start timer | Native AsyncStorage; specialty route and `timer-library.tsx` | Until relevant deletion/reset or OS app-data clearing/uninstall. Standalone specialty JSON/CSV exports are explicit. These keys are separate from the original SQLite program store and its device-data export. No board content is sent to billing. |
+| Company logo (optional image data URI, at most 2 MB before encoding) | System document picker; `src/app/pro.tsx`, `settings.companyLogo` | Local SQLite settings and explicit full device-data export; remove in Your plan. No upload to billing, live projection or feedback. Imported by the picker without broad media permission. |
+
+Current access checks are implemented, not a claim that the Play verification extension is deployed. Google Play product/API credentials and real store purchase lifecycle are unverified. `store/GOOGLE-PLAY.md` identifies the activation gates. The signed bundle's build checks are separate from publisher declarations.
+
+Proposed notice: `privacy-notice.draft.md`; proposed store classifications: `data-safety.draft.json`. Outstanding publisher identity, intended audience/markets, lawful bases, transfer safeguards, mailbox/account retention, deletion operations and final public privacy/contact URL are explicitly unresolved. Revisit the inventory when store purchases are enabled, native sign-in/sync is added, a provider changes or the processing scope changes. Public notices should be localized for the actual release markets; the current prepared copy is English.
 
 Before store submission, the owner must verify provider storage region/account handling, generated OS backup rules and privacy manifests, publisher/contact details and applicable store-form classifications. With explicit owner approval, the free Web3Forms account and one form were created on 2026-10-28. No payment plan, autoresponder, team access, Firebase administration or app-store account was configured. The mobile client contains only the public form alias, never the recipient address or an account credential.

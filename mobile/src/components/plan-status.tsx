@@ -2,11 +2,13 @@ import React from "react";
 import { router } from "expo-router";
 import { Action, Body, Row } from "./ui";
 import { useBilling, refreshBilling } from "../services/billing";
+import { BrandLogo } from "./brand-logo";
 
 export function PlanStatus() {
   const { access, error, loading } = useBilling();
   return (
     <Row>
+      <BrandLogo />
       <Body muted>
         {loading
           ? "Checking access…"
