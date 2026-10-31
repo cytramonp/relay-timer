@@ -1,0 +1,49 @@
+{
+  "sourceCommit": "96a0579581279fc8ab27e394b9fab93eae989f02",
+  "runtimeCommit": "6b7b5652fb74f947126af70e8f167074b22897f5",
+  "date": "2026-10-30",
+  "timezone": "America/Los_Angeles",
+  "skills": {
+    "reactNative": "59e9d17446a248b21d86f078fcd0bd2d36db1ca4",
+    "cto": "82d55e14b561b846abc22dc84bc532d2a2877daa"
+  },
+  "sourceSha256": {
+    "mobile/src/state/app-store.tsx": "2d57fb24f852ce39c2ab91df402d6a9e00005f9fc44d836462ee5c9f1742d68d",
+    "mobile/src/app/specialty/[slug].tsx": "34078b44ec5468e09ff88865822c6d381ed89dad96fa62c5dcfa7c94cf225674",
+    "mobile/src/core/board-engine.js": "b0e0c8258627ffb8c5df603138de42112aad28c94596c6b15fb345aee9adbd3a",
+    "mobile/src/core/board.ts": "0ff8f05f220b47c78d96953b8badeb3354bdb5c1d851c925b6ac2ca88d331510",
+    "mobile/src/core/backup.ts": "c8a3bbe35ed78bcaee14421baeeb3fcbd1f9797ac13f5dd9cc18a193795e7b06",
+    "mobile/src/services/notifications.ts": "c24bead906938199d0b947bce72e03d4cf036a768ea85b48d457aff195bd3eb2",
+    "mobile/src/state/live-store.tsx": "2ce9a6f439fa0a26562f90a0d4ffdae9d37d11bbc684dec09fdbb9db61016fff",
+    "mobile/src/services/storage.ts": "435c7898d45d03bb206ff0fe409f0e6f39d63702c7eae935eb30a5f34ed52f19",
+    "mobile/package-lock.json": "0815df7488e8ea94c26add1b2f45dc527059d5cf58051cea4418c2811d668dd9"
+  },
+  "rerunChecks": {
+    "mobileTests": {
+      "passed": 40,
+      "failed": 0
+    },
+    "webTests": {
+      "passed": 59,
+      "failed": 0
+    },
+    "billingTests": {
+      "passed": 9,
+      "failed": 0,
+      "googleProviderMocked": true
+    },
+    "typescript": "passed",
+    "expoLint": "passed",
+    "webSyntaxChecks": "passed",
+    "auditHarness": "passed"
+  },
+  "notMeasured": [
+    "physical-device startup latency",
+    "native JS/UI frame pacing",
+    "memory peak",
+    "battery consumption",
+    "real lock-screen alarms",
+    "real Google Play purchases",
+    "current iOS native runtime"
+  ]
+}

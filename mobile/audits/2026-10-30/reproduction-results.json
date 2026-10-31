@@ -1,0 +1,63 @@
+{
+  "baseline": "96a0579581279fc8ab27e394b9fab93eae989f02",
+  "runtimeBaseline": "6b7b5652fb74f947126af70e8f167074b22897f5",
+  "node": "v24.14.1",
+  "harness": "audits/2026-10-30/reproduce.mjs",
+  "results": {
+    "scheduledReset": {
+      "scheduledAt": 540000,
+      "resetCardAutostarts": true,
+      "manuallyStartedAt": 10000,
+      "unexpectedAnchorAfterOldSchedule": 540000
+    },
+    "lapCap": {
+      "recorded": 501,
+      "kept": 500,
+      "firstLapRow": "\"Timer 1\",\"Lap record\",\"\",\"2.00\",\"Recorded\",\"1\",\"2.00\",\"\"",
+      "expectedFirstRetainedLapNumber": 2,
+      "expectedSplitSeconds": 1
+    },
+    "backupRoundTrip": {
+      "validPrograms": 200,
+      "agendaItemsPerProgram": 200,
+      "exportedCharacters": 10341960,
+      "exportedBytes": 10341960,
+      "importError": "Choose a JSON file smaller than 4 MB."
+    },
+    "wallClockChange": {
+      "beforeCorrection": "0:10",
+      "afterWallClockAdvancedOneHour": "60:10",
+      "expectedIfTenSecondsReallyPassed": "0:10"
+    },
+    "specialtyQuota": {
+      "startsIncludingTwoIndividualResets": 3,
+      "reservationsBeforeFullBoardReset": 1,
+      "reusedSession": "audit-1",
+      "reservationsAfterFullBoardResetAndStart": 2,
+      "caveat": "Local extracted controller with mocks; intended boundary of a billable session still needs a product rule."
+    },
+    "resetScope": {
+      "sqliteOnly": true,
+      "evidence": "resetDevice calls emptyStore/commit, without clearing AsyncStorage board/feedback/favorite/host keys",
+      "method": "Source assertion, not a native reset test"
+    },
+    "notificationQueue": {
+      "lastRequestedState": "paused/disabled",
+      "obsoleteRunsStillScheduledBeforeFinalCancellation": [
+        "corptimer-old-0",
+        "corptimer-new-0"
+      ],
+      "method": "Actual queue with delayed mock; no claim about real OS delivery latency"
+    },
+    "liveCommandAcknowledgement": {
+      "startEventuallySucceeded": false,
+      "acknowledgedBeforeStartResolved": [
+        "audit-command"
+      ],
+      "deletedBeforeStartResolved": [
+        "audit-command"
+      ],
+      "method": "Actual callback with pending mocked start resolving false; no live Firestore writes"
+    }
+  }
+}

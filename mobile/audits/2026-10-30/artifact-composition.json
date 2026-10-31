@@ -1,0 +1,133 @@
+{
+  "CorpTimer-0.4.0-beta.apk": {
+    "fileBytes": 75561216,
+    "sha256": "e95941233f45fb544f6c01c09d6f799101411f85b0e8ceccad4f1dd0ca7166a5",
+    "groups": {
+      "other": {
+        "entries": 1672,
+        "uncompressedBytes": 10154414,
+        "zipCompressedBytes": 7293829
+      },
+      "assets": {
+        "entries": 4,
+        "uncompressedBytes": 6371876,
+        "zipCompressedBytes": 6370936
+      },
+      "dex": {
+        "entries": 2,
+        "uncompressedBytes": 13049384,
+        "zipCompressedBytes": 6148906
+      },
+      "lib/arm64-v8a": {
+        "entries": 30,
+        "uncompressedBytes": 26682728,
+        "zipCompressedBytes": 26682728
+      },
+      "lib/x86_64": {
+        "entries": 30,
+        "uncompressedBytes": 28367352,
+        "zipCompressedBytes": 28367352
+      }
+    },
+    "largestEntries": [
+      {
+        "name": "lib/x86_64/libreactnative.so",
+        "uncompressedBytes": 7258056,
+        "zipCompressedBytes": 7258056
+      },
+      {
+        "name": "lib/arm64-v8a/libreactnative.so",
+        "uncompressedBytes": 7049088,
+        "zipCompressedBytes": 7049088
+      },
+      {
+        "name": "assets/index.android.bundle",
+        "uncompressedBytes": 6354660,
+        "zipCompressedBytes": 6354660
+      },
+      {
+        "name": "classes.dex",
+        "uncompressedBytes": 10278736,
+        "zipCompressedBytes": 5002576
+      },
+      {
+        "name": "lib/x86_64/libhermesvm.so",
+        "uncompressedBytes": 2830688,
+        "zipCompressedBytes": 2830688
+      },
+      {
+        "name": "lib/arm64-v8a/libhermesvm.so",
+        "uncompressedBytes": 2704136,
+        "zipCompressedBytes": 2704136
+      },
+      {
+        "name": "resources.arsc",
+        "uncompressedBytes": 2332352,
+        "zipCompressedBytes": 2332352
+      },
+      {
+        "name": "lib/x86_64/libexpo-sqlite.so",
+        "uncompressedBytes": 1947576,
+        "zipCompressedBytes": 1947576
+      }
+    ]
+  },
+  "CorpTimer-0.4.0-google-play-internal.aab": {
+    "fileBytes": 56740848,
+    "sha256": "eade540b7fcf64da6bae21b977d80fb208b14a4f6f32105f203d4fba4fd62592",
+    "groups": {
+      "other": {
+        "entries": 1776,
+        "uncompressedBytes": 253683941,
+        "zipCompressedBytes": 50232972
+      },
+      "dex": {
+        "entries": 2,
+        "uncompressedBytes": 13049384,
+        "zipCompressedBytes": 6148906
+      }
+    },
+    "largestEntries": [
+      {
+        "name": "BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map",
+        "uncompressedBytes": 128391304,
+        "zipCompressedBytes": 9763367
+      },
+      {
+        "name": "base/dex/classes.dex",
+        "uncompressedBytes": 10278736,
+        "zipCompressedBytes": 5002576
+      },
+      {
+        "name": "BUNDLE-METADATA/com.android.tools.build.debugsymbols/arm64-v8a/libreactnative.so.sym",
+        "uncompressedBytes": 11528736,
+        "zipCompressedBytes": 3055297
+      },
+      {
+        "name": "BUNDLE-METADATA/com.android.tools.build.debugsymbols/x86_64/libreactnative.so.sym",
+        "uncompressedBytes": 11010424,
+        "zipCompressedBytes": 2977247
+      },
+      {
+        "name": "base/assets/index.android.bundle",
+        "uncompressedBytes": 6354660,
+        "zipCompressedBytes": 2670495
+      },
+      {
+        "name": "base/lib/x86_64/libreactnative.so",
+        "uncompressedBytes": 7258056,
+        "zipCompressedBytes": 2450973
+      },
+      {
+        "name": "base/lib/arm64-v8a/libreactnative.so",
+        "uncompressedBytes": 7049088,
+        "zipCompressedBytes": 2362893
+      },
+      {
+        "name": "base/lib/x86_64/libhermesvm.so",
+        "uncompressedBytes": 2830688,
+        "zipCompressedBytes": 1180400
+      }
+    ]
+  }
+}
