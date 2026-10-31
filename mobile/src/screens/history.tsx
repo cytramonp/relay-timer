@@ -60,8 +60,8 @@ function ReportRow({ report: r }: { report: Report }) {
       [],
       ["Lap", "Split seconds", "Total seconds"],
       ...r.laps.map((lap, i) => [
-        i + 1,
-        (lap - (r.laps[i - 1] ?? 0)) / 1000,
+        (r.lapOffset ?? 0) + i + 1,
+        (lap - (r.laps[i - 1] ?? r.lapBase ?? 0)) / 1000,
         lap / 1000,
       ]),
       [],
@@ -117,7 +117,8 @@ function ReportRow({ report: r }: { report: Report }) {
           ))}
           {r.laps.map((lap, i) => (
             <Body key={i}>
-              Lap {i + 1}: {formatTime(lap - (r.laps[i - 1] ?? 0), true)} ·
+              Lap {(r.lapOffset ?? 0) + i + 1}:{" "}
+              {formatTime(lap - (r.laps[i - 1] ?? r.lapBase ?? 0), true)} ·
               total {formatTime(lap, true)}
             </Body>
           ))}

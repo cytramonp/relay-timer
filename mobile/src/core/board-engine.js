@@ -12,16 +12,16 @@ export function createBoard(profile) {
 export const elapsed = (card, now) =>
   card.elapsed + (card.anchor === null ? 0 : Math.max(0, now - card.anchor));
 export function settle(card, mode, now) {
-  let c = {
-    ...card,
-    stages: card.stages.map((s) => ({ ...s })),
-    laps: [...card.laps],
-  };
-  if (c.anchor === null || mode === "up") return c;
+  if (card.anchor === null || card.done || mode === "up") return card;
+  if (elapsed(card, now) < card.stages[card.index].seconds * 1000) return card;
+  let c = { ...card };
   let ms = elapsed(c, now);
   while (ms >= c.stages[c.index].seconds * 1000 && !c.done) {
     if (c.automatic === false && c.index < c.stages.length - 1) {
-      c.elapsed = c.stages[c.index].seconds * 1000;c.anchor=null;c.waiting=true;return c;
+      c.elapsed = c.stages[c.index].seconds * 1000;
+      c.anchor = null;
+      c.waiting = true;
+      return c;
     }
     ms -= c.stages[c.index].seconds * 1000;
     if (c.index === c.stages.length - 1) {
@@ -45,13 +45,16 @@ export function act(board, index, action, mode, now) {
     );
   const c = { ...next[index], laps: [...next[index].laps] };
   if (action === "toggle" && !c.done) {
-    if(c.waiting)return next;
+    if (c.waiting) return next;
     c.elapsed = elapsed(c, now);
     c.anchor = c.anchor === null ? now : null;
+    c.scheduledAt = null;
+    c.hasStarted = true;
   }
   if (action === "pause") {
     c.elapsed = elapsed(c, now);
     c.anchor = null;
+    c.scheduledAt = null;
   }
   if (action === "reset") {
     c.index = 0;
@@ -60,8 +63,18 @@ export function act(board, index, action, mode, now) {
     c.done = false;
     c.waiting = false;
     c.laps = [];
+    c.hasStarted = false;
+    c.lapOffset = 0;
+    c.lapBase = 0;
+    c.scheduledAt = null;
   }
-  if (action === "lap" && c.anchor !== null) c.laps.push(elapsed(c, now));
+  if (action === "lap" && c.anchor !== null) {
+    c.laps.push(elapsed(c, now));
+    if (c.laps.length > 500) {
+      c.lapBase = c.laps.shift();
+      c.lapOffset = (c.lapOffset || 0) + 1;
+    }
+  }
   if (action === "next") {
     if (mode === "turn") {
       c.elapsed = elapsed(c, now);
@@ -103,11 +116,31 @@ export function act(board, index, action, mode, now) {
   return next.map((x) => settle(x, mode, now));
 }
 export function seekCard(card, seconds, mode) {
-  const c={...card,anchor:null,done:false,waiting:false,index:0,elapsed:0};
-  let remaining=Math.max(0,Number(seconds)||0)*1000;
-  if(mode==='up'){c.elapsed=remaining;c.laps=c.laps.filter(v=>v<=remaining);return c;}
-  while(c.index<c.stages.length-1&&remaining>=c.stages[c.index].seconds*1000){remaining-=c.stages[c.index].seconds*1000;c.index++;}
-  c.elapsed=Math.min(remaining,c.stages[c.index].seconds*1000);c.done=c.index===c.stages.length-1&&c.elapsed>=c.stages[c.index].seconds*1000;
+  const c = {
+    ...card,
+    anchor: null,
+    done: false,
+    waiting: false,
+    index: 0,
+    elapsed: 0,
+  };
+  let remaining = Math.max(0, Number(seconds) || 0) * 1000;
+  if (mode === "up") {
+    c.elapsed = remaining;
+    c.laps = c.laps.filter((v) => v <= remaining);
+    return c;
+  }
+  while (
+    c.index < c.stages.length - 1 &&
+    remaining >= c.stages[c.index].seconds * 1000
+  ) {
+    remaining -= c.stages[c.index].seconds * 1000;
+    c.index++;
+  }
+  c.elapsed = Math.min(remaining, c.stages[c.index].seconds * 1000);
+  c.done =
+    c.index === c.stages.length - 1 &&
+    c.elapsed >= c.stages[c.index].seconds * 1000;
   return c;
 }
 export function display(card, mode, now) {

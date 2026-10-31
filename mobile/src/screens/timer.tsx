@@ -6,6 +6,7 @@ import { Stack, router } from "expo-router";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { catalog } from "../core/catalog";
 import {
+  advance,
   createRun,
   elapsed,
   formatTime,
@@ -23,6 +24,7 @@ import {
   Row,
   Rule,
 } from "../components/ui";
+import { useTimerNow } from "../hooks/use-timer-now";
 import { useApp } from "../state/app-store";
 import { useTheme } from "../theme";
 
@@ -34,13 +36,14 @@ export function TimerScreen({ kind }: { kind: Kind }) {
     [kind, store.drafts],
   );
   const active = store.run?.kind === kind ? store.run : null,
-    r = active ?? preview;
-  const [name, setName] = useState(store.drafts[kind].title),
-    [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 200);
-    return () => clearInterval(id);
-  }, []);
+    base = active ?? preview;
+  const now = useTimerNow(
+    base.status === "running",
+    kind === "stopwatch" ? 100 : 250,
+    kind === "newyear",
+  );
+  const r = kind === "chess" ? advance(base, now) : base;
+  const [name, setName] = useState(store.drafts[kind].title);
   const running = r.status === "running";
   useEffect(() => {
     if (running && store.settings.keepAwake)

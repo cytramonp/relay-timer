@@ -7,7 +7,7 @@ import {
   useFocusEffect,
   useLocalSearchParams,
 } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { userData } from "../../services/user-data";
 import * as Crypto from "expo-crypto";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import profiles from "../../core/specialty-catalog.json";
@@ -47,6 +47,7 @@ import { BrandLogo } from "../../components/brand-logo";
 import { BreathingOrb } from "../../components/breathing-orb";
 import {
   reserveSession,
+  sessionIdentity,
   requireCustomization,
   useBilling,
 } from "../../services/billing";
@@ -54,6 +55,14 @@ import { exportFile, importFile } from "../../services/files";
 import { defaultConfig } from "../../core/catalog";
 import { playCue, dialFeedback } from "../../services/audio";
 import { useApp } from "../../state/app-store";
+import {
+  timerNow,
+  saveClockCheckpoint,
+  wallTime,
+} from "../../services/timer-clock";
+import { boardAlarmPlan } from "../../core/board-alarms";
+import { syncAlarmScope } from "../../services/notifications";
+import { boardSessionContinues } from "../../core/session";
 import { useTheme } from "../../theme";
 
 export default function SpecialtyTimer() {
@@ -75,12 +84,13 @@ export default function SpecialtyTimer() {
   return <Board key={profile.slug} profile={profile as BoardProfile} />;
 }
 function Board({ profile: p }: { profile: BoardProfile }) {
+  const [AsyncStorage] = useState(() => userData.scope());
   const t = useTheme(),
     { store } = useApp(),
     { access } = useBilling();
   const [board, setBoard] = useState<Card[]>(() => freshBoard(p));
   const [ready, setReady] = useState(false),
-    [now, setNow] = useState(() => Date.now());
+    [now, setNow] = useState(() => timerNow());
   const [edit, setEdit] = useState<number | null>(null),
     [guide, setGuide] = useState(false);
   const [note, setNote] = useState("");
@@ -104,6 +114,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     });
   }
   const [pending, setPending] = useState(false);
+  const sessionOwner = useRef<string | null>(null);
   const session = useRef<string | null>(null),
     busy = useRef(false),
     current = useRef(board),
@@ -137,10 +148,11 @@ function Board({ profile: p }: { profile: BoardProfile }) {
           restoreBoard(
             Array.isArray(saved) ? saved : saved.board,
             p.mode,
-            Date.now(),
+            timerNow(),
           ),
         );
         session.current = Array.isArray(saved) ? null : saved.session || null;
+        sessionOwner.current = saved.sessionOwner || null;
         restoreOptions(saved.options);
       })
       .catch(() => {
@@ -162,15 +174,25 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   }, [key, p.mode]);
   useEffect(() => {
     if (!ready || !persist.current) return;
-    const save = () =>
-      AsyncStorage.setItem(
+    const save = () => {
+      try {
+        saveClockCheckpoint();
+      } catch {
+        setNote(
+          "Could not save clock recovery data. Keep the app open and export a backup.",
+        );
+        return;
+      }
+      return AsyncStorage.setItem(
         key,
         JSON.stringify({
           board: current.current,
           session: session.current,
+          sessionOwner: sessionOwner.current,
           options,
         }),
       ).catch(() => setNote("Could not save this board. Export a backup."));
+    };
     void save();
     const sub = AppState.addEventListener("change", () => {
       void save();
@@ -178,11 +200,38 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     return () => {
       sub.remove();
     };
-  }, [board, ready, key, options]);
+  }, [board, ready, key, options, AsyncStorage]);
+  useEffect(() => {
+    if (!ready) return;
+    const plan = store.settings.notifications
+      ? boardAlarmPlan(
+          board,
+          p.mode,
+          timerNow(),
+          p.slug === "speech-timer" ? options : undefined,
+        ).map((a) => ({ ...a, at: wallTime(a.at) }))
+      : [];
+    void syncAlarmScope(
+      `board.${p.slug}`,
+      plan,
+      options.sound ? "bell" : "off",
+      p.slug,
+    ).catch(() =>
+      setNote(
+        "Background alerts could not be scheduled. Keep this timer open.",
+      ),
+    );
+  }, [board, ready, p.mode, p.slug, options, store.settings.notifications]);
   useFocusEffect(
     useCallback(() => {
+      if (!running) return;
       const id = setInterval(() => {
-        const time = Date.now();
+        if (
+          AppState.currentState === "background" ||
+          AppState.currentState === "inactive"
+        )
+          return;
+        const time = timerNow();
         setNow(time);
         const before = current.current;
         before.forEach((card, i) => {
@@ -240,7 +289,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       return () => clearInterval(id);
       // Latest board is read from a ref; reinstall only for the sound preference.
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [p.mode, options, store.settings.haptics]),
+    }, [running, p.mode, options, store.settings.haptics]),
   );
   useEffect(() => {
     if (running && store.settings.keepAwake)
@@ -266,16 +315,20 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     setPending(true);
     setNote("");
     try {
+      const uid = await sessionIdentity();
+      if (sessionOwner.current !== uid) session.current = null;
       if (!session.current) {
         const saved = await AsyncStorage.getItem(key + ".reservation"),
           reservation = saved || Crypto.randomUUID();
         if (!saved)
           await AsyncStorage.setItem(key + ".reservation", reservation);
-        await reserveSession(reservation);
+        await reserveSession(reservation, uid);
         session.current = reservation;
+        sessionOwner.current = uid;
         await AsyncStorage.removeItem(key + ".reservation");
       }
-      setBoard((b) => fn(b, Date.now()));
+      if (!AsyncStorage.current()) return;
+      setBoard((b) => fn(b, timerNow()));
       cue("Start", "off");
     } catch (e) {
       setNote(e instanceof Error ? e.message : "Reconnect to start a timer.");
@@ -286,7 +339,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   }
   function action(i: number, action: string) {
     if (action === "add" || action === "subtract") {
-      customize(() => setBoard((b) => act(b, i, action, p.mode, Date.now())));
+      customize(() => setBoard((b) => act(b, i, action, p.mode, timerNow())));
       return;
     }
     if (
@@ -296,12 +349,9 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       void start((b, time) => act(b, i, action, p.mode, time));
       return;
     }
-    setBoard((b) =>
-      act(b, i, action, p.mode, Date.now()).map((c) => ({
-        ...c,
-        laps: c.laps.slice(-500),
-      })),
-    );
+    if (action === "reset" && !boardSessionContinues(current.current, i))
+      session.current = null;
+    setBoard((b) => act(b, i, action, p.mode, timerNow()));
     if (action === "next")
       cue("Next stage", board[i].stages[board[i].index].cueEnd ?? "bell");
   }
@@ -332,6 +382,9 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       done: false,
       waiting: false,
       laps: [],
+      lapOffset: 0,
+      lapBase: 0,
+      hasStarted: false,
     }));
   return (
     <Page>
@@ -339,7 +392,9 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       <View style={{ gap: 6 }}>
         <Body muted>{p.description}</Body>
         <Body muted style={{ fontSize: 14, lineHeight: 20 }}>
-          Keep the app open for stage sounds.
+          Background alerts follow Settings. Up to 48 upcoming alerts across
+          timers are scheduled; keep long sessions open. Voice and repeated cues
+          play in the app.
         </Body>
       </View>
       <BrandLogo />
@@ -378,7 +433,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
           onPress={() =>
             setBoard((b) =>
               b.map((_, i) => ({
-                ...act(b, i, "pause", p.mode, Date.now())[i],
+                ...act(b, i, "pause", p.mode, timerNow())[i],
                 scheduledAt: null,
               })),
             )
@@ -602,8 +657,10 @@ function Board({ profile: p }: { profile: BoardProfile }) {
               ) : null}
               {c.laps.map((v, j) => (
                 <Body key={j}>
-                  Lap {j + 1}: {(v / 1000).toFixed(2)} s · split{" "}
-                  {((v - (c.laps[j - 1] || 0)) / 1000).toFixed(2)} s
+                  Lap {(c.lapOffset ?? 0) + j + 1}: {(v / 1000).toFixed(2)} s ·
+                  split{" "}
+                  {((v - (c.laps[j - 1] ?? c.lapBase ?? 0)) / 1000).toFixed(2)}{" "}
+                  s
                 </Body>
               ))}
             </View>
@@ -709,8 +766,8 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                 try {
                   const scheduled = servingBoard(
                     board,
-                    Date.now() + Number(serve) * 60000,
-                    Date.now(),
+                    timerNow() + Number(serve) * 60000,
+                    timerNow(),
                   );
                   void start(() => scheduled);
                 } catch (e) {
@@ -748,7 +805,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
               const b = restoreBoard(
                 Array.isArray(saved) ? saved : saved.board,
                 p.mode,
-                Date.now(),
+                timerNow(),
               );
               restoreOptions(saved.options);
               session.current = null;
@@ -783,7 +840,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                   const s = JSON.parse(text);
                   if (s.mode !== p.mode)
                     throw Error("This setup uses a different clock mode.");
-                  const b = restoreBoard(s.board, p.mode, Date.now()).map(
+                  const b = restoreBoard(s.board, p.mode, timerNow()).map(
                     (c) => ({ ...c, anchor: null, scheduledAt: null }),
                   );
                   session.current = null;
@@ -799,7 +856,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
             void files(() =>
               exportFile(
                 `${p.slug}-results.csv`,
-                boardCsv(board, Date.now()),
+                boardCsv(board, timerNow()),
                 "text/csv",
               ),
             )

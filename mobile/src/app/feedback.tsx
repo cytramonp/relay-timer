@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Linking, Text, View } from "react-native";
 import { Stack, router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { userData } from "../services/user-data";
 import { Ionicons } from "@expo/vector-icons";
 import { Action, Body, Field, Heading, Page, Row } from "../components/ui";
 import { sendFeedback, type Feedback } from "../services/feedback";
@@ -14,6 +14,7 @@ const empty: Feedback = {
   category: "Something isn’t working",
 };
 export default function FeedbackScreen() {
+  const [AsyncStorage] = useState(() => userData.scope());
   const t = useTheme(),
     [form, setForm] = useState(empty),
     [ready, setReady] = useState(false),
@@ -45,14 +46,14 @@ export default function FeedbackScreen() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [AsyncStorage]);
   useEffect(() => {
     if (!ready || sent) return;
     const timer = setTimeout(() => {
       void AsyncStorage.setItem(KEY, JSON.stringify(form)).catch(() => {});
     }, 200);
     return () => clearTimeout(timer);
-  }, [form, ready, sent]);
+  }, [form, ready, sent, AsyncStorage]);
   async function send() {
     if (sending.current) return;
     sending.current = true;

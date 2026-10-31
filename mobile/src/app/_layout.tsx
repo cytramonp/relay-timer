@@ -15,7 +15,7 @@ import {
 } from "expo-router/react-navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { AppProvider } from "../state/app-store";
+import { AppProvider, useApp } from "../state/app-store";
 import { ThemeProvider, useTheme } from "../theme";
 import { LiveProvider } from "../state/live-store";
 import { OverlayProvider } from "../state/overlay-store";
@@ -101,15 +101,22 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AppProvider>
-          <ThemeProvider>
-            <OverlayProvider>
-              <LiveProvider>
-                <Navigation />
-              </LiveProvider>
-            </OverlayProvider>
-          </ThemeProvider>
+          <AppContents />
         </AppProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
+  );
+}
+
+function AppContents() {
+  const { dataVersion } = useApp();
+  return (
+    <ThemeProvider key={dataVersion}>
+      <OverlayProvider>
+        <LiveProvider>
+          <Navigation />
+        </LiveProvider>
+      </OverlayProvider>
+    </ThemeProvider>
   );
 }

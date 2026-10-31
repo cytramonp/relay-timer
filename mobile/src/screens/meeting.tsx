@@ -18,6 +18,7 @@ import Animated, {
 import * as Crypto from "expo-crypto";
 import * as Haptics from "expo-haptics";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
+import { useTimerNow } from "../hooks/use-timer-now";
 import { useApp } from "../state/app-store";
 import { metrics, useTheme } from "../theme";
 import {
@@ -62,15 +63,11 @@ export function MeetingScreen() {
     { height, width } = useWindowDimensions();
   const run = store.run?.kind === "meeting" ? store.run : null,
     config = run && run.status !== "done" ? run.config : store.drafts.meeting;
-  const [now, setNow] = useState(Date.now),
-    [dragging, setDragging] = useState(false),
+  const now = useTimerNow(run?.status === "running");
+  const [dragging, setDragging] = useState(false),
     [topic, setTopic] = useState(""),
     [owner, setOwner] = useState(""),
     [editingItem, setEditingItem] = useState<string | null>(null);
-  useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), 250);
-    return () => clearInterval(id);
-  }, []);
   useEffect(() => {
     if (run?.status === "running" && store.settings.keepAwake)
       void activateKeepAwakeAsync("meeting").catch(() => {});

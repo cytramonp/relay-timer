@@ -313,6 +313,8 @@ export function report(run: Run): Report {
     elapsed: run.elapsed,
     entries: run.entries,
     laps: run.laps,
+    lapOffset: run.lapOffset,
+    lapBase: run.lapBase,
     notes: run.notes,
     originalAgenda: run.originalAgenda,
     planChanges: run.planChanges,
@@ -320,7 +322,7 @@ export function report(run: Run): Report {
   };
 }
 export type Alarm = { at: number; title: string; body: string };
-export function alarmPlan(input: Run, now: number): Alarm[] {
+export function alarmPlan(input: Run, now: number, limit = 48): Alarm[] {
   const r = advance(input, now);
   if (r.status !== "running" || r.kind === "stopwatch") return [];
   if (r.kind === "newyear")
@@ -337,7 +339,7 @@ export function alarmPlan(input: Run, now: number): Alarm[] {
     ];
   const out: Alarm[] = [];
   let deadline = phaseDeadline(r) - r.elapsed + now;
-  for (let i = r.index; i < r.phases.length && out.length < 48; i++) {
+  for (let i = r.index; i < r.phases.length && out.length < limit; i++) {
     const p = r.phases[i];
     const warn = deadline - r.config.warning * 1000;
     if (p.type === "work" && r.config.warning > 0 && warn > now)
@@ -356,5 +358,5 @@ export function alarmPlan(input: Run, now: number): Alarm[] {
     if (!r.config.automatic) break;
     deadline += r.phases[i + 1]?.ms ?? 0;
   }
-  return out.slice(0, 48);
+  return out.slice(0, limit);
 }

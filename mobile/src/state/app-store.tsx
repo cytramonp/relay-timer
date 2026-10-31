@@ -15,7 +15,7 @@ import {
   finishRun,
   nextPhase,
   remaining,
-  report,
+  report as coreReport,
   switchSide,
   toggleRun,
 } from "../core/clock";
@@ -29,13 +29,24 @@ import type {
   Store,
 } from "../core/types";
 import { emptyStore, loadStore, saveStore } from "../services/storage";
-import { syncNotifications } from "../services/notifications";
+import {
+  syncNotifications,
+  cancelTimerAlerts,
+} from "../services/notifications";
 import { playCue } from "../services/audio";
+import { runNow, timerNow } from "../services/timer-clock";
+import { clearUserData, restoreDeviceData } from "../services/device-data";
+import { bufferedWriter } from "../core/buffered-writer";
+import { appendLap } from "../core/session";
 import { clone } from "../core/clone";
 import { applyRun, recoverStore } from "../core/recovery";
 import { editMeetingRun, nudgeMeeting, undoMeeting } from "../core/meeting";
 import { validateConfig } from "../core/backup";
 import { requireCustomization, reserveSession } from "../services/billing";
+
+function report(run: Run) {
+  return { ...coreReport(run), finishedAt: Date.now() };
+}
 
 type Action =
   | "toggle"
@@ -74,25 +85,27 @@ type ContextValue = {
   removeReport: (id: string) => void;
   settings: (values: Partial<Settings>) => void;
   canUndo: boolean;
-  resetDevice: () => void;
+  dataVersion: number;
+  unreadableData: boolean;
+  resetDevice: () => Promise<void>;
+  restoreDevice: (json: string) => Promise<void>;
 };
 const Context = createContext<ContextValue | null>(null);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [loaded] = useState(loadStore),
     [store, setStore] = useState(loaded.store),
     [notice, notify] = useState(loaded.error),
-    [canUndo, setCanUndo] = useState(false);
+    [canUndo, setCanUndo] = useState(false),
+    [dataVersion, setDataVersion] = useState(0),
+    [unreadableData, setUnreadableData] = useState(!!loaded.error);
   const current = useRef(store),
     starting = useRef(false),
     pendingStart = useRef<{ kind: Kind; id: string } | null>(null),
     undo = useRef<Run[]>([]),
     protectedData = useRef(!!loaded.error);
-  function commit(next: Store, schedule = true) {
-    current.current = next;
-    setStore(next);
-    setCanUndo(undo.current.length > 0);
-    let saved = false;
-    if (!protectedData.current) {
+  const [writer] = useState(() =>
+    bufferedWriter(({ next, schedule }: { next: Store; schedule: boolean }) => {
+      let saved = false;
       try {
         saveStore(next);
         saved = true;
@@ -101,22 +114,46 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           "Could not save on this device. Export your programs from My programs.",
         );
       }
-    } else
-      notify(
-        "Local saving is paused to preserve unreadable data. Export device data in Settings, then reset the local library.",
-      );
-    if (schedule)
-      void syncNotifications(next.run, next.settings.notifications).catch(() =>
-        notify(
-          "Timer is running, but alerts could not be scheduled. Keep the app open.",
+      if (schedule)
+        void syncNotifications(next.run, next.settings.notifications).catch(
+          () =>
+            notify(
+              "Timer is running, but alerts could not be scheduled. Keep the app open.",
+            ),
+        );
+      return saved;
+    }),
+  );
+  function commit(next: Store, schedule = true, immediate = true) {
+    if (
+      next.run?.status === "done" &&
+      !current.current.history.some((h) => h.id === next.run!.id)
+    )
+      next = {
+        ...next,
+        history: next.history.map((h) =>
+          h.id === next.run!.id ? { ...h, finishedAt: Date.now() } : h,
         ),
+      };
+    current.current = next;
+    setStore(next);
+    setCanUndo(undo.current.length > 0);
+    if (protectedData.current) {
+      notify(
+        "Local saving is paused to preserve unreadable data. Export recovery data in Settings before replacing it.",
       );
-    return saved;
+      return false;
+    }
+    if (!immediate) {
+      writer.schedule({ next, schedule });
+      return true;
+    }
+    return writer.write({ next, schedule });
   }
   function setRun(run: Run | null, remember = false) {
     const s = current.current;
     if (remember && s.run) {
-      undo.current.push(advance(s.run, Date.now()));
+      undo.current.push(advance(s.run, runNow(s.run)));
       undo.current = undo.current.slice(-20);
     }
     commit(applyRun(s, run));
@@ -134,68 +171,84 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }
   useEffect(() => {
     let lastSecond = -1;
-    const timer = setInterval(() => {
-      const s = current.current;
-      if (!s.run || s.run.status !== "running") return;
-      const now = Date.now(),
-        before = s.run,
-        r = advance(before, now);
-      const changed = r.status !== before.status || r.index !== before.index;
-      const count = Math.ceil(remaining(r, now) / 1000),
-        isWork = r.phases[r.index]?.type === "work";
-      if (
-        AppState.currentState === "active" ||
-        AppState.currentState === null
-      ) {
-        if (changed)
-          void playCue(
-            r.config,
-            r.status === "done" ? "Timer complete" : r.phases[r.index]?.name,
-            s.settings.haptics,
-          ).catch(() =>
-            notify("Sound could not play. Check your device volume."),
-          );
-        else if (
-          count !== lastSecond &&
-          ((isWork && count === r.config.warning && count > 0) ||
-            (count > 0 && count <= r.config.finalCue))
-        )
-          void playCue(
-            r.config,
-            count <= r.config.finalCue
-              ? String(count)
-              : `${count} seconds remaining`,
-            s.settings.haptics,
-          ).catch(() => {});
-      }
-      lastSecond = count;
-      if (changed) setRun(r);
-      else {
-        current.current = { ...s, run: r };
-        setStore(current.current);
-      }
-    }, 200);
+    const timer =
+      store.run?.status === "running"
+        ? setInterval(() => {
+            const s = current.current;
+            if (
+              !s.run ||
+              s.run.status !== "running" ||
+              AppState.currentState === "background" ||
+              AppState.currentState === "inactive"
+            )
+              return;
+            const now = runNow(s.run),
+              before = s.run,
+              r = advance(before, now);
+            const changed =
+              r.status !== before.status || r.index !== before.index;
+            const count = Math.ceil(remaining(r, now) / 1000),
+              isWork = r.phases[r.index]?.type === "work";
+            if (
+              AppState.currentState === "active" ||
+              AppState.currentState === null
+            ) {
+              if (changed)
+                void playCue(
+                  r.config,
+                  r.status === "done"
+                    ? "Timer complete"
+                    : r.phases[r.index]?.name,
+                  s.settings.haptics,
+                ).catch(() =>
+                  notify("Sound could not play. Check your device volume."),
+                );
+              else if (
+                count !== lastSecond &&
+                ((isWork && count === r.config.warning && count > 0) ||
+                  (count > 0 && count <= r.config.finalCue))
+              )
+                void playCue(
+                  r.config,
+                  count <= r.config.finalCue
+                    ? String(count)
+                    : `${count} seconds remaining`,
+                  s.settings.haptics,
+                ).catch(() => {});
+            }
+            lastSecond = count;
+            if (changed) setRun(r);
+            else {
+              current.current = { ...s, run: r };
+              // Presentation clocks subscribe locally; do not broadcast every tick.
+            }
+          }, 200)
+        : undefined;
     const subscription = AppState.addEventListener("change", (state) => {
       const s = current.current;
+      writer.flush();
       if (s.run) {
-        commit(recoverStore(s, Date.now()));
+        commit(recoverStore(s, runNow(s.run)));
       }
       if (state === "active") lastSecond = -1;
     });
     return () => {
-      clearInterval(timer);
+      if (timer) clearInterval(timer);
       subscription.remove();
     };
     // All callbacks read current.current; subscribing once avoids restarting the clock on every tick.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [store.run?.status]);
   const value: ContextValue = {
     store,
+    dataVersion,
+    unreadableData,
     snapshot: () => current.current,
-    refreshRun: () => commit(recoverStore(current.current, Date.now())),
+    refreshRun: () =>
+      commit(recoverStore(current.current, runNow(current.current.run))),
     seekMeeting(ms) {
       const r = current.current.run,
-        now = Date.now();
+        now = timerNow();
       if (r?.kind === "meeting" && Number.isFinite(ms))
         setRun(nudgeMeeting(r, ms - elapsed(r, now), now));
     },
@@ -209,9 +262,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         s = current.current;
       const run =
         s.run?.kind === "meeting" && s.run.status !== "done"
-          ? editMeetingRun(advance(s.run, Date.now()), c, Date.now())
+          ? editMeetingRun(advance(s.run, runNow(s.run)), c, timerNow())
           : s.run;
-      commit({ ...s, drafts: { ...s.drafts, meeting: c }, run });
+      commit({ ...s, drafts: { ...s.drafts, meeting: c }, run }, true, false);
     },
     parking(items) {
       const s = current.current;
@@ -320,11 +373,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const s = current.current;
       let history = s.history;
       if (s.run?.startedAt && s.run.status !== "done")
-        history = [report(finishRun(s.run, Date.now())), ...history].slice(
+        history = [report(finishRun(s.run, runNow(s.run))), ...history].slice(
           0,
           100,
         );
-      const r = toggleRun(createRun(kind, s.drafts[kind], id), Date.now());
+      const now = runNow(kind);
+      const r = toggleRun(createRun(kind, s.drafts[kind], id, now), now);
       if (kind === "meeting") r.parking = clone(s.meetingParking ?? []);
       commit({ ...s, run: r, history });
       pendingStart.current = null;
@@ -344,7 +398,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     act(action) {
       const s = current.current;
       if (!s.run) return;
-      const now = Date.now(),
+      const now = runNow(s.run),
         r = advance(s.run, now);
       if (action === "undo") {
         if (r.kind === "meeting") {
@@ -396,16 +450,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (action === "clock-back" || action === "clock-forward")
         setRun(nudgeMeeting(r, action === "clock-back" ? -60000 : 60000, now));
       if (action === "lap" && r.kind === "stopwatch" && r.status === "running")
-        setRun({ ...r, laps: [...r.laps, elapsed(r, now)].slice(-500) }, false);
+        setRun({ ...r, ...appendLap(r, elapsed(r, now)) }, false);
     },
     chess(side) {
       const s = current.current;
-      if (s.run) setRun(switchSide(s.run, side, Date.now()));
+      if (s.run) setRun(switchSide(s.run, side, runNow(s.run)));
     },
     notes(text) {
       const s = current.current;
       if (s.run)
-        commit({ ...s, run: { ...s.run, notes: text.slice(0, 10000) } }, false);
+        commit(
+          { ...s, run: { ...s.run, notes: text.slice(0, 10000) } },
+          false,
+          false,
+        );
     },
     saveProgram(kind, name, appearance, config) {
       if (!canCustomize()) return false;
@@ -468,11 +526,50 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         settings: { ...current.current.settings, ...values },
       });
     },
-    resetDevice() {
-      protectedData.current = false;
-      undo.current = [];
-      commit(emptyStore());
-      notify("Local library reset.");
+    async restoreDevice(json) {
+      if (starting.current)
+        throw Error("Wait for the current start to finish, then restore.");
+      starting.current = true;
+      writer.discard();
+      try {
+        const restored = await restoreDeviceData(json);
+        await cancelTimerAlerts();
+        protectedData.current = false;
+        setUnreadableData(false);
+        pendingStart.current = null;
+        localStorage.removeItem("corptimer-start-reservation-v1");
+        undo.current = [];
+        commit(restored);
+        notify(
+          "Device data restored. Specialty clocks are paused; the active primary run was saved to History.",
+        );
+      } finally {
+        starting.current = false;
+        setDataVersion((v) => v + 1);
+      }
+    },
+    async resetDevice() {
+      if (starting.current)
+        throw Error("Wait for the current start to finish, then reset.");
+      starting.current = true;
+      writer.discard();
+      try {
+        await clearUserData();
+        protectedData.current = false;
+        setUnreadableData(false);
+        pendingStart.current = null;
+        undo.current = [];
+        if (!commit(emptyStore()))
+          throw Error(
+            "Could not reset the main timer storage. Retry before continuing.",
+          );
+        notify(
+          "Local timer data deleted. Account access and server usage were kept.",
+        );
+      } finally {
+        starting.current = false;
+        setDataVersion((v) => v + 1);
+      }
     },
   };
   return <Context.Provider value={value}>{children}</Context.Provider>;

@@ -25,8 +25,8 @@ try {
   if ($fingerprint -ne 'BC2A570E7F8A08509ACDFB0F9756E395C3EDD091A1FB276030A76E1FE8430BB2') { throw 'Unexpected upload certificate fingerprint' }
   $report = @{
     sourceRevision = $SourceRevision
-    version = '0.4.0'
-    versionCode = 6
+    version = '0.4.1'
+    versionCode = 7
     signedLocally = $true
     privateKeyTransferred = $false
     unsignedSha256 = (Get-FileHash -LiteralPath $UnsignedBundle -Algorithm SHA256).Hash

@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ScrollView, Text } from "react-native";
 import { Stack, router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
+import { useTimerNow } from "../hooks/use-timer-now";
 import { useApp } from "../state/app-store";
 import { useTheme } from "../theme";
 import { MeetingClock } from "../components/meeting-clock";
 export default function FocusScreen() {
   const { store, start, act } = useApp(),
     t = useTheme(),
-    inset = useSafeAreaInsets(),
-    [now, setNow] = useState(Date.now);
+    inset = useSafeAreaInsets();
   const run = store.run?.kind === "meeting" ? store.run : null,
     config = run?.config ?? store.drafts.meeting;
+  const now = useTimerNow(run?.status === "running");
   useEffect(() => {
     void activateKeepAwakeAsync("focus").catch(() => {});
-    const id = setInterval(() => setNow(Date.now()), 250);
     return () => {
-      clearInterval(id);
       void deactivateKeepAwake("focus");
     };
   }, []);

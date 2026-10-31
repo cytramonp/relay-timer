@@ -109,7 +109,7 @@ document.querySelector('#board-sound').onclick=async()=>{profile.sound=!profile.
 document.querySelector('#board-fullscreen').onclick=()=>toggleFullscreen(root);
 document.querySelector('#board-export').onclick=()=>{
  const quote=v=>'"'+String(typeof v==='string'&&/^[=+@-]/.test(v)?"'"+v:v).replaceAll('"','""')+'"';
- const rows=[['Name','Stage','Elapsed seconds','Lap','Split seconds'],...board.flatMap(c=>[[c.name,c.stages[c.index].name,(elapsed(c,Date.now())/1000).toFixed(2),'',''],...c.laps.map((v,i)=>[c.name,'Lap',v/1000,i+1,(v-(c.laps[i-1]||0))/1000])])];
+ const rows=[['Name','Stage','Elapsed seconds','Lap','Split seconds'],...board.flatMap(c=>[[c.name,c.stages[c.index].name,(elapsed(c,Date.now())/1000).toFixed(2),'',''],...c.laps.map((v,i)=>[c.name,'Lap',v/1000,i+1,(v-(c.laps[i-1]??c.lapBase??0))/1000])])];
  const url=URL.createObjectURL(new Blob([rows.map(r=>r.map(quote).join(',')).join('\r\n')],{type:'text/csv'}));const a=document.createElement('a');a.href=url;a.download=slug+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 render();setInterval(tick,100);setInterval(()=>save(true),5000);window.addEventListener('pagehide',()=>save(true));document.body.dataset.timerReady='true';

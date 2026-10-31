@@ -126,7 +126,13 @@ export function restoreBoard(
       (c.anchor !== null && (!Number.isFinite(c.anchor) || c.anchor < 0)) ||
       !Array.isArray(c.laps) ||
       c.laps.some((n: number) => !Number.isFinite(n) || n < 0) ||
-      c.laps.length > 500
+      c.laps.length > 500 ||
+      (c.lapOffset !== undefined &&
+        (!Number.isSafeInteger(c.lapOffset) || c.lapOffset < 0)) ||
+      (c.lapBase !== undefined &&
+        (!Number.isFinite(c.lapBase) || c.lapBase < 0)) ||
+      (c.scheduledAt != null &&
+        (!Number.isFinite(c.scheduledAt) || c.scheduledAt < 0))
     )
       throw Error("Invalid saved clock.");
     return settle(
@@ -180,8 +186,8 @@ export function boardCsv(board: Card[], now: number) {
           "",
           (ms / 1000).toFixed(2),
           "Recorded",
-          i + 1,
-          ((ms - (c.laps[i - 1] || 0)) / 1000).toFixed(2),
+          (c.lapOffset ?? 0) + i + 1,
+          ((ms - (c.laps[i - 1] ?? c.lapBase ?? 0)) / 1000).toFixed(2),
           "",
         ]
           .map(quote)
