@@ -86,7 +86,7 @@ export default function SpecialtyTimer() {
 function Board({ profile: p }: { profile: BoardProfile }) {
   const [AsyncStorage] = useState(() => userData.scope());
   const t = useTheme(),
-    { store } = useApp(),
+    { store, snapshot } = useApp(),
     { access } = useBilling();
   const [board, setBoard] = useState<Card[]>(() => freshBoard(p));
   const [ready, setReady] = useState(false),
@@ -96,6 +96,8 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   const [note, setNote] = useState("");
   const [options, setOptions] = useState(() => boardOptions(undefined, p));
   const { sound, hideDigits, kidsView } = options;
+  const optionSnapshot = useRef(options);
+  optionSnapshot.current = options;
   const [signalDraft, setSignalDraft] = useState(() => ({
     green: String(options.green),
     amber: String(options.amber),
@@ -175,6 +177,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   useEffect(() => {
     if (!ready || !persist.current) return;
     const save = () => {
+      if (busy.current) return;
       try {
         saveClockCheckpoint();
       } catch {
@@ -200,7 +203,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     return () => {
       sub.remove();
     };
-  }, [board, ready, key, options, AsyncStorage]);
+  }, [board, ready, key, options, AsyncStorage, pending]);
   useEffect(() => {
     if (!ready) return;
     const plan = store.settings.notifications
@@ -307,7 +310,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     }
   }
   async function start(fn: (b: Card[], time: number) => Card[]) {
-    if (!ready || busy.current) return;
+    if (!ready || busy.current || !AsyncStorage.current()) return;
     // Release input focus before pending/access updates resize the controls.
     // Otherwise Android can scroll back to an offscreen duration field.
     Keyboard.dismiss();
@@ -325,10 +328,45 @@ function Board({ profile: p }: { profile: BoardProfile }) {
         await reserveSession(reservation, uid);
         session.current = reservation;
         sessionOwner.current = uid;
-        await AsyncStorage.removeItem(key + ".reservation");
       }
       if (!AsyncStorage.current()) return;
-      setBoard((b) => fn(b, timerNow()));
+      const next = fn(current.current, timerNow());
+      saveClockCheckpoint();
+      // Persist the accepted start before removing its retry ID. A navigation
+      // or process interruption must not consume a grant without saving it.
+      await AsyncStorage.setItem(
+        key,
+        JSON.stringify({
+          board: next,
+          session: session.current,
+          sessionOwner: sessionOwner.current,
+          options: optionSnapshot.current,
+        }),
+      );
+      if (!AsyncStorage.current()) return;
+      await AsyncStorage.removeItem(key + ".reservation");
+      if (!AsyncStorage.current()) return;
+      current.current = next;
+      setBoard(next);
+      const settings = snapshot().settings;
+      const plan = settings.notifications
+        ? boardAlarmPlan(
+            next,
+            p.mode,
+            timerNow(),
+            p.slug === "speech-timer" ? optionSnapshot.current : undefined,
+          ).map((a) => ({ ...a, at: wallTime(a.at) }))
+        : [];
+      void syncAlarmScope(
+        `board.${p.slug}`,
+        plan,
+        optionSnapshot.current.sound ? "bell" : "off",
+        p.slug,
+      ).catch(() =>
+        setNote(
+          "Background alerts could not be scheduled. Keep this timer open.",
+        ),
+      );
       cue("Start", "off");
     } catch (e) {
       setNote(e instanceof Error ? e.message : "Reconnect to start a timer.");

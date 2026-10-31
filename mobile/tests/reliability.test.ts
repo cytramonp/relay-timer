@@ -289,9 +289,12 @@ test("repository replacement waits for in-flight writes and rejects old-screen l
   const replacement = repository.replace(async () => {
     values.clear();
   });
+  const openedDuringReplacement = repository.scope();
+  assert.equal(openedDuringReplacement.current(), false);
+  const interleaved = openedDuringReplacement.setItem("board", "partial");
   const late = old.setItem("board", "resurrected");
   release();
-  await Promise.all([write, replacement, late]);
+  await Promise.all([write, replacement, late, interleaved]);
   assert.equal(values.size, 0);
   assert.equal(old.current(), false);
   await repository.scope().setItem("board", "new");

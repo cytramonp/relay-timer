@@ -62,6 +62,7 @@ function controller() {
     `
     const ready=true,busy={current:false},session={current:null},sessionOwner={current:null},persist={current:true};
     const p=customProfile,key='corptimer.board.audit', Keyboard={dismiss(){}},timerNow=()=>1000;
+    const optionSnapshot={current:{sound:true}},saveClockCheckpoint=()=>{},snapshot=()=>({settings:{notifications:false}}),syncAlarmScope=async()=>{};
     let board=freshBoard(p); const current={current:board};
     const setBoard=fn=>{board=typeof fn==='function'?fn(board):fn;current.current=board;};
     const setPending=()=>{},setNote=onError,setEdit=()=>{},cue=()=>{},customize=fn=>fn();
@@ -102,8 +103,12 @@ function controller() {
   };
 }
 test("real specialty start/pause/resume shares one grant; reset and account change need new grants", async () => {
-  const { c, charged, account } = controller();
+  const { c, charged, account, data } = controller();
   await c.start();
+  const durable = JSON.parse(data.get("corptimer.board.audit")!);
+  assert.equal(durable.session, c.session.current);
+  assert.notEqual(durable.board[0].anchor, null);
+  assert.equal(data.has("corptimer.board.audit.reservation"), false);
   c.action(0, "toggle"); // Pause
   await c.start();
   assert.equal(charged.size, 1);

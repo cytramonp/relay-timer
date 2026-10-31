@@ -7,11 +7,12 @@ type Storage = {
 // already in flight finish before replacement; later writes from old scopes stop.
 export function scopedRepository(storage: Storage) {
   let generation = 0;
+  let replacing = false;
   let writes = Promise.resolve();
   return {
     flush: () => writes.catch(() => {}),
     scope() {
-      const own = generation;
+      const own = replacing ? -1 : generation;
       const enqueue = (fn: () => Promise<unknown>) => {
         const result = writes
           .catch(() => {})
@@ -30,9 +31,15 @@ export function scopedRepository(storage: Storage) {
       };
     },
     async replace<T>(work: () => Promise<T>): Promise<T> {
+      if (replacing) throw Error("Another data replacement is still running.");
+      replacing = true;
       generation++;
-      await writes.catch(() => {});
-      return work();
+      try {
+        await writes.catch(() => {});
+        return await work();
+      } finally {
+        replacing = false;
+      }
     },
   };
 }
