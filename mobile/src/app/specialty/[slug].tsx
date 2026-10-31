@@ -713,8 +713,8 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       <TimerFavoriteControls id={p.slug} />
       <Body muted>
         Clocks continue by elapsed time while away. Keep this screen open for
-        stage sounds; specialty background alerts are not scheduled. Up to 500
-        recent laps are kept.
+        stage sounds; background alerts follow Settings and its schedule limit.
+        Up to 500 recent laps are kept.
       </Body>
       <Action
         label="Add clock"

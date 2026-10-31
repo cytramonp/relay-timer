@@ -31,8 +31,13 @@ def verify(g, form):
     open_path('specialty/multi-stopwatch')
     t = top('board-clock-0')
     tap(find(t, text='Reset'))
-    tap(find(tree(), text='Start'))
-    time.sleep(2)
+    # UIAutomator requires an idle accessibility tree. The continuously updated
+    # stopwatch intentionally never idles; pause at the already observed control
+    # coordinates before reading a fresh tree. Start/Pause occupy the same slot.
+    control = find(tree(), text='Start')
+    tap(control)
+    time.sleep(3)
+    tap(control)
     assert seconds(top('board-clock-0')) >= 1
 
     if form == 'phone':
@@ -46,6 +51,8 @@ def verify(g, form):
             began = time.monotonic()
             previous_auto = adb('shell', 'settings', 'get', 'global', 'auto_time').strip()
             before = seconds(top('board-clock-0'))
+            control = find(tree(), text='Start')
+            tap(control)
             try:
                 adb('shell', 'input', 'keyevent', 'KEYCODE_HOME')
                 adb('shell', 'settings', 'put', 'global', 'auto_time', '0')
@@ -54,11 +61,10 @@ def verify(g, form):
                 if changed.returncode == 0 and actual - base >= 3590:
                     adb('shell', 'am', 'force-stop', 'com.corptimer.app')
                     open_path('specialty/multi-stopwatch')
-                    for _ in range(15):
-                        time.sleep(1)
-                        t = tree()
-                        if find(t, identifier='board-clock-0') is not None:
-                            break
+                    time.sleep(4)
+                    tap(control)
+                    t = top('board-clock-0')
+                    assert find(t, text='Start') is not None, 'Restarted stopwatch did not pause at its observed control'
                     after = seconds(t)
                     assert 0 <= after - before < 120, 'Wall-clock correction or same-boot restart changed elapsed by an hour'
                     result['clockJump'] = {'tested': True, 'wallShiftSeconds': actual - base,
@@ -66,6 +72,8 @@ def verify(g, form):
                     capture('phone-041-monotonic-restart.png')
                 else:
                     result['clockJump']['skipReason'] = 'Emulator clock could not be changed'
+                    open_path('specialty/multi-stopwatch')
+                    tap(control)
             finally:
                 restore = base + int(time.monotonic() - began)
                 adb('shell', 'date', '-u', '@' + str(restore))
@@ -74,7 +82,7 @@ def verify(g, form):
             result['clockJump']['skipReason'] = 'Emulator does not allow root'
 
     t = top('board-clock-0')
-    tap(find(t, text='Pause'))
+    assert find(t, text='Start') is not None, 'Stopwatch must be paused before data-reset checks'
     t, favorite = scroll_text('Add to favorites')
     tap(favorite)
     assert find(tree(), text='Remove favorite') is not None

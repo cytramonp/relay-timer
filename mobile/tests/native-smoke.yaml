@@ -13,8 +13,9 @@ appId: com.corptimer.app
     element:
       id: drag-handle-1
     direction: DOWN
-    centerElement: true
-    timeout: 20000
+    centerElement: false
+    visibilityPercentage: 50
+    timeout: 60000
 - swipe:
     from:
       id: drag-handle-1
