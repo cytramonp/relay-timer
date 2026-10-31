@@ -87,6 +87,8 @@ export type Run = {
   phaseStart: number;
   entries: Entry[];
   laps: number[];
+  lapOffset?: number;
+  lapBase?: number;
   sides: [number, number];
   moves: [number, number];
   active: number;
@@ -115,6 +117,8 @@ export type Report = {
   elapsed: number;
   entries: Entry[];
   laps: number[];
+  lapOffset?: number;
+  lapBase?: number;
   notes: string;
   originalAgenda?: Slot[];
   planChanges?: PlanChange[];

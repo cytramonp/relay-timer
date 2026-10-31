@@ -9,6 +9,8 @@ import { AppState } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Crypto from "expo-crypto";
 import { useApp } from "./app-store";
+import { timerNow } from "../services/timer-clock";
+import { commandQueue } from "../core/remote-commands";
 import { meetingProjection } from "../core/meeting";
 type Host = { id: string; token: string; uid: string; expiresAt: number };
 type LiveValue = {
@@ -32,12 +34,14 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const owner = useRef<Host | null>(null),
-    handled = useRef(new Set<string>()),
     lastCommand = useRef("");
   const projection = () => {
     const s = current.current.snapshot(),
       r = s.run?.kind === "meeting" ? s.run : null;
-    return meetingProjection(r?.config ?? s.drafts.meeting, r, Date.now());
+    return {
+      ...meetingProjection(r?.config ?? s.drafts.meeting, r, timerNow()),
+      publishedAt: Date.now(),
+    };
   };
   async function publish() {
     const h = owner.current;
@@ -55,9 +59,10 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
       ).publishRoom(h.id, projection(), lastCommand.current);
       if (owner.current?.id === h.id) setError("");
     } catch {
-      if (owner.current?.id === h.id) setError(
-        "Live sharing is disconnected. Keep this app open and reconnect; your local timer still works.",
-      );
+      if (owner.current?.id === h.id)
+        setError(
+          "Live sharing is disconnected. Keep this app open and reconnect; your local timer still works.",
+        );
     }
   }
   useEffect(() => {
@@ -91,30 +96,32 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
       cancelled = false;
     void import("../services/live").then((service) => {
       if (cancelled) return;
+      const consume = commandQueue({
+        now: Date.now,
+        current: () => !cancelled && owner.current?.id === host.id,
+        async execute(action) {
+          const app = current.current,
+            s = app.snapshot();
+          if (s.run && s.run.kind !== "meeting") return false;
+          if (action === "next" && !s.run) return app.start("meeting");
+          if (!s.run) return false;
+          app.act(action === "pause" ? "toggle" : action);
+          return true;
+        },
+        async acknowledge(id) {
+          lastCommand.current = id;
+          await publish();
+        },
+        rejected: () =>
+          setError(
+            "Remote action was not accepted. Check the current timer, connection and plan, then try again.",
+          ),
+        clear: (id) => service.clearCommand(host.id, id),
+      });
       dispose = service.watchCommands(
         host.id,
         (id, action, at) => {
-          if (handled.current.has(id)) return;
-          handled.current.add(id);
-          if (
-            Math.abs(Date.now() - at) <= 30000 &&
-            ["next", "pause", "undo", "extend"].includes(action)
-          ) {
-            const app = current.current,
-              s = app.snapshot();
-            if (!s.run || s.run.kind === "meeting") {
-              if (action === "next" && !s.run) app.start("meeting");
-              else
-                app.act(
-                  action === "pause"
-                    ? "toggle"
-                    : (action as "next" | "undo" | "extend"),
-                );
-              lastCommand.current = id;
-              void publish();
-            }
-          }
-          void service.clearCommand(host.id, id).catch(() => {});
+          void consume(id, action, at);
         },
         () =>
           setError(
@@ -203,7 +210,6 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
             owner.current = null;
             setHost(null);
             setError("");
-            handled.current.clear();
             await AsyncStorage.removeItem(KEY);
           } catch {
             setError(

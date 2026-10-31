@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Linking, Platform } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import Constants from "expo-constants";
 import {
   Action,
@@ -13,12 +13,51 @@ import {
   Toggle,
 } from "../components/ui";
 import { useApp } from "../state/app-store";
-import { requestNotifications } from "../services/notifications";
-import { exportFile } from "../services/files";
-import { rawStore } from "../services/storage";
+import {
+  requestNotifications,
+  alertReadiness,
+  requestExactAlerts,
+} from "../services/notifications";
+import { useOverlay } from "../state/overlay-store";
+import { useLive } from "../state/live-store";
+import {
+  exportDeviceData,
+  exportRecoveryData,
+  revokeStoredLiveHost,
+} from "../services/device-data";
+import { readDeviceBackup } from "../core/device-backup";
+import { importFile, exportFile } from "../services/files";
 
 export function SettingsScreen() {
-  const { store, settings, notify, resetDevice } = useApp(),
+  const live = useLive(),
+    overlay = useOverlay();
+  const [recoveryNeeded, setRecoveryNeeded] = useState(false);
+  const [readiness, setReadiness] = useState<{
+    allowed: boolean;
+    exact: boolean;
+  } | null>(null);
+  useFocusEffect(
+    useCallback(() => {
+      let live = true;
+      void alertReadiness()
+        .then((r) => {
+          if (live) setReadiness(r);
+        })
+        .catch(() => {});
+      return () => {
+        live = false;
+      };
+    }, []),
+  );
+  const {
+      store,
+      snapshot,
+      settings,
+      notify,
+      resetDevice,
+      restoreDevice,
+      unreadableData,
+    } = useApp(),
     [busy, setBusy] = useState(false);
   async function alerts(enabled: boolean) {
     if (!enabled) {
@@ -28,9 +67,13 @@ export function SettingsScreen() {
     setBusy(true);
     try {
       if (await requestNotifications()) {
+        const ready = await alertReadiness();
+        setReadiness(ready);
         settings({ notifications: true });
         notify(
-          "Background alerts are enabled. Try a short timer with the screen locked.",
+          ready.exact
+            ? "Timer alerts enabled. Test delivery once with the screen locked."
+            : "Approximate alerts enabled. Allow precise alarms below for time-critical timers.",
         );
       } else
         notify(
@@ -96,7 +139,37 @@ export function SettingsScreen() {
           if (!busy) void alerts(v);
         }}
       />
+      {Platform.OS === "android" && store.settings.notifications && (
+        <>
+          <Body muted>
+            {readiness?.exact
+              ? "Precise alarm access is allowed."
+              : "Precise alarm access is not allowed. Background alerts may arrive late."}
+          </Body>
+          <Action
+            label="Allow precise timer alarms"
+            disabled={busy}
+            onPress={() =>
+              void (async () => {
+                setBusy(true);
+                try {
+                  setReadiness(await requestExactAlerts());
+                  settings({ notifications: true });
+                } catch {
+                  notify(
+                    "Could not open precise alarm settings. Try your phone Settings.",
+                  );
+                } finally {
+                  setBusy(false);
+                }
+              })()
+            }
+          />
+        </>
+      )}
       <Body muted>
+        Up to 48 upcoming alerts across timers are scheduled. Keep long programs
+        open to replenish the schedule. Repeated cues and voice play in the app.
         Alerts are scheduled locally. No notification tokens or timer content
         are sent to a push service. Focus mode, battery restrictions and system
         notification settings can affect delivery. Voice cues and the final
@@ -121,23 +194,116 @@ export function SettingsScreen() {
         version does not yet sign in to the website or synchronize your private
         library.
       </Body>
+      <Body muted>
+        Device backups include saved plans, history, notes, specialty clocks,
+        favorites and unsent feedback. Account credentials and live control
+        links are excluded. Restored specialty clocks are paused; an active
+        primary timer is archived to History. Starting again checks your plan.
+      </Body>
       <Action
-        label="Export device data"
+        label="Export device backup"
+        disabled={busy || unreadableData}
         onPress={() =>
-          void exportFile("corptimer-device-data.json", rawStore()).catch((e) =>
-            notify(e.message),
-          )
+          void (async () => {
+            setBusy(true);
+            try {
+              await exportFile(
+                "corptimer-device-backup.json",
+                await exportDeviceData(snapshot()),
+              );
+            } catch (e) {
+              setRecoveryNeeded(true);
+              notify(
+                e instanceof Error ? e.message : "Could not export backup.",
+              );
+            } finally {
+              setBusy(false);
+            }
+          })()
+        }
+      />
+      {(unreadableData || recoveryNeeded) && (
+        <Action
+          label="Export original data for recovery"
+          onPress={() =>
+            void (async () => {
+              try {
+                await exportFile(
+                  "corptimer-recovery.json",
+                  await exportRecoveryData(),
+                );
+              } catch (e) {
+                notify(
+                  e instanceof Error
+                    ? e.message
+                    : "Could not export recovery data.",
+                );
+              }
+            })()
+          }
+        />
+      )}
+      <Action
+        label="Restore device backup"
+        disabled={busy || live.busy}
+        onPress={() =>
+          void (async () => {
+            setBusy(true);
+            try {
+              const json = await importFile();
+              if (json === null) return;
+              readDeviceBackup(json);
+              if (
+                !(await confirm(
+                  "Replace local timer data?",
+                  "The chosen backup will replace plans, history, notes, specialty clocks, favorites and feedback drafts. Export your current backup first. Account access stays on this device.",
+                ))
+              )
+                return;
+              if (live.host) await live.stop();
+              await revokeStoredLiveHost();
+              overlay.hide();
+              await restoreDevice(json);
+            } catch (e) {
+              notify(
+                e instanceof Error
+                  ? e.message
+                  : "Restore did not finish. Keep your backup and retry.",
+              );
+            } finally {
+              setBusy(false);
+            }
+          })()
         }
       />
       <Action
-        label="Reset local library"
+        label="Delete local timer data"
+        disabled={busy || live.busy}
         onPress={() =>
-          void confirm(
-            "Delete all local data?",
-            "This removes programs, history, notes and the active timer from this device. Export a backup first. This cannot be undone.",
-          ).then((ok) => {
-            if (ok) resetDevice();
-          })
+          void (async () => {
+            if (
+              !(await confirm(
+                "Delete local timer data?",
+                "This deletes plans, history, private notes, active timers, specialty setups, favorites and unsent feedback. Account sign-in and server usage are kept. Export a backup first.",
+              ))
+            )
+              return;
+            setBusy(true);
+            try {
+              if (live.host) await live.stop();
+              await revokeStoredLiveHost();
+              overlay.hide();
+              await resetDevice();
+            } catch (e) {
+              notify(
+                e instanceof Error
+                  ? e.message
+                  : "Could not finish deleting local data. Retry before continuing.",
+              );
+            } finally {
+              setBusy(false);
+            }
+          })()
         }
       />
       <Rule />

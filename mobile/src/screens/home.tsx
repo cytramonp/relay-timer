@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { catalog } from "../core/catalog";
 import { formatTime, remaining } from "../core/clock";
 import { Action, Body, Heading, Page, Row, Rule } from "../components/ui";
+import { useTimerNow } from "../hooks/use-timer-now";
 import { useApp } from "../state/app-store";
 import { useTheme } from "../theme";
 import { PlanStatus } from "../components/plan-status";
@@ -24,6 +25,11 @@ export function HomeScreen() {
   const t = useTheme(),
     { store } = useApp(),
     active = store.run;
+  const now = useTimerNow(
+    active?.status === "running",
+    250,
+    active?.kind === "newyear",
+  );
   return (
     <Page>
       <PlanStatus />
@@ -57,9 +63,7 @@ export function HomeScreen() {
               fontVariant: ["tabular-nums"],
             }}
           >
-            {formatTime(
-              remaining(active, active.anchor ?? active.startedAt ?? 0),
-            )}
+            {formatTime(remaining(active, now))}
           </Text>
           <Action
             label="Return to active timer"

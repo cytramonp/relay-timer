@@ -14,11 +14,14 @@ export type Card = {
   elapsed: number;
   anchor: number | null;
   laps: number[];
+  lapOffset?: number;
+  lapBase?: number;
   done: boolean;
   waiting?: boolean;
   automatic?: boolean;
   scheduledAt?: number | null;
   score?: number;
+  hasStarted?: boolean;
 };
 export type Profile = { count: number; mode: string; stages: Stage[] };
 export function createBoard(profile: Profile): Card[];

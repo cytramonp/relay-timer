@@ -1,6 +1,7 @@
 appId: com.corptimer.app
 ---
-- launchApp
+- launchApp:
+    clearState: true
 - tapOn: Settings
 - tapOn: Dark
 - tapOn: Meeting

@@ -4,8 +4,14 @@ on:
     branches: ['codex/corptimer-mobile']
     paths: ['.github/workflows/mobile-ios.yml', 'mobile/scripts/capture-ios.py', 'mobile/tests/native-*.yaml']
   workflow_dispatch:
+    inputs:
+      reuse_native_run:
+        description: 'Optional simulator shell run for JS-only QA; native inputs must be identical'
+        required: false
+        default: ''
 permissions:
   contents: read
+  actions: read
 jobs:
   simulator:
     runs-on: macos-26
@@ -15,19 +21,32 @@ jobs:
         working-directory: mobile
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: mobile/package-lock.json
       - run: npm ci
-      - run: npx expo prebuild --platform ios --no-install
+      - if: inputs.reuse_native_run == ''
+        run: npx expo prebuild --platform ios --no-install
         env:
           CI: '1'
-      - run: pod install --project-directory=ios
+      - if: inputs.reuse_native_run == ''
+        run: pod install --project-directory=ios
       - name: Compile unsigned iOS simulator app
+        if: inputs.reuse_native_run == ''
         run: |
           xcodebuild -workspace ios/CorpTimer.xcworkspace -scheme CorpTimer -configuration Release -sdk iphonesimulator -derivedDataPath ios-build CODE_SIGNING_ALLOWED=NO build > xcodebuild.log 2>&1 || { tail -n 100 xcodebuild.log; exit 1; }
+      - name: Reuse identical native shell for JavaScript-only runtime QA
+        if: inputs.reuse_native_run != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IOS_NATIVE_RUN: ${{ inputs.reuse_native_run }}
+        run: |
+          gh run download "$IOS_NATIVE_RUN" --repo "$GITHUB_REPOSITORY" --name corptimer-ios-simulator --dir native-shell
+          python3 scripts/rebundle-ios.py
       - name: Preserve simulator executable permissions in an archive
         run: ditto -c -k --sequesterRsrc --keepParent ios-build/Build/Products/Release-iphonesimulator/CorpTimer.app corptimer-ios-simulator.zip
       - uses: actions/upload-artifact@v4

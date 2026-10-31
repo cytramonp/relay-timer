@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { Text, View, Pressable } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { userData } from "../services/user-data";
 import { router, useFocusEffect } from "expo-router";
 import profiles from "../core/specialty-catalog.json";
 import { Action, Body, Field, Heading, Row } from "./ui";
@@ -16,6 +16,7 @@ export function openTimer(id: string, replace = false) {
     method({ pathname: "/timer/[kind]", params: { kind: id } });
 }
 export function TimerFavoriteControls({ id }: { id: string }) {
+  const [AsyncStorage] = useState(() => userData.scope());
   const [prefs, setPrefs] = useState<Preferences>({
     favorites: [],
     home: null,
@@ -30,7 +31,7 @@ export function TimerFavoriteControls({ id }: { id: string }) {
           }
         })
         .catch(() => {});
-    }, []),
+    }, [AsyncStorage]),
   );
   function save(next: Preferences) {
     setPrefs(next);
@@ -80,6 +81,7 @@ export function TimerFavoriteControls({ id }: { id: string }) {
   );
 }
 export function SpecialtyLibrary() {
+  const [AsyncStorage] = useState(() => userData.scope());
   const t = useTheme(),
     [open, setOpen] = useState(""),
     [query, setQuery] = useState(""),
@@ -94,7 +96,7 @@ export function SpecialtyLibrary() {
           }
         })
         .catch(() => {});
-    }, []),
+    }, [AsyncStorage]),
   );
   const link = (slug: string) =>
     router.push({ pathname: "/specialty/[slug]", params: { slug } });
