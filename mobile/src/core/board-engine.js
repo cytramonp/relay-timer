@@ -119,6 +119,7 @@ export function seekCard(card, seconds, mode) {
   const c = {
     ...card,
     anchor: null,
+    scheduledAt: null,
     done: false,
     waiting: false,
     index: 0,
@@ -128,6 +129,10 @@ export function seekCard(card, seconds, mode) {
   if (mode === "up") {
     c.elapsed = remaining;
     c.laps = c.laps.filter((v) => v <= remaining);
+    if (remaining < (c.lapBase || 0)) {
+      c.lapBase = 0;
+      c.lapOffset = 0;
+    }
     return c;
   }
   while (

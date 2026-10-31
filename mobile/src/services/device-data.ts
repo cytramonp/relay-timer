@@ -10,6 +10,36 @@ import { rawStore, saveStore } from "./storage";
 import { runNow } from "./timer-clock";
 import { userData } from "./user-data";
 
+// Read durable ownership too: Settings can open before LiveProvider finishes
+// rehydrating. A late reconnect must never publish restored data to an old room.
+export async function revokeStoredLiveHost() {
+  const raw = await AsyncStorage.getItem(LIVE_HOST_KEY);
+  if (!raw) return;
+  let host;
+  try {
+    host = JSON.parse(raw);
+  } catch {
+    throw Error(
+      "The saved live link could not be read. Reconnect live sharing before replacing local data.",
+    );
+  }
+  if (host?.expiresAt <= Date.now()) {
+    await AsyncStorage.removeItem(LIVE_HOST_KEY);
+    return;
+  }
+  if (!/^[a-f0-9]{32}$/.test(host?.id) || typeof host?.uid !== "string")
+    throw Error(
+      "The saved live link is invalid. Reconnect live sharing before replacing local data.",
+    );
+  const live = await import("./live");
+  if (!(await live.sameOwner(host.uid)))
+    throw Error(
+      "Sign in to the account owning the previous live link before replacing local data.",
+    );
+  await live.endRoom(host.id);
+  await AsyncStorage.removeItem(LIVE_HOST_KEY);
+}
+
 async function records() {
   await userData.flush();
   const keys = (await AsyncStorage.getAllKeys()).filter(isUserDataKey);

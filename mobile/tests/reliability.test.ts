@@ -1,6 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { act, settle, createBoard, display } from "../src/core/board-engine.js";
+import {
+  act,
+  settle,
+  createBoard,
+  display,
+  seekCard,
+} from "../src/core/board-engine.js";
 import {
   freshBoard,
   customProfile,
@@ -119,6 +125,10 @@ test("501/502 laps retain accurate split, absolute lap number and serialized met
   }
   assert.equal(board[0].lapOffset, 2);
   assert.equal(board[0].lapBase, 2000);
+  const rewound = seekCard(board[0], 1, "up");
+  assert.equal(rewound.lapBase, 0);
+  assert.equal(rewound.lapOffset, 0);
+  assert.equal(rewound.laps.length, 0);
   assert.deepEqual(primary.laps, board[0].laps);
   assert(
     boardCsv(JSON.parse(JSON.stringify(board)), 503000).includes(

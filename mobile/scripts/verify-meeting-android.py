@@ -307,6 +307,9 @@ try:
         open_path('pro')
         t = tree(); assert 'Your timer. Your way.' in ET.tostring(t, encoding='unicode')
         capture(f'{form}-android-plan.png')
+        if os.getenv('CORPTIMER_RELIABILITY_QA') == '1':
+            from reliability_android import verify
+            verify(globals(), form)
         open_path('settings'); tap_node(find(tree(), text='Dark'))
         adb('shell', 'settings', 'put', 'system', 'font_scale', '1.3')
         open_path(''); capture(f'{form}-android-dark-large-text.png')

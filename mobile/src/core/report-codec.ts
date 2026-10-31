@@ -1,3 +1,4 @@
+import { MAX_BACKUP_BYTES } from "./data-keys.ts";
 import { kinds, type Report, type ParkingItem, type Slot } from "./types.ts";
 
 function text(value: unknown, max = 120): string {
@@ -25,8 +26,9 @@ export function decodeParking(value: unknown): ParkingItem[] {
     const x = record(v);
     return {
       id: text(x.id, 100),
-      text: text(x.text, 5000),
-      owner: text(x.owner, 120),
+      // Older native versions allowed free-form follow-up text and owners.
+      text: text(x.text, MAX_BACKUP_BYTES),
+      owner: text(x.owner, MAX_BACKUP_BYTES),
       done: x.done === true,
     };
   });

@@ -20,13 +20,18 @@ import {
 } from "../services/notifications";
 import { useOverlay } from "../state/overlay-store";
 import { useLive } from "../state/live-store";
-import { exportDeviceData, exportRecoveryData } from "../services/device-data";
+import {
+  exportDeviceData,
+  exportRecoveryData,
+  revokeStoredLiveHost,
+} from "../services/device-data";
 import { readDeviceBackup } from "../core/device-backup";
 import { importFile, exportFile } from "../services/files";
 
 export function SettingsScreen() {
   const live = useLive(),
     overlay = useOverlay();
+  const [recoveryNeeded, setRecoveryNeeded] = useState(false);
   const [readiness, setReadiness] = useState<{
     allowed: boolean;
     exact: boolean;
@@ -207,6 +212,7 @@ export function SettingsScreen() {
                 await exportDeviceData(snapshot()),
               );
             } catch (e) {
+              setRecoveryNeeded(true);
               notify(
                 e instanceof Error ? e.message : "Could not export backup.",
               );
@@ -216,7 +222,7 @@ export function SettingsScreen() {
           })()
         }
       />
-      {unreadableData && (
+      {(unreadableData || recoveryNeeded) && (
         <Action
           label="Export original data for recovery"
           onPress={() =>
@@ -255,6 +261,7 @@ export function SettingsScreen() {
               )
                 return;
               if (live.host) await live.stop();
+              await revokeStoredLiveHost();
               overlay.hide();
               await restoreDevice(json);
             } catch (e) {
@@ -284,6 +291,7 @@ export function SettingsScreen() {
             setBusy(true);
             try {
               if (live.host) await live.stop();
+              await revokeStoredLiveHost();
               overlay.hide();
               await resetDevice();
             } catch (e) {

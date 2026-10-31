@@ -29,6 +29,7 @@ with zipfile.ZipFile(apk) as z:
             alignment = struct.unpack_from(fmt + ('Q' if elf64 else 'I'), data, pos + (48 if elf64 else 28))[0]
             assert alignment >= 16384, f'{name}: LOAD alignment {alignment}'
         checked.append(name)
+    assert any(b'CorpTimerClock' in z.read(n) for n in z.namelist() if n.endswith('.dex')), 'Native monotonic clock was not linked'
     bundle = z.read('assets/index.android.bundle')
     assert b'cytramonp@gmail.com' not in bundle
     assert b'corptimer_pro_yearly' in bundle

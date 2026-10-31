@@ -34,7 +34,6 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const owner = useRef<Host | null>(null),
-    handled = useRef(new Set<string>()),
     lastCommand = useRef("");
   const projection = () => {
     const s = current.current.snapshot(),
@@ -211,7 +210,6 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
             owner.current = null;
             setHost(null);
             setError("");
-            handled.current.clear();
             await AsyncStorage.removeItem(KEY);
           } catch {
             setError(

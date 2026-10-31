@@ -110,6 +110,8 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - uses: reactivecircus/android-emulator-runner@v2
+        env:
+          CORPTIMER_RELIABILITY_QA: "1"
         with:
           api-level: 36
           arch: x86_64
