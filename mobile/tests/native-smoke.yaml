@@ -5,6 +5,9 @@ appId: com.corptimer.app
 - assertVisible:
     id: current-speaker
     text: Welcome
+- extendedWaitUntil:
+    visible: 'Full access · trial'
+    timeout: 40000
 - takeScreenshot: '${DEVICE_CLASS}-ios-meeting-ready'
 - scrollUntilVisible:
     element:

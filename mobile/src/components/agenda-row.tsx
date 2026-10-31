@@ -34,6 +34,7 @@ export const AgendaRow = memo(function AgendaRow({
   onDuration,
   onMenu,
   onDrag,
+  scrollGesture,
 }: {
   item: Slot;
   index: number;
@@ -46,6 +47,7 @@ export const AgendaRow = memo(function AgendaRow({
   onDuration: (id: string) => void;
   onMenu: (id: string, action: string) => void;
   onDrag: (active: boolean) => void;
+  scrollGesture: ReturnType<typeof Gesture.Native>;
 }) {
   const t = useTheme(),
     reduced = useReducedMotion(),
@@ -53,6 +55,7 @@ export const AgendaRow = memo(function AgendaRow({
     [menu, setMenu] = useState(false);
   useEffect(() => setName(item.name), [item.name]);
   const pan = Gesture.Pan()
+    .blocksExternalGesture(scrollGesture)
     .minDistance(3)
     .onStart((e) => {
       drag.index.value = index;
@@ -181,7 +184,7 @@ export const AgendaRow = memo(function AgendaRow({
             }
             style={{
               minHeight: 56,
-              width: 40,
+              width: 48,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -197,7 +200,11 @@ export const AgendaRow = memo(function AgendaRow({
             maxLength={120}
             onChangeText={setName}
             onEndEditing={() => onRename(item.id, name.trim() || item.name)}
-            onBlur={Platform.OS === "web" ? () => onRename(item.id, name.trim() || item.name) : undefined}
+            onBlur={
+              Platform.OS === "web"
+                ? () => onRename(item.id, name.trim() || item.name)
+                : undefined
+            }
             selectTextOnFocus
             style={{
               color: t.ink,

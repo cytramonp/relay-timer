@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   Platform,
   Pressable,
@@ -48,6 +49,7 @@ import { PlanStatus } from "../components/plan-status";
 import { requireCustomization } from "../services/billing";
 
 export function MeetingScreen() {
+  const scrollGesture = useMemo(() => Gesture.Native(), []);
   const live = useLive();
   const {
       store,
@@ -234,6 +236,7 @@ export function MeetingScreen() {
         </Pressable>
       </View>
       <MeetingTimeline
+        scrollGesture={scrollGesture}
         config={config}
         run={run}
         now={now}
@@ -346,6 +349,7 @@ export function MeetingScreen() {
       <View>
         {view.rows.map((a, i) => (
           <AgendaRow
+            scrollGesture={scrollGesture}
             key={a.id}
             item={a}
             index={i}
@@ -387,290 +391,300 @@ export function MeetingScreen() {
     </View>
   );
   return (
-    <Animated.ScrollView
-      ref={scrollRef}
-      onScroll={scrollHandler}
-      scrollEventThrottle={16}
-      scrollEnabled={!dragging}
-      contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      style={{ flex: 1, backgroundColor: t.bg }}
-      onContentSizeChange={(_, h) => {
-        maxScroll.set(Math.max(0, h - (height - 170)));
-      }}
-      contentContainerStyle={{
-        padding: metrics.page,
-        paddingBottom: 42,
-        gap: 24,
-        maxWidth: 1200,
-        width: "100%",
-        alignSelf: "center",
-      }}
-    >
-      <Notice />
-      <PlanStatus />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 10,
+    <GestureDetector gesture={scrollGesture}>
+      <Animated.ScrollView
+        ref={scrollRef}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+        scrollEnabled={!dragging}
+        contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        style={{ flex: 1, backgroundColor: t.bg }}
+        onContentSizeChange={(_, h) => {
+          maxScroll.set(Math.max(0, h - (height - 170)));
+        }}
+        contentContainerStyle={{
+          padding: metrics.page,
+          paddingBottom: 42,
+          gap: 24,
+          maxWidth: 1200,
+          width: "100%",
+          alignSelf: "center",
         }}
       >
-        <TextInput
-          accessibilityLabel="Meeting name"
-          key={config.title}
-          defaultValue={config.title}
-          onBlur={
-            Platform.OS === "web"
-              ? (e) => {
-                  // react-native-web supplies text on blur; native commits on end editing below.
-                  const event = e.nativeEvent as typeof e.nativeEvent & {
-                    text?: string;
-                  };
-                  change({
-                    ...config,
-                    title: event.text?.trim() || config.title,
-                  });
-                }
-              : undefined
-          }
-          onEndEditing={(e) =>
-            change({
-              ...config,
-              title: e.nativeEvent.text.trim() || config.title,
-            })
-          }
-          maxLength={120}
+        <Notice />
+        <PlanStatus />
+        <View
           style={{
-            flex: 1,
-            minWidth: 0,
-            fontFamily: "Cantata",
-            color: t.ink,
-            fontSize: 28,
-            minHeight: 48,
-            paddingVertical: 4,
-          }}
-        />
-        <IconAction
-          icon="share-outline"
-          label="Share live meeting"
-          onPress={() => router.push("/meeting-share")}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 10,
-          marginTop: -12,
-        }}
-      >
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => router.push("/meeting-templates")}
-          style={{
-            minHeight: 48,
-            paddingHorizontal: 14,
-            borderWidth: 1,
-            borderColor: t.line,
-            borderRadius: 10,
-            justifyContent: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 10,
           }}
         >
-          <Text style={{ fontFamily: "Manrope", fontSize: 13, color: t.teal }}>
-            Templates
-          </Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() =>
-            void (async () => {
-              try {
-                requireCustomization();
-              } catch (e) {
-                notify(
-                  e instanceof Error
-                    ? e.message
-                    : "Check your plan before creating a meeting.",
-                );
-                return;
-              }
-              if (
-                run &&
-                run.status !== "done" &&
-                !(await confirm(
-                  "Create a new meeting?",
-                  "The current session will be saved in History.",
-                ))
-              )
-                return;
-              if (live.host) {
+          <TextInput
+            accessibilityLabel="Meeting name"
+            key={config.title}
+            defaultValue={config.title}
+            onBlur={
+              Platform.OS === "web"
+                ? (e) => {
+                    // react-native-web supplies text on blur; native commits on end editing below.
+                    const event = e.nativeEvent as typeof e.nativeEvent & {
+                      text?: string;
+                    };
+                    change({
+                      ...config,
+                      title: event.text?.trim() || config.title,
+                    });
+                  }
+                : undefined
+            }
+            onEndEditing={(e) =>
+              change({
+                ...config,
+                title: e.nativeEvent.text.trim() || config.title,
+              })
+            }
+            maxLength={120}
+            style={{
+              flex: 1,
+              minWidth: 0,
+              fontFamily: "Cantata",
+              color: t.ink,
+              fontSize: 28,
+              minHeight: 48,
+              paddingVertical: 4,
+            }}
+          />
+          <IconAction
+            icon="share-outline"
+            label="Share live meeting"
+            onPress={() => router.push("/meeting-share")}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 10,
+            marginTop: -12,
+          }}
+        >
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push("/meeting-templates")}
+            style={{
+              minHeight: 48,
+              paddingHorizontal: 14,
+              borderWidth: 1,
+              borderColor: t.line,
+              borderRadius: 10,
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{ fontFamily: "Manrope", fontSize: 13, color: t.teal }}
+            >
+              Templates
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() =>
+              void (async () => {
                 try {
-                  await live.stop();
+                  requireCustomization();
                 } catch (e) {
                   notify(
-                    e instanceof Error ? e.message : "Stop live sharing first.",
+                    e instanceof Error
+                      ? e.message
+                      : "Check your plan before creating a meeting.",
                   );
                   return;
                 }
-              }
-              if (run) act("reset");
-              editMeeting(defaultConfig("meeting"));
-            })()
-          }
-          style={{
-            minHeight: 48,
-            justifyContent: "center",
-            paddingHorizontal: 8,
-          }}
-        >
-          <Text style={{ fontSize: 13, color: t.muted }}>New meeting</Text>
-        </Pressable>
-      </View>
-      {wide ? (
-        <View
-          style={{ flexDirection: "row", alignItems: "flex-start", gap: 26 }}
-        >
-          <View style={{ flex: 1 }}>{clock}</View>
-          <View style={{ flex: 1 }}>{agenda}</View>
+                if (
+                  run &&
+                  run.status !== "done" &&
+                  !(await confirm(
+                    "Create a new meeting?",
+                    "The current session will be saved in History.",
+                  ))
+                )
+                  return;
+                if (live.host) {
+                  try {
+                    await live.stop();
+                  } catch (e) {
+                    notify(
+                      e instanceof Error
+                        ? e.message
+                        : "Stop live sharing first.",
+                    );
+                    return;
+                  }
+                }
+                if (run) act("reset");
+                editMeeting(defaultConfig("meeting"));
+              })()
+            }
+            style={{
+              minHeight: 48,
+              justifyContent: "center",
+              paddingHorizontal: 8,
+            }}
+          >
+            <Text style={{ fontSize: 13, color: t.muted }}>New meeting</Text>
+          </Pressable>
         </View>
-      ) : (
-        <>
-          {clock}
-          <Rule />
-          {agenda}
-        </>
-      )}
-      <Rule />
-      <View style={{ gap: 12 }}>
-        <Heading>For later</Heading>
-        <Body muted>Park the tangent. Keep the conversation moving.</Body>
-        <Field
-          label="Topic or action item"
-          value={topic}
-          onChangeText={setTopic}
-          maxLength={500}
-          placeholder="Something to come back to…"
-        />
-        <Field label="Owner (optional)" value={owner} onChangeText={setOwner} />
-        <Action
-          label={editingItem ? "Save item" : "Add item"}
-          disabled={!topic.trim()}
-          onPress={() => {
-            const item = {
-              id: Crypto.randomUUID(),
-              text: topic.trim(),
-              owner: owner.trim(),
-              done: false,
-            };
-            parking(
-              editingItem
-                ? items.map((a) =>
-                    a.id === editingItem
-                      ? { ...a, text: item.text, owner: item.owner }
-                      : a,
-                  )
-                : [...items, item],
-            );
-            setEditingItem(null);
-            setTopic("");
-            setOwner("");
-          }}
-        />
-        {editingItem && (
+        {wide ? (
+          <View
+            style={{ flexDirection: "row", alignItems: "flex-start", gap: 26 }}
+          >
+            <View style={{ flex: 1 }}>{clock}</View>
+            <View style={{ flex: 1 }}>{agenda}</View>
+          </View>
+        ) : (
+          <>
+            {clock}
+            <Rule />
+            {agenda}
+          </>
+        )}
+        <Rule />
+        <View style={{ gap: 12 }}>
+          <Heading>For later</Heading>
+          <Body muted>Park the tangent. Keep the conversation moving.</Body>
+          <Field
+            label="Topic or action item"
+            value={topic}
+            onChangeText={setTopic}
+            maxLength={500}
+            placeholder="Something to come back to…"
+          />
+          <Field
+            label="Owner (optional)"
+            value={owner}
+            onChangeText={setOwner}
+          />
           <Action
-            label="Cancel edit"
+            label={editingItem ? "Save item" : "Add item"}
+            disabled={!topic.trim()}
             onPress={() => {
+              const item = {
+                id: Crypto.randomUUID(),
+                text: topic.trim(),
+                owner: owner.trim(),
+                done: false,
+              };
+              parking(
+                editingItem
+                  ? items.map((a) =>
+                      a.id === editingItem
+                        ? { ...a, text: item.text, owner: item.owner }
+                        : a,
+                    )
+                  : [...items, item],
+              );
               setEditingItem(null);
               setTopic("");
               setOwner("");
             }}
           />
-        )}
-        {!items.length && (
-          <Body muted>
-            Nothing parked yet. These notes stay off the live screen.
-          </Body>
-        )}
-        {items.map((item) => (
-          <View
-            key={item.id}
-            style={{
-              gap: 6,
-              paddingVertical: 8,
-              borderBottomWidth: 1,
-              borderColor: t.line,
-            }}
-          >
-            <Toggle
-              label={item.text + (item.owner ? ` · ${item.owner}` : "")}
-              value={item.done}
-              onChange={(done) =>
-                parking(
-                  items.map((a) => (a.id === item.id ? { ...a, done } : a)),
-                )
-              }
+          {editingItem && (
+            <Action
+              label="Cancel edit"
+              onPress={() => {
+                setEditingItem(null);
+                setTopic("");
+                setOwner("");
+              }}
             />
-            <Row>
-              <Action
-                label="Edit"
-                onPress={() => {
-                  setTopic(item.text);
-                  setOwner(item.owner);
-                  setEditingItem(item.id);
-                }}
+          )}
+          {!items.length && (
+            <Body muted>
+              Nothing parked yet. These notes stay off the live screen.
+            </Body>
+          )}
+          {items.map((item) => (
+            <View
+              key={item.id}
+              style={{
+                gap: 6,
+                paddingVertical: 8,
+                borderBottomWidth: 1,
+                borderColor: t.line,
+              }}
+            >
+              <Toggle
+                label={item.text + (item.owner ? ` · ${item.owner}` : "")}
+                value={item.done}
+                onChange={(done) =>
+                  parking(
+                    items.map((a) => (a.id === item.id ? { ...a, done } : a)),
+                  )
+                }
               />
-              <Action
-                label="Remove"
-                onPress={() => parking(items.filter((a) => a.id !== item.id))}
-              />
-            </Row>
-          </View>
-        ))}
-      </View>
-      {run && (
-        <View style={{ gap: 12 }}>
-          <Heading>Private notes</Heading>
-          <TextInput
-            accessibilityLabel="Private meeting notes"
-            multiline
-            value={run.notes}
-            onChangeText={notes}
-            maxLength={10000}
-            placeholder="Decisions and next steps…"
-            placeholderTextColor={t.muted}
-            style={{
-              minHeight: 120,
-              padding: 14,
-              borderWidth: 1,
-              borderColor: t.line,
-              borderRadius: 12,
-              color: t.ink,
-              backgroundColor: t.field,
-              textAlignVertical: "top",
-              fontSize: 16,
-            }}
-          />
+              <Row>
+                <Action
+                  label="Edit"
+                  onPress={() => {
+                    setTopic(item.text);
+                    setOwner(item.owner);
+                    setEditingItem(item.id);
+                  }}
+                />
+                <Action
+                  label="Remove"
+                  onPress={() => parking(items.filter((a) => a.id !== item.id))}
+                />
+              </Row>
+            </View>
+          ))}
         </View>
-      )}
-      <Rule />
-      <Body muted>
-        Unused time passes to the next speaker. Finish early, and the next
-        person gets more room. Overrun, and their available time adjusts.
-      </Body>
-      <Row>
-        <Action
-          label="Import / export"
-          onPress={() => router.push("/(tabs)/programs")}
-        />
-        <Action
-          label="Timing settings"
-          onPress={() => router.push("/meeting-options")}
-        />
-      </Row>
-    </Animated.ScrollView>
+        {run && (
+          <View style={{ gap: 12 }}>
+            <Heading>Private notes</Heading>
+            <TextInput
+              accessibilityLabel="Private meeting notes"
+              multiline
+              value={run.notes}
+              onChangeText={notes}
+              maxLength={10000}
+              placeholder="Decisions and next steps…"
+              placeholderTextColor={t.muted}
+              style={{
+                minHeight: 120,
+                padding: 14,
+                borderWidth: 1,
+                borderColor: t.line,
+                borderRadius: 12,
+                color: t.ink,
+                backgroundColor: t.field,
+                textAlignVertical: "top",
+                fontSize: 16,
+              }}
+            />
+          </View>
+        )}
+        <Rule />
+        <Body muted>
+          Unused time passes to the next speaker. Finish early, and the next
+          person gets more room. Overrun, and their available time adjusts.
+        </Body>
+        <Row>
+          <Action
+            label="Import / export"
+            onPress={() => router.push("/(tabs)/programs")}
+          />
+          <Action
+            label="Timing settings"
+            onPress={() => router.push("/meeting-options")}
+          />
+        </Row>
+      </Animated.ScrollView>
+    </GestureDetector>
   );
 }
