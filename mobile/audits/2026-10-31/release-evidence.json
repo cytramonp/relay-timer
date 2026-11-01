@@ -67,7 +67,16 @@
       "scope": "Unsigned simulator native runtime QA; not a signed archive or store submission"
     },
     "physicalDeviceTested": false,
-    "scope": "iPhone/iPad Meeting and iPhone dark pass; isolated corrected iPad dark QA is pending and is not counted as a pass. Unsigned simulator only"
+    "scope": "iPhone/iPad Meeting and iPhone dark pass. Isolated iPad dark CLI timed out after all UI commands; OS screenshot exposes an open large-text agenda layout defect. No whole-iOS appearance approval. Unsigned simulator only",
+    "iosKnownIssues": [
+      {
+        "priority": "P2",
+        "area": "iPad accessibility-medium agenda rows",
+        "status": "open",
+        "description": "Fixed-width time columns wrap values and overlap adjacent rows; not fixed in this Android runtime."
+      }
+    ],
+    "iosTargetedIpadDarkConclusion": "failure (CLI timeout after UI actions/screenshot)"
   },
   "apkSha256": "A130CF36CEFFCAA227FAF0EA9C25953D20D99279849FF16356CCDF3CDB533CD0",
   "aabSha256": "FC7FC994EA6DD1002BA01B208CDAAEABB7B210754828F3C42F2E4DCC4A08DC69",
