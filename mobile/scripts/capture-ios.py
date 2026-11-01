@@ -14,8 +14,12 @@ output = root / 'native-captures'
 output.mkdir(exist_ok=True)
 inventory = json.loads(run('xcrun', 'simctl', 'list', 'devices', 'available', '--json'))
 devices = [d for runtime, rows in inventory['devices'].items() if 'iOS' in runtime for d in rows if d.get('isAvailable')]
+scope = os.environ.get('IOS_UI_SCOPE', 'all')
+assert scope in ['all', 'ipad-dark', 'iphone-dark'], 'Unknown iOS UI evidence scope'
 results = []
-for category in ['iPhone', 'iPad']:
+categories = ['iPad'] if scope == 'ipad-dark' else ['iPhone'] if scope == 'iphone-dark' else ['iPhone', 'iPad']
+flows = [('native-dark', 240)] if scope != 'all' else [('native-smoke', 600), ('native-dark', 240)]
+for category in categories:
     candidates = [d for d in devices if d['name'].startswith(category)]
     if not candidates:
         raise RuntimeError(f'No available {category} simulator on this runner')
@@ -29,7 +33,7 @@ for category in ['iPhone', 'iPad']:
     run('xcrun', 'simctl', 'launch', udid, 'com.corptimer.app')
     time.sleep(5)
     run('xcrun', 'simctl', 'io', udid, 'screenshot', str(output / f'{category.lower()}-ios-home.png'))
-    for flow, budget in [('native-smoke', 600), ('native-dark', 240)]:
+    for flow, budget in flows:
         if flow == 'native-dark':
             run('xcrun','simctl','ui',udid,'appearance','dark')
             run('xcrun','simctl','ui',udid,'content_size','accessibility-medium')
@@ -43,6 +47,6 @@ for category in ['iPhone', 'iPad']:
             results.append({'device': device['name'], 'flow': flow, 'passed': False, 'error': str(error)})
             subprocess.run(['xcrun','simctl','io',udid,'screenshot',str(output/f'{category.lower()}-{flow}-failure.png')],timeout=45)
             subprocess.run(['xcrun','simctl','terminate',udid,'com.corptimer.app'],timeout=45)
-        (output/'ios-ui-results.json').write_text(json.dumps({'source':os.environ.get('GITHUB_SHA'),'results':results},indent=2))
+        (output/'ios-ui-results.json').write_text(json.dumps({'source':os.environ.get('GITHUB_SHA'),'scope':scope,'results':results},indent=2))
     run('xcrun', 'simctl', 'shutdown', udid)
 assert all(result['passed'] for result in results), 'One or more iOS UI flows failed; see ios-ui-results.json and native logs'

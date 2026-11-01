@@ -11,9 +11,9 @@ async function main() {
     const input = path.resolve(source, `phone-android-${name}.png`);
     // Preserve the complete captured screen. Contain-fit adds neutral margins,
     // meeting Play's 16:9 dimensions without cropping controls or inventing UI.
-    await sharp(input).resize({ width: 1080, height: 1920, fit: 'contain', background: '#eeece5' }).png().toFile(path.join(dest, `phone-${i + 1}-${name}.png`));
+    await sharp(input).resize({ width: 1080, height: 1920, fit: 'contain', background: '#eeece5' }).flatten({ background: '#eeece5' }).removeAlpha().png().toFile(path.join(dest, `phone-${i + 1}-${name}.png`));
   }
-  await sharp(path.resolve(source, 'tablet-android-landscape.png')).png().toFile(path.join(dest, 'tablet-landscape.png'));
+  await sharp(path.resolve(source, 'tablet-android-landscape.png')).flatten({ background: '#eeece5' }).removeAlpha().png().toFile(path.join(dest, 'tablet-landscape.png'));
   console.log('Prepared six complete native phone captures and one landscape tablet capture.');
 }
 main().catch(e => { console.error(e); process.exit(1); });

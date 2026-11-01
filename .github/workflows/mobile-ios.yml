@@ -9,6 +9,11 @@ on:
         description: 'Optional simulator shell run for JS-only QA; native inputs must be identical'
         required: false
         default: ''
+      ui_scope:
+        description: 'UI evidence scope; targeted reruns do not replace the all-device result'
+        type: choice
+        options: ['all', 'ipad-dark', 'iphone-dark']
+        default: 'all'
 permissions:
   contents: read
   actions: read
@@ -59,6 +64,8 @@ jobs:
         run: curl -fsSL https://get.maestro.mobile.dev | bash
       - name: Launch iPhone and iPad and capture native UI
         run: python3 scripts/capture-ios.py
+        env:
+          IOS_UI_SCOPE: ${{ inputs.ui_scope || 'all' }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:

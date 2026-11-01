@@ -62,4 +62,6 @@ Recheck these time-sensitive requirements at actual submission.
 
 ## 0.4.1 reliability delta
 
+Store screenshot preparation preserves the complete native screen using contain-fit and outputs 24-bit RGB PNG without alpha. The feature graphic is also RGB at 1024×500; phone exports are 1080×1920. This follows Google's [preview asset requirements](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en); it does not complete the owner-specific listing/declaration checks.
+
 See `../audits/2026-10-31/IMPLEMENTATION.ru.md`. Store payment activation is unchanged. Device backup/reset now covers portable specialty data and drafts, excluding credentials/grants/live capabilities. All timer scopes share up to 48 upcoming local alerts; long sessions need foreground replenishment. Exact Android access is separately checked. Native elapsed-time metadata stays local; live publication uses wall-clock event timestamps and elapsed durations. Hardware delivery, OS intervention and actual store payment tests remain outstanding.

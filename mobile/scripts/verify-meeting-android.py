@@ -14,6 +14,8 @@ apk = next((root / 'android/app/build/outputs/apk/release').glob('*.apk'))
 def adb(*args):
     return subprocess.check_output(['adb', *args], text=True, timeout=35)
 
+assert os.environ.get('CI') == 'true' and adb('get-serialno').strip().startswith('emulator-'), 'Destructive native QA is limited to a disposable CI emulator; use the manual checklist on real devices'
+
 def tree():
     # The floating timer is intentionally non-focusable. Include all windows,
     # otherwise Android reports only the focused launcher behind the overlay.

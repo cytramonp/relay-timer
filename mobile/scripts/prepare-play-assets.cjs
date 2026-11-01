@@ -18,7 +18,7 @@ async function main() {
     <text x="669" y="400" font-family="Arial,sans-serif" font-size="17" fill="#a8c2c1">Then five equal voices.</text>
   </svg>`;
   await fs.writeFile(path.join(dest, 'feature-graphic.svg'), svg);
-  await sharp(Buffer.from(svg)).png().toFile(path.join(dest, 'feature-graphic.png'));
+  await sharp(Buffer.from(svg)).flatten({ background: '#eeece5' }).removeAlpha().png().toFile(path.join(dest, 'feature-graphic.png'));
   console.log('Created Play icon 512×512 and feature graphic 1024×500.');
 }
 main().catch(e => { console.error(e); process.exit(1); });
