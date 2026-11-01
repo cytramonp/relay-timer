@@ -2,6 +2,8 @@
 
 Native React Native / Expo SDK 58 application for iPhone, iPad and Android, in the same repository as corptimer.com. Version 0.4.0 adds 27 specialty profiles, favorites/start timer, stage editing and exports, company branding and Trial/Free/Pro access. It preserves the one-hour Meeting, rotary controls, gestures and in-app support form from 0.3. See [PARITY-0.4.md](PARITY-0.4.md) and [store/GOOGLE-PLAY.md](store/GOOGLE-PLAY.md) for implementation and activation boundaries.
 
+Version 0.4.1 hardens session grants, complete device backup/reset, native elapsed-time recovery, scoped background alerts and local rendering/persistence. See [implementation status](audits/2026-10-31/IMPLEMENTATION.ru.md) for verified behavior and remaining device/store gates.
+
 ## Run
 
 Requires Node 24 and npm. From this directory:
@@ -45,7 +47,7 @@ Open http://127.0.0.1:4176. A browser preview checks UI and portable logic; it d
 - Light/dark palettes, system font scaling, safe-area-aware navigation and English interface.
 - Original CorpTimer glasses, derived illustrations, fonts and licenses.
 
-Programs, notes and reports are local by default. Creating a live link explicitly uploads only the meeting title, public agenda, timing state and an anonymous host identity to Firebase. Anyone holding the viewer link can read that projection; a separate capability link grants timer control. Notes, follow-up owners and reports are excluded. Private-library synchronization and native Google sign-in are not implemented. Website plans can be imported without importing active runs, reports or private notes.
+Programs, notes and reports are local by default. Creating a live link explicitly uploads only the meeting title, public agenda, timing state and an anonymous host identity to Firebase. Anyone holding the viewer link can read that projection; a separate capability link grants timer control. Notes, follow-up owners and reports are excluded. Private-library synchronization is not implemented; the native Google sign-in adapter is prepared but disabled pending account configuration and real-device verification. Website plans can be imported without importing active runs, reports or private notes.
 
 ## Verification
 
@@ -64,7 +66,7 @@ See [VALIDATION.md](VALIDATION.md) for what was actually checked and what remain
 
 ## Android installation build
 
-[Android 0.4.0 internal-test release, build6](https://github.com/cytramonp/relay-timer/releases/tag/mobile-v0.4.0-beta.1) includes the APK, separately signed Play AAB, store kit, native captures, foreground-service demonstration and build/hash reports. See VALIDATION.md for exact evidence and remaining production gates.
+[Android 0.4.1 reliability beta, build7](https://github.com/cytramonp/relay-timer/releases/tag/mobile-v0.4.1-beta.1) provides the APK and separately signed Play AAB for manual/internal testing. See [VALIDATION.md](VALIDATION.md) for exact binary provenance, completed and pending native checks, and remaining production gates; [manual Android checks](audits/2026-10-31/MANUAL-QA.ru.md) accompany the APK.
 
 The repository's **Android APK and Google Play bundle** workflow builds standalone arm64/x86-64 artifacts with embedded JavaScript and API36 emulator verification. Download `corptimer-android-test-apk` from a successful run, unzip and install it; no Metro server is needed. The beta APK retains its historical debug certificate for update compatibility. Google Play requires the separately signed AAB. An unsigned CI bundle may be signed locally with `scripts/sign-play-bundle.ps1`, keeping the upload key on the owner's computer. See the Play preparation document before any upload.
 
