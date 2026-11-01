@@ -13,15 +13,15 @@ def verify(g, form):
     result = {'form': form, 'source': os.getenv('GITHUB_SHA'), 'feedbackSent': False,
               'physicalDevice': False, 'clockJump': {'tested': False}}
 
-    def top(identifier):
+    def top(identifier=None, text=None):
         for _ in range(12):
             t = tree()
-            node = find(t, identifier=identifier)
+            node = find(t, identifier=identifier, text=text)
             if node is not None:
                 return t
             w, h = dimensions()
             adb('shell', 'input', 'swipe', str(w // 2), str(int(h * .3)), str(w // 2), str(int(h * .8)), '400')
-        raise AssertionError('Could not reach ' + identifier)
+        raise AssertionError('Could not reach ' + str(identifier or text))
 
     def seconds(t):
         text = find(t, identifier='board-clock-0').attrib['text']
@@ -88,6 +88,7 @@ def verify(g, form):
     assert find(tree(), text='Remove favorite') is not None
     t, save = scroll_text('Save setup')
     tap(save)
+    top(text='Setup saved on this device.')
     open_path('feedback')
     t, message = g['scroll_to']('feedback-message')
     tap(message)
@@ -108,7 +109,7 @@ def verify(g, form):
     assert find(t, text='Remove favorite') is None, 'Reset kept favorites'
     t, load = scroll_text('Load setup')
     tap(load)
-    scroll_text('Save a setup first.')
+    top(text='Save a setup first.')
     open_path('feedback')
     t, message = g['scroll_to']('feedback-message')
     assert message.attrib.get('text') != 'QA_DRAFT_DELETE_WITHOUT_SENDING', 'Reset kept the feedback draft'
