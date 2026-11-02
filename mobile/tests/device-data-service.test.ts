@@ -158,3 +158,15 @@ test("device service rejects malformed input without writes and rolls partial re
   assert.deepEqual([...f.data.entries()].sort(), original.sort());
   assert.deepEqual([...f.sqlite.entries()], sqlite);
 });
+
+test("clear user data removes independent custom timers and their saved plans without touching auth", async () => {
+  const f = fixture();
+  const key =
+    "corptimer.board.custom-timer-12345678-1234-4abc-8def-123456789abc";
+  for (const suffix of ["", ".setup", ".reservation"])
+    f.data.set(key + suffix, "test-record");
+  await f.service.clearUserData();
+  for (const suffix of ["", ".setup", ".reservation"])
+    assert.equal(f.data.has(key + suffix), false);
+  assert.equal(f.data.get("firebase:auth:local"), "test-auth-sentinel");
+});

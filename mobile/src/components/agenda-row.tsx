@@ -1,5 +1,12 @@
 import React, { memo, useEffect, useState } from "react";
-import { Platform, Pressable, Text, TextInput, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { MenuView } from "@expo/ui/community/menu";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -12,7 +19,7 @@ import Animated, {
 import { Ionicons } from "@expo/vector-icons";
 import { formatTime } from "../core/clock";
 import type { Slot } from "../core/types";
-import { metrics, useTheme } from "../theme";
+import { useTheme } from "../theme";
 
 export type DragState = {
   index: SharedValue<number>;
@@ -35,7 +42,9 @@ export const AgendaRow = memo(function AgendaRow({
   onMenu,
   onDrag,
   scrollGesture,
+  rowHeight,
 }: {
+  rowHeight: number;
   item: Slot;
   index: number;
   count: number;
@@ -49,6 +58,11 @@ export const AgendaRow = memo(function AgendaRow({
   onDrag: (active: boolean) => void;
   scrollGesture: ReturnType<typeof Gesture.Native>;
 }) {
+  const { fontScale, width } = useWindowDimensions();
+  const timeWidth = Math.min(
+    width * 0.35,
+    Math.max(84, Math.ceil(84 * fontScale)),
+  );
   const t = useTheme(),
     reduced = useReducedMotion(),
     [name, setName] = useState(item.name),
@@ -70,7 +84,7 @@ export const AgendaRow = memo(function AgendaRow({
       drag.pointer.value = e.absoluteY;
       drag.target.value = Math.max(
         0,
-        Math.min(count - 1, Math.round(index + drag.dy.value / metrics.row)),
+        Math.min(count - 1, Math.round(index + drag.dy.value / rowHeight)),
       );
     })
     .onEnd(() => {
@@ -87,11 +101,11 @@ export const AgendaRow = memo(function AgendaRow({
     const active = drag.index.value === index;
     const offset =
       drag.index.value < index && drag.target.value >= index
-        ? -metrics.row
+        ? -rowHeight
         : drag.index.value > index &&
             drag.target.value <= index &&
             drag.target.value >= 0
-          ? metrics.row
+          ? rowHeight
           : 0;
     return {
       zIndex: active ? 20 : 0,
@@ -148,7 +162,7 @@ export const AgendaRow = memo(function AgendaRow({
       testID={`agenda-row-${index}`}
       style={[
         {
-          height: metrics.row,
+          height: rowHeight,
           backgroundColor: state === "current" ? t.soft : t.bg,
           borderBottomWidth: 1,
           borderColor: t.line,
@@ -240,7 +254,7 @@ export const AgendaRow = memo(function AgendaRow({
           disabled={state === "done"}
           onPress={() => onDuration(item.id)}
           style={({ pressed }) => ({
-            width: 72,
+            width: timeWidth,
             minHeight: 58,
             justifyContent: "center",
             alignItems: "flex-end",
@@ -249,6 +263,8 @@ export const AgendaRow = memo(function AgendaRow({
           })}
         >
           <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
             style={{
               color: t.ink,
               fontFamily: "Manrope",
@@ -260,6 +276,8 @@ export const AgendaRow = memo(function AgendaRow({
             {formatTime(item.seconds * 1000)}
           </Text>
           <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
             style={{
               color: state === "current" ? t.teal : t.muted,
               fontSize: 11,

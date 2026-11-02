@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "HIIT · 8 intervals",
+      "stages": [
+        {
+          "name": "Work 1",
+          "seconds": 20,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Recover",
+          "seconds": 10,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Work 2",
+          "seconds": 20,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Recover",
+          "seconds": 10,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Work 3",
+          "seconds": 20,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Recover",
+          "seconds": 10,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Work 4",
+          "seconds": 20,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Recover",
+          "seconds": 10,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Work 5",
+          "seconds": 20,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Recover",
+          "seconds": 10,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Work 6",
+          "seconds": 20,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Recover",
+          "seconds": 10,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Work 7",
+          "seconds": 20,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Recover",
+          "seconds": 10,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Work 8",
+          "seconds": 20,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Recover",
+          "seconds": 10,
+          "cueEnd": "beep"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#F69A90"
+  }
+}

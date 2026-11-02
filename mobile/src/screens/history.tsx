@@ -17,10 +17,11 @@ import { meetingCSV } from "../core/meeting-report";
 import { router } from "expo-router";
 import type { Report } from "../core/types";
 
-export function HistoryScreen() {
+export function HistoryScreen({ embedded = false }: { embedded?: boolean }) {
   const { store } = useApp();
+  const Container = embedded ? View : Page;
   return (
-    <Page>
+    <Container>
       <Body muted>
         Your last 100 finished sessions. Private and saved on this device.
       </Body>
@@ -35,7 +36,7 @@ export function HistoryScreen() {
       ) : (
         store.history.map((r) => <ReportRow key={r.id} report={r} />)
       )}
-    </Page>
+    </Container>
   );
 }
 function ReportRow({ report: r }: { report: Report }) {

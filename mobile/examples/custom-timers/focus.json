@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Focus · 25 + 5",
+      "stages": [
+        {
+          "name": "Focus",
+          "seconds": 1500,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Break",
+          "seconds": 300,
+          "cueEnd": "bell"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#66D6BE"
+  }
+}

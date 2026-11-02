@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Presentation · 10 minutes",
+      "stages": [
+        {
+          "name": "Introduction",
+          "seconds": 60,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Main idea",
+          "seconds": 420,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Questions",
+          "seconds": 120,
+          "cueEnd": "bell"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#66D6BE"
+  }
+}

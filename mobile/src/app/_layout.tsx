@@ -3,7 +3,8 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
-import { Platform, Linking } from "react-native";
+import { Platform, Linking, Text } from "react-native";
+import { localDemo } from "../services/demo-mode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { favoritesKey, openTimer } from "../components/timer-library";
 import { NavigationBar } from "expo-navigation-bar";
@@ -64,6 +65,18 @@ function Navigation() {
       }}
     >
       <StatusBar style={dark ? "light" : "dark"} />
+      {localDemo ? (
+        <Text
+          style={{
+            backgroundColor: "#fff0b3",
+            color: "#332500",
+            textAlign: "center",
+            padding: 4,
+          }}
+        >
+          LOCAL DEMO · no purchases or account
+        </Text>
+      ) : null}
       {Platform.OS === "android" && (
         <NavigationBar style={dark ? "light" : "dark"} />
       )}

@@ -1,5 +1,6 @@
 import { TimerFavoriteControls } from "../components/timer-library";
-import { PlanStatus } from "../components/plan-status";
+import { TimerIdentity } from "../components/timer-identity";
+import { TimerSurface } from "../components/timer-surface";
 import React, { useEffect, useMemo, useState } from "react";
 import { Text, TextInput, View, Pressable } from "react-native";
 import { Stack, router } from "expo-router";
@@ -100,23 +101,16 @@ export function TimerScreen({ kind }: { kind: Kind }) {
           ),
         }}
       />
-      <PlanStatus />
+      <TimerIdentity kind={kind} />
       <Heading>{r.config.title}</Heading>
       <TimerFavoriteControls id={kind} />
-      <View
-        style={{
-          backgroundColor: t.clock,
-          borderRadius: 14,
-          padding: 22,
-          gap: 20,
-        }}
-      >
+      <TimerSurface identity={<TimerIdentity kind={kind} />}>
         <Row style={{ justifyContent: "space-between" }}>
           <Text style={{ color: t.bright, fontSize: 15, fontWeight: "600" }}>
             {status}
           </Text>
           {phase && (
-            <Text style={{ color: "#b5cbca", fontSize: 14 }}>
+            <Text style={{ color: t.clockMuted, fontSize: 14 }}>
               {r.index + 1} / {r.phases.length}
             </Text>
           )}
@@ -135,16 +129,20 @@ export function TimerScreen({ kind }: { kind: Kind }) {
                   minHeight: 145,
                   borderRadius: 10,
                   borderWidth: 2,
-                  borderColor: r.active === side ? t.bright : "#375055",
-                  backgroundColor: r.active === side ? "#173f42" : t.clock,
+                  borderColor: r.active === side ? t.bright : t.clockLine,
+                  backgroundColor: r.active === side ? t.clockTrack : t.clock,
                 }}
               >
                 <Text style={{ color: t.cream, fontSize: 17 }}>
                   {side === 0 ? "White" : "Black"} · {r.moves[side]} moves
                 </Text>
                 <Text
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
                   style={{
                     fontSize: 54,
+                    lineHeight: 76,
+                    includeFontPadding: true,
                     color: r.active === side ? t.bright : t.cream,
                     fontFamily: "Manrope",
                     fontVariant: ["tabular-nums"],
@@ -181,7 +179,10 @@ export function TimerScreen({ kind }: { kind: Kind }) {
                   fontVariant: ["tabular-nums"],
                   color: ms < 0 ? t.salmon : t.cream,
                   letterSpacing: -2,
-                  minHeight: 90,
+                  minHeight: 98,
+                  lineHeight: kind === "newyear" ? 68 : 98,
+                  includeFontPadding: true,
+                  paddingVertical: 4,
                 }}
               >
                 {formatTime(ms, kind === "stopwatch")}
@@ -198,7 +199,7 @@ export function TimerScreen({ kind }: { kind: Kind }) {
                 style={{
                   height: 8,
                   borderRadius: 4,
-                  backgroundColor: "#375055",
+                  backgroundColor: t.clockTrack,
                   overflow: "hidden",
                 }}
               >
@@ -280,7 +281,7 @@ export function TimerScreen({ kind }: { kind: Kind }) {
             />
           </Row>
         )}
-      </View>
+      </TimerSurface>
       {active && !done && (
         <Action
           label="Finish & save to History"

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Egg · 7-minute demo",
+      "stages": [
+        {
+          "name": "Cook",
+          "seconds": 420,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Cool in cold water",
+          "seconds": 120,
+          "cueEnd": "bell"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#F6BD70"
+  }
+}

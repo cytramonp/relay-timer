@@ -1,3 +1,4 @@
+import { customInstance } from "./library.ts";
 import { checkBackupSize, isPortableDataKey } from "./data-keys.ts";
 import { decodeStore } from "./store-codec.ts";
 import { elapsed } from "./board-engine.js";
@@ -12,7 +13,7 @@ function portableValue(key: string, text: string, now = 0): string {
   if (key.startsWith("corptimer.board.")) {
     const slug = key.slice("corptimer.board.".length).replace(/\.setup$/, "");
     const mode =
-      slug === "custom-timer"
+      slug === "custom-timer" || customInstance(slug) !== null
         ? "sequence"
         : profiles.find((p) => p.slug === slug)?.mode;
     if (!mode) throw Error("Unknown board in backup.");

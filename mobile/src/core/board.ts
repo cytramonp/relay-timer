@@ -1,4 +1,5 @@
 import { createBoard, settle, type Card, type Stage } from "./board-engine.js";
+import { validAccent, validMedia, type CustomMedia } from "./custom-media.ts";
 
 export type BoardProfile = {
   slug: string;
@@ -20,6 +21,9 @@ export type BoardProfile = {
   red?: number;
 };
 export type BoardOptions = {
+  accent?: string;
+  logo?: CustomMedia;
+  customSound?: CustomMedia;
   sound: boolean;
   hideDigits: boolean;
   kidsView: boolean;
@@ -56,6 +60,11 @@ export function boardOptions(
     /* Keep the published defaults for corrupt or older option records. */
   }
   return {
+    ...(validAccent(v.accent) ? { accent: v.accent } : {}),
+    ...(validMedia(v.logo, "image") ? { logo: v.logo } : {}),
+    ...(validMedia(v.customSound, "audio")
+      ? { customSound: v.customSound }
+      : {}),
     sound: typeof v.sound === "boolean" ? v.sound : profile.sound !== false,
     hideDigits:
       typeof v.hideDigits === "boolean" ? v.hideDigits : !!profile.hideDigits,
@@ -139,7 +148,37 @@ export function restoreBoard(
       {
         ...c,
         name: c.name.slice(0, 80),
-        stages: c.stages.map((s: Stage) => ({ ...s })),
+        stages: c.stages.map((s: Stage) => ({
+          ...s,
+          ...(s.cueEnd !== undefined
+            ? {
+                cueEnd: [
+                  "bell",
+                  "gong",
+                  "beep",
+                  "click",
+                  "off",
+                  "custom",
+                ].includes(s.cueEnd)
+                  ? s.cueEnd
+                  : "bell",
+              }
+            : {}),
+          ...(s.cueStart !== undefined
+            ? {
+                cueStart: [
+                  "bell",
+                  "gong",
+                  "beep",
+                  "click",
+                  "off",
+                  "custom",
+                ].includes(s.cueStart)
+                  ? s.cueStart
+                  : "off",
+              }
+            : {}),
+        })),
         laps: c.laps.slice(),
       },
       mode,

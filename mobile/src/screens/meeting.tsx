@@ -45,7 +45,8 @@ import { MeetingTimeline } from "../components/meeting-timeline";
 import { AgendaRow } from "../components/agenda-row";
 import type { Config } from "../core/types";
 import { useLive } from "../state/live-store";
-import { PlanStatus } from "../components/plan-status";
+import { TimerIdentity } from "../components/timer-identity";
+import { Ionicons } from "@expo/vector-icons";
 import { requireCustomization } from "../services/billing";
 
 export function MeetingScreen() {
@@ -62,7 +63,8 @@ export function MeetingScreen() {
       notify,
     } = useApp(),
     t = useTheme(),
-    { height, width } = useWindowDimensions();
+    { height, width, fontScale } = useWindowDimensions();
+  const rowHeight = Math.max(metrics.row, Math.ceil(76 * fontScale));
   const run = store.run?.kind === "meeting" ? store.run : null,
     config = run && run.status !== "done" ? run.config : store.drafts.meeting;
   const now = useTimerNow(run?.status === "running");
@@ -107,7 +109,7 @@ export function MeetingScreen() {
         0,
         Math.min(
           config.agenda.length - 1,
-          Math.round(index.value + dy.value / metrics.row),
+          Math.round(index.value + dy.value / rowHeight),
         ),
       );
       scrollTo(scrollRef, 0, next, false);
@@ -349,6 +351,7 @@ export function MeetingScreen() {
       <View>
         {view.rows.map((a, i) => (
           <AgendaRow
+            rowHeight={rowHeight}
             scrollGesture={scrollGesture}
             key={a.id}
             item={a}
@@ -414,7 +417,7 @@ export function MeetingScreen() {
         }}
       >
         <Notice />
-        <PlanStatus />
+        <TimerIdentity kind="meeting" />
         <View
           style={{
             flexDirection: "row",
@@ -459,7 +462,7 @@ export function MeetingScreen() {
             }}
           />
           <IconAction
-            icon="share-outline"
+            icon="qr-code-outline"
             label="Share live meeting"
             onPress={() => router.push("/meeting-share")}
           />
@@ -483,6 +486,11 @@ export function MeetingScreen() {
               borderColor: t.line,
               borderRadius: 10,
               justifyContent: "center",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+              backgroundColor: t.panel,
+              borderBottomWidth: 3,
             }}
           >
             <Text
@@ -490,6 +498,7 @@ export function MeetingScreen() {
             >
               Templates
             </Text>
+            <Ionicons name="chevron-down" size={16} color={t.teal} />
           </Pressable>
           <Pressable
             accessibilityRole="button"
@@ -533,10 +542,17 @@ export function MeetingScreen() {
             style={{
               minHeight: 48,
               justifyContent: "center",
-              paddingHorizontal: 8,
+              paddingHorizontal: 14,
+              borderWidth: 1,
+              borderBottomWidth: 3,
+              borderColor: t.line,
+              borderRadius: 10,
+              backgroundColor: t.panel,
             }}
           >
-            <Text style={{ fontSize: 13, color: t.muted }}>New meeting</Text>
+            <Text style={{ fontSize: 13, color: t.teal, fontWeight: "600" }}>
+              + New meeting
+            </Text>
           </Pressable>
         </View>
         {wide ? (

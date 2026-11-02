@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Boxing · 3 rounds",
+      "stages": [
+        {
+          "name": "Warm up",
+          "seconds": 60,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Round 1",
+          "seconds": 180,
+          "cueEnd": "gong"
+        },
+        {
+          "name": "Rest",
+          "seconds": 60,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Round 2",
+          "seconds": 180,
+          "cueEnd": "gong"
+        },
+        {
+          "name": "Rest",
+          "seconds": 60,
+          "cueEnd": "beep"
+        },
+        {
+          "name": "Round 3",
+          "seconds": 180,
+          "cueEnd": "gong"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#F69A90"
+  }
+}

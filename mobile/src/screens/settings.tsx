@@ -27,6 +27,8 @@ import {
 } from "../services/device-data";
 import { readDeviceBackup } from "../core/device-backup";
 import { importFile, exportFile } from "../services/files";
+import { AppBrandEditor } from "../components/app-brand-editor";
+import { PlanStatus } from "../components/plan-status";
 
 export function SettingsScreen() {
   const live = useLive(),
@@ -92,10 +94,6 @@ export function SettingsScreen() {
   return (
     <Page>
       <Heading>Your timer, your rhythm.</Heading>
-      <Action
-        label="Your plan · Trial, Free & Pro"
-        onPress={() => router.push("/pro")}
-      />
       <Body muted>Appearance</Body>
       <Row>
         {(["light", "dark", "system"] as const).map((appearance) => (
@@ -186,11 +184,13 @@ export function SettingsScreen() {
         />
       )}
       <Rule />
+      <AppBrandEditor />
+      <Rule />
       <Heading>Your data</Heading>
       <Action label="Privacy & data" onPress={() => router.push("/privacy")} />
       <Body>
         Programs, notes and session history are stored on this device. Export
-        programs from My programs to move them to another device. This native
+        programs from Library to move them to another device. This native
         version does not yet sign in to the website or synchronize your private
         library.
       </Body>
@@ -330,6 +330,9 @@ export function SettingsScreen() {
         label="Support & feedback"
         onPress={() => router.push("/feedback")}
       />
+      <Rule />
+      <Heading>Your plan</Heading>
+      <PlanStatus showLogo={false} />
     </Page>
   );
 }

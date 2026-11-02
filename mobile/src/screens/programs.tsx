@@ -12,6 +12,8 @@ import {
   Row,
   Rule,
 } from "../components/ui";
+import { SavedBoards } from "../components/saved-boards";
+import { HistoryScreen } from "./history";
 import { catalog } from "../core/catalog";
 import { readBackup, writeBackup } from "../core/backup";
 import { useApp } from "../state/app-store";
@@ -30,7 +32,8 @@ export function ProgramsScreen() {
     } = useApp(),
     t = useTheme(),
     [query, setQuery] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [section, setSection] = useState<"saved" | "history">("saved");
   const programs = store.programs.filter((p) =>
     `${p.name} ${p.kind}`.toLowerCase().includes(query.toLowerCase()),
   );
@@ -57,115 +60,142 @@ export function ProgramsScreen() {
   }
   return (
     <Page>
-      <Body muted>Set it up once. Make it yours. Saved on this device.</Body>
       <Row>
         <Action
-          label={busy ? "Working…" : "Import"}
-          disabled={busy}
-          onPress={() => void load()}
+          label="Saved programs"
+          tone={section === "saved" ? "primary" : "outline"}
+          onPress={() => setSection("saved")}
         />
         <Action
-          label="Export all"
-          disabled={busy || !store.programs.length}
-          onPress={() => void backup()}
+          label="History"
+          tone={section === "history" ? "primary" : "outline"}
+          onPress={() => setSection("history")}
         />
       </Row>
-      <Field
-        label="Find a program"
-        value={query}
-        onChangeText={setQuery}
-        placeholder="Search by name or timer"
-      />
-      {!programs.length && (
+      {section === "history" ? (
+        <HistoryScreen embedded />
+      ) : (
         <>
-          <Heading>
-            {store.programs.length
-              ? "No matching programs"
-              : "Your next routine starts here."}
-          </Heading>
-          <Body>
-            {store.programs.length
-              ? "Try another name or clear the search."
-              : "Open a timer, edit its setup and choose Save program. You can also import a setup or meeting backup from corptimer.com."}
+          <Body muted>
+            Set it up once. Make it yours. Saved on this device.
           </Body>
-          <Action
-            label="Browse timers"
-            onPress={() => router.navigate("/(tabs)/timers")}
+          <Row>
+            <Action
+              label={busy ? "Working…" : "Import"}
+              disabled={busy}
+              onPress={() => void load()}
+            />
+            <Action
+              label="Export programs"
+              disabled={busy || !store.programs.length}
+              onPress={() => void backup()}
+            />
+          </Row>
+          <Field
+            label="Find a program"
+            value={query}
+            onChangeText={setQuery}
+            placeholder="Search by name or timer"
           />
+          <SavedBoards query={query} />
+          <Heading>Saved programs</Heading>
+          {!programs.length && (
+            <>
+              <Heading>
+                {store.programs.length
+                  ? "No matching programs"
+                  : "Your next routine starts here."}
+              </Heading>
+              <Body>
+                {store.programs.length
+                  ? "Try another name or clear the search."
+                  : "Open a timer, edit its setup and choose Save program. You can also import a setup or meeting backup from corptimer.com."}
+              </Body>
+              <Action
+                label="Browse timers"
+                onPress={() => router.navigate("/(tabs)/timers")}
+              />
+            </>
+          )}
+          {programs.map((p) => (
+            <View key={p.id} style={{ gap: 12, paddingVertical: 12 }}>
+              <Text
+                style={{ fontFamily: "Cantata", fontSize: 23, color: t.ink }}
+              >
+                {p.name}
+              </Text>
+              <Body muted>
+                {catalog.find((c) => c.kind === p.kind)?.title} ·{" "}
+                {new Date(p.updatedAt).toLocaleDateString()}
+              </Body>
+              <Row>
+                <Action
+                  label="Open"
+                  tone="primary"
+                  onPress={() =>
+                    void (async () => {
+                      if (store.run?.kind === p.kind) {
+                        if (
+                          store.run.status !== "done" &&
+                          !(await confirm(
+                            "Load this program?",
+                            "The active run will finish and move to History.",
+                          ))
+                        )
+                          return;
+                        act("reset");
+                      }
+                      updateDraft(p.kind, p.config, true);
+                      router.push(`/timer/${p.kind}`);
+                    })()
+                  }
+                />
+                <Action
+                  label="Export"
+                  onPress={() =>
+                    void exportFile(
+                      "corptimer-program.json",
+                      writeBackup([p]),
+                    ).catch((e) => notify(e.message))
+                  }
+                />
+                <Action
+                  label="Delete"
+                  onPress={() =>
+                    void confirm(
+                      "Delete saved program?",
+                      `Remove “${p.name}” from this device?`,
+                    ).then((ok) => {
+                      if (ok) deleteProgram(p.id);
+                    })
+                  }
+                />
+              </Row>
+              <Row>
+                <Action
+                  label="Edit"
+                  onPress={() =>
+                    p.kind === "meeting"
+                      ? router.push({
+                          pathname: "/save-meeting",
+                          params: { id: p.id },
+                        })
+                      : router.push({
+                          pathname: "/edit/[kind]",
+                          params: { kind: p.kind, programId: p.id },
+                        })
+                  }
+                />
+                <Action
+                  label="Duplicate"
+                  onPress={() => duplicateProgram(p.id)}
+                />
+              </Row>
+              <Rule />
+            </View>
+          ))}
         </>
       )}
-      {programs.map((p) => (
-        <View key={p.id} style={{ gap: 12, paddingVertical: 12 }}>
-          <Text style={{ fontFamily: "Cantata", fontSize: 23, color: t.ink }}>
-            {p.name}
-          </Text>
-          <Body muted>
-            {catalog.find((c) => c.kind === p.kind)?.title} ·{" "}
-            {new Date(p.updatedAt).toLocaleDateString()}
-          </Body>
-          <Row>
-            <Action
-              label="Open"
-              tone="primary"
-              onPress={() =>
-                void (async () => {
-                  if (store.run?.kind === p.kind) {
-                    if (
-                      store.run.status !== "done" &&
-                      !(await confirm(
-                        "Load this program?",
-                        "The active run will finish and move to History.",
-                      ))
-                    )
-                      return;
-                    act("reset");
-                  }
-                  updateDraft(p.kind, p.config, true);
-                  router.push(`/timer/${p.kind}`);
-                })()
-              }
-            />
-            <Action
-              label="Export"
-              onPress={() =>
-                void exportFile(
-                  "corptimer-program.json",
-                  writeBackup([p]),
-                ).catch((e) => notify(e.message))
-              }
-            />
-            <Action
-              label="Delete"
-              onPress={() =>
-                void confirm(
-                  "Delete saved program?",
-                  `Remove “${p.name}” from this device?`,
-                ).then((ok) => {
-                  if (ok) deleteProgram(p.id);
-                })
-              }
-            />
-          </Row>
-          <Row>
-            <Action
-              label="Edit"
-              onPress={() =>
-                p.kind === "meeting"
-                  ? router.push({
-                      pathname: "/save-meeting",
-                      params: { id: p.id },
-                    })
-                  : router.push({
-                      pathname: "/edit/[kind]",
-                      params: { kind: p.kind, programId: p.id },
-                    })
-              }
-            />
-            <Action label="Duplicate" onPress={() => duplicateProgram(p.id)} />
-          </Row>
-          <Rule />
-        </View>
-      ))}
     </Page>
   );
 }

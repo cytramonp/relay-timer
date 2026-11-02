@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
-import { playEntitlement, verifyPlay, digest } from './play.js';
+import { playEntitlement, verifyPlay, refreshPlay, digest } from './play.js';
 import { readAccount } from './store.js';
 const future = new Date(Date.now() + 86400000).toISOString();
 const receipt = () => ({ subscriptionState: 'SUBSCRIPTION_STATE_ACTIVE', acknowledgementState: 'ACKNOWLEDGEMENT_STATE_ACKNOWLEDGED', lineItems: [{ productId: 'corptimer_pro_yearly', offerDetails: { basePlanId: 'annual' }, expiryTime: future }] });
@@ -38,4 +38,19 @@ test('Forged account, pending receipt, acknowledgement failure and missing setup
   assert.equal(await verifyPlay(env, 'a', 'a-valid-private-purchase-token', { async receipt() { return r; } }), false);
   assert.deepEqual((await readAccount(env.DB, 'a')).state, {});
   await assert.rejects(verifyPlay({ DB: database() }, 'a', 'a-valid-private-purchase-token'));
+});
+
+
+test('Anonymous reinstall restores a previously verified purchase and revokes the previous install on refresh', async () => {
+  const env = { DB: database(), PLAY_SERVICE_ACCOUNT: 'configured' };
+  const token = 'anonymous-install-valid-purchase-token';
+  const r = { ...receipt(), externalAccountIdentifiers: { obfuscatedExternalAccountId: await digest('anonymous-before') } };
+  const io = { async receipt() { return r; }, async acknowledge() {} };
+  // A new install cannot claim an as-yet-unverified token bound to another UID.
+  await assert.rejects(verifyPlay(env, 'anonymous-after', token, io), /Purchase account mismatch/);
+  await verifyPlay(env, 'anonymous-before', token, io);
+  await verifyPlay(env, 'anonymous-after', token, io);
+  await refreshPlay(env, 'anonymous-before');
+  assert.equal((await readAccount(env.DB, 'anonymous-before')).state.providers.google.expiresAt, 0);
+  assert((await readAccount(env.DB, 'anonymous-after')).state.providers.google.expiresAt > Date.now());
 });

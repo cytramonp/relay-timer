@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Workshop · brainstorm",
+      "stages": [
+        {
+          "name": "Brief",
+          "seconds": 120,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Ideas",
+          "seconds": 480,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Vote",
+          "seconds": 180,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Decide",
+          "seconds": 120,
+          "cueEnd": "bell"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#F6BD70"
+  }
+}

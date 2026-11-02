@@ -112,6 +112,11 @@ export function decodeStore(json?: string | null): {
       keepAwake: saved.settings?.keepAwake !== false,
       haptics: saved.settings?.haptics !== false,
       dialSound: saved.settings?.dialSound !== false,
+      accent: ["teal", "blue", "violet", "rose", "amber"].includes(
+        saved.settings?.accent ?? "",
+      )
+        ? saved.settings.accent
+        : "teal",
       companyLogo:
         typeof saved.settings?.companyLogo === "string" &&
         saved.settings.companyLogo.length <= 2800000 &&

@@ -130,6 +130,7 @@ export type Settings = {
   haptics: boolean;
   dialSound?: boolean;
   companyLogo?: string;
+  accent?: "teal" | "blue" | "violet" | "rose" | "amber";
   appearance?: "light" | "dark" | "system";
   floatingShape?: "wide" | "strip" | "square";
 };

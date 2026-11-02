@@ -1,3 +1,4 @@
+import { TimerIdentity } from "../components/timer-identity";
 import React, { useEffect } from "react";
 import { ScrollView, Text } from "react-native";
 import { Stack, router } from "expo-router";
@@ -43,6 +44,7 @@ export default function FocusScreen() {
         }}
       />
       <StatusBar style="light" />
+      <TimerIdentity kind="meeting" />
       <MeetingClock
         config={config}
         run={run}

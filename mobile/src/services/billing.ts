@@ -16,6 +16,7 @@ import Play, {
 } from "../../modules/corptimer-billing";
 import { withDeadline, checkDeadline } from "../core/deadline";
 import config from "../config/billing-public.json";
+import { localDemo } from "./demo-mode";
 
 export type Access = {
   tier: "trial" | "free" | "pro";
@@ -104,6 +105,7 @@ async function identity() {
   return auth.currentUser!;
 }
 export async function sessionIdentity() {
+  if (localDemo) return "local-demo-only";
   return withDeadline(async (signal) => {
     const user = await identity();
     checkDeadline(signal);
@@ -150,6 +152,13 @@ async function request(path: string, body: object = {}, expectedUid?: string) {
   }
 }
 export function refreshBilling(): Promise<Access> {
+  if (localDemo)
+    return Promise.resolve({
+      tier: "trial",
+      customize: true,
+      canStart: true,
+      remaining: 10,
+    });
   if (refresh) return refresh;
   refresh = request("/access/status")
     .then(() => {
@@ -167,6 +176,7 @@ export function refreshBilling(): Promise<Access> {
   return refresh;
 }
 export async function reserveSession(id: string, expectedUid?: string) {
+  if (localDemo) return;
   await request("/access/start", { sessionId: id }, expectedUid);
 }
 export function requireCustomization() {
@@ -207,10 +217,8 @@ export async function buyPro() {
   if (!purchasesEnabled())
     throw Error("Google Play purchases are not connected in this build yet.");
   const user = await identity();
-  if (user.isAnonymous)
-    throw Error(
-      "Sign in with Google before subscribing so your Pro access can follow your account.",
-    );
+  // Play handles the store account. A separate Google sign-in is optional;
+  // the server still verifies the receipt and its initial anonymous owner.
   const account = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     user.uid,
@@ -220,6 +228,13 @@ export async function buyPro() {
 export function initializeBilling() {
   if (initialized) return;
   initialized = true;
+  if (localDemo) {
+    publish({
+      access: { tier: "trial", customize: true, canStart: true, remaining: 10 },
+      loading: false,
+    });
+    return;
+  }
   onAuthStateChanged(getFirebaseClient().auth, (user) => {
     refresh = null;
     publish({

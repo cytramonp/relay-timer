@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Stretch · four sides",
+      "stages": [
+        {
+          "name": "Left shoulder",
+          "seconds": 30,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Right shoulder",
+          "seconds": 30,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Left calf",
+          "seconds": 30,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Right calf",
+          "seconds": 30,
+          "cueEnd": "bell"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#AFA6ED"
+  }
+}
