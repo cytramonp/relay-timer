@@ -4,6 +4,8 @@ Native React Native / Expo SDK 58 application for iPhone, iPad and Android, in t
 
 Version 0.4.1 hardens session grants, complete device backup/reset, native elapsed-time recovery, scoped background alerts and local rendering/persistence. See [implementation status](audits/2026-10-31/IMPLEMENTATION.ru.md) for verified behavior and remaining device/store gates.
 
+Version 0.5.0 adds the complete grouped catalog, a dedicated Favorites tab, combined Library/history, independent custom timer copies with stage cues and uploaded audio, company colors/logos and illustrated creation help. See the [creation guide](docs/custom-timers/GUIDE.ru.md), [ten examples](examples/custom-timers) and [version-specific validation](VALIDATION.md). Play purchases remain disabled until publisher configuration and live store tests are completed.
+
 ## Run
 
 Requires Node 24 and npm. From this directory:

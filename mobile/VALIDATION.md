@@ -1,6 +1,15 @@
 # Mobile beta validation
 
-Updated 1 November 2026 (America/Los_Angeles). Current 0.4.1 evidence is recorded separately below; 0.4 and older evidence remains historical. These statuses describe development/internal-test preparation, not store approval.
+Updated 1 November 2026 (America/Los_Angeles). Evidence is version-specific. These statuses describe development/internal-test preparation, not store approval.
+
+## 0.5.0 custom timer and interface update
+
+- Version **0.5.0 (8)**, runtime source `5a98329`. Full catalog, grouped/all view, independent custom copies, Favorites tab and combined Library/history; per-stage cues, portable media, global branding, fullscreen timer panels and illustrated creation guide.
+- **72 mobile tests and 10 billing-worker tests pass**, TypeScript and lint pass. [CI 41367099775](https://github.com/cytramonp/relay-timer/actions/runs/41367099775) validates the runtime revision including web and native exports. The later commits only add QA/evidence/tooling; they do not change this APK's runtime.
+- Chrome at 412×915: ten recipes created through UI and preserved in Library; Boxing renamed and changed to30sec, then reloaded; grouped catalog, ordinary/custom favorites, global palette and Meeting/custom fullscreen verified. [Browser evidence](docs/custom-timers/screenshots/browser-qa.json). This uses an explicit **development-only web demo**, with no actual billing requests; the mode is disabled unconditionally in native/release builds.
+- [Android build 41367094693](https://github.com/cytramonp/relay-timer/actions/runs/41367094693) and the exact-APK native tutorial checks are pending. No physical-device playback, performance or store-purchase verification is claimed.
+- Optional Google sign-in is no longer a client-side requirement to start a Play purchase. Mocked backend tests prove restoration of a previously verified receipt onto a new anonymous install, and rejection of an unverified token belonging to another identity. **Live Play configuration remains disabled**. Reinstalling before a first receipt was verified remains a recovery edge case; no weaker first-owner receipt binding was introduced.
+- [Requirement checklist](audits/2026-11-01/UPGRADE-CHECKLIST.ru.md), [creation guide](docs/custom-timers/GUIDE.ru.md), [manual checks](docs/custom-timers/MANUAL-QA.ru.md), [video plan](docs/custom-timers/VIDEO-PLAN.ru.md).
 
 ## 0.4.1 reliability implementation
 
