@@ -9,11 +9,22 @@ on:
         description: 'Run containing the APK artifact to verify (binary provenance is that run, not the test-script HEAD)'
         required: true
         default: '40798934523'
+      scope:
+        description: 'Existing reliability checks or custom timer tutorials'
+        type: choice
+        options: [reliability, custom-tutorials]
+        default: reliability
 permissions:
   contents: read
   actions: read
 jobs:
+  tutorials:
+    if: inputs.scope == 'custom-tutorials'
+    uses: ./.github/workflows/mobile-custom-tutorials.yml
+    with:
+      apk_run_id: ${{ inputs.apk_run_id }}
   verify:
+    if: inputs.scope != 'custom-tutorials'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

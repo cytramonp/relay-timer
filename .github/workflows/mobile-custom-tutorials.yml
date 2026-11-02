@@ -1,5 +1,10 @@
 name: Custom timer native tutorials
 on:
+  workflow_call:
+    inputs:
+      apk_run_id:
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       apk_run_id:
