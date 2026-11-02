@@ -26,6 +26,7 @@ jobs:
           java-version: 17
       - uses: gradle/actions/setup-gradle@v4
       - run: npm ci
+      - run: python3 scripts/check-image-headers.py
       - run: npx expo prebuild --platform android --no-install
         env:
           CI: '1'
