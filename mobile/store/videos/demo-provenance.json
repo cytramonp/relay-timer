@@ -1,6 +1,6 @@
 {
-  "apkRunId": "41053160974",
-  "apkSha256": "e95941233f45fb544f6c01c09d6f799101411f85b0e8ceccad4f1dd0ca7166a5",
-  "scriptRevision": "55ca9446e35653b1ee413c1719586102aeb5e544",
+  "apkRunId": "41222748245",
+  "apkSha256": "a130cf36ceffcaa227faf0ea9c25953d20d99279849ff16356ccdf3cdb533cd0",
+  "scriptRevision": "a8965d43f29e4fd54fe1ea59aefc66ff2909514e",
   "scope": "Actual API36 emulator recording: user opens overlay; Home; Next/Pause/Undo/Close over launcher. Overlay permission pre-granted on disposable emulator, not real-device consent."
 }

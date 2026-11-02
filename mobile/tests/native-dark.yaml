@@ -1,9 +1,10 @@
 appId: com.corptimer.app
 ---
-- launchApp
-- tapOn: Settings
+- launchApp:
+    clearState: true
+- tapOn: 'Settings, tab, 5 of 5'
 - tapOn: Dark
-- tapOn: Meeting
+- tapOn: 'Meeting, tab, 1 of 5'
 - scrollUntilVisible:
     element:
       text: Meeting name

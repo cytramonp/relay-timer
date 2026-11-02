@@ -62,7 +62,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="timers"
         options={{
-          title: "Other timers",
+          title: "Timers",
           tabBarLabel: "Timers",
           tabBarIcon: ({ color, size }) => (
             <Ionicons
@@ -74,9 +74,18 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="favorites"
+        options={{
+          title: "Favorites",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="star-outline" color={color as string} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="programs"
         options={{
-          title: "My programs",
+          title: "Library",
           tabBarLabel: "Library",
           tabBarIcon: ({ color, size }) => (
             <Ionicons
@@ -87,15 +96,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="history"
-        options={{
-          title: "History",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="time-outline" color={color as string} size={size} />
-          ),
-        }}
-      />
+      <Tabs.Screen name="history" options={{ href: null, title: "History" }} />
       <Tabs.Screen
         name="settings"
         options={{

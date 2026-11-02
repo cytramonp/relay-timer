@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Breathing · four cycles",
+      "stages": [
+        {
+          "name": "Inhale",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Hold",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Exhale",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Rest",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Inhale",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Hold",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Exhale",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Rest",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Inhale",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Hold",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Exhale",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Rest",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Inhale",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Hold",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Exhale",
+          "seconds": 4,
+          "cueEnd": "off"
+        },
+        {
+          "name": "Rest",
+          "seconds": 4,
+          "cueEnd": "off"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#91C8F6"
+  }
+}

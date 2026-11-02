@@ -1,0 +1,91 @@
+{
+  "product": "CorpTimer",
+  "version": "0.4.1",
+  "androidVersionCode": 7,
+  "runtimeSourceRevision": "8aa92cff7b218e20ddd9e7dc40c929dbb8c4b05f",
+  "buildRun": "https://github.com/cytramonp/relay-timer/actions/runs/41222748245",
+  "tests": {
+    "mobile": 61,
+    "web": 59,
+    "billingWorker": 9
+  },
+  "checksRun": "https://github.com/cytramonp/relay-timer/actions/runs/41223037614",
+  "nativeQAScope": {
+    "androidComplete": true,
+    "androidQARun": "https://github.com/cytramonp/relay-timer/actions/runs/41323385047",
+    "androidQADriverRevision": "6bb4be1c4a1066675eb9f373e222fc31aff9643d",
+    "androidReliability": {
+      "phone": {
+        "form": "phone",
+        "source": "6bb4be1c4a1066675eb9f373e222fc31aff9643d",
+        "feedbackSent": false,
+        "physicalDevice": false,
+        "clockJump": {
+          "tested": true,
+          "wallShiftSeconds": 3600,
+          "elapsedDeltaSeconds": 9,
+          "processRestart": true
+        },
+        "resetDomains": {
+          "primary": true,
+          "board": true,
+          "setup": true,
+          "favorites": true,
+          "feedbackDraft": true
+        }
+      },
+      "tablet": {
+        "form": "tablet",
+        "source": "6bb4be1c4a1066675eb9f373e222fc31aff9643d",
+        "feedbackSent": false,
+        "physicalDevice": false,
+        "clockJump": {
+          "tested": false
+        },
+        "resetDomains": {
+          "primary": true,
+          "board": true,
+          "setup": true,
+          "favorites": true,
+          "feedbackDraft": true
+        }
+      }
+    },
+    "iosMeetingPhoneTabletPassed": true,
+    "iosDarkLargeTextComplete": false,
+    "iosAllDeviceRun": "https://github.com/cytramonp/relay-timer/actions/runs/41323387538",
+    "iosTargetedIpadDarkRun": "https://github.com/cytramonp/relay-timer/actions/runs/41325394746",
+    "iosProvenance": {
+      "nativeRun": "41181124447",
+      "nativeSource": "c78d24139c68cae04524358b6bc1b9459e601d7a",
+      "javascriptSource": "6bb4be1c4a1066675eb9f373e222fc31aff9643d",
+      "nativeInputsIdentical": true,
+      "nativeExecutableSha256": "82e5fbd1ec62c158006d71f6a2a71ff3d17291aa8e7d206b00c4a25f28ec7e7c",
+      "hermesSha256": "a27f0d1dfc030c7123aa4336bb4e41318441ee06819d7a3d92b36bebfd615da2",
+      "version": "0.4.1",
+      "build": "7",
+      "scope": "Unsigned simulator native runtime QA; not a signed archive or store submission"
+    },
+    "physicalDeviceTested": false,
+    "scope": "iPhone/iPad Meeting and iPhone dark pass. Isolated iPad dark CLI timed out after all UI commands; OS screenshot exposes an open large-text agenda layout defect. No whole-iOS appearance approval. Unsigned simulator only",
+    "iosKnownIssues": [
+      {
+        "priority": "P2",
+        "area": "iPad accessibility-medium agenda rows",
+        "status": "open",
+        "description": "Fixed-width time columns wrap values and overlap adjacent rows; not fixed in this Android runtime."
+      }
+    ],
+    "iosTargetedIpadDarkConclusion": "failure (CLI timeout after UI actions/screenshot)"
+  },
+  "apkSha256": "A130CF36CEFFCAA227FAF0EA9C25953D20D99279849FF16356CCDF3CDB533CD0",
+  "aabSha256": "FC7FC994EA6DD1002BA01B208CDAAEABB7B210754828F3C42F2E4DCC4A08DC69",
+  "apkCertificateSha256": "FAC61745DC0903786FB9EDE62A962B399F7348F0BB6F899B8332667591033B9C",
+  "aabUploadCertificateSha256": "BC2A570E7F8A08509ACDFB0F9756E395C3EDD091A1FB276030A76E1FE8430BB2",
+  "signedLocally": true,
+  "privateSigningKeyTransferred": false,
+  "bundletoolValidation": true,
+  "productionApproved": false,
+  "handoffDate": "2026-11-01",
+  "release": "https://github.com/cytramonp/relay-timer/releases/tag/mobile-v0.4.1-beta.1"
+}

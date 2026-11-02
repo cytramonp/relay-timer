@@ -14,7 +14,9 @@ import Play, {
   type PlayProduct,
   type PlayPurchase,
 } from "../../modules/corptimer-billing";
+import { withDeadline, checkDeadline } from "../core/deadline";
 import config from "../config/billing-public.json";
+import { localDemo } from "./demo-mode";
 
 export type Access = {
   tier: "trial" | "free" | "pro";
@@ -102,42 +104,61 @@ async function identity() {
   if (!auth.currentUser) await signInAnonymously(auth);
   return auth.currentUser!;
 }
-async function request(path: string, body: object = {}) {
-  const user = await identity();
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+export async function sessionIdentity() {
+  if (localDemo) return "local-demo-only";
+  return withDeadline(async (signal) => {
+    const user = await identity();
+    checkDeadline(signal);
+    return user.uid;
+  }, 15000);
+}
+async function request(path: string, body: object = {}, expectedUid?: string) {
   try {
-    const response = await fetch(config.apiBase + path, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        Authorization: `Bearer ${await user.getIdToken()}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    const data = await response.json();
-    if (getFirebaseClient().auth.currentUser?.uid !== user.uid)
-      throw Error("The account changed. Refresh your plan and try again.");
-    if (data.access && ["trial", "free", "pro"].includes(data.access.tier))
-      publish({ access: data.access, error: "", loading: false });
-    if (!response.ok)
-      throw Error(
-        data.error ||
-          "Your two free sessions are used for today. Try again tomorrow or choose Pro.",
-      );
-    return data;
+    return await withDeadline(async (signal) => {
+      const user = await identity();
+      checkDeadline(signal);
+      if (expectedUid && user.uid !== expectedUid)
+        throw Error("The account changed. Try starting again.");
+      const token = await user.getIdToken();
+      checkDeadline(signal);
+      const response = await fetch(config.apiBase + path, {
+        method: "POST",
+        signal,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const data = await response.json();
+      checkDeadline(signal);
+      if (getFirebaseClient().auth.currentUser?.uid !== user.uid)
+        throw Error("The account changed. Refresh your plan and try again.");
+      if (data.access && ["trial", "free", "pro"].includes(data.access.tier))
+        publish({ access: data.access, error: "", loading: false });
+      if (!response.ok)
+        throw Error(
+          data.error ||
+            "Your two free sessions are used for today. Try again tomorrow or choose Pro.",
+        );
+      return data;
+    }, 15000);
   } catch (error) {
     if (error instanceof Error && error.name === "AbortError")
       throw Error(
         "The access check timed out. Reconnect and try again; your running timer can continue.",
       );
     throw error;
-  } finally {
-    clearTimeout(timeout);
   }
 }
 export function refreshBilling(): Promise<Access> {
+  if (localDemo)
+    return Promise.resolve({
+      tier: "trial",
+      customize: true,
+      canStart: true,
+      remaining: 10,
+    });
   if (refresh) return refresh;
   refresh = request("/access/status")
     .then(() => {
@@ -154,8 +175,9 @@ export function refreshBilling(): Promise<Access> {
     });
   return refresh;
 }
-export async function reserveSession(id: string) {
-  await request("/access/start", { sessionId: id });
+export async function reserveSession(id: string, expectedUid?: string) {
+  if (localDemo) return;
+  await request("/access/start", { sessionId: id }, expectedUid);
 }
 export function requireCustomization() {
   if (!status.access)
@@ -195,10 +217,8 @@ export async function buyPro() {
   if (!purchasesEnabled())
     throw Error("Google Play purchases are not connected in this build yet.");
   const user = await identity();
-  if (user.isAnonymous)
-    throw Error(
-      "Sign in with Google before subscribing so your Pro access can follow your account.",
-    );
+  // Play handles the store account. A separate Google sign-in is optional;
+  // the server still verifies the receipt and its initial anonymous owner.
   const account = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
     user.uid,
@@ -208,6 +228,13 @@ export async function buyPro() {
 export function initializeBilling() {
   if (initialized) return;
   initialized = true;
+  if (localDemo) {
+    publish({
+      access: { tier: "trial", customize: true, canStart: true, remaining: 10 },
+      loading: false,
+    });
+    return;
+  }
   onAuthStateChanged(getFirebaseClient().auth, (user) => {
     refresh = null;
     publish({

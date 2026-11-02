@@ -17,10 +17,11 @@ import { meetingCSV } from "../core/meeting-report";
 import { router } from "expo-router";
 import type { Report } from "../core/types";
 
-export function HistoryScreen() {
+export function HistoryScreen({ embedded = false }: { embedded?: boolean }) {
   const { store } = useApp();
+  const Container = embedded ? View : Page;
   return (
-    <Page>
+    <Container>
       <Body muted>
         Your last 100 finished sessions. Private and saved on this device.
       </Body>
@@ -35,7 +36,7 @@ export function HistoryScreen() {
       ) : (
         store.history.map((r) => <ReportRow key={r.id} report={r} />)
       )}
-    </Page>
+    </Container>
   );
 }
 function ReportRow({ report: r }: { report: Report }) {
@@ -60,8 +61,8 @@ function ReportRow({ report: r }: { report: Report }) {
       [],
       ["Lap", "Split seconds", "Total seconds"],
       ...r.laps.map((lap, i) => [
-        i + 1,
-        (lap - (r.laps[i - 1] ?? 0)) / 1000,
+        (r.lapOffset ?? 0) + i + 1,
+        (lap - (r.laps[i - 1] ?? r.lapBase ?? 0)) / 1000,
         lap / 1000,
       ]),
       [],
@@ -117,7 +118,8 @@ function ReportRow({ report: r }: { report: Report }) {
           ))}
           {r.laps.map((lap, i) => (
             <Body key={i}>
-              Lap {i + 1}: {formatTime(lap - (r.laps[i - 1] ?? 0), true)} ·
+              Lap {(r.lapOffset ?? 0) + i + 1}:{" "}
+              {formatTime(lap - (r.laps[i - 1] ?? r.lapBase ?? 0), true)} ·
               total {formatTime(lap, true)}
             </Body>
           ))}

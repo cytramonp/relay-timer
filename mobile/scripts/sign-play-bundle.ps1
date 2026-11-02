@@ -9,6 +9,10 @@ $ErrorActionPreference = 'Stop'
 if (-not (Test-Path -LiteralPath $UnsignedBundle)) { throw 'Unsigned input bundle is missing' }
 if (Test-Path -LiteralPath $OutputBundle) { throw 'Output already exists; choose a new artifact path' }
 if (-not (Test-Path -LiteralPath "$JavaHome/bin/jarsigner.exe")) { throw 'Set JavaHome to a trusted JDK containing jarsigner' }
+$sourceApp = (git show "${SourceRevision}:mobile/app.json") | ConvertFrom-Json
+if ($LASTEXITCODE -ne 0 -or -not $sourceApp.expo.version) { throw 'Cannot read version from the exact source revision' }
+$sourceBilling = (git show "${SourceRevision}:mobile/src/config/billing-public.json") | ConvertFrom-Json
+if ($LASTEXITCODE -ne 0) { throw 'Cannot read billing configuration from the exact source revision' }
 $keyConfig = Get-Content -LiteralPath "$KeyDirectory/credentials.json" -Raw | ConvertFrom-Json
 $env:CORPTIMER_LOCAL_STORE_PASSWORD = $keyConfig.storePassword
 $env:CORPTIMER_LOCAL_KEY_PASSWORD = $keyConfig.keyPassword
@@ -25,15 +29,15 @@ try {
   if ($fingerprint -ne 'BC2A570E7F8A08509ACDFB0F9756E395C3EDD091A1FB276030A76E1FE8430BB2') { throw 'Unexpected upload certificate fingerprint' }
   $report = @{
     sourceRevision = $SourceRevision
-    version = '0.4.0'
-    versionCode = 6
+    version = $sourceApp.expo.version
+    versionCode = $sourceApp.expo.android.versionCode
     signedLocally = $true
     privateKeyTransferred = $false
     unsignedSha256 = (Get-FileHash -LiteralPath $UnsignedBundle -Algorithm SHA256).Hash
     aabSha256 = (Get-FileHash -LiteralPath $OutputBundle -Algorithm SHA256).Hash
     uploadCertificateSha256 = $fingerprint
-    playPurchasesEnabled = $false
-    googleSignInConfigured = $false
+    playPurchasesEnabled = $sourceBilling.purchasesEnabled
+    googleSignInConfigured = [bool]$sourceBilling.googleWebClientId
     releaseScope = 'Internal testing preparation; publisher setup and live store tests pending'
   }
   $report | ConvertTo-Json | Set-Content -LiteralPath "$OutputBundle.build.json" -Encoding utf8

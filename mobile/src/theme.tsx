@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useMemo } from "react";
 import { Appearance, Platform, useColorScheme } from "react-native";
 import { useApp } from "./state/app-store";
+import { useBilling } from "./services/billing";
+import { brandPalettes } from "./core/brand";
 
 const light = {
   bg: "#eeece5",
@@ -48,6 +50,7 @@ const dark = {
 };
 const Context = createContext(light);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const { access } = useBilling();
   const { store } = useApp(),
     preference = store.settings.appearance ?? "light",
     system = useColorScheme();
@@ -59,11 +62,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [preference]);
   const isDark =
     preference === "system" ? system === "dark" : preference === "dark";
-  return (
-    <Context.Provider value={isDark ? dark : light}>
-      {children}
-    </Context.Provider>
+  const palette =
+    brandPalettes[
+      access?.customize ? (store.settings.accent ?? "teal") : "teal"
+    ];
+  const colors = useMemo(
+    () => ({
+      ...(isDark ? dark : light),
+      teal: isDark ? palette.dark : palette.light,
+      clock: palette.clock,
+      bright: palette.bright,
+    }),
+    [isDark, palette],
   );
+  return <Context.Provider value={colors}>{children}</Context.Provider>;
 }
 export const useTheme = () => useContext(Context);
 export const metrics = {

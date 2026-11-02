@@ -1,4 +1,5 @@
 import { createBoard, settle, type Card, type Stage } from "./board-engine.js";
+import { validAccent, validMedia, type CustomMedia } from "./custom-media.ts";
 
 export type BoardProfile = {
   slug: string;
@@ -20,6 +21,9 @@ export type BoardProfile = {
   red?: number;
 };
 export type BoardOptions = {
+  accent?: string;
+  logo?: CustomMedia;
+  customSound?: CustomMedia;
   sound: boolean;
   hideDigits: boolean;
   kidsView: boolean;
@@ -56,6 +60,11 @@ export function boardOptions(
     /* Keep the published defaults for corrupt or older option records. */
   }
   return {
+    ...(validAccent(v.accent) ? { accent: v.accent } : {}),
+    ...(validMedia(v.logo, "image") ? { logo: v.logo } : {}),
+    ...(validMedia(v.customSound, "audio")
+      ? { customSound: v.customSound }
+      : {}),
     sound: typeof v.sound === "boolean" ? v.sound : profile.sound !== false,
     hideDigits:
       typeof v.hideDigits === "boolean" ? v.hideDigits : !!profile.hideDigits,
@@ -126,14 +135,50 @@ export function restoreBoard(
       (c.anchor !== null && (!Number.isFinite(c.anchor) || c.anchor < 0)) ||
       !Array.isArray(c.laps) ||
       c.laps.some((n: number) => !Number.isFinite(n) || n < 0) ||
-      c.laps.length > 500
+      c.laps.length > 500 ||
+      (c.lapOffset !== undefined &&
+        (!Number.isSafeInteger(c.lapOffset) || c.lapOffset < 0)) ||
+      (c.lapBase !== undefined &&
+        (!Number.isFinite(c.lapBase) || c.lapBase < 0)) ||
+      (c.scheduledAt != null &&
+        (!Number.isFinite(c.scheduledAt) || c.scheduledAt < 0))
     )
       throw Error("Invalid saved clock.");
     return settle(
       {
         ...c,
         name: c.name.slice(0, 80),
-        stages: c.stages.map((s: Stage) => ({ ...s })),
+        stages: c.stages.map((s: Stage) => ({
+          ...s,
+          ...(s.cueEnd !== undefined
+            ? {
+                cueEnd: [
+                  "bell",
+                  "gong",
+                  "beep",
+                  "click",
+                  "off",
+                  "custom",
+                ].includes(s.cueEnd)
+                  ? s.cueEnd
+                  : "bell",
+              }
+            : {}),
+          ...(s.cueStart !== undefined
+            ? {
+                cueStart: [
+                  "bell",
+                  "gong",
+                  "beep",
+                  "click",
+                  "off",
+                  "custom",
+                ].includes(s.cueStart)
+                  ? s.cueStart
+                  : "off",
+              }
+            : {}),
+        })),
         laps: c.laps.slice(),
       },
       mode,
@@ -180,8 +225,8 @@ export function boardCsv(board: Card[], now: number) {
           "",
           (ms / 1000).toFixed(2),
           "Recorded",
-          i + 1,
-          ((ms - (c.laps[i - 1] || 0)) / 1000).toFixed(2),
+          (c.lapOffset ?? 0) + i + 1,
+          ((ms - (c.laps[i - 1] ?? c.lapBase ?? 0)) / 1000).toFixed(2),
           "",
         ]
           .map(quote)

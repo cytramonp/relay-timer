@@ -1,3 +1,4 @@
+import { checkBackupSize, MAX_BACKUP_BYTES } from "../core/data-keys";
 import * as DocumentPicker from "expo-document-picker";
 import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
@@ -11,13 +12,16 @@ export async function importFile(): Promise<string | null> {
   });
   if (pick.canceled) return null;
   const asset = pick.assets[0];
-  if ((asset.size ?? 0) > 4_000_000)
-    throw Error("Choose a file smaller than 4 MB.");
-  if (Platform.OS === "web")
-    return asset.file
-      ? await asset.file.text()
-      : await (await fetch(asset.uri)).text();
-  return new File(asset.uri).text();
+  if ((asset.size ?? 0) > MAX_BACKUP_BYTES)
+    throw Error("Choose a file smaller than 32 MB.");
+  const text =
+    Platform.OS === "web"
+      ? asset.file
+        ? await asset.file.text()
+        : await (await fetch(asset.uri)).text()
+      : await new File(asset.uri).text();
+  checkBackupSize(text);
+  return text;
 }
 export async function exportFile(
   name: string,

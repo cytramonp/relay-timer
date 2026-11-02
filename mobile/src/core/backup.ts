@@ -1,4 +1,5 @@
 import { defaultConfig } from "./catalog.ts";
+import { checkBackupSize } from "./data-keys.ts";
 import { kinds, type Config, type Kind, type Program } from "./types.ts";
 
 export function isKind(value: unknown): value is Kind {
@@ -127,8 +128,7 @@ export function readBackup(
   makeId: () => string,
   now = Date.now(),
 ): Program[] {
-  if (json.length > 4_000_000)
-    throw Error("Choose a JSON file smaller than 4 MB.");
+  checkBackupSize(json);
   let raw;
   try {
     raw = JSON.parse(json);
@@ -210,7 +210,8 @@ export function readBackup(
     });
 }
 export function writeBackup(programs: Program[]) {
-  return JSON.stringify(
+  if (programs.length > 200) throw Error("Export at most 200 programs.");
+  const json = JSON.stringify(
     {
       format: "corptimer-mobile",
       version: 1,
@@ -225,6 +226,8 @@ export function writeBackup(programs: Program[]) {
     null,
     2,
   );
+  checkBackupSize(json);
+  return json;
 }
 export function csv(rows: (string | number)[][]) {
   return rows

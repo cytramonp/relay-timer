@@ -1,0 +1,17 @@
+{
+  "version": "0.4.1",
+  "runtimeSourceRevision": "8aa92cff7b218e20ddd9e7dc40c929dbb8c4b05f",
+  "apkSha256": "A130CF36CEFFCAA227FAF0EA9C25953D20D99279849FF16356CCDF3CDB533CD0",
+  "nativeQARun": "https://github.com/cytramonp/relay-timer/actions/runs/41323385047",
+  "testDriverRevision": "6bb4be1c4a1066675eb9f373e222fc31aff9643d",
+  "screens": [
+    "meeting-ready",
+    "duration-dial",
+    "kitchen-timer",
+    "breathing-timer",
+    "speech-timer",
+    "multi-stopwatch",
+    "tablet-landscape"
+  ],
+  "processing": "Preserve complete native frames; phone contain-fit 1080x1920 with neutral margins; opaque RGB PNG with no alpha. No synthetic UI."
+}

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Tea · steep & enjoy",
+      "stages": [
+        {
+          "name": "Steep",
+          "seconds": 180,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Cool",
+          "seconds": 60,
+          "cueEnd": "bell"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#91C8F6"
+  }
+}

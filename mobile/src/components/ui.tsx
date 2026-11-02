@@ -141,12 +141,14 @@ export function Action({
   tone = "outline",
   disabled = false,
   testID,
+  icon,
 }: {
   label: string;
   onPress: () => void;
   tone?: "outline" | "primary" | "danger" | "cream";
   disabled?: boolean;
   testID?: string;
+  icon?: React.ReactNode;
 }) {
   const t = useTheme(),
     bg =
@@ -156,7 +158,7 @@ export function Action({
           ? t.salmon
           : tone === "cream"
             ? t.cream
-            : "transparent",
+            : t.panel,
     fg =
       tone === "primary"
         ? t.bg
@@ -185,8 +187,14 @@ export function Action({
         opacity: disabled ? 0.45 : pressed ? 0.7 : 1,
         justifyContent: "center",
         alignItems: "center",
+        flexDirection: "row",
+        gap: 8,
+        borderBottomWidth: 3,
+        transform: [{ translateY: pressed ? 1 : 0 }],
+        boxShadow: disabled || pressed ? "none" : "0 2px 3px rgba(0,0,0,0.10)",
       })}
     >
+      {icon}
       <Text
         style={{
           fontSize: 15,

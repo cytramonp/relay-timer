@@ -1,0 +1,145 @@
+{
+  "checkedDate": "2026-11-01",
+  "policy": {
+    "price": 4.99,
+    "currency": "USD",
+    "trialDays": 10,
+    "trialUses": 10,
+    "dailyUses": 2
+  },
+  "policyMatchesLive": true,
+  "policyCases": [
+    {
+      "name": "Trial persists before 10 days despite 10 starts",
+      "passed": true
+    },
+    {
+      "name": "Trial persists after 10 days with fewer than 10 starts",
+      "passed": true
+    },
+    {
+      "name": "Trial ends only after both thresholds",
+      "passed": true
+    },
+    {
+      "name": "Two free starts; third denied",
+      "passed": true
+    },
+    {
+      "name": "Same session retry/resume does not consume another start",
+      "passed": true
+    },
+    {
+      "name": "UTC next day replenishes allowance",
+      "passed": true
+    },
+    {
+      "name": "Active Stripe subscription unlocks Pro and customization",
+      "passed": true
+    },
+    {
+      "name": "Active provider union; expiry restores Free",
+      "passed": true
+    }
+  ],
+  "primaryTimers": 9,
+  "specialtyProfiles": 27,
+  "liveProfilesAndDefaultsMatch": true,
+  "sameApiBase": true,
+  "nativePurchasesEnabled": false,
+  "nativeGoogleClientConfigured": false,
+  "realPaymentTested": false,
+  "realCrossDeviceSignInTested": false,
+  "website": "https://corptimer.com/",
+  "apkVersion": "0.4.1",
+  "androidVersionCode": 7,
+  "apkRuntimeRevision": "8aa92cff7b218e20ddd9e7dc40c929dbb8c4b05f",
+  "apkSha256": "A130CF36CEFFCAA227FAF0EA9C25953D20D99279849FF16356CCDF3CDB533CD0",
+  "publishedWebApiEnabled": true,
+  "publicHealth": {
+    "ok": true,
+    "paymentsConfigured": true
+  },
+  "publicHealthScope": "Does not establish real payment success or Play activation",
+  "sameFirebaseProject": true,
+  "firebaseRegistrationRead": {
+    "reason": "Existing identity could not read Android app registrations; no permissions or APIs changed",
+    "status": 403,
+    "authenticatedRead": false
+  },
+  "checks": {
+    "mobileTestsPassed": 61,
+    "billingWorkerTestsPassed": 9,
+    "typecheck": "passed",
+    "expoLint": "passed"
+  },
+  "nativePrivateCloudLibrarySync": false,
+  "nativeIOSPurchasesImplemented": false,
+  "changes": "Audit documentation only; no runtime, billing, account or live deployment changes",
+  "publicFiles": {
+    "billing-config.json": {
+      "url": "https://corptimer.com/billing-config.json",
+      "snapshotUtf8Sha256": "6a8ccacd6000177d64cf1ceb57daf7c2d3e684c73f44b95865f6f99afbe502c3"
+    },
+    "board-engine.js": {
+      "url": "https://corptimer.com/board-engine.js",
+      "snapshotUtf8Sha256": "ea896dc6b4cd1a6581ab94571f467750535b1f8dd49ed0037310bfa7ab3b05bf"
+    },
+    "cloud.js": {
+      "url": "https://corptimer.com/cloud.js",
+      "snapshotUtf8Sha256": "34a0608e044ba0adffceb22e3a7a52ba4fdbbf73183e0e8cef6fd4d717a8fe91"
+    },
+    "index.html": {
+      "url": "https://corptimer.com/index.html",
+      "snapshotUtf8Sha256": "58be73aadb714e590e9b7bf1bf6e937da79e6edbefffdb575c8be26df1e81cfe"
+    },
+    "pro-client.js": {
+      "url": "https://corptimer.com/pro-client.js",
+      "snapshotUtf8Sha256": "fdbc6db045f41d9f629b2e5ee207b0dad04deb40c5729e31ffa62671e1627134"
+    },
+    "pro-policy.js": {
+      "url": "https://corptimer.com/pro-policy.js",
+      "snapshotUtf8Sha256": "670bbff74225e3fe8e1a363214e43e8d5149d98cd2a6fec8f9356067719db23a"
+    },
+    "pro-ui.js": {
+      "url": "https://corptimer.com/pro-ui.js",
+      "snapshotUtf8Sha256": "9c8f329ae4af2c2a5fe5ae722ba7c32b69f8b626f6ff4c5d1be7b5fea135661f"
+    },
+    "specialty-board.js": {
+      "url": "https://corptimer.com/specialty-board.js",
+      "snapshotUtf8Sha256": "42ce0a37b16ba505a71445cdd31bc43284614c0f520f5f9bff52160a02fca13f"
+    },
+    "specialty-catalog.js": {
+      "url": "https://corptimer.com/specialty-catalog.js",
+      "snapshotUtf8Sha256": "d96f7bee59397200dafb37d7a547c41393ca9024252089675f02b6e976db4fe1"
+    },
+    "timer-account.js": {
+      "url": "https://corptimer.com/timer-account.js",
+      "snapshotUtf8Sha256": "d30d75f6e0d678f60e2a3927a3b90aa0a93c5cebf280be11165e5b3d19be87b9"
+    },
+    "timer-catalog.js": {
+      "url": "https://corptimer.com/timer-catalog.js",
+      "snapshotUtf8Sha256": "e94cf62b33e8ed337bd6a7f7da636465fb5c8f5568ba63a46e2a24cb73c742c3"
+    },
+    "timer-favorites.js": {
+      "url": "https://corptimer.com/timer-favorites.js",
+      "snapshotUtf8Sha256": "1233b8da741f18d5e695fe6699e819097b14e2d02273c61878db6a649d2dfe17"
+    },
+    "timer-popularity.js": {
+      "url": "https://corptimer.com/timer-popularity.js",
+      "snapshotUtf8Sha256": "e9b4fc3ab3d0f00884e65bba8208910a86cb5659942694cbcb6d74a2164e81d3"
+    },
+    "timer-store.js": {
+      "url": "https://corptimer.com/timer-store.js",
+      "snapshotUtf8Sha256": "d8fa30d84d49eaabfdc4f173e8d8ac69eb6708086740ae4b45d6797040f97975"
+    },
+    "timer-themes.js": {
+      "url": "https://corptimer.com/timer-themes.js",
+      "snapshotUtf8Sha256": "3b49c8f9493727c0603c8da4bb07c51191c3967daf0037a2b379996ff2c310aa"
+    },
+    "timer.js": {
+      "url": "https://corptimer.com/timer.js",
+      "snapshotUtf8Sha256": "ac39a6e663946259ed98c68348e117a1d72067084c43e899bb7469cbc5a2774d"
+    }
+  }
+}

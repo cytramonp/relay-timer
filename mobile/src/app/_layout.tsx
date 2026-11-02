@@ -3,7 +3,8 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
-import { Platform, Linking } from "react-native";
+import { Platform, Linking, Text } from "react-native";
+import { localDemo } from "../services/demo-mode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { favoritesKey, openTimer } from "../components/timer-library";
 import { NavigationBar } from "expo-navigation-bar";
@@ -15,7 +16,7 @@ import {
 } from "expo-router/react-navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { AppProvider } from "../state/app-store";
+import { AppProvider, useApp } from "../state/app-store";
 import { ThemeProvider, useTheme } from "../theme";
 import { LiveProvider } from "../state/live-store";
 import { OverlayProvider } from "../state/overlay-store";
@@ -64,6 +65,18 @@ function Navigation() {
       }}
     >
       <StatusBar style={dark ? "light" : "dark"} />
+      {localDemo ? (
+        <Text
+          style={{
+            backgroundColor: "#fff0b3",
+            color: "#332500",
+            textAlign: "center",
+            padding: 4,
+          }}
+        >
+          LOCAL DEMO · no purchases or account
+        </Text>
+      ) : null}
       {Platform.OS === "android" && (
         <NavigationBar style={dark ? "light" : "dark"} />
       )}
@@ -101,15 +114,22 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AppProvider>
-          <ThemeProvider>
-            <OverlayProvider>
-              <LiveProvider>
-                <Navigation />
-              </LiveProvider>
-            </OverlayProvider>
-          </ThemeProvider>
+          <AppContents />
         </AppProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
+  );
+}
+
+function AppContents() {
+  const { dataVersion } = useApp();
+  return (
+    <ThemeProvider key={dataVersion}>
+      <OverlayProvider>
+        <LiveProvider>
+          <Navigation />
+        </LiveProvider>
+      </OverlayProvider>
+    </ThemeProvider>
   );
 }

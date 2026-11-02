@@ -7,6 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { timerNow } from "../services/timer-clock";
 import { elapsed, type Card } from "../core/board-engine";
 import { useTheme } from "../theme";
 
@@ -21,7 +22,7 @@ export const BreathingOrb = memo(function BreathingOrb({
   useEffect(() => {
     const progress = Math.min(
       1,
-      elapsed(card, Date.now()) / Math.max(1, phase.seconds * 1000),
+      elapsed(card, timerNow()) / Math.max(1, phase.seconds * 1000),
     );
     const inhale = /inhale/i.test(phase.name),
       exhale = /exhale/i.test(phase.name);
@@ -33,7 +34,7 @@ export const BreathingOrb = memo(function BreathingOrb({
         withTiming(inhale ? 1 : 0.55, {
           duration: Math.max(
             0,
-            phase.seconds * 1000 - elapsed(card, Date.now()),
+            phase.seconds * 1000 - elapsed(card, timerNow()),
           ),
           easing: Easing.linear,
           reduceMotion: ReduceMotion.System,

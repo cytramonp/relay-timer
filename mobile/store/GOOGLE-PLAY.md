@@ -1,11 +1,11 @@
-# Google Play release preparation — 0.4.0 (6)
+# Google Play release preparation — 0.4.1 (7)
 
 This package is prepared for **internal testing**, not an assertion of production approval.
 The APK is for direct testing. Google Play receives the signed **Android App Bundle (.aab)**.
 
 ## Build and signing
 
-- Package: `com.corptimer.app`; version `0.4.0`; version code `6`.
+- Package: `com.corptimer.app`; version `0.4.1`; version code `7`.
 - Target SDK 36; compile/build tools 37; native ARM64 and x86-64.
 - Billing Client 9.1.0. No microphone or broad photo/storage permissions.
 - User-enabled floating countdown: `specialUse` foreground service, visible notification and Close control.
@@ -26,7 +26,7 @@ CI workflow: `.github/workflows/mobile-android.yml`. It compiles the APK, checks
    Register the Android package and actual **Play App Signing** SHA-1 certificate in the existing Firebase/Google Auth project. Put its Web OAuth client ID in `googleWebClientId`. The optional native Google button uses Credential Manager 1.6.0 and Firebase credential linking/sign-in; no additional Google API scopes are requested. Test the same Google identity on web and native for shared account entitlement. Native purchase requires signed-in identity. This preparation build has an empty client ID and cannot perform Google sign-in. Verify account deletion across the shared web/native identity before activating account creation for production.
 4. Connect a least-privilege Play Developer API service account to the existing billing Worker. Store its JSON only as `PLAY_SERVICE_ACCOUNT` in the server's secret store. Apply the additional `play_purchases` table to the **existing** D1 database. Deploy the merged Worker without replacing Stripe secrets or account data. No deployment of this native extension is implied by committing it.
 5. For license testing only, set server `PLAY_ALLOW_TEST=true`. Test success, decline, pending → paid, cancellation through expiry, restore/reinstall, refund, grace, hold, repeated taps and network interruption through the actual Play-installed build. Disable test entitlements for the public production server after the agreed testing configuration is separated.
-6. Set `mobile/src/config/billing-public.json` `purchasesEnabled:true` **only after** the product and verification endpoint are working. This 0.4.0 preparation build deliberately has purchases disabled. Rebuild with a higher version code for the payment-enabled release.
+6. Set `mobile/src/config/billing-public.json` `purchasesEnabled:true` **only after** the product and verification endpoint are working. This 0.4.1 preparation build deliberately has purchases disabled. Rebuild with a higher version code for the payment-enabled release.
 7. Complete the publisher's support email (Play requires one), privacy URL, audience, content rating, ads declaration, data-safety, Health apps and foreground-service declarations. Review the Health form against the actual workout, yoga, meditation and breathing timer features; there is no Health Connect, body-vital measurement or clinical advice in the code. Do not automatically declare that the app has no relevant features merely because it does not collect health measurements. [Google’s Health declaration guide](https://support.google.com/googleplay/android-developer/answer/14738291). Public contact details belong in the Play publisher profile; the app's feedback recipient is still hidden.
 8. Complete applicable account testing / production-access requirements and review the pre-launch report. New personal accounts currently require at least 12 opted-in testers continuously for 14 days before applying for production access. Internal testing does not itself satisfy this requirement.
 
@@ -59,3 +59,9 @@ Deferred/interrupted service impact: the user loses the visible countdown and qu
 - https://developers.google.com/android-publisher/api-ref/rest/v3/purchases.subscriptionsv2/get
 
 Recheck these time-sensitive requirements at actual submission.
+
+## 0.4.1 reliability delta
+
+Store screenshot preparation preserves the complete native screen using contain-fit and outputs 24-bit RGB PNG without alpha. The feature graphic is also RGB at 1024×500; phone exports are 1080×1920. This follows Google's [preview asset requirements](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en); it does not complete the owner-specific listing/declaration checks.
+
+See `../audits/2026-10-31/IMPLEMENTATION.ru.md`. Store payment activation is unchanged. Device backup/reset now covers portable specialty data and drafts, excluding credentials/grants/live capabilities. All timer scopes share up to 48 upcoming local alerts; long sessions need foreground replenishment. Exact Android access is separately checked. Native elapsed-time metadata stays local; live publication uses wall-clock event timestamps and elapsed durations. Hardware delivery, OS intervention and actual store payment tests remain outstanding.

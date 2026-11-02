@@ -1,0 +1,84 @@
+{
+  "checkedDate": "2026-10-30",
+  "timezone": "America/Los_Angeles",
+  "command": "npm audit --json (mobile)",
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 2,
+      "moderate": 24,
+      "high": 2,
+      "critical": 0,
+      "total": 28
+    },
+    "dependencies": {
+      "prod": 885,
+      "dev": 30,
+      "optional": 77,
+      "peer": 10,
+      "peerOptional": 0,
+      "total": 974
+    }
+  },
+  "advisories": [
+    {
+      "package": "deepmerge",
+      "severity": "low",
+      "title": "deepmerge mergeObject() allows prototype poisoning of returned objects",
+      "url": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+      "range": ">=4.2.0 <=4.3.1"
+    },
+    {
+      "package": "glob",
+      "severity": "moderate",
+      "title": "Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal",
+      "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4",
+      "range": ">=9.0.0 <=14.0.1"
+    },
+    {
+      "package": "minimatch",
+      "severity": "moderate",
+      "title": "minimatch has potential denial of service via globparts amplification",
+      "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+      "range": "<11.0.1"
+    },
+    {
+      "package": "zod",
+      "severity": "high",
+      "title": "Zod can exhaust memory while validating oversized constrained collections",
+      "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+      "range": "<4.6.6"
+    }
+  ],
+  "affectedPackages": [
+    "@eslint-community/eslint-utils",
+    "@eslint/config-array",
+    "@eslint/eslintrc",
+    "@expo/cli",
+    "@expo/config",
+    "@expo/config-plugins",
+    "@expo/fingerprint",
+    "@expo/inline-modules",
+    "@expo/local-build-cache-provider",
+    "@expo/metro-config",
+    "@expo/prebuild-config",
+    "@typescript-eslint/eslint-plugin",
+    "@typescript-eslint/parser",
+    "@typescript-eslint/type-utils",
+    "@typescript-eslint/typescript-estree",
+    "@typescript-eslint/utils",
+    "deepmerge",
+    "eslint",
+    "eslint-config-expo",
+    "eslint-plugin-expo",
+    "eslint-plugin-import",
+    "eslint-plugin-react",
+    "expo",
+    "expo-sharing",
+    "expo-splash-screen",
+    "glob",
+    "minimatch",
+    "zod"
+  ],
+  "note": "28 affected-package entries are propagation of four underlying advisories, not 28 demonstrated vulnerabilities in shipped app paths. Reachability in Hermes has not been proven."
+}

@@ -14,6 +14,8 @@ apk = next((root / 'android/app/build/outputs/apk/release').glob('*.apk'))
 def adb(*args):
     return subprocess.check_output(['adb', *args], text=True, timeout=35)
 
+assert os.environ.get('CI') == 'true' and adb('get-serialno').strip().startswith('emulator-'), 'Destructive native QA is limited to a disposable CI emulator; use the manual checklist on real devices'
+
 def tree():
     # The floating timer is intentionally non-focusable. Include all windows,
     # otherwise Android reports only the focused launcher behind the overlay.
@@ -307,6 +309,9 @@ try:
         open_path('pro')
         t = tree(); assert 'Your timer. Your way.' in ET.tostring(t, encoding='unicode')
         capture(f'{form}-android-plan.png')
+        if os.getenv('CORPTIMER_RELIABILITY_QA') == '1':
+            from reliability_android import verify
+            verify(globals(), form)
         open_path('settings'); tap_node(find(tree(), text='Dark'))
         adb('shell', 'settings', 'put', 'system', 'font_scale', '1.3')
         open_path(''); capture(f'{form}-android-dark-large-text.png')

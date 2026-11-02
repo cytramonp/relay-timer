@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { AppState, Platform } from "react-native";
+import { timerNow, monotonicNow } from "../services/timer-clock";
 import Overlay from "../../modules/corptimer-overlay";
 import { useApp } from "./app-store";
 import { meetingProjection, meetingView } from "../core/meeting";
@@ -35,11 +36,14 @@ export function OverlayProvider({ children }: { children: React.ReactNode }) {
     const s = current.current.snapshot(),
       r = s.run?.kind === "meeting" ? s.run : null,
       c = r?.config ?? s.drafts.meeting,
-      now = Date.now(),
+      now = timerNow(),
       view = meetingView(c, r, now);
     return {
       ...meetingProjection(c, r, now),
+      publishedAt: Date.now(),
+      publishedUptime: monotonicNow(),
       progress: view.progress,
+      progressDuration: view.available,
       nextBudget: view.nextBudget,
       turn: r?.entries.length ?? -1,
       shape: s.settings.floatingShape ?? "wide",

@@ -1,3 +1,4 @@
+import { GoogleMark } from "../components/google-mark";
 import React, { useState } from "react";
 import { Linking, Platform, View } from "react-native";
 import { Stack, router } from "expo-router";
@@ -51,42 +52,6 @@ export default function ProScreen() {
         {access ? `YOUR PLAN · ${access.tier.toUpperCase()}` : "YOUR PLAN"}
       </Body>
       <Heading>Your timer. Your way.</Heading>
-      {account ? (
-        <>
-          <Body>
-            Signed in as{" "}
-            {account.email || account.name || "your Google account"}.
-          </Body>
-          <Action
-            label="Sign out"
-            disabled={busy}
-            onPress={() =>
-              void task(async () => {
-                if (live.host) await live.stop();
-                await signOutAccount();
-              })
-            }
-          />
-        </>
-      ) : (
-        <>
-          <Action
-            label="Sign in with Google"
-            disabled={busy || !googleSignInEnabled()}
-            onPress={() =>
-              void task(async () => {
-                if (live.host) await live.stop();
-                await signInGoogle();
-              })
-            }
-          />
-          <Body muted>
-            {googleSignInEnabled()
-              ? "Use the same Google account as the website to check your Pro access. Your local timers stay on this device."
-              : "Google account linking is awaiting the publisher's app-certificate setup. You can use the trial without signing in."}
-          </Body>
-        </>
-      )}
       <Body>
         One library for meetings, training, focus and everyday routines.
       </Body>
@@ -109,14 +74,22 @@ export default function ProScreen() {
           </Body>
         ) : (
           <Body style={{ color: t.bright }}>
-            Annual plan · price shown by Google Play
+            {Platform.OS === "android"
+              ? "Annual plan - price shown by Google Play"
+              : "Annual plan - purchases unavailable in this build"}
           </Body>
         )}
         {access?.tier === "pro" ? (
           <Body style={{ color: t.bright }}>Pro is active.</Body>
         ) : (
           <Action
-            label={busy ? "Please wait…" : "Subscribe with Google Play"}
+            label={
+              busy
+                ? "Please wait..."
+                : Platform.OS === "android"
+                  ? "Subscribe with Google Play"
+                  : "Pro subscription"
+            }
             tone="cream"
             disabled={busy || !product || !purchasesEnabled()}
             onPress={() => void task(buyPro)}
@@ -125,8 +98,52 @@ export default function ProScreen() {
       </View>
       {!purchasesEnabled() ? (
         <Body muted>
-          Google Play purchases are being prepared. This build can check trial
-          and Free access; it cannot take a payment.
+          {Platform.OS === "android"
+            ? "Google Play purchases and restore are not available in this build yet."
+            : "App Store purchases and restore are not available in this build yet."}{" "}
+          You can use the trial and Free timers without signing in. No payment
+          can be taken in this build.
+        </Body>
+      ) : null}
+      <Action
+        label={
+          Platform.OS === "android"
+            ? "Restore Google Play purchases"
+            : "Restore purchases"
+        }
+        disabled={busy || !purchasesEnabled()}
+        onPress={() =>
+          void task(
+            restorePurchases,
+            "Restore check complete. Your current plan is shown above.",
+          )
+        }
+      />
+      <Action
+        label="Refresh plan"
+        disabled={busy}
+        onPress={() => void task(refreshBilling)}
+      />
+      {Platform.OS === "android" ? (
+        <Action
+          label="Manage Google Play subscription"
+          onPress={() =>
+            void Linking.openURL(
+              "https://play.google.com/store/account/subscriptions?sku=corptimer_pro_yearly&package=com.corptimer.app",
+            ).catch(() =>
+              setMessage(
+                "Open Google Play → Payments & subscriptions → Subscriptions.",
+              ),
+            )
+          }
+        />
+      ) : null}
+      {Platform.OS === "android" ? (
+        <Body muted>
+          Payment is charged to your Google Play account. The annual
+          subscription renews automatically unless cancelled in Google Play
+          before renewal. Cancelling retains Pro until the end of the paid
+          period. No payment is required to start the CorpTimer trial.
         </Body>
       ) : null}
       <Heading>Start with full access.</Heading>
@@ -144,6 +161,50 @@ export default function ProScreen() {
           {access.remaining} of 2 starts left today. Resets at 00:00 UTC.
         </Body>
       ) : null}
+      <Rule />
+      <Heading>Website account (optional)</Heading>
+      <Body muted>
+        Already have Pro on corptimer.com? Link the same Google account to check
+        that access here. This is separate from purchasing or restoring through
+        the app store.
+      </Body>
+      {account ? (
+        <>
+          <Body>
+            Website account:{" "}
+            {account.email || account.name || "your Google account"}.
+          </Body>
+          <Action
+            label="Sign out"
+            disabled={busy}
+            onPress={() =>
+              void task(async () => {
+                if (live.host) await live.stop();
+                await signOutAccount();
+              })
+            }
+          />
+        </>
+      ) : (
+        <>
+          <Action
+            label="Sign in with Google"
+            icon={<GoogleMark />}
+            disabled={busy || !googleSignInEnabled()}
+            onPress={() =>
+              void task(async () => {
+                if (live.host) await live.stop();
+                await signInGoogle();
+              })
+            }
+          />
+          <Body muted>
+            {googleSignInEnabled()
+              ? "Use the same Google account as the website to check your Pro access. Your local timers stay on this device."
+              : "Website account linking is not available in this build yet. No sign-in is needed to use the trial or Free timers."}
+          </Body>
+        </>
+      )}
       <Rule />
       <Heading>Your logo</Heading>
       <BrandLogo />
@@ -193,39 +254,6 @@ export default function ProScreen() {
         onPress={() => settings({ companyLogo: undefined })}
       />
       <Rule />
-      <Action
-        label="Restore Google Play purchases"
-        disabled={busy || !purchasesEnabled()}
-        onPress={() =>
-          void task(
-            restorePurchases,
-            "Restore check complete. Your current plan is shown above.",
-          )
-        }
-      />
-      <Action
-        label="Refresh plan"
-        disabled={busy}
-        onPress={() => void task(refreshBilling)}
-      />
-      <Action
-        label="Manage Google Play subscription"
-        onPress={() =>
-          void Linking.openURL(
-            "https://play.google.com/store/account/subscriptions?sku=corptimer_pro_yearly&package=com.corptimer.app",
-          ).catch(() =>
-            setMessage(
-              "Open Google Play → Payments & subscriptions → Subscriptions.",
-            ),
-          )
-        }
-      />
-      <Body muted>
-        Payment is charged to your Google Play account. The annual subscription
-        renews automatically unless cancelled in Google Play before renewal.
-        Cancelling retains Pro until the end of the paid period. No payment is
-        required to start the CorpTimer trial.
-      </Body>
       <Action label="Privacy & data" onPress={() => router.push("/privacy")} />
       {message || error ? <Body>{message || error}</Body> : null}
     </Page>

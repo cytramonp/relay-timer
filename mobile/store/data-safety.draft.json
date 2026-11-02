@@ -1,6 +1,6 @@
 {
   "status": "Draft; reconcile with publisher settings and Play Console definitions before submission",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "encryptedInTransit": true,
   "ads": false,
   "collection": [

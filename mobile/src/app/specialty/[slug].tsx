@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { AppState, Keyboard, Text, View } from "react-native";
+import {
+  AppState,
+  Keyboard,
+  Modal,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { Image } from "expo-image";
 import {
   Stack,
@@ -7,7 +14,8 @@ import {
   useFocusEffect,
   useLocalSearchParams,
 } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { checkLibraryCapacity } from "../../services/library-capacity";
+import { userData } from "../../services/user-data";
 import * as Crypto from "expo-crypto";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import profiles from "../../core/specialty-catalog.json";
@@ -42,27 +50,51 @@ import {
 } from "../../components/ui";
 import { DurationField } from "../../components/duration-field";
 import { TimerFavoriteControls } from "../../components/timer-library";
-import { PlanStatus } from "../../components/plan-status";
+import { TimerBrandEditor } from "../../components/timer-brand-editor";
+import { customRecipes, recipeSetup } from "../../core/custom-recipes";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { BrandLogo } from "../../components/brand-logo";
 import { BreathingOrb } from "../../components/breathing-orb";
 import {
   reserveSession,
+  sessionIdentity,
   requireCustomization,
   useBilling,
 } from "../../services/billing";
 import { exportFile, importFile } from "../../services/files";
 import { defaultConfig } from "../../core/catalog";
-import { playCue, dialFeedback } from "../../services/audio";
+import { playCue, playCustomCue, dialFeedback } from "../../services/audio";
 import { useApp } from "../../state/app-store";
+import {
+  timerNow,
+  saveClockCheckpoint,
+  wallTime,
+} from "../../services/timer-clock";
+import { boardAlarmPlan } from "../../core/board-alarms";
+import { syncAlarmScope } from "../../services/notifications";
+import { boardSessionContinues } from "../../core/session";
 import { useTheme } from "../../theme";
 
 export default function SpecialtyTimer() {
-  const { slug } = useLocalSearchParams<{ slug: string }>();
+  const { slug, instance } = useLocalSearchParams<{
+    slug: string;
+    instance?: string;
+  }>();
+  const validInstance =
+    typeof instance === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      instance,
+    )
+      ? instance.toLowerCase()
+      : undefined;
   const profile =
     slug === "custom-timer"
       ? customProfile
       : profiles.find((p) => p.slug === slug);
-  if (!profile)
+  if (
+    !profile ||
+    (instance !== undefined && (!validInstance || slug !== "custom-timer"))
+  )
     return (
       <Page>
         <Heading>Timer not found</Heading>
@@ -72,20 +104,39 @@ export default function SpecialtyTimer() {
         />
       </Page>
     );
-  return <Board key={profile.slug} profile={profile as BoardProfile} />;
+  return (
+    <Board
+      key={`${profile.slug}:${validInstance ?? "default"}`}
+      profile={profile as BoardProfile}
+      instance={slug === "custom-timer" ? validInstance : undefined}
+    />
+  );
 }
-function Board({ profile: p }: { profile: BoardProfile }) {
+function Board({
+  profile: p,
+  instance,
+}: {
+  profile: BoardProfile;
+  instance?: string;
+}) {
+  const [AsyncStorage] = useState(() => userData.scope());
   const t = useTheme(),
-    { store } = useApp(),
+    { store, snapshot } = useApp(),
     { access } = useBilling();
   const [board, setBoard] = useState<Card[]>(() => freshBoard(p));
   const [ready, setReady] = useState(false),
-    [now, setNow] = useState(() => Date.now());
+    [now, setNow] = useState(() => timerNow());
   const [edit, setEdit] = useState<number | null>(null),
     [guide, setGuide] = useState(false);
+  const [fullscreen, setFullscreen] = useState<number | null>(null);
+  const [design, setDesign] = useState(false);
+  const [recipesOpen, setRecipesOpen] = useState(false);
+  const copyBusy = useRef(false);
   const [note, setNote] = useState("");
   const [options, setOptions] = useState(() => boardOptions(undefined, p));
   const { sound, hideDigits, kidsView } = options;
+  const optionSnapshot = useRef(options);
+  optionSnapshot.current = options;
   const [signalDraft, setSignalDraft] = useState(() => ({
     green: String(options.green),
     amber: String(options.amber),
@@ -104,15 +155,22 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     });
   }
   const [pending, setPending] = useState(false);
+  const sessionOwner = useRef<string | null>(null);
   const session = useRef<string | null>(null),
     busy = useRef(false),
     current = useRef(board),
     persist = useRef(true);
-  const key = `corptimer.board.${p.slug}`;
+  const key = `corptimer.board.${p.slug}${instance ? `-${instance}` : ""}`;
   current.current = board;
   const running = board.some((c) => c.anchor !== null || !!c.scheduledAt);
   function cue(name: string, which = "bell") {
     if (!sound || which === "off") return;
+    if (which === "custom" && options.customSound && access?.customize) {
+      void playCustomCue(options.customSound.uri).catch(() =>
+        setNote("Your audio could not be played. Try MP3 or WAV."),
+      );
+      return;
+    }
     if (which === "click") {
       dialFeedback(store.settings.haptics, true);
       return;
@@ -130,6 +188,11 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   useEffect(() => {
     let live = true;
     void AsyncStorage.getItem(key)
+      .then(
+        async (saved) =>
+          saved ??
+          (instance ? await AsyncStorage.getItem(key + ".setup") : null),
+      )
       .then((s) => {
         if (!live || !s) return;
         const saved = JSON.parse(s);
@@ -137,10 +200,11 @@ function Board({ profile: p }: { profile: BoardProfile }) {
           restoreBoard(
             Array.isArray(saved) ? saved : saved.board,
             p.mode,
-            Date.now(),
+            timerNow(),
           ),
         );
         session.current = Array.isArray(saved) ? null : saved.session || null;
+        sessionOwner.current = saved.sessionOwner || null;
         restoreOptions(saved.options);
       })
       .catch(() => {
@@ -159,18 +223,29 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     };
     // The profile is fixed for this keyed screen instance.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, p.mode]);
+  }, [key, p.mode, instance]);
   useEffect(() => {
     if (!ready || !persist.current) return;
-    const save = () =>
-      AsyncStorage.setItem(
+    const save = () => {
+      if (busy.current) return;
+      try {
+        saveClockCheckpoint();
+      } catch {
+        setNote(
+          "Could not save clock recovery data. Keep the app open and export a backup.",
+        );
+        return;
+      }
+      return AsyncStorage.setItem(
         key,
         JSON.stringify({
           board: current.current,
           session: session.current,
+          sessionOwner: sessionOwner.current,
           options,
         }),
       ).catch(() => setNote("Could not save this board. Export a backup."));
+    };
     void save();
     const sub = AppState.addEventListener("change", () => {
       void save();
@@ -178,11 +253,46 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     return () => {
       sub.remove();
     };
-  }, [board, ready, key, options]);
+  }, [board, ready, key, options, AsyncStorage, pending]);
+  useEffect(() => {
+    if (!ready) return;
+    const plan = store.settings.notifications
+      ? boardAlarmPlan(
+          board,
+          p.mode,
+          timerNow(),
+          p.slug === "speech-timer" ? options : undefined,
+        ).map((a) => ({ ...a, at: wallTime(a.at) }))
+      : [];
+    void syncAlarmScope(
+      `board.${p.slug}${instance ? `-${instance}` : ""}`,
+      plan,
+      options.sound ? "bell" : "off",
+      p.slug,
+    ).catch(() =>
+      setNote(
+        "Background alerts could not be scheduled. Keep this timer open.",
+      ),
+    );
+  }, [
+    board,
+    ready,
+    p.mode,
+    p.slug,
+    instance,
+    options,
+    store.settings.notifications,
+  ]);
   useFocusEffect(
     useCallback(() => {
+      if (!running) return;
       const id = setInterval(() => {
-        const time = Date.now();
+        if (
+          AppState.currentState === "background" ||
+          AppState.currentState === "inactive"
+        )
+          return;
+        const time = timerNow();
         setNow(time);
         const before = current.current;
         before.forEach((card, i) => {
@@ -240,7 +350,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       return () => clearInterval(id);
       // Latest board is read from a ref; reinstall only for the sound preference.
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [p.mode, options, store.settings.haptics]),
+    }, [running, p.mode, options, store.settings.haptics]),
   );
   useEffect(() => {
     if (running && store.settings.keepAwake)
@@ -258,7 +368,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     }
   }
   async function start(fn: (b: Card[], time: number) => Card[]) {
-    if (!ready || busy.current) return;
+    if (!ready || busy.current || !AsyncStorage.current()) return;
     // Release input focus before pending/access updates resize the controls.
     // Otherwise Android can scroll back to an offscreen duration field.
     Keyboard.dismiss();
@@ -266,16 +376,55 @@ function Board({ profile: p }: { profile: BoardProfile }) {
     setPending(true);
     setNote("");
     try {
+      const uid = await sessionIdentity();
+      if (sessionOwner.current !== uid) session.current = null;
       if (!session.current) {
         const saved = await AsyncStorage.getItem(key + ".reservation"),
           reservation = saved || Crypto.randomUUID();
         if (!saved)
           await AsyncStorage.setItem(key + ".reservation", reservation);
-        await reserveSession(reservation);
+        await reserveSession(reservation, uid);
         session.current = reservation;
-        await AsyncStorage.removeItem(key + ".reservation");
+        sessionOwner.current = uid;
       }
-      setBoard((b) => fn(b, Date.now()));
+      if (!AsyncStorage.current()) return;
+      const next = fn(current.current, timerNow());
+      saveClockCheckpoint();
+      // Persist the accepted start before removing its retry ID. A navigation
+      // or process interruption must not consume a grant without saving it.
+      await AsyncStorage.setItem(
+        key,
+        JSON.stringify({
+          board: next,
+          session: session.current,
+          sessionOwner: sessionOwner.current,
+          options: optionSnapshot.current,
+        }),
+      );
+      if (!AsyncStorage.current()) return;
+      await AsyncStorage.removeItem(key + ".reservation");
+      if (!AsyncStorage.current()) return;
+      current.current = next;
+      setBoard(next);
+      const settings = snapshot().settings;
+      const plan = settings.notifications
+        ? boardAlarmPlan(
+            next,
+            p.mode,
+            timerNow(),
+            p.slug === "speech-timer" ? optionSnapshot.current : undefined,
+          ).map((a) => ({ ...a, at: wallTime(a.at) }))
+        : [];
+      void syncAlarmScope(
+        `board.${p.slug}${instance ? `-${instance}` : ""}`,
+        plan,
+        optionSnapshot.current.sound ? "bell" : "off",
+        p.slug,
+      ).catch(() =>
+        setNote(
+          "Background alerts could not be scheduled. Keep this timer open.",
+        ),
+      );
       cue("Start", "off");
     } catch (e) {
       setNote(e instanceof Error ? e.message : "Reconnect to start a timer.");
@@ -286,7 +435,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
   }
   function action(i: number, action: string) {
     if (action === "add" || action === "subtract") {
-      customize(() => setBoard((b) => act(b, i, action, p.mode, Date.now())));
+      customize(() => setBoard((b) => act(b, i, action, p.mode, timerNow())));
       return;
     }
     if (
@@ -296,12 +445,9 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       void start((b, time) => act(b, i, action, p.mode, time));
       return;
     }
-    setBoard((b) =>
-      act(b, i, action, p.mode, Date.now()).map((c) => ({
-        ...c,
-        laps: c.laps.slice(-500),
-      })),
-    );
+    if (action === "reset" && !boardSessionContinues(current.current, i))
+      session.current = null;
+    setBoard((b) => act(b, i, action, p.mode, timerNow()));
     if (action === "next")
       cue("Next stage", board[i].stages[board[i].index].cueEnd ?? "bell");
   }
@@ -332,17 +478,280 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       done: false,
       waiting: false,
       laps: [],
+      lapOffset: 0,
+      lapBase: 0,
+      hasStarted: false,
     }));
+  async function saveCopy(cards: Card[] = setup(), savedOptions = options) {
+    if (copyBusy.current) return;
+    copyBusy.current = true;
+    try {
+      requireCustomization();
+      const id = Crypto.randomUUID();
+      const copyKey = `corptimer.board.custom-timer-${id}`;
+      const data = JSON.stringify({
+        board: cards,
+        options: savedOptions,
+        session: null,
+        sessionOwner: null,
+      });
+      await checkLibraryCapacity([
+        [copyKey + ".setup", data],
+        [copyKey, data],
+      ]);
+      await AsyncStorage.setItem(copyKey + ".setup", data);
+      await AsyncStorage.setItem(copyKey, data);
+      if (AsyncStorage.current())
+        router.push({
+          pathname: "/specialty/[slug]",
+          params: { slug: "custom-timer", instance: id },
+        });
+    } finally {
+      copyBusy.current = false;
+    }
+  }
   return (
     <Page>
       <Stack.Screen options={{ title: p.title }} />
+      {specialtyArt[p.slug] || p.slug === "custom-timer" ? (
+        <Image
+          source={specialtyArt[p.slug] ?? require("../../../assets/simple.jpg")}
+          contentFit="contain"
+          style={{ width: "100%", height: 120 }}
+          accessibilityLabel={`${p.title} illustration`}
+        />
+      ) : null}
+      <Row>
+        <Action
+          label="Customize timer"
+          testID="customize-timer"
+          tone="primary"
+          disabled={!ready || running}
+          onPress={() =>
+            customize(() => {
+              setEdit(0);
+              setDesign(false);
+            })
+          }
+        />
+        <Action
+          label="Creation guide"
+          onPress={() => router.push("/timer-guide")}
+        />
+      </Row>
+      <Row>
+        <Action
+          label={
+            design ? "Hide colors, logo & sounds" : "Colors, logo & sounds"
+          }
+          testID="timer-brand-options"
+          onPress={() => customize(() => setDesign(!design))}
+        />
+        {p.slug === "custom-timer" ? (
+          <Action
+            label={recipesOpen ? "Hide recipes" : "Choose a recipe"}
+            testID="custom-recipes-toggle"
+            onPress={() => setRecipesOpen(!recipesOpen)}
+          />
+        ) : null}
+      </Row>
+      {edit !== null ? (
+        <Action label="Close editor" onPress={() => setEdit(null)} />
+      ) : null}
+      {edit !== null && board[edit] && access?.customize ? (
+        <ClockEditor
+          key={edit}
+          card={board[edit]}
+          mode={p.mode}
+          hasCustomSound={!!options.customSound}
+          onChange={(value) => customize(() => patch(edit, value))}
+          onRemove={() =>
+            customize(() => {
+              if (board.length > 1)
+                setBoard((b) => b.filter((_, n) => n !== edit));
+              setEdit(null);
+            })
+          }
+        />
+      ) : null}
+      {design && access?.customize ? (
+        <TimerBrandEditor
+          value={options}
+          onChange={(v) =>
+            customize(
+              () =>
+                void files(async () => {
+                  const next = {
+                    ...options,
+                    accent: v.accent,
+                    logo: v.logo,
+                    customSound: v.customSound,
+                  };
+                  await checkLibraryCapacity([
+                    [
+                      key,
+                      JSON.stringify({
+                        board: current.current,
+                        options: next,
+                        session: session.current,
+                        sessionOwner: sessionOwner.current,
+                      }),
+                    ],
+                  ]);
+                  requireCustomization();
+                  if (AsyncStorage.current()) setOptions(next);
+                }),
+            )
+          }
+        />
+      ) : null}
+      {p.slug === "custom-timer" && recipesOpen ? (
+        <>
+          <Heading>Try a complete recipe</Heading>
+          <Body muted>
+            Each recipe creates its own saved timer in Library. Example
+            durations are editable.
+          </Body>
+          <Row>
+            {customRecipes.map((r) => (
+              <Action
+                key={r.id}
+                testID={`custom-recipe-${r.id}`}
+                label={r.title}
+                disabled={running}
+                onPress={() =>
+                  customize(
+                    () =>
+                      void files(async () => {
+                        const recipe = recipeSetup(r.id);
+                        await saveCopy(
+                          recipe.board,
+                          boardOptions(recipe.options, p),
+                        );
+                      }),
+                  )
+                }
+              />
+            ))}
+          </Row>
+        </>
+      ) : null}
+      <Modal
+        visible={fullscreen !== null}
+        animationType="fade"
+        onRequestClose={() => setFullscreen(null)}
+      >
+        <SafeAreaView style={{ flex: 1, backgroundColor: t.clock }}>
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+              padding: 24,
+              gap: 20,
+            }}
+          >
+            {fullscreen !== null && board[fullscreen] ? (
+              <>
+                <Image
+                  source={
+                    specialtyArt[p.slug] ??
+                    require("../../../assets/simple.jpg")
+                  }
+                  contentFit="contain"
+                  style={{ width: 120, height: 72, alignSelf: "center" }}
+                  accessibilityLabel={`${p.title} illustration`}
+                />
+                {options.logo && access?.customize ? (
+                  <Image
+                    source={{ uri: options.logo.uri }}
+                    contentFit="contain"
+                    style={{ width: 180, height: 64, alignSelf: "center" }}
+                  />
+                ) : null}
+                <Text
+                  style={{ color: t.cream, fontSize: 26, textAlign: "center" }}
+                >
+                  {board[fullscreen].name}
+                </Text>
+                <Text
+                  style={{
+                    color: t.bright,
+                    fontSize: 22,
+                    textAlign: "center",
+                  }}
+                >
+                  {board[fullscreen].stages[board[fullscreen].index].name}
+                </Text>
+                <Text
+                  accessibilityRole="timer"
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  style={{
+                    color: t.cream,
+                    fontSize: 100,
+                    textAlign: "center",
+                    fontVariant: ["tabular-nums"],
+                  }}
+                >
+                  {display(board[fullscreen], p.mode, now)}
+                </Text>
+                {p.mode !== "up" ? (
+                  <StageProgress
+                    card={board[fullscreen]}
+                    now={now}
+                    accent={access?.customize ? options.accent : undefined}
+                  />
+                ) : null}
+                <Row>
+                  <Action
+                    label={
+                      board[fullscreen].anchor === null ? "Start" : "Pause"
+                    }
+                    tone="cream"
+                    disabled={
+                      pending ||
+                      board[fullscreen].done ||
+                      !!board[fullscreen].waiting
+                    }
+                    onPress={() => action(fullscreen, "toggle")}
+                  />
+                  <Action
+                    label="Next stage"
+                    tone="cream"
+                    disabled={pending || board[fullscreen].done}
+                    onPress={() =>
+                      action(fullscreen, p.mode === "up" ? "lap" : "next")
+                    }
+                  />
+                </Row>
+              </>
+            ) : null}
+            <Action
+              label="Exit full screen"
+              tone="cream"
+              onPress={() => setFullscreen(null)}
+            />
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
       <View style={{ gap: 6 }}>
         <Body muted>{p.description}</Body>
         <Body muted style={{ fontSize: 14, lineHeight: 20 }}>
-          Keep the app open for stage sounds.
+          Background alerts follow Settings. Up to 48 upcoming alerts across
+          timers are scheduled; keep long sessions open. Voice and repeated cues
+          play in the app.
         </Body>
       </View>
-      <BrandLogo />
+      {options.logo && access?.customize ? (
+        <Image
+          source={{ uri: options.logo.uri }}
+          contentFit="contain"
+          style={{ width: 180, height: 64 }}
+          accessibilityLabel={options.logo.name}
+        />
+      ) : (
+        <BrandLogo />
+      )}
       {note ? <Body>{note}</Body> : null}
       <Row>
         <Action
@@ -378,7 +787,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
           onPress={() =>
             setBoard((b) =>
               b.map((_, i) => ({
-                ...act(b, i, "pause", p.mode, Date.now())[i],
+                ...act(b, i, "pause", p.mode, timerNow())[i],
                 scheduledAt: null,
               })),
             )
@@ -407,6 +816,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                 }}
               >
                 <Text
+                  testID={`board-name-${i}`}
                   style={{
                     color: t.cream,
                     fontSize: 22,
@@ -415,6 +825,13 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                 >
                   {c.name}
                 </Text>
+                <Row>
+                  <Action
+                    label="Full screen"
+                    tone="cream"
+                    onPress={() => setFullscreen(i)}
+                  />
+                </Row>
                 <Text style={{ color: t.bright, fontSize: 16 }}>
                   {phase.name} ·{" "}
                   {c.done
@@ -517,27 +934,11 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                   </>
                 ) : null}
                 {p.mode !== "up" ? (
-                  <View
-                    accessibilityLabel={`${c.stages.length} stage timeline`}
-                    style={{ flexDirection: "row", gap: 4, height: 10 }}
-                  >
-                    {c.stages.map((s, n) => (
-                      <View
-                        key={n}
-                        style={{
-                          flex: s.seconds,
-                          minWidth: 3,
-                          borderRadius: 3,
-                          backgroundColor:
-                            n < c.index
-                              ? t.bright
-                              : n === c.index
-                                ? t.salmon
-                                : t.clockTrack,
-                        }}
-                      />
-                    ))}
-                  </View>
+                  <StageProgress
+                    card={c}
+                    now={now}
+                    accent={access?.customize ? options.accent : undefined}
+                  />
                 ) : null}
                 <Row>
                   <Action
@@ -586,24 +987,12 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                   disabled={c.anchor !== null}
                 />
               </Row>
-              {edit === i && c.anchor === null && access?.customize ? (
-                <ClockEditor
-                  card={c}
-                  mode={p.mode}
-                  onChange={(value) => customize(() => patch(i, value))}
-                  onRemove={() =>
-                    customize(() => {
-                      if (board.length > 1)
-                        setBoard((b) => b.filter((_, n) => i !== n));
-                      setEdit(null);
-                    })
-                  }
-                />
-              ) : null}
               {c.laps.map((v, j) => (
                 <Body key={j}>
-                  Lap {j + 1}: {(v / 1000).toFixed(2)} s · split{" "}
-                  {((v - (c.laps[j - 1] || 0)) / 1000).toFixed(2)} s
+                  Lap {(c.lapOffset ?? 0) + j + 1}: {(v / 1000).toFixed(2)} s ·
+                  split{" "}
+                  {((v - (c.laps[j - 1] ?? c.lapBase ?? 0)) / 1000).toFixed(2)}{" "}
+                  s
                 </Body>
               ))}
             </View>
@@ -614,12 +1003,12 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       )}
       <Rule />
       <Heading>Setup & options</Heading>
-      <PlanStatus showLogo={false} />
-      <TimerFavoriteControls id={p.slug} />
+
+      <TimerFavoriteControls id={instance ? `${p.slug}-${instance}` : p.slug} />
       <Body muted>
         Clocks continue by elapsed time while away. Keep this screen open for
-        stage sounds; specialty background alerts are not scheduled. Up to 500
-        recent laps are kept.
+        stage sounds; background alerts follow Settings and its schedule limit.
+        Up to 500 recent laps are kept.
       </Body>
       <Action
         label="Add clock"
@@ -709,8 +1098,8 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                 try {
                   const scheduled = servingBoard(
                     board,
-                    Date.now() + Number(serve) * 60000,
-                    Date.now(),
+                    timerNow() + Number(serve) * 60000,
+                    timerNow(),
                   );
                   void start(() => scheduled);
                 } catch (e) {
@@ -723,16 +1112,24 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       ) : null}
       <Rule />
       <Row>
+        {p.mode === "sequence" ? (
+          <Action
+            label="Save as new timer"
+            testID="save-custom-copy"
+            disabled={pending || running}
+            onPress={() => customize(() => void files(() => saveCopy()))}
+          />
+        ) : null}
         <Action
           label="Save setup"
+          testID="save-board-setup"
           onPress={() =>
             customize(
               () =>
                 void files(async () => {
-                  await AsyncStorage.setItem(
-                    key + ".setup",
-                    JSON.stringify({ board: setup(), options }),
-                  );
+                  const data = JSON.stringify({ board: setup(), options });
+                  await checkLibraryCapacity([[key + ".setup", data]]);
+                  await AsyncStorage.setItem(key + ".setup", data);
                   setNote("Setup saved on this device.");
                 }),
             )
@@ -740,6 +1137,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
         />
         <Action
           label="Load setup"
+          testID="load-board-setup"
           onPress={() =>
             void files(async () => {
               const s = await AsyncStorage.getItem(key + ".setup");
@@ -748,7 +1146,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
               const b = restoreBoard(
                 Array.isArray(saved) ? saved : saved.board,
                 p.mode,
-                Date.now(),
+                timerNow(),
               );
               restoreOptions(saved.options);
               session.current = null;
@@ -783,7 +1181,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
                   const s = JSON.parse(text);
                   if (s.mode !== p.mode)
                     throw Error("This setup uses a different clock mode.");
-                  const b = restoreBoard(s.board, p.mode, Date.now()).map(
+                  const b = restoreBoard(s.board, p.mode, timerNow()).map(
                     (c) => ({ ...c, anchor: null, scheduledAt: null }),
                   );
                   session.current = null;
@@ -799,7 +1197,7 @@ function Board({ profile: p }: { profile: BoardProfile }) {
             void files(() =>
               exportFile(
                 `${p.slug}-results.csv`,
-                boardCsv(board, Date.now()),
+                boardCsv(board, timerNow()),
                 "text/csv",
               ),
             )
@@ -812,9 +1210,11 @@ function Board({ profile: p }: { profile: BoardProfile }) {
       />
       {guide ? (
         <>
-          {specialtyArt[p.slug] ? (
+          {specialtyArt[p.slug] || p.slug === "custom-timer" ? (
             <Image
-              source={specialtyArt[p.slug]}
+              source={
+                specialtyArt[p.slug] ?? require("../../../assets/simple.jpg")
+              }
               contentFit="contain"
               style={{ width: "100%", aspectRatio: 1200 / 630 }}
               accessibilityLabel={`${p.title} stage diagram`}
@@ -834,7 +1234,9 @@ function ClockEditor({
   mode,
   onChange,
   onRemove,
+  hasCustomSound,
 }: {
+  hasCustomSound: boolean;
   card: Card;
   mode: string;
   onChange: (value: Partial<Card>) => void;
@@ -875,6 +1277,28 @@ function ClockEditor({
               }
             />
           ) : null}
+          <Body muted>Stage end sound</Body>
+          <Row>
+            {[
+              "bell",
+              "gong",
+              "beep",
+              "click",
+              "off",
+              ...(hasCustomSound ? ["custom"] : []),
+            ].map((cue) => (
+              <Action
+                key={cue}
+                label={cue === "custom" ? "My sound" : cue}
+                tone={(s.cueEnd ?? "bell") === cue ? "primary" : "outline"}
+                onPress={() =>
+                  setStages((a) =>
+                    a.map((x, n) => (n === j ? { ...x, cueEnd: cue } : x)),
+                  )
+                }
+              />
+            ))}
+          </Row>
           <Row>
             <Action
               label="Move earlier"
@@ -899,6 +1323,11 @@ function ClockEditor({
           </Row>
         </View>
       ))}
+      <Toggle
+        label="Automatically advance to next stage"
+        value={card.automatic !== false}
+        onChange={(automatic) => onChange({ automatic })}
+      />
       <Action
         label="Add stage"
         disabled={stages.length >= 100}
@@ -946,6 +1375,9 @@ function ClockEditor({
                   done: false,
                   waiting: false,
                   laps: [],
+                  lapOffset: 0,
+                  lapBase: 0,
+                  hasStarted: false,
                 }
               : {}),
           });
@@ -954,6 +1386,55 @@ function ClockEditor({
       />
       <Action label="Remove clock" onPress={onRemove} />
       {error ? <Body>{error}</Body> : null}
+    </View>
+  );
+}
+
+function StageProgress({
+  card,
+  now,
+  accent,
+}: {
+  card: Card;
+  now: number;
+  accent?: string;
+}) {
+  const t = useTheme();
+  const remaining = card.done ? 0 : card.stages.length - card.index - 1;
+  return (
+    <View style={{ gap: 12 }}>
+      <View
+        accessibilityLabel={`${remaining} stages remaining after this one`}
+        style={{ flexDirection: "row", gap: 4, height: 14 }}
+      >
+        {card.stages.map((s, i) => (
+          <View
+            key={i}
+            style={{
+              flex: s.seconds,
+              minWidth: 3,
+              borderRadius: 3,
+              backgroundColor: t.clockTrack,
+              overflow: "hidden",
+              borderWidth: 1,
+              borderColor: accent ?? t.bright,
+            }}
+          >
+            <View
+              style={{
+                height: "100%",
+                width: `${card.done || i < card.index ? 100 : i === card.index ? Math.min(100, (elapsed(card, now) / Math.max(1, s.seconds * 1000)) * 100) : 0}%`,
+                backgroundColor: accent ?? t.bright,
+              }}
+            />
+          </View>
+        ))}
+      </View>
+      <Text style={{ color: t.cream, fontSize: 16 }}>
+        {card.done
+          ? "All stages finished"
+          : `${remaining} next stages · Next: ${card.stages[card.index + 1]?.name ?? "Finish"}`}
+      </Text>
     </View>
   );
 }

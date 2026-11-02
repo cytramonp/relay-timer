@@ -13,6 +13,7 @@ import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.os.SystemClock
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -108,7 +109,7 @@ class TimerOverlayService : Service() {
           val a = agenda.getJSONObject(i); val w = (max(0.5, a.optDouble("min", 1.0)) / max(0.5, total) * width).toFloat()
           paint.color = if (a.optString("status") == "done") teal else Color.rgb(41, 70, 75)
           canvas.drawRect(x, 0f, x + max(1f, w - dp(2)), height.toFloat(), paint)
-          if (a.optString("status") == "current") { paint.color = teal; canvas.drawRect(x, 0f, x + max(0f, w - dp(2)) * snapshot.optDouble("progress", 0.0).toFloat(), height.toFloat(), paint) }
+          if (a.optString("status") == "current") { paint.color = teal; canvas.drawRect(x, 0f, x + max(0f, w - dp(2)) * (snapshot.optDouble("progress", 0.0) + (if (snapshot.optString("status") == "running") max(0L, SystemClock.elapsedRealtime() - snapshot.optLong("publishedUptime", SystemClock.elapsedRealtime())).toDouble() / max(1.0, snapshot.optDouble("progressDuration", 1.0)) else 0.0)).coerceIn(0.0, 1.0).toFloat(), height.toFloat(), paint) }
           x += w
         }
       }
@@ -142,6 +143,8 @@ class TimerOverlayService : Service() {
   private fun applySnapshot(data: JSONObject) {
     val oldKey = snapshot.optString("name") + snapshot.optInt("turn", -1)
     snapshot = data
+    handler.removeCallbacks(ticker)
+    if (data.optString("status") == "done") { stopSelf(); return }
     if (oldKey != data.optString("name") + data.optInt("turn", -1)) tickSent = false
     if (!::window.isInitialized) return
     if (data.optString("shape", "wide") != shape) {
@@ -151,6 +154,7 @@ class TimerOverlayService : Service() {
     name.text = data.optString("name", "Welcome")
     pause.text = if (data.optString("status") == "paused") "Resume" else "Pause"
     render()
+    if (data.optString("status") == "running") handler.postDelayed(ticker, 250)
   }
   private fun format(value: Double): String {
     val seconds = ceil(abs(value) / 1000).toLong()
@@ -159,14 +163,14 @@ class TimerOverlayService : Service() {
   private fun render() {
     if (!::clock.isInitialized) return
     val running = snapshot.optString("status") == "running"
-    val delta = if (running) max(0L, System.currentTimeMillis() - snapshot.optLong("publishedAt", System.currentTimeMillis())) else 0L
+    val delta = if (running) max(0L, SystemClock.elapsedRealtime() - snapshot.optLong("publishedUptime", SystemClock.elapsedRealtime())) else 0L
     val remaining = snapshot.optDouble("baseRemaining", 0.0) - delta
     clock.text = format(remaining); clock.setTextColor(if (remaining < 0) Color.rgb(255, 155, 144) else cream)
     next.text = if (snapshot.optString("next").isNotEmpty()) "Next: ${snapshot.optString("next")} · gets ${format(snapshot.optDouble("nextBudget", 0.0) - delta)}" else snapshot.optString("status", "ready")
     segments.invalidate()
     if (running && remaining <= 0 && snapshot.optString("policy") == "auto" && !tickSent) { tickSent = true; emit?.invoke("tick") }
   }
-  private val ticker = object : Runnable { override fun run() { if (!SettingsAllowed()) { stopSelf(); return }; render(); handler.postDelayed(this, 250) } }
+  private val ticker = object : Runnable { override fun run() { if (!SettingsAllowed()) { stopSelf(); return }; render(); if (snapshot.optString("status") == "running") handler.postDelayed(this, 250) } }
   override fun onDestroy() {
     handler.removeCallbacksAndMessages(null)
     if (::window.isInitialized) try { wm.removeView(window) } catch (_: Exception) {}

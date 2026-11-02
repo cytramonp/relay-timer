@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -20,6 +20,8 @@ function Boundary({
   position,
   onChange,
   disabled,
+  scrollGesture,
+  horizontalGesture,
 }: {
   index: number;
   left: number;
@@ -28,10 +30,13 @@ function Boundary({
   position: number;
   onChange: (index: number, position: number) => void;
   disabled: boolean;
+  scrollGesture: ReturnType<typeof Gesture.Native>;
+  horizontalGesture: ReturnType<typeof Gesture.Native>;
 }) {
   const t = useTheme(),
     dx = useSharedValue(0);
   const pan = Gesture.Pan()
+    .blocksExternalGesture(scrollGesture, horizontalGesture)
     .enabled(!disabled)
     // Resize horizontally; let the page own a vertical swipe through this handle.
     .activeOffsetX([-6, 6])
@@ -109,16 +114,21 @@ function ClockCursor({
   scale,
   width,
   onSeek,
+  scrollGesture,
+  horizontalGesture,
 }: {
   at: number;
   scale: number;
   width: number;
   onSeek: (ms: number) => void;
+  scrollGesture: ReturnType<typeof Gesture.Native>;
+  horizontalGesture: ReturnType<typeof Gesture.Native>;
 }) {
   const t = useTheme(),
     dx = useSharedValue(0),
     left = Math.min(1, at / scale) * width;
   const pan = Gesture.Pan()
+    .blocksExternalGesture(scrollGesture, horizontalGesture)
     .activeOffsetX([-6, 6])
     .failOffsetY([-8, 8])
     .onUpdate((e) => {
@@ -200,6 +210,7 @@ export function MeetingTimeline({
   onBoundary,
   onClock,
   onSeek,
+  scrollGesture,
 }: {
   config: Config;
   run: Run | null;
@@ -207,7 +218,9 @@ export function MeetingTimeline({
   onBoundary: (i: number, position: number) => void;
   onClock: (seconds: number) => void;
   onSeek: (ms: number) => void;
+  scrollGesture: ReturnType<typeof Gesture.Native>;
 }) {
+  const horizontalGesture = useMemo(() => Gesture.Native(), []);
   const t = useTheme(),
     v = meetingView(config, run, now),
     [container, setContainer] = useState(0);
@@ -246,146 +259,152 @@ export function MeetingTimeline({
       <Text style={{ fontSize: 12, color: t.muted, lineHeight: 18 }}>
         Drag a handle to change the plan. Swipe the track to see every slot.
       </Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator
-        contentContainerStyle={{ paddingTop: 5, paddingBottom: 15 }}
-      >
-        <View style={{ width, gap: 7 }}>
-          <View
-            style={{
-              flexDirection: "row",
-              height: 48,
-              gap: 2,
-              width: (v.total / scale) * width,
-            }}
-          >
-            {v.rows.map((a, i) => (
-              <View
-                key={a.id}
-                accessible
-                accessibilityLabel={`${a.name}, ${formatTime(a.seconds * 1000)} planned, ${a.state}`}
-                style={{
-                  flex: Math.max(a.seconds, 1),
-                  backgroundColor:
-                    a.state === "done"
-                      ? t.soft
-                      : a.state === "current"
-                        ? t.teal
-                        : t.panel,
-                  overflow: "hidden",
-                  borderRadius: 5,
-                  justifyContent: "center",
-                  paddingHorizontal: 5,
-                }}
-              >
-                <Text
-                  numberOfLines={1}
+      <GestureDetector gesture={horizontalGesture}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator
+          contentContainerStyle={{ paddingTop: 5, paddingBottom: 15 }}
+        >
+          <View style={{ width, gap: 7 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                height: 48,
+                gap: 2,
+                width: (v.total / scale) * width,
+              }}
+            >
+              {v.rows.map((a, i) => (
+                <View
+                  key={a.id}
+                  accessible
+                  accessibilityLabel={`${a.name}, ${formatTime(a.seconds * 1000)} planned, ${a.state}`}
                   style={{
-                    fontSize: 11,
-                    fontFamily: "Manrope",
-                    color: a.state === "current" ? t.onTeal : t.ink,
+                    flex: Math.max(a.seconds, 1),
+                    backgroundColor:
+                      a.state === "done"
+                        ? t.soft
+                        : a.state === "current"
+                          ? t.teal
+                          : t.panel,
+                    overflow: "hidden",
+                    borderRadius: 5,
+                    justifyContent: "center",
+                    paddingHorizontal: 5,
                   }}
                 >
-                  {i + 1} {a.name}
-                </Text>
-                <Text
-                  numberOfLines={1}
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 11,
+                      fontFamily: "Manrope",
+                      color: a.state === "current" ? t.onTeal : t.ink,
+                    }}
+                  >
+                    {i + 1} {a.name}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 10,
+                      color: a.state === "current" ? t.onTeal : t.muted,
+                    }}
+                  >
+                    {formatTime(a.seconds * 1000)}
+                  </Text>
+                </View>
+              ))}
+            </View>
+            {config.agenda.slice(0, -1).map((a, i) => {
+              const sum = totalSeconds(config.agenda.slice(0, i + 1));
+              return (
+                <Boundary
+                  scrollGesture={scrollGesture}
+                  horizontalGesture={horizontalGesture}
+                  key={a.id}
+                  index={i}
+                  left={((sum * 1000) / scale) * width}
+                  position={sum}
+                  width={width}
+                  total={scale / 1000}
+                  onChange={onBoundary}
+                  disabled={
+                    !!run &&
+                    (v.done.has(a.id) || v.done.has(config.agenda[i + 1].id))
+                  }
+                />
+              );
+            })}
+            <View
+              accessibilityLabel="Actual time used"
+              style={{
+                flexDirection: "row",
+                height: 18,
+                borderRadius: 4,
+                backgroundColor: t.line,
+                overflow: "hidden",
+              }}
+            >
+              {(run?.entries ?? []).map((entry, i) => (
+                <View
+                  key={i}
                   style={{
-                    fontSize: 10,
-                    color: a.state === "current" ? t.onTeal : t.muted,
+                    width: `${(entry.actual / scale) * 100}%`,
+                    height: 18,
+                    backgroundColor:
+                      entry.actual > entry.planned ? t.salmon : t.bright,
+                    borderRightWidth: 2,
+                    borderRightColor: t.bg,
                   }}
-                >
-                  {formatTime(a.seconds * 1000)}
-                </Text>
-              </View>
-            ))}
-          </View>
-          {config.agenda.slice(0, -1).map((a, i) => {
-            const sum = totalSeconds(config.agenda.slice(0, i + 1));
-            return (
-              <Boundary
-                key={a.id}
-                index={i}
-                left={((sum * 1000) / scale) * width}
-                position={sum}
-                width={width}
-                total={scale / 1000}
-                onChange={onBoundary}
-                disabled={
-                  !!run &&
-                  (v.done.has(a.id) || v.done.has(config.agenda[i + 1].id))
-                }
-              />
-            );
-          })}
-          <View
-            accessibilityLabel="Actual time used"
-            style={{
-              flexDirection: "row",
-              height: 18,
-              borderRadius: 4,
-              backgroundColor: t.line,
-              overflow: "hidden",
-            }}
-          >
-            {(run?.entries ?? []).map((entry, i) => (
-              <View
-                key={i}
-                style={{
-                  width: `${(entry.actual / scale) * 100}%`,
-                  height: 18,
-                  backgroundColor:
-                    entry.actual > entry.planned ? t.salmon : t.bright,
-                  borderRightWidth: 2,
-                  borderRightColor: t.bg,
-                }}
-              />
-            ))}
+                />
+              ))}
+              {run && run.status !== "done" && (
+                <View
+                  style={{
+                    width: `${(Math.max(0, v.elapsed - run.phaseStart) / scale) * 100}%`,
+                    height: 18,
+                    backgroundColor: t.teal,
+                  }}
+                />
+              )}
+            </View>
             {run && run.status !== "done" && (
+              <ClockCursor
+                scrollGesture={scrollGesture}
+                horizontalGesture={horizontalGesture}
+                at={v.elapsed}
+                scale={scale}
+                width={width}
+                onSeek={onSeek}
+              />
+            )}
+            {run && run.status === "done" && (
               <View
+                pointerEvents="none"
                 style={{
-                  width: `${(Math.max(0, v.elapsed - run.phaseStart) / scale) * 100}%`,
-                  height: 18,
-                  backgroundColor: t.teal,
+                  position: "absolute",
+                  left:
+                    Math.min(1, v.elapsed / Math.max(v.total, v.elapsed, 1)) *
+                    width,
+                  top: 0,
+                  height: 73,
+                  width: 1,
+                  backgroundColor: t.red,
                 }}
               />
             )}
-          </View>
-          {run && run.status !== "done" && (
-            <ClockCursor
-              at={v.elapsed}
-              scale={scale}
-              width={width}
-              onSeek={onSeek}
-            />
-          )}
-          {run && run.status === "done" && (
             <View
-              pointerEvents="none"
-              style={{
-                position: "absolute",
-                left:
-                  Math.min(1, v.elapsed / Math.max(v.total, v.elapsed, 1)) *
-                  width,
-                top: 0,
-                height: 73,
-                width: 1,
-                backgroundColor: t.red,
-              }}
-            />
-          )}
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            {[0, 0.25, 0.5, 0.75, 1].map((p) => (
-              <Text key={p} style={{ fontSize: 11, color: t.muted }}>
-                {formatTime(p * scale)}
-              </Text>
-            ))}
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              {[0, 0.25, 0.5, 0.75, 1].map((p) => (
+                <Text key={p} style={{ fontSize: 11, color: t.muted }}>
+                  {formatTime(p * scale)}
+                </Text>
+              ))}
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </GestureDetector>
       <View
         style={{
           flexDirection: "row",

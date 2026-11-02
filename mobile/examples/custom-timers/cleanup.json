@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "mode": "sequence",
+  "board": [
+    {
+      "name": "Cleanup · three rooms",
+      "stages": [
+        {
+          "name": "Desk",
+          "seconds": 300,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Kitchen",
+          "seconds": 300,
+          "cueEnd": "bell"
+        },
+        {
+          "name": "Living room",
+          "seconds": 300,
+          "cueEnd": "bell"
+        }
+      ],
+      "index": 0,
+      "elapsed": 0,
+      "anchor": null,
+      "laps": [],
+      "done": false
+    }
+  ],
+  "options": {
+    "sound": true,
+    "accent": "#AFA6ED"
+  }
+}
