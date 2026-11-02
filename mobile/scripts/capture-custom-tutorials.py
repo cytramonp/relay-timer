@@ -63,9 +63,10 @@ def seek(**kw):
 
 def ensure_editor():
     top()
-    tap(seek(ident="customize-timer"))
-
-
+    t = tree()
+    if find(t, text="Close editor") is None:
+        tap(find(t, ident="customize-timer"))
+    top()
 def top():
     for _ in range(35):
         if find(tree(), ident="customize-timer") is not None: return
