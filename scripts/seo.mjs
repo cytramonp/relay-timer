@@ -2,13 +2,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
 
 const ORIGIN = 'https://corptimer.com';
 const escape = text => text.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const decode = text => text.replace(/&(amp|lt|gt|quot|#39);/g, (_, code) => ({amp:'&',lt:'<',gt:'>',quot:'"','#39':"'"}[code]));
 
 export function publicPages(root) {
-  return [...fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8').matchAll(/<loc>(.*?)<\/loc>/g)].map(([, url]) => {
+  return [...fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8').matchAll(/<loc>(.*?)<\/loc>/g)].filter(([,url])=>!/^\/(es|fr|de|pt)\//.test(new URL(url).pathname)).map(([, url]) => {
     const slug = new URL(url).pathname.replace(/^\/|\/$/g, '');
     const file = path.join(root, slug, 'index.html');
     const html = fs.readFileSync(file, 'utf8');
@@ -101,4 +102,7 @@ ${site}<!-- seo:end -->\n`;
   console.log(`SEO metadata updated for ${count} public pages.`);
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) applySeo(process.argv[2] || 'docs');
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+ const root=process.argv[2]||'docs';applySeo(root);
+ if(fs.existsSync(path.join(root,'locales/es.json')))execFileSync('python',['-X','utf8','scripts/build-locales.py','--root',root],{stdio:'inherit'});
+}

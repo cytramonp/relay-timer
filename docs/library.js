@@ -6,7 +6,7 @@ let templates;
 const sent=new Map();let syncPromise=Promise.resolve();
 const element=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;};
 function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('toast').hidden=true,6000);}
-function googleAsset(){const picture=document.createElement('picture'),source=document.createElement('source');source.media='(max-width:600px)';source.srcset='./assets/google-signin-icon.png';const img=document.createElement('img');img.src='./assets/google-signin.png';img.width=180;img.height=40;img.alt='Sign in with Google';picture.append(source,img);return picture;}
+function googleAsset(){const picture=document.createElement('picture'),source=document.createElement('source');source.media='(max-width:600px)';source.srcset=new URL('./assets/google-signin-icon.png',import.meta.url).href;const img=document.createElement('img');img.src=new URL('./assets/google-signin.png',import.meta.url).href;img.width=180;img.height=40;img.alt='Sign in with Google';picture.append(source,img);return picture;}
 function show(id){if(!$(id).open)$(id).showModal();}
 function status(text){$('save-status').textContent=text;}
 function persist(){try{writeLibrary(key,records,activeId);status(user?(cloudReady?'Saved locally · syncing…':'Saved locally · waiting for cloud'):'Saved in this browser');}catch{status('Saving unavailable · export a backup');toast('Browser storage is unavailable or full. Export your meetings to keep a backup.');}renderLibrary();templates?.render();}
@@ -45,6 +45,6 @@ function init(){if(ready)return;const stored=readLibrary(guestKey);records=store
   $('summary-copy').onclick=async()=>{try{await navigator.clipboard.writeText(summaryText());toast('Meeting summary copied.');}catch{toast('Clipboard unavailable. Export the meeting instead.');}};
   // Load account state after the useful workspace has rendered. No analytics are initialized.
   setTimeout(()=>ensureCloud().catch(()=>{}),0);
-  if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  if('serviceWorker'in navigator)navigator.serviceWorker.register(new URL('./sw.js',import.meta.url)).catch(()=>{});
 }
 if(window.relayTimer)init();else document.addEventListener('relay:ready',init,{once:true});

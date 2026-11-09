@@ -65,7 +65,7 @@ test('every timer has a crawlable page, unique canonical, correct preset and wor
     assert.ok(html.includes(guideFor(timer).paragraphs[0]));if(timer.minutes)assert.ok(html.includes(`>${timer.minutes}:00</div>`));
     for(const id of timer.kind==='specialty'?['specialty-board','board-start','board-pause','board-export','board-fullscreen','board-note']:['timer-settings','save-setup','saved-presets','delete-setup','export-setup','import-setup','fullscreen-timer','runtime-note'])assert.ok(html.includes(`id="${id}"`),`${timer.slug}: missing required control ${id}`);
     for(const [,href]of html.matchAll(/(?:href|src)="([^"]+)"/g)){
-      if(/^(?:https?:|#)/.test(href))continue;const clean=href.split(/[?#]/)[0];const target=path.resolve(path.dirname(filename),clean.endsWith('/')?clean+'index.html':clean);assert.ok(fs.existsSync(target),`${timer.slug}: ${href}`);
+      if(/^(?:https?:|#)/.test(href))continue;const clean=href.split(/[?#]/)[0];const base=clean.startsWith('/')?docs:path.dirname(filename);const relative=clean.replace(/^\//,'');const target=path.resolve(base,relative.endsWith('/')?relative+'index.html':relative);assert.ok(fs.existsSync(target),`${timer.slug}: ${href}`);
     }
   }
   const root=fs.readFileSync(path.join(docs,'index.html'),'utf8');assert.ok(root.includes('Other Timers'));assert.ok(!root.includes('help-open'));assert.ok(!root.includes('help-dialog'));

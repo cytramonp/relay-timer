@@ -12,7 +12,7 @@ try {
       home: timers.some((t) => t.slug === p.home) ? p.home : null,
     };
 } catch {}
-const path = location.pathname.replace(/\/$/, "");
+const path = location.pathname.replace(/^\/(es|fr|de|pt)(?=\/)/, "").replace(/\/$/, "");
 const current = timers.find((t) => t.slug.startsWith('custom:') ? path.endsWith('/custom-timer') && new URLSearchParams(location.search).get('id')===t.slug.slice(7) :
   t.slug
     ? path.endsWith("/" + t.slug)
@@ -21,7 +21,7 @@ const current = timers.find((t) => t.slug.startsWith('custom:') ? path.endsWith(
 const href = (t) =>
   new URL(
     t.slug.startsWith('custom:') ? 'custom-timer/?id='+encodeURIComponent(t.slug.slice(7)) : t.slug ? t.slug + '/' : './',
-    new URL('./',import.meta.url),
+    new URL(document.documentElement.lang==='en'?'./':document.documentElement.lang+'/',import.meta.url),
   ).href;
 if (
   current?.slug === "" &&

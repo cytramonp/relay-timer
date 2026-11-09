@@ -1,4 +1,5 @@
 import {enhanceGuides} from './enhance-guides.mjs';
+import {execFileSync} from 'node:child_process';
 import {applySeo} from './seo.mjs';
 // Build real, crawlable documents for static hosting; no runtime build required.
 import fs from 'node:fs';
@@ -87,3 +88,4 @@ console.log(`Generated ${timers.length-1} timer pages, directory, sitemap and ro
 
 enhanceGuides();
 applySeo(root);
+execFileSync('python',['-X','utf8','scripts/build-locales.py'],{stdio:'inherit'});

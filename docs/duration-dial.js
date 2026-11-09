@@ -15,7 +15,7 @@ if(typeof document!=='undefined'){
  function open(input){
   if(dialog.open)return;source=input;source.focus({preventScroll:true});step=Number(input.step)||1;min=input.min===''?0:Number(input.min);max=input.max===''?86400:Number(input.max);value=Math.min(max,Math.max(min,Number(input.value)||0));turnSteps=input.name==='hours'?24:60;
   number.min=min;number.max=max;number.step=step;
-  const label=input.getAttribute('aria-label')||input.closest('label')?.textContent.trim().split('\n')[0]||'Time';
+  const label=input.name||input.dataset.key||input.dataset.field||input.id||'minutes';
   unit.textContent=input.hasAttribute('data-time-field')?'Seconds':/hour/i.test(label)?'Hours':/second|sec|work|rest|prepare|cooldown|warning|increment|delay/i.test(label)||input.dataset.field==='seconds'||input.dataset.stage?.endsWith(':seconds')?'Seconds':'Minutes';
   if(input.id==='setWarn')unit.textContent='Minutes';
   if(document.body.dataset.timerKind==='pomodoro'&&['work','rest','longRest'].includes(input.name))unit.textContent='Minutes';

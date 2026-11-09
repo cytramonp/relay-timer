@@ -55,3 +55,11 @@
 - Timer settings, custom timers, templates and favorites save locally, with optional Google account synchronization.
 - Keep the tab open for alarms; background and mobile delivery depend on the browser.
 - Live audience links are temporary session views, not indexable timer guides.
+
+## Languages
+
+- [English](https://corptimer.com/timers/): complete timer library and guides.
+- [Español](https://corptimer.com/es/timers/): complete timer library and guides.
+- [Français](https://corptimer.com/fr/timers/): complete timer library and guides.
+- [Deutsch](https://corptimer.com/de/timers/): complete timer library and guides.
+- [Português](https://corptimer.com/pt/timers/): complete timer library and guides.

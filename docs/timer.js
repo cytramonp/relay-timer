@@ -314,7 +314,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
     $("ovSlotInfo").textContent = slotInfo;
     $("ovName").textContent = name;
     $("ovTime").innerHTML = time;
-    $("ovNext").innerHTML = (nextName ? "Next: <b>" + esc(nextName) + "</b>" : esc(nextNote)) +
+    $("ovNext").innerHTML = (nextName ? "Next: <b translate=\"no\">" + esc(nextName) + "</b>" : esc(nextNote)) +
       (nextName && nextNote ? "<small>" + esc(nextNote) + "</small>" : "");
     $("ovBar").style.width = (bar*100).toFixed(1) + "%";
     $("ovBlocks").innerHTML = blocks.map(b => '<i class="' + b.st + '" style="flex-grow:' + (b.w / MIN).toFixed(2) +
@@ -368,7 +368,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
     let plan = "", act = "", ticks = '<span style="left:0">0</span>', a = 0;
     S.agenda.forEach((sp, i) => {
       const b = a + slotMs(sp), bl = blocks[i] || { st: "up", frac: 0 };
-      plan += '<div class="seg ' + bl.st + (sp.kind === "topic" ? " topic" : "") + '" style="left:' + pct(a) + ';width:' + pct(b-a) +
+      plan += '<div translate="no" class="seg ' + bl.st + (sp.kind === "topic" ? " topic" : "") + '" style="left:' + pct(a) + ';width:' + pct(b-a) +
         (bl.st === "cur" ? ";--p:" + (bl.frac * 100).toFixed(1) + "%" : "") + '">' + esc(sp.name) +
         (bndDrag ? " · " + fmt(slotMs(sp), "up") : "") + '</div>';
       if (canResizeAfter(i)) plan += '<div class="bnd' + (i === N() - 1 ? " end" : "") + (bndDrag && bndDrag.i === i ? " on" : "") + '" data-i="' + i + '" style="left:' + pct(b) +
@@ -379,9 +379,9 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
     if (r){
       r.log.forEach(l => {
         const nm = (byId(l.id) || {}).name;
-        act += '<div class="seg ' + (l.end > l.dl ? "over" : "under") + '" style="left:' + pct(l.start) + ';width:' + pct(l.end - l.start) + '">' + esc(nm) + '</div>';
+        act += '<div translate="no" class="seg ' + (l.end > l.dl ? "over" : "under") + '" style="left:' + pct(l.start) + ';width:' + pct(l.end - l.start) + '">' + esc(nm) + '</div>';
       });
-      if (r.cur) act += '<div class="seg live" style="left:' + pct(r.cur.start) + ';width:' + pct(e - r.cur.start) + '">' + esc((byId(r.cur.id) || {}).name) + '</div>';
+      if (r.cur) act += '<div translate="no" class="seg live" style="left:' + pct(r.cur.start) + ';width:' + pct(e - r.cur.start) + '">' + esc((byId(r.cur.id) || {}).name) + '</div>';
     }
     $("lanes").innerHTML = '<div class="lane plan">' + plan + '</div><div class="lane act">' + act + '</div><div class="ticks">' + ticks + '</div>';
     const nl = $("nowline");

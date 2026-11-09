@@ -1,3 +1,4 @@
+import {t,localizedInputValue} from './i18n-core.js';
 import {stageTick} from './transition-sound.js';
 import {beginUse} from './pro-client.js';
 import {intervalCue} from './interval-cues.js';
@@ -50,6 +51,7 @@ function isLocked() { return kind === 'stopwatch' ? stopwatch.elapsed > 0 || sto
 function syncForm() {
   for (const [name, value] of Object.entries(config)) {
     const field = fields.namedItem(name); if (!field || name === 'duration' || name === 'overrides') continue;
+    if (['task','activity'].includes(name)&&value===base[name]){field.dataset.i18nValue=value;field.value=t(value);continue;}else delete field.dataset.i18nValue;
     if (field.type === 'checkbox') field.checked = value;
     else field.value = kind === 'pomodoro' && ['work','rest','longRest'].includes(name) ? value / 60 : value;
   }
@@ -71,7 +73,7 @@ function readForm() {
   const c = structuredClone(config);
   for (const name of Object.keys(base)) {
     const f = fields.namedItem(name); if (!f || name === 'duration' || name === 'overrides') continue;
-    c[name] = f.type === 'checkbox' ? f.checked : typeof base[name] === 'number' ? Number(f.value) : f.value;
+    c[name] = f.type === 'checkbox' ? f.checked : typeof base[name] === 'number' ? Number(f.value) : localizedInputValue(f);
     if (kind === 'pomodoro' && ['work','rest','longRest'].includes(name)) c[name] *= 60;
   }
   if (fields.hours) c.duration = Number(fields.hours.value)*3600 + Number(fields.minutes.value)*60 + Number(fields.seconds.value);
@@ -189,7 +191,7 @@ function render() {
   if (kind==='stopwatch') {
     $('clock-time').textContent=formatTime(stopwatch.elapsed,true); $('clock-time').dataset.long=String($('clock-time').textContent.length>6); $('clock-status').textContent=stopwatch.running?'Running':stopwatch.elapsed?'Paused':'Ready';
     $('start-timer').textContent=stopwatch.running?'Pause':stopwatch.elapsed?'Resume':'Start';$('lap-timer').disabled=!stopwatch.running||stopwatch.laps.length>=1000;
-    stage.dataset.paused=String(!stopwatch.running&&stopwatch.elapsed>0);document.title=`${formatTime(stopwatch.elapsed)} · Stopwatch | CorpTimer`;return;
+    stage.dataset.paused=String(!stopwatch.running&&stopwatch.elapsed>0);document.title=`${formatTime(stopwatch.elapsed)} · ${t('Stopwatch')} | CorpTimer`;return;
   }
   const s=clock.sequence[clock.index],remaining=clock.remaining();
   stage.dataset.phase=s?.type||'work';stage.dataset.warning=String(!clock.done&&s?.type==='work'&&config.warning>0&&remaining<=config.warning*1000);stage.dataset.done=String(clock.done);stage.dataset.paused=String(!clock.running&&!clock.done&&isLocked());
@@ -209,7 +211,7 @@ function render() {
     document.querySelectorAll('[data-step]').forEach(el=>{const i=Number(el.dataset.step);el.classList.toggle('is-complete',i<clock.index||clock.done);if(i===clock.index&&!clock.done)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
     $('clock-announcement').textContent=clock.done?'Timer complete':`${s?.name||'Ready'}. ${formatTime(remaining)} remaining.`;lastIndex=clock.index;lastDone=clock.done;
   }
-  document.title=`${formatTime(remaining)} · ${document.body.dataset.timerTitle} | CorpTimer`;
+  document.title=`${formatTime(remaining)} · ${t(document.body.dataset.timerTitle)} | CorpTimer`;
 }
 function renderChess() {
   for (let i=0;i<2;i++) {
@@ -222,7 +224,7 @@ function renderChess() {
   $('clock-status').textContent=clock.flag!==null?`${clock.flag===0?'White':'Black'} is out of time`:clock.running?`${clock.active===0?'White':'Black'} to move`:isLocked()?'Paused':'Ready';
   $('start-timer').disabled=clock.flag!==null;$('start-timer').textContent=clock.running?'Pause':isLocked()?'Resume':'Start match';
   $('clock-phase').textContent=clock.flag!==null?'Time is up.':clock.running?'Your move.':'Make time for a good game.';
-  document.title=`${formatTime(clock.times[0])} / ${formatTime(clock.times[1])} · Chess Timer | CorpTimer`;
+  document.title=`${formatTime(clock.times[0])} / ${formatTime(clock.times[1])} · ${t('Chess Timer')} | CorpTimer`;
 }
 function renderNewYear() {
   const remaining=Math.max(0,yearTarget.target-Date.now()),seconds=Math.ceil(remaining/1000);
@@ -233,7 +235,7 @@ function renderNewYear() {
   $('clock-next').textContent=`January 1, ${yearTarget.year} · 00:00 · ${yearTarget.zone}`;
   $('next-year').hidden=remaining>0;
   if(!remaining&&!lastDone){stageTick();tone();$('clock-announcement').textContent=`Happy New Year ${yearTarget.year}!`;lastDone=true;}
-  document.title=`${values[0]} days · New Year Countdown | CorpTimer`;
+  document.title=`${values[0]} ${t('Days')} · ${t('New Year Countdown')} | CorpTimer`;
 }
 let billingSession=null,billingStarting=false;
 async function startPause() {
@@ -300,7 +302,7 @@ document.addEventListener('visibilitychange',()=>{tick();save();if(!document.hid
 syncForm();resetClock();restore();renderPresets();initializing=false;
 setInterval(tick,100);
 document.body.dataset.timerReady='true';
-if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js').catch(()=>{});
+if('serviceWorker' in navigator)navigator.serviceWorker.register(new URL('./sw.js',import.meta.url)).catch(()=>{});
 
 const timelineHost=document.createElement('div');stage.after(timelineHost);const timelines=[];
 if(kind==='chess') {

@@ -1,9 +1,17 @@
 User-agent: *
 Allow: /
 Disallow: /live.html
+Disallow: /es/live.html
+Disallow: /fr/live.html
+Disallow: /de/live.html
+Disallow: /pt/live.html
 
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /live.html
+Disallow: /es/live.html
+Disallow: /fr/live.html
+Disallow: /de/live.html
+Disallow: /pt/live.html
 
 Sitemap: https://corptimer.com/sitemap.xml
