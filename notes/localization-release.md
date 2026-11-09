@@ -57,5 +57,5 @@ other live hashes and the entire existing hosting configuration. It checks the
 current release both before staging and before promotion.
 
 Post-release verification uses `python scripts/verify-localization.py`, checking
-220 public documents, 17 exact assets, language metadata, and all five noindex
+220 public documents, 18 exact assets, language metadata, and all five noindex
 live screens. A sitemap being published or accepted does not establish indexing.

@@ -1952,5 +1952,7 @@
   "slot {0}": "Zeitabschnitt {0}",
   "plan {0}": "Plan {0}",
   "gets {0}": "erhält {0}",
-  "gets {0} if you stop now": "erhält {0}, wenn du jetzt stoppst"
+  "gets {0} if you stop now": "erhält {0}, wenn du jetzt stoppst",
+  "Alarm at {0} · tap Test alarm to enable sound": "Alarm bei {0} · klicke auf Alarm testen, um den Ton zu aktivieren",
+  "tap Test alarm to enable sound": "klicke auf Alarm testen, um den Ton zu aktivieren"
 }

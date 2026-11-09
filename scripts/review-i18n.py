@@ -10,6 +10,8 @@ Pause|Pausar|Pause|Pausieren|Pausar
 Reset|Reiniciar|Réinitialiser|Zurücksetzen|Reiniciar
 Next|Siguiente|Suivant|Weiter|Próximo
 Next: {0}|Siguiente: {0}|Ensuite : {0}|Als Nächstes: {0}|A seguir: {0}
+Alarm at {0} · tap Test alarm to enable sound|Alarma a las {0} · pulsa Probar alarma para activar el sonido|Alarme à {0} · appuyez sur Tester l’alarme pour activer le son|Alarm bei {0} · klicke auf Alarm testen, um den Ton zu aktivieren|Alarme em {0} · toque em Testar alarme para ativar o som
+tap Test alarm to enable sound|pulsa Probar alarma para activar el sonido|appuyez sur Tester l’alarme pour activer le son|klicke auf Alarm testen, um den Ton zu aktivieren|toque em Testar alarme para ativar o som
 slot {0}|intervalo {0}|créneau {0}|Zeitabschnitt {0}|intervalo {0}
 plan {0}|plan {0}|durée prévue {0}|Plan {0}|plano {0}
 gets {0}|dispone de {0}|dispose de {0}|erhält {0}|recebe {0}

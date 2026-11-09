@@ -1952,5 +1952,7 @@
   "slot {0}": "créneau {0}",
   "plan {0}": "durée prévue {0}",
   "gets {0}": "dispose de {0}",
-  "gets {0} if you stop now": "dispose de {0} si vous arrêtez maintenant"
+  "gets {0} if you stop now": "dispose de {0} si vous arrêtez maintenant",
+  "Alarm at {0} · tap Test alarm to enable sound": "Alarme à {0} · appuyez sur Tester l’alarme pour activer le son",
+  "tap Test alarm to enable sound": "appuyez sur Tester l’alarme pour activer le son"
 }

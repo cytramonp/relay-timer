@@ -39,6 +39,7 @@ test('translation catalogs retain placeholders and resolve dynamic statuses with
   for(const source of Object.keys(data)){let value=t(source);for(let i=0;i<3;i++)value=t(value);assert.equal(t(value),value,`${lang}: repeatedly translating ${source} must settle`);}
   installDictionary(data);assert.equal(t('Resume'),data.Resume);assert.equal(t('Runny yolk · 5 minutes'),data['Runny yolk · 5 minutes']);
   const next=t('Next: Runny yolk · 5 minutes');assert.ok(!next.includes('Runny yolk'),next);assert.ok(next.includes('5'));
+  assert.ok(!t('Alarm at 5:00 · tap Test alarm to enable sound').includes('tap Test alarm'));
   assert.equal(t('12:34.5'),'12:34.5');assert.equal(t('Мария — мой личный таймер'),'Мария — мой личный таймер');
  }
  installDictionary();

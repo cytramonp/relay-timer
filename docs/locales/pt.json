@@ -1952,5 +1952,7 @@
   "slot {0}": "intervalo {0}",
   "plan {0}": "plano {0}",
   "gets {0}": "recebe {0}",
-  "gets {0} if you stop now": "recebe {0} se você parar agora"
+  "gets {0} if you stop now": "recebe {0} se você parar agora",
+  "Alarm at {0} · tap Test alarm to enable sound": "Alarme em {0} · toque em Testar alarme para ativar o som",
+  "tap Test alarm to enable sound": "toque em Testar alarme para ativar o som"
 }
