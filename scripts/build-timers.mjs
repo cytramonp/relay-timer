@@ -1,4 +1,5 @@
 import {enhanceGuides} from './enhance-guides.mjs';
+import {applySeo} from './seo.mjs';
 // Build real, crawlable documents for static hosting; no runtime build required.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -66,7 +67,7 @@ buildSpecialtyPages(documentShell);
 fs.mkdirSync(path.join(root,'custom-timer'),{recursive:true});
 fs.writeFileSync(path.join(root,'custom-timer/index.html'),documentShell({title:'Make your own timer',description:'Build your own timer with editable slots, independent clocks, player time banks and personal sound cues.',slug:'custom-timer',kind:'specialty',body:`<div class="tool-heading"><h1>Make your own timer</h1><p>Your slots. Your signals. Your pace. Create a sequence, independent clocks or player time banks.</p></div><div class="board-actions"><button id="board-start">Start all</button><button id="board-pause">Pause all</button><button id="board-add">Add clock</button><button id="board-export">Export CSV</button><button id="board-sound">Sound off</button><button id="board-fullscreen">Fullscreen board</button></div><p id="board-note" role="status">Edit your setup below, then save it as a custom timer.</p><div id="specialty-board" class="specialty-board"></div><details class="timer-guide"><summary>How it works and advice</summary><div class="guide-content"><h2>Build a timer around your routine</h2><ol><li>Choose sequential slots, independent stopwatches or player time banks.</li><li>Name each slot and set its duration. Add preparation, rests or repeats under Advanced.</li><li>Choose start, end and warning signals per slot. Test sounds before your session.</li><li>Apply changes, then Save as custom timer. Sign in with Google for account synchronization.</li></ol><p>Drag a clock timeline to adjust its time. The timer stays paused after seeking. Fullscreen can show one clock or the whole board.</p><p>Keep the tab open for alarms. Browser background and locked-screen delivery is not guaranteed.</p></div></details>`}).replace('../special-timers.js?v=22','../specialty-board.js?v=2'));
 
-const updated='2026-10-29'; // Change only when public page content meaningfully changes.
+const updated='2026-10-30'; // Change only when public page content or search metadata meaningfully changes.
 fs.writeFileSync(path.join(root,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(url=>`\n  <url><loc>${url}</loc><lastmod>${updated}</lastmod></url>`).join('')}\n</urlset>\n`);
 fs.writeFileSync(path.join(root,'robots.txt'),'User-agent: *\nAllow: /\nDisallow: /live.html\n\nUser-agent: OAI-SearchBot\nAllow: /\nDisallow: /live.html\n\nSitemap: https://corptimer.com/sitemap.xml\n');
 fs.writeFileSync(path.join(root,'llms.txt'),'# CorpTimer\n\n> Free browser-based timers for meetings, focus, classrooms, workouts and everyday activities.\n\n## Public timer pages\n\n'+timers.map(t=>`- [${t.title}](https://corptimer.com/${t.slug?t.slug+'/':''}): ${t.description}`).join('\n')+'\n\n## Directory and usage\n\n- [Other Timers](https://corptimer.com/timers/): Browse all activities and preset countdowns.\n- Each timer page contains a public, expandable How it works and advice guide in its HTML.\n- JavaScript is required to operate the clocks; an account is not required.\n- Timer settings, custom timers, templates and favorites save locally, with optional Google account synchronization.\n- Keep the tab open for alarms; background and mobile delivery depend on the browser.\n- Live audience links are temporary session views, not indexable timer guides.\n');
@@ -85,3 +86,4 @@ fs.writeFileSync(meetingFile,meeting);
 console.log(`Generated ${timers.length-1} timer pages, directory, sitemap and robots.txt.`);
 
 enhanceGuides();
+applySeo(root);

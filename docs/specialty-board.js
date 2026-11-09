@@ -1,4 +1,7 @@
 import {themeMarkup,updateTheme,mountThemeControls,themeDefaults,scheduleForServing} from './timer-themes.js';
+import {beginUse} from './pro-client.js';
+let billingSession=null,billingStarting=false;
+async function permitBoard(){if(billingSession)return true;if(billingStarting)return false;billingStarting=true;const id=crypto.randomUUID();try{if(!await beginUse(id))return false;billingSession=id;return true;}finally{billingStarting=false;}}
 import {stageTick} from './transition-sound.js';
 import {timerArt} from './timer-art.js';
 import { specialtyTimers } from './specialty-catalog.js';
@@ -99,10 +102,12 @@ root.onclick=async e=>{
  const full=e.target.closest('[data-fullscreen]');if(full){toggleFullscreen(full.closest('.board-clock'),full);return;}
  const remove=e.target.closest('[data-remove-clock]');if(remove){const i=+remove.dataset.removeClock;if(board[i].anchor!==null){note.textContent='Stop this clock before removing it.';return;}board.splice(i,1);save();render();return;}
  const b=e.target.closest('[data-action]');if(!b)return;const index=+b.dataset.index,action=b.dataset.action;
+ if(action==='toggle'&&board[index].anchor===null&&!await permitBoard())return;
+ if(action==='reset'&&board.every((c,i)=>i===index||c.anchor===null))billingSession=null;
  await arm();board[index].scheduledAt=null;const previous=board[index];board=act(board,index,action,profile.mode,Date.now());if(action==='toggle'&&previous.anchor===null)cue(previous.stages[previous.index].cueStart||'off');if(action==='lap')stageTick();if(action==='lap'&&profile.lapSound)cue('click');if(action==='next'){stageTick();}if(action==='next'&&!previous.waiting)cue(profile.mode==='turn'?'click':previous.stages[previous.index].cueEnd||'bell');save();tick();
 };
 root.onchange=e=>{const el=e.target;if(el.dataset.name!==undefined)board[+el.dataset.name].name=el.value.slice(0,80);if(el.dataset.stage){const [i,j,field]=el.dataset.stage.split(':');if(board[i].anchor!==null){render();return;}if(field==='name')board[i].stages[j].name=el.value.slice(0,80);else if(el.checkValidity())board[i].stages[j].seconds=+el.value;else{render();return;}}save();tick();};
-document.querySelector('#board-start').onclick=async()=>{await arm();const now=Date.now();board=board.map(c=>settle({...c,scheduledAt:null},profile.mode,now)).map((c,i)=>({...c,elapsed:elapsed(c,now),anchor:!c.done&&!c.waiting&&(profile.mode!=='turn'||i===0)?now:null}));cue(board[0].stages[board[0].index].cueStart||'off');save();tick();};
+document.querySelector('#board-start').onclick=async()=>{if(!await permitBoard())return;await arm();const now=Date.now();board=board.map(c=>settle({...c,scheduledAt:null},profile.mode,now)).map((c,i)=>({...c,elapsed:elapsed(c,now),anchor:!c.done&&!c.waiting&&(profile.mode!=='turn'||i===0)?now:null}));cue(board[0].stages[board[0].index].cueStart||'off');save();tick();};
 document.querySelector('#board-pause').onclick=()=>{const now=Date.now();board=board.map((_,i)=>act(board,i,'pause',profile.mode,now)[i]);board=board.map(c=>({...c,scheduledAt:null}));save();tick();};
 document.querySelector('#board-add').onclick=()=>{if(board.length>=12){note.textContent='A board supports up to 12 clocks.';return;}board.push({...fresh()[0],name:`Timer ${board.length+1}`});save();render();};
 document.querySelector('#board-sound').onclick=async()=>{profile.sound=!profile.sound;await arm();if(profile.sound)cue('bell');configSave();render();};

@@ -8,6 +8,8 @@
     "test": "node --test tests/*.test.mjs",
     "check": "node scripts/check.mjs",
     "build:timers": "node scripts/expand-library.mjs && node scripts/build-timers.mjs",
-    "build:timer-art": "node scripts/build-library-art.mjs"
+    "build:timer-art": "node scripts/build-library-art.mjs",
+    "build:seo": "node scripts/build-seo-assets.mjs && node scripts/seo.mjs",
+    "audit:seo": "python scripts/audit-seo.py"
   }
 }

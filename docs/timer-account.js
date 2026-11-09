@@ -1,4 +1,5 @@
 import './duration-dial.js';
+import './pro-ui.js';
 import {createAlarm} from './timeline-alarm.js';
 import {elapsedTime} from './model.js';
 import {loadCloud} from './cloud.js';

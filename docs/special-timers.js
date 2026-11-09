@@ -1,4 +1,5 @@
 import {stageTick} from './transition-sound.js';
+import {beginUse} from './pro-client.js';
 import {intervalCue} from './interval-cues.js';
 import {CuePlayer} from './cue-player.js';
 import {createTimeline} from './timer-timeline.js';
@@ -234,8 +235,10 @@ function renderNewYear() {
   if(!remaining&&!lastDone){stageTick();tone();$('clock-announcement').textContent=`Happy New Year ${yearTarget.year}!`;lastDone=true;}
   document.title=`${values[0]} days · New Year Countdown | CorpTimer`;
 }
+let billingSession=null,billingStarting=false;
 async function startPause() {
   if (!form.reportValidity()||$('form-error').textContent) return;
+  if(!isLocked()||clock?.done){if(clock?.done)billingSession=null;if(billingStarting)return;billingStarting=true;try{if(!await beginUse(billingSession||=crypto.randomUUID())){billingSession=null;return;}}finally{billingStarting=false;}}
   if (!isLocked()) {
     config=readForm();
     if(fields.hours&&(config.duration<=0||config.duration>86400)){$('form-error').textContent='Choose a duration from 1 second to 24 hours.';return;}
@@ -272,7 +275,7 @@ form.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{setConfig({...c
 form.querySelectorAll('[data-minutes]').forEach(b=>b.onclick=()=>setConfig({...config,duration:Number(b.dataset.minutes)*60}));
 $('test-sound').onclick=async()=>{await armAudio();if(config.sound==='off'||!config.volume)notice('Choose a sound and raise the volume to test it.');else{tone();notice('Sound test played. Check your device volume before starting.');}};
 if($('start-timer'))$('start-timer').onclick=startPause;
-if($('reset-timer'))$('reset-timer').onclick=()=>{resetClock();notice('Timer reset. Your setup is ready.');};
+if($('reset-timer'))$('reset-timer').onclick=()=>{billingSession=null;resetClock();notice('Timer reset. Your setup is ready.');};
 if($('next-interval'))$('next-interval').onclick=async()=>{await armAudio();const waiting=clock.waiting,done=clock.done;clock.next(Date.now());if(waiting&&!clock.done)clock.start(Date.now());if(!done){stageTick();tone();}render();lockFields();save();};
 if($('extend-timer'))$('extend-timer').onclick=()=>{clock.update(Date.now());clock.extend(60000);renderSequence();render();save();};
 if($('lap-timer'))$('lap-timer').onclick=addLap;

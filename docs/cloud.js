@@ -10,6 +10,8 @@ export async function loadCloud(onUser,onError){
     let unsubscribe;
     authSDK.onAuthStateChanged(auth,user=>{unsubscribe?.();unsubscribe=null;currentUser=user;observed=true;for(const listener of userListeners)Promise.resolve(listener(user?.isAnonymous?null:user)).catch(error=>{for(const report of errorListeners)report(error);});},error=>{for(const report of errorListeners)report(error);});
     return{
+      async billingToken(){await auth.authStateReady();if(!auth.currentUser)await authSDK.signInAnonymously(auth);return auth.currentUser.getIdToken();},
+      async ensureBillingUser(){await auth.authStateReady();if(auth.currentUser&&!auth.currentUser.isAnonymous)return auth.currentUser;return this.signIn();},
       watchSettings(uid,onRecords,onError){return dbSDK.onSnapshot(dbSDK.collection(db,'users',uid,'timerSettings'),snap=>onRecords(snap.docs.map(d=>d.data())),onError);},
       async writeSetting(uid,record){if(auth.currentUser?.uid!==uid)throw Error('Sign in again to sync your settings.');await dbSDK.setDoc(dbSDK.doc(db,'users',uid,'timerSettings',encodeURIComponent(record.key)),record);},
       async signIn(){const provider=new authSDK.GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});return authSDK.signInWithPopup(auth,provider);},

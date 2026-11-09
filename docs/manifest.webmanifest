@@ -1,1 +1,38 @@
-{"name":"CorpTimer","short_name":"CorpTimer","start_url":"./","scope":"./","display":"standalone","background_color":"#eeece5","theme_color":"#eeece5","icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}
+{
+  "name": "CorpTimer",
+  "short_name": "CorpTimer",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eeece5",
+  "theme_color": "#eeece5",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "./",
+  "description": "Timers for meetings, focus, workouts and everyday routines.",
+  "lang": "en"
+}

@@ -1,4 +1,5 @@
 import {stageTick} from './transition-sound.js';
+import {beginUse,canCustomize} from './pro-client.js';
 import {elapsedTime,deadline,splitMinutes,formatTime,normalizeState,equalizedAgenda} from "./model.js?v=8";
 import {iconMarkup} from "./icons.js?v=8";
 import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=8';
@@ -102,7 +103,9 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
     r.log.push({ id: c.id, start: c.start, end: e, dl: deadlineFor(c.id, c.start) });
     r.cur = null;
   }
-  function next(){
+  let starting=false;
+  async function next(){
+    if(!S.run){if(starting||!pending().length)return;initAudio();starting=true;const id=crypto.randomUUID();try{if(!await beginUse(id))return;if(S.run)return;S.run={id,t0:Date.now(),pausedMs:0,pauseAt:null,log:[],cur:{id:pending()[0]?.id,start:0},originalPlan:copyPlan(S.agenda),planChanges:[]};if(!S.run.cur.id){S.run=null;return;}}finally{starting=false;}save();renderRos();tick();return;}
     initAudio();if(S.run)stageTick();
     const r = S.run;
     if (!r){
@@ -137,6 +140,7 @@ import {copyPlan,advanceAutomatic,makeReport,cleanParking} from './session.js?v=
   }
   function extendCurrent(){if(!S.run?.cur)return;const a=byId(S.run.cur.id);a.min=round2(a.min+1);a.pin=true;S.total=round2(total()/MIN);resetBeeps();save();renderRos();tick();}
   function addItem(kind){
+    if(!canCustomize())return;
     if (kind === "topic"){
       // A topic goes right after whoever is speaking, or to the top before the meeting starts.
       const at = S.run && S.run.cur ? posOf(S.run.cur.id) + 1 : S.run ? N() : 0;
