@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { memo, useEffect, useState } from "react";
 import {
   Platform,
@@ -58,6 +59,7 @@ export const AgendaRow = memo(function AgendaRow({
   onDrag: (active: boolean) => void;
   scrollGesture: ReturnType<typeof Gesture.Native>;
 }) {
+  const tr = useTranslate();
   const { fontScale, width } = useWindowDimensions();
   const timeWidth = Math.min(
     width * 0.35,
@@ -146,7 +148,7 @@ export const AgendaRow = memo(function AgendaRow({
   const trigger = (
     <View
       accessible
-      accessibilityLabel={`Actions for ${item.name}`}
+      accessibilityLabel={tr("Actions for {0}", String(item.name))}
       style={{
         width: 40,
         minHeight: 48,
@@ -178,8 +180,10 @@ export const AgendaRow = memo(function AgendaRow({
             testID={`drag-handle-${index}`}
             accessible
             accessibilityRole="adjustable"
-            accessibilityLabel={`Reorder ${item.name}`}
-            accessibilityHint="Drag to move. Or use accessibility actions."
+            accessibilityLabel={tr("Reorder {0}", String(item.name))}
+            accessibilityHint={tr(
+              "Drag to move. Or use accessibility actions.",
+            )}
             accessibilityActions={[
               { name: "increment", label: "Move down" },
               { name: "decrement", label: "Move up" },
@@ -209,7 +213,7 @@ export const AgendaRow = memo(function AgendaRow({
         <View style={{ flex: 1, minWidth: 0, gap: 1 }}>
           <TextInput
             testID={`agenda-name-${index}`}
-            accessibilityLabel={`Name for slot ${index + 1}`}
+            accessibilityLabel={tr("Name for slot {0}", String(index + 1))}
             value={name}
             maxLength={120}
             onChangeText={setName}
@@ -239,18 +243,22 @@ export const AgendaRow = memo(function AgendaRow({
             }}
           >
             {state === "current"
-              ? "Speaking now"
+              ? tr("Speaking now")
               : state === "done"
-                ? "Finished"
+                ? tr("Finished")
                 : item.kind === "topic"
-                  ? "Topic"
-                  : "Participant"}
-            {item.pinned ? " · pinned" : ""}
+                  ? tr("Topic")
+                  : tr("Participant")}
+            {item.pinned ? tr(" · pinned") : ""}
           </Text>
         </View>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Edit minutes for ${item.name}, ${formatTime(item.seconds * 1000)} planned`}
+          accessibilityLabel={tr(
+            "Edit minutes for {0}, {1} planned",
+            String(item.name),
+            String(formatTime(item.seconds * 1000)),
+          )}
           disabled={state === "done"}
           onPress={() => onDuration(item.id)}
           style={({ pressed }) => ({
@@ -284,14 +292,16 @@ export const AgendaRow = memo(function AgendaRow({
               fontVariant: ["tabular-nums"],
             }}
           >
-            {state === "done" || state === "current" ? "used " : "gets "}
+            {state === "done" || state === "current"
+              ? tr("used ")
+              : tr("gets ")}
             {formatTime(Math.max(0, available))}
           </Text>
         </Pressable>
         {Platform.OS === "web" ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Actions for ${item.name}`}
+            accessibilityLabel={tr("Actions for {0}", String(item.name))}
             onPress={() => setMenu(!menu)}
           >
             {trigger}

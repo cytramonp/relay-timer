@@ -312,6 +312,27 @@ try:
         if os.getenv('CORPTIMER_RELIABILITY_QA') == '1':
             from reliability_android import verify
             verify(globals(), form)
+        # Switch languages in the exact APK, use an accent-free search, and
+        # verify the selected language survives a cold restart.
+        spanish = json.loads((root / 'src/locales/es.json').read_text(encoding='utf-8'))
+        open_path('settings')
+        _, language = scroll_to('language-es')
+        tap_node(language)
+        open_path('timers')
+        _, search = scroll_to('timer-library-search')
+        tap_node(search)
+        adb('shell', 'input', 'text', 'meditacion')
+        scroll_text(spanish['Meditation Timer'])
+        capture(f'{form}-android-spanish-search.png')
+        adb('shell', 'am', 'force-stop', 'com.corptimer.app')
+        open_path('specialty/egg-timer')
+        assert find(tree(), text=spanish['Egg Timer']) is not None, 'Language did not persist'
+        _, egg = scroll_to('egg-doneness')
+        assert find(tree(), description=spanish['Translucent white · liquid yolk']) is not None
+        capture(f'{form}-android-egg-doneness.png')
+        open_path('settings')
+        _, language = scroll_to('language-en')
+        tap_node(language)
         open_path('settings'); tap_node(find(tree(), text='Dark'))
         adb('shell', 'settings', 'put', 'system', 'font_scale', '1.3')
         open_path(''); capture(f'{form}-android-dark-large-text.png')

@@ -1,3 +1,5 @@
+import { useTranslate } from "../state/language";
+import { languages, readLanguage, type Language } from "../core/language";
 import React, { useState, useCallback } from "react";
 import { Linking, Platform } from "react-native";
 import { router, useFocusEffect } from "expo-router";
@@ -5,7 +7,7 @@ import Constants from "expo-constants";
 import {
   Action,
   Body,
-  confirm,
+  useConfirm,
   Heading,
   Page,
   Row,
@@ -31,6 +33,8 @@ import { AppBrandEditor } from "../components/app-brand-editor";
 import { PlanStatus } from "../components/plan-status";
 
 export function SettingsScreen() {
+  const tr = useTranslate();
+  const confirm = useConfirm();
   const live = useLive(),
     overlay = useOverlay();
   const [recoveryNeeded, setRecoveryNeeded] = useState(false);
@@ -74,18 +78,26 @@ export function SettingsScreen() {
         settings({ notifications: true });
         notify(
           ready.exact
-            ? "Timer alerts enabled. Test delivery once with the screen locked."
-            : "Approximate alerts enabled. Allow precise alarms below for time-critical timers.",
+            ? tr(
+                "Timer alerts enabled. Test delivery once with the screen locked.",
+              )
+            : tr(
+                "Approximate alerts enabled. Allow precise alarms below for time-critical timers.",
+              ),
         );
       } else
         notify(
           Platform.OS === "web"
-            ? "Background alerts are available in the iOS and Android apps."
-            : "Notifications were not allowed. Enable them in your phone settings, then try again.",
+            ? tr("Background alerts are available in the iOS and Android apps.")
+            : tr(
+                "Notifications were not allowed. Enable them in your phone settings, then try again.",
+              ),
         );
     } catch {
       notify(
-        "Could not enable alerts. Check notification settings on your phone.",
+        tr(
+          "Could not enable alerts. Check notification settings on your phone.",
+        ),
       );
     } finally {
       setBusy(false);
@@ -93,18 +105,35 @@ export function SettingsScreen() {
   }
   return (
     <Page>
-      <Heading>Your timer, your rhythm.</Heading>
-      <Body muted>Appearance</Body>
+      <Heading>{tr("Your timer, your rhythm.")}</Heading>
+      <Body muted>{tr("Language")}</Body>
+      <Row>
+        {(Object.keys(languages) as Language[]).map((language) => (
+          <Action
+            key={language}
+            label={languages[language]}
+            testID={`language-${language}`}
+            tone={
+              readLanguage(store.settings.language) === language
+                ? "primary"
+                : "outline"
+            }
+            onPress={() => settings({ language })}
+          />
+        ))}
+      </Row>
+      <Rule />
+      <Body muted>{tr("Appearance")}</Body>
       <Row>
         {(["light", "dark", "system"] as const).map((appearance) => (
           <Action
             key={appearance}
             label={
               appearance === "system"
-                ? "Use device"
+                ? tr("Use device")
                 : appearance === "light"
-                  ? "Light"
-                  : "Dark"
+                  ? tr("Light")
+                  : tr("Dark")
             }
             tone={
               (store.settings.appearance ?? "light") === appearance
@@ -116,22 +145,22 @@ export function SettingsScreen() {
         ))}
       </Row>
       <Toggle
-        label="Keep screen awake while a timer is running"
+        label={tr("Keep screen awake while a timer is running")}
         value={store.settings.keepAwake}
         onChange={(keepAwake) => settings({ keepAwake })}
       />
       <Toggle
-        label="Haptic feedback"
+        label={tr("Haptic feedback")}
         value={store.settings.haptics}
         onChange={(haptics) => settings({ haptics })}
       />
       <Toggle
-        label="Dial click sounds"
+        label={tr("Dial click sounds")}
         value={store.settings.dialSound !== false}
         onChange={(dialSound) => settings({ dialSound })}
       />
       <Toggle
-        label={busy ? "Enabling alerts…" : "Background alerts"}
+        label={busy ? tr("Enabling alerts…") : tr("Background alerts")}
         value={store.settings.notifications}
         onChange={(v) => {
           if (!busy) void alerts(v);
@@ -141,11 +170,13 @@ export function SettingsScreen() {
         <>
           <Body muted>
             {readiness?.exact
-              ? "Precise alarm access is allowed."
-              : "Precise alarm access is not allowed. Background alerts may arrive late."}
+              ? tr("Precise alarm access is allowed.")
+              : tr(
+                  "Precise alarm access is not allowed. Background alerts may arrive late.",
+                )}
           </Body>
           <Action
-            label="Allow precise timer alarms"
+            label={tr("Allow precise timer alarms")}
             disabled={busy}
             onPress={() =>
               void (async () => {
@@ -155,7 +186,9 @@ export function SettingsScreen() {
                   settings({ notifications: true });
                 } catch {
                   notify(
-                    "Could not open precise alarm settings. Try your phone Settings.",
+                    tr(
+                      "Could not open precise alarm settings. Try your phone Settings.",
+                    ),
                   );
                 } finally {
                   setBusy(false);
@@ -166,19 +199,16 @@ export function SettingsScreen() {
         </>
       )}
       <Body muted>
-        Up to 48 upcoming alerts across timers are scheduled. Keep long programs
-        open to replenish the schedule. Repeated cues and voice play in the app.
-        Alerts are scheduled locally. No notification tokens or timer content
-        are sent to a push service. Focus mode, battery restrictions and system
-        notification settings can affect delivery. Voice cues and the final
-        spoken countdown play while the app is open.
+        {tr(
+          "Up to 48 upcoming alerts across timers are scheduled. Keep long programs open to replenish the schedule. Repeated cues and voice play in the app. Alerts are scheduled locally. No notification tokens or timer content are sent to a push service. Focus mode, battery restrictions and system notification settings can affect delivery. Voice cues and the final spoken countdown play while the app is open.",
+        )}
       </Body>
       {Platform.OS !== "web" && (
         <Action
-          label="Open phone settings"
+          label={tr("Open phone settings")}
           onPress={() =>
             void Linking.openSettings().catch(() =>
-              notify("Open your phone Settings and find CorpTimer."),
+              notify(tr("Open your phone Settings and find CorpTimer.")),
             )
           }
         />
@@ -186,22 +216,23 @@ export function SettingsScreen() {
       <Rule />
       <AppBrandEditor />
       <Rule />
-      <Heading>Your data</Heading>
-      <Action label="Privacy & data" onPress={() => router.push("/privacy")} />
+      <Heading>{tr("Your data")}</Heading>
+      <Action
+        label={tr("Privacy & data")}
+        onPress={() => router.push("/privacy")}
+      />
       <Body>
-        Programs, notes and session history are stored on this device. Export
-        programs from Library to move them to another device. This native
-        version does not yet sign in to the website or synchronize your private
-        library.
+        {tr(
+          "Programs, notes and session history are stored on this device. Export programs from Library to move them to another device. This native version does not yet sign in to the website or synchronize your private library.",
+        )}
       </Body>
       <Body muted>
-        Device backups include saved plans, history, notes, specialty clocks,
-        favorites and unsent feedback. Account credentials and live control
-        links are excluded. Restored specialty clocks are paused; an active
-        primary timer is archived to History. Starting again checks your plan.
+        {tr(
+          "Device backups include saved plans, history, notes, specialty clocks, favorites and unsent feedback. Account credentials and live control links are excluded. Restored specialty clocks are paused; an active primary timer is archived to History. Starting again checks your plan.",
+        )}
       </Body>
       <Action
-        label="Export device backup"
+        label={tr("Export device backup")}
         disabled={busy || unreadableData}
         onPress={() =>
           void (async () => {
@@ -214,7 +245,7 @@ export function SettingsScreen() {
             } catch (e) {
               setRecoveryNeeded(true);
               notify(
-                e instanceof Error ? e.message : "Could not export backup.",
+                e instanceof Error ? e.message : tr("Could not export backup."),
               );
             } finally {
               setBusy(false);
@@ -224,7 +255,7 @@ export function SettingsScreen() {
       />
       {(unreadableData || recoveryNeeded) && (
         <Action
-          label="Export original data for recovery"
+          label={tr("Export original data for recovery")}
           onPress={() =>
             void (async () => {
               try {
@@ -236,7 +267,7 @@ export function SettingsScreen() {
                 notify(
                   e instanceof Error
                     ? e.message
-                    : "Could not export recovery data.",
+                    : tr("Could not export recovery data."),
                 );
               }
             })()
@@ -244,7 +275,7 @@ export function SettingsScreen() {
         />
       )}
       <Action
-        label="Restore device backup"
+        label={tr("Restore device backup")}
         disabled={busy || live.busy}
         onPress={() =>
           void (async () => {
@@ -255,8 +286,10 @@ export function SettingsScreen() {
               readDeviceBackup(json);
               if (
                 !(await confirm(
-                  "Replace local timer data?",
-                  "The chosen backup will replace plans, history, notes, specialty clocks, favorites and feedback drafts. Export your current backup first. Account access stays on this device.",
+                  tr("Replace local timer data?"),
+                  tr(
+                    "The chosen backup will replace plans, history, notes, specialty clocks, favorites and feedback drafts. Export your current backup first. Account access stays on this device.",
+                  ),
                 ))
               )
                 return;
@@ -268,7 +301,7 @@ export function SettingsScreen() {
               notify(
                 e instanceof Error
                   ? e.message
-                  : "Restore did not finish. Keep your backup and retry.",
+                  : tr("Restore did not finish. Keep your backup and retry."),
               );
             } finally {
               setBusy(false);
@@ -277,14 +310,16 @@ export function SettingsScreen() {
         }
       />
       <Action
-        label="Delete local timer data"
+        label={tr("Delete local timer data")}
         disabled={busy || live.busy}
         onPress={() =>
           void (async () => {
             if (
               !(await confirm(
-                "Delete local timer data?",
-                "This deletes plans, history, private notes, active timers, specialty setups, favorites and unsent feedback. Account sign-in and server usage are kept. Export a backup first.",
+                tr("Delete local timer data?"),
+                tr(
+                  "This deletes plans, history, private notes, active timers, specialty setups, favorites and unsent feedback. Account sign-in and server usage are kept. Export a backup first.",
+                ),
               ))
             )
               return;
@@ -298,7 +333,9 @@ export function SettingsScreen() {
               notify(
                 e instanceof Error
                   ? e.message
-                  : "Could not finish deleting local data. Retry before continuing.",
+                  : tr(
+                      "Could not finish deleting local data. Retry before continuing.",
+                    ),
               );
             } finally {
               setBusy(false);
@@ -307,31 +344,35 @@ export function SettingsScreen() {
         }
       />
       <Rule />
-      <Heading>About CorpTimer</Heading>
-      <Body>Version {Constants.expoConfig?.version}</Body>
+      <Heading>{tr("About CorpTimer")}</Heading>
       <Body>
-        Meeting, Boxing, Fitness, Pomodoro, Classroom, Chess, Stopwatch,
-        Countdown, New Year and 27 specialty timers. No advertising. Trial, Free
-        and optional Pro access.
+        {tr("Version ")}
+        {Constants.expoConfig?.version}
+      </Body>
+      <Body>
+        {tr(
+          "Meeting, Boxing, Fitness, Pomodoro, Classroom, Chess, Stopwatch, Countdown, New Year and 27 specialty timers. No advertising. Trial, Free and optional Pro access.",
+        )}
       </Body>
       <Action
-        label="Open corptimer.com"
+        label={tr("Open corptimer.com")}
         onPress={() =>
           void Linking.openURL("https://corptimer.com/").catch(() =>
-            notify("Could not open your browser."),
+            notify(tr("Could not open your browser.")),
           )
         }
       />
       <Body muted>
-        Send a message to the team without leaving the app. Your meeting notes
-        and history are never attached.
+        {tr(
+          "Send a message to the team without leaving the app. Your meeting notes and history are never attached.",
+        )}
       </Body>
       <Action
-        label="Support & feedback"
+        label={tr("Support & feedback")}
         onPress={() => router.push("/feedback")}
       />
       <Rule />
-      <Heading>Your plan</Heading>
+      <Heading>{tr("Your plan")}</Heading>
       <PlanStatus showLogo={false} />
     </Page>
   );

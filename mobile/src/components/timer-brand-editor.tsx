@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useState } from "react";
 import { View, Pressable, Text } from "react-native";
 import { Image } from "expo-image";
@@ -21,6 +22,7 @@ export function TimerBrandEditor({
   onChange: (value: TimerBrand) => void;
   audio?: boolean;
 }) {
+  const tr = useTranslate();
   const [error, setError] = useState("");
   const [hex, setHex] = useState(value.accent ?? "#66D6BE");
   async function change(fn: () => Promise<TimerBrand> | TimerBrand) {
@@ -36,10 +38,11 @@ export function TimerBrandEditor({
   }
   return (
     <View style={{ gap: 12 }}>
-      <Heading>Colors & company logo</Heading>
+      <Heading>{tr("Colors & company logo")}</Heading>
       <Body muted>
-        Choose a highlight color. Clock digits keep their readable contrast.
-        Your logo and sound travel with exported setups.
+        {tr(
+          "Choose a highlight color. Clock digits keep their readable contrast. Your logo and sound travel with exported setups.",
+        )}
       </Body>
       <Row>
         {[
@@ -52,7 +55,7 @@ export function TimerBrandEditor({
           <Pressable
             key={accent}
             accessibilityRole="button"
-            accessibilityLabel={`${name} highlight`}
+            accessibilityLabel={tr("{0} highlight", String(name))}
             accessibilityState={{ selected: value.accent === accent }}
             onPress={() => {
               setHex(accent);
@@ -78,14 +81,14 @@ export function TimerBrandEditor({
         ))}
       </Row>
       <Field
-        label="Custom highlight · #RRGGBB"
+        label={tr("Custom highlight · #RRGGBB")}
         value={hex}
         maxLength={7}
         autoCapitalize="characters"
         onChangeText={setHex}
       />
       <Action
-        label="Apply color"
+        label={tr("Apply color")}
         onPress={() =>
           void change(() => {
             if (!validAccent(hex))
@@ -104,7 +107,7 @@ export function TimerBrandEditor({
       ) : null}
       <Row>
         <Action
-          label="Upload company logo"
+          label={tr("Upload company logo")}
           onPress={() =>
             void change(async () => {
               const logo = await pickCustomMedia("image");
@@ -114,23 +117,23 @@ export function TimerBrandEditor({
         />
         {value.logo ? (
           <Action
-            label="Remove logo"
+            label={tr("Remove logo")}
             onPress={() => void change(() => ({ ...value, logo: undefined }))}
           />
         ) : null}
       </Row>
       {audio ? (
         <>
-          <Heading>Your sound</Heading>
+          <Heading>{tr("Your sound")}</Heading>
           <Body muted>
-            MP3, WAV, M4A, AAC or OGG, up to 2 MB. Choose “My sound” for a stage
-            after uploading. Custom audio plays while the app is open;
-            background notifications use the standard alert.
+            {tr(
+              "MP3, WAV, M4A, AAC or OGG, up to 2 MB. Choose “My sound” for a stage after uploading. Custom audio plays while the app is open; background notifications use the standard alert.",
+            )}
           </Body>
           {value.customSound ? <Body>{value.customSound.name}</Body> : null}
           <Row>
             <Action
-              label="Upload sound"
+              label={tr("Upload sound")}
               onPress={() =>
                 void change(async () => {
                   const customSound = await pickCustomMedia("audio");
@@ -141,7 +144,7 @@ export function TimerBrandEditor({
             {value.customSound ? (
               <>
                 <Action
-                  label="Preview my sound"
+                  label={tr("Preview my sound")}
                   onPress={() =>
                     void playCustomCue(value.customSound!.uri).catch(() =>
                       setError(
@@ -151,7 +154,7 @@ export function TimerBrandEditor({
                   }
                 />
                 <Action
-                  label="Remove sound"
+                  label={tr("Remove sound")}
                   onPress={() =>
                     void change(() => ({ ...value, customSound: undefined }))
                   }

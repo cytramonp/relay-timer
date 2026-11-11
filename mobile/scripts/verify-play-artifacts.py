@@ -8,7 +8,11 @@ sdk = Path(os.environ['ANDROID_HOME'])
 aapt = sorted(sdk.glob('build-tools/*/aapt'))[-1]
 badging = subprocess.check_output([str(aapt), 'dump', 'badging', str(apk)], text=True)
 permissions = subprocess.check_output([str(aapt), 'dump', 'permissions', str(apk)], text=True)
-assert "package: name='com.corptimer.app' versionCode='7'" in badging
+config = json.loads((root / 'app.json').read_text(encoding='utf-8'))['expo']
+package = config['android']['package']
+version_code = config['android']['versionCode']
+version = config['version']
+assert f"package: name='{package}' versionCode='{version_code}' versionName='{version}'" in badging, badging[:1500]
 assert "targetSdkVersion:'36'" in badging, badging[:1500]
 for forbidden in ['RECORD_AUDIO', 'READ_MEDIA_IMAGES', 'READ_MEDIA_VIDEO', 'READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']:
     assert forbidden not in permissions, permissions
@@ -34,7 +38,7 @@ with zipfile.ZipFile(apk) as z:
     assert b'cytramonp@gmail.com' not in bundle
     assert b'corptimer_pro_yearly' in bundle
     assert b'Google Play purchases are being prepared' in bundle
-report = {'version': '0.4.1', 'versionCode': 7, 'targetSdk': 36, 'package': 'com.corptimer.app', 'apkSha256': hashlib.sha256(apk.read_bytes()).hexdigest(), 'nativeLibraries16KB': len(checked), 'sensitiveMediaPermissions': False, 'recipientAddressInBundle': False, 'storePurchasesEnabled': False}
+report = {'version': version, 'versionCode': version_code, 'targetSdk': 36, 'package': package, 'apkSha256': hashlib.sha256(apk.read_bytes()).hexdigest(), 'nativeLibraries16KB': len(checked), 'sensitiveMediaPermissions': False, 'recipientAddressInBundle': False, 'storePurchasesEnabled': False}
 aab = root / 'android/app/build/outputs/bundle/release/app-release.aab'
 if aab.exists():
     cert = subprocess.check_output(['keytool', '-printcert', '-jarfile', str(aab)], text=True)

@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useState } from "react";
 import { Action, Body, Heading, Row } from "./ui";
 import { BrandLogo } from "./brand-logo";
@@ -7,6 +8,7 @@ import { pickCustomMedia } from "../services/custom-media";
 import { brandPalettes } from "../core/brand";
 
 export function AppBrandEditor() {
+  const tr = useTranslate();
   const { store, settings } = useApp();
   const [error, setError] = useState("");
   async function change(action: () => void | Promise<void>) {
@@ -22,10 +24,11 @@ export function AppBrandEditor() {
   }
   return (
     <>
-      <Heading>Colors & company logo</Heading>
+      <Heading>{tr("Colors & company logo")}</Heading>
       <Body muted>
-        Trial & Pro · Apply your style to every timer. Saved on this device and
-        included in device backups.
+        {tr(
+          "Trial & Pro · Apply your style to every timer. Saved on this device and included in device backups.",
+        )}
       </Body>
       <Row>
         {(Object.keys(brandPalettes) as (keyof typeof brandPalettes)[]).map(
@@ -46,7 +49,7 @@ export function AppBrandEditor() {
       <BrandLogo />
       <Row>
         <Action
-          label="Upload company logo"
+          label={tr("Upload company logo")}
           onPress={() =>
             void change(async () => {
               const logo = await pickCustomMedia("image");
@@ -59,7 +62,7 @@ export function AppBrandEditor() {
         />
         {store.settings.companyLogo ? (
           <Action
-            label="Remove company logo"
+            label={tr("Remove company logo")}
             onPress={() => settings({ companyLogo: undefined })}
           />
         ) : null}

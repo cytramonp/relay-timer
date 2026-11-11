@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import { TimerFavoriteControls } from "../components/timer-library";
 import { TimerIdentity } from "../components/timer-identity";
 import { TimerSurface } from "../components/timer-surface";
@@ -18,7 +19,7 @@ import type { Kind } from "../core/types";
 import {
   Action,
   Body,
-  confirm,
+  useConfirm,
   Field,
   Heading,
   Page,
@@ -30,6 +31,8 @@ import { useApp } from "../state/app-store";
 import { useTheme } from "../theme";
 
 export function TimerScreen({ kind }: { kind: Kind }) {
+  const tr = useTranslate();
+  const confirm = useConfirm();
   const { store, start, act, chess, notes, saveProgram, canUndo } = useApp(),
     t = useTheme();
   const preview = useMemo(
@@ -59,8 +62,8 @@ export function TimerScreen({ kind }: { kind: Kind }) {
       store.run.id !== r.id &&
       store.run.status !== "done" &&
       !(await confirm(
-        "Start a different timer?",
-        "The current run will finish and move to History.",
+        tr("Start a different timer?"),
+        tr("The current run will finish and move to History."),
       ))
     )
       return;
@@ -80,6 +83,7 @@ export function TimerScreen({ kind }: { kind: Kind }) {
               Math.max(1, phaseDeadline(r) - r.phaseStart),
           ),
         );
+  const stockTitle = catalog.find((item) => item.kind === kind)!.title;
   const status = done
     ? "Complete"
     : r.status === "ready"
@@ -95,19 +99,24 @@ export function TimerScreen({ kind }: { kind: Kind }) {
     <Page>
       <Stack.Screen
         options={{
-          title: catalog.find((c) => c.kind === kind)!.title,
+          title: tr(stockTitle),
           headerRight: () => (
-            <Action label="Edit" onPress={() => router.push(`/edit/${kind}`)} />
+            <Action
+              label={tr("Edit")}
+              onPress={() => router.push(`/edit/${kind}`)}
+            />
           ),
         }}
       />
       <TimerIdentity kind={kind} />
-      <Heading>{r.config.title}</Heading>
+      <Heading>
+        {r.config.title === stockTitle ? tr(stockTitle) : r.config.title}
+      </Heading>
       <TimerFavoriteControls id={kind} />
       <TimerSurface identity={<TimerIdentity kind={kind} />}>
         <Row style={{ justifyContent: "space-between" }}>
           <Text style={{ color: t.bright, fontSize: 15, fontWeight: "600" }}>
-            {status}
+            {tr(status)}
           </Text>
           {phase && (
             <Text style={{ color: t.clockMuted, fontSize: 14 }}>
@@ -121,7 +130,11 @@ export function TimerScreen({ kind }: { kind: Kind }) {
               <Pressable
                 key={side}
                 accessibilityRole="button"
-                accessibilityLabel={`${side === 0 ? "White" : "Black"} clock. ${formatTime(r.sides[side])}. Tap after your move.`}
+                accessibilityLabel={tr(
+                  "{0} clock. {1}. Tap after your move.",
+                  tr(side === 0 ? "White" : "Black"),
+                  String(formatTime(r.sides[side])),
+                )}
                 onPress={() => (active ? chess(side) : void begin())}
                 disabled={done}
                 style={{
@@ -134,7 +147,8 @@ export function TimerScreen({ kind }: { kind: Kind }) {
                 }}
               >
                 <Text style={{ color: t.cream, fontSize: 17 }}>
-                  {side === 0 ? "White" : "Black"} · {r.moves[side]} moves
+                  {side === 0 ? tr("White") : tr("Black")} · {r.moves[side]}
+                  {tr(" moves")}
                 </Text>
                 <Text
                   numberOfLines={1}
@@ -160,17 +174,20 @@ export function TimerScreen({ kind }: { kind: Kind }) {
               style={{ color: t.cream, fontSize: 22, fontFamily: "Cantata" }}
             >
               {kind === "stopwatch"
-                ? "Elapsed time"
+                ? tr("Elapsed time")
                 : kind === "newyear"
                   ? r.config.zone === "local"
-                    ? "Your local midnight"
+                    ? tr("Your local midnight")
                     : r.config.zone
                   : (phase?.name ?? r.config.title)}
             </Text>
             {!(kind === "classroom" && r.config.hideDigits) && (
               <Text
                 selectable
-                accessibilityLabel={`${kind === "stopwatch" ? "Elapsed" : "Remaining"} ${formatTime(ms)}`}
+                accessibilityLabel={tr(
+                  kind === "stopwatch" ? "Elapsed {0}" : "Remaining {0}",
+                  formatTime(ms),
+                )}
                 adjustsFontSizeToFit
                 numberOfLines={1}
                 style={{
@@ -217,7 +234,7 @@ export function TimerScreen({ kind }: { kind: Kind }) {
         <Row>
           {!active || done ? (
             <Action
-              label={done ? "Run again" : "Start timer"}
+              label={done ? tr("Run again") : tr("Start timer")}
               testID="start-timer"
               tone="cream"
               onPress={() => void begin()}
@@ -226,10 +243,10 @@ export function TimerScreen({ kind }: { kind: Kind }) {
             <Action
               label={
                 running
-                  ? "Pause"
+                  ? tr("Pause")
                   : r.status === "waiting"
-                    ? "Next interval"
-                    : "Resume"
+                    ? tr("Next interval")
+                    : tr("Resume")
               }
               tone="cream"
               onPress={() => act(r.status === "waiting" ? "next" : "toggle")}
@@ -237,14 +254,14 @@ export function TimerScreen({ kind }: { kind: Kind }) {
           ) : null}
           {active && !done && r.phases.length > 1 && (
             <Action
-              label={kind === "meeting" ? "Next speaker" : "Next"}
+              label={kind === "meeting" ? tr("Next speaker") : tr("Next")}
               tone="cream"
               onPress={() => act("next")}
             />
           )}
           {active && !done && kind === "stopwatch" && (
             <Action
-              label="Lap"
+              label={tr("Lap")}
               tone="cream"
               disabled={!running}
               onPress={() => act("lap")}
@@ -255,24 +272,24 @@ export function TimerScreen({ kind }: { kind: Kind }) {
           <Row>
             {!done && r.phases.length > 0 && (
               <Action
-                label="+1 minute"
+                label={tr("+1 minute")}
                 tone="cream"
                 onPress={() => act("extend")}
               />
             )}
             <Action
-              label="Undo"
+              label={tr("Undo")}
               tone="cream"
               disabled={!canUndo}
               onPress={() => act("undo")}
             />
             <Action
-              label="Reset"
+              label={tr("Reset")}
               tone="danger"
               onPress={() =>
                 void confirm(
-                  "Reset this timer?",
-                  "The current run will be saved in History.",
+                  tr("Reset this timer?"),
+                  tr("The current run will be saved in History."),
                   true,
                 ).then((ok) => {
                   if (ok) act("reset");
@@ -284,11 +301,11 @@ export function TimerScreen({ kind }: { kind: Kind }) {
       </TimerSurface>
       {active && !done && (
         <Action
-          label="Finish & save to History"
+          label={tr("Finish & save to History")}
           onPress={() =>
             void confirm(
-              "Finish this run?",
-              "Save the elapsed time and results in History.",
+              tr("Finish this run?"),
+              tr("Save the elapsed time and results in History."),
             ).then((ok) => {
               if (ok) act("finish");
             })
@@ -296,22 +313,33 @@ export function TimerScreen({ kind }: { kind: Kind }) {
         />
       )}
       {done && (
-        <Body>Saved in History. You can export your results there.</Body>
+        <Body>
+          {tr("Saved in History. You can export your results there.")}
+        </Body>
       )}
       <Body muted>
         {store.settings.notifications
-          ? "Background alerts enabled. Your phone controls notification delivery and volume."
-          : "Keep the app open for sounds. Enable background alerts in Settings for lock-screen notifications."}
+          ? tr(
+              "Background alerts enabled. Your phone controls notification delivery and volume.",
+            )
+          : tr(
+              "Keep the app open for sounds. Enable background alerts in Settings for lock-screen notifications.",
+            )}
       </Body>
       {phase?.round > 0 && (
         <Body muted>
-          Round {phase.round}
-          {r.config.sets > 1 ? ` · Set ${phase.set} of ${r.config.sets}` : ""}
+          {tr("Round ")}
+          {phase.round}
+          {r.config.sets > 1
+            ? tr(" · Set {0} of {1}", String(phase.set), String(r.config.sets))
+            : ""}
         </Body>
       )}
       {r.phases.length > 0 && (
         <>
-          <Heading>{kind === "meeting" ? "Agenda" : "Sequence"}</Heading>
+          <Heading>
+            {kind === "meeting" ? tr("Agenda") : tr("Sequence")}
+          </Heading>
           {r.phases
             .slice(Math.max(0, r.index - 3), Math.max(30, r.index + 27))
             .map((p, offset) => {
@@ -341,7 +369,7 @@ export function TimerScreen({ kind }: { kind: Kind }) {
                     </Text>
                     {i === r.index && (
                       <Body muted style={{ fontSize: 13 }}>
-                        Current interval
+                        {tr("Current interval")}
                       </Body>
                     )}
                   </View>
@@ -351,17 +379,22 @@ export function TimerScreen({ kind }: { kind: Kind }) {
             })}
           {r.phases.length > 30 && (
             <Body muted>
-              Showing nearby stages · {r.phases.length} stages in this program.
+              {tr("Showing nearby stages · ")}
+              {r.phases.length}
+              {tr(" stages in this program.")}
             </Body>
           )}
         </>
       )}
       {kind === "stopwatch" && r.laps.length > 0 && (
         <>
-          <Heading>Laps</Heading>
+          <Heading>{tr("Laps")}</Heading>
           {r.laps.map((lap, i) => (
             <Row key={i} style={{ justifyContent: "space-between" }}>
-              <Body>Lap {i + 1}</Body>
+              <Body>
+                {tr("Lap ")}
+                {i + 1}
+              </Body>
               <Body>
                 {formatTime(lap - (r.laps[i - 1] ?? 0), true)} ·{" "}
                 {formatTime(lap, true)}
@@ -372,14 +405,14 @@ export function TimerScreen({ kind }: { kind: Kind }) {
       )}
       {kind === "meeting" && active && !done && (
         <>
-          <Heading>Private notes</Heading>
+          <Heading>{tr("Private notes")}</Heading>
           <TextInput
-            accessibilityLabel="Private meeting notes"
+            accessibilityLabel={tr("Private meeting notes")}
             multiline
             maxLength={10000}
             value={r.notes}
             onChangeText={notes}
-            placeholder="Decisions, next steps, things to return to…"
+            placeholder={tr("Decisions, next steps, things to return to…")}
             placeholderTextColor={t.muted}
             style={{
               minHeight: 140,
@@ -396,12 +429,19 @@ export function TimerScreen({ kind }: { kind: Kind }) {
         </>
       )}
       <Rule />
-      <Heading>Keep this program</Heading>
-      <Field label="Saved program name" value={name} onChangeText={setName} />
+      <Heading>{tr("Keep this program")}</Heading>
+      <Field
+        label={tr("Saved program name")}
+        value={name}
+        onChangeText={setName}
+      />
       <Row>
-        <Action label="Save program" onPress={() => saveProgram(kind, name)} />
         <Action
-          label="Edit setup"
+          label={tr("Save program")}
+          onPress={() => saveProgram(kind, name)}
+        />
+        <Action
+          label={tr("Edit setup")}
           onPress={() => router.push(`/edit/${kind}`)}
         />
       </Row>

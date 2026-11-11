@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useEffect, useRef, useState } from "react";
 import { Linking, Text, View } from "react-native";
 import { Stack, router } from "expo-router";
@@ -14,6 +15,7 @@ const empty: Feedback = {
   category: "Something isn’t working",
 };
 export default function FeedbackScreen() {
+  const tr = useTranslate();
   const [AsyncStorage] = useState(() => userData.scope());
   const t = useTheme(),
     [form, setForm] = useState(empty),
@@ -78,28 +80,30 @@ export default function FeedbackScreen() {
   return (
     <Page>
       <Stack.Screen
-        options={{ title: "Support & feedback", gestureEnabled: !busy }}
+        options={{ title: tr("Support & feedback"), gestureEnabled: !busy }}
       />
       {sent ? (
         <>
           <Ionicons name="checkmark-circle-outline" size={48} color={t.teal} />
-          <Heading>Thank you. Message sent.</Heading>
+          <Heading>{tr("Thank you. Message sent.")}</Heading>
           <Body>
-            Your message was accepted by our delivery service. If you left an
-            email, support can reply there.
+            {tr(
+              "Your message was accepted by our delivery service. If you left an email, support can reply there.",
+            )}
           </Body>
           <Action
-            label="Back to settings"
+            label={tr("Back to settings")}
             tone="primary"
             onPress={() => router.back()}
           />
         </>
       ) : (
         <>
-          <Heading>Let’s make it better.</Heading>
+          <Heading>{tr("Let’s make it better.")}</Heading>
           <Body muted>
-            Report a problem or tell us what would help. You can write in any
-            language.
+            {tr(
+              "Report a problem or tell us what would help. You can write in any language.",
+            )}
           </Body>
           <Row>
             {["Something isn’t working", "An idea", "A question"].map(
@@ -115,7 +119,7 @@ export default function FeedbackScreen() {
             )}
           </Row>
           <Field
-            label="Your message"
+            label={tr("Your message")}
             containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
             testID="feedback-message"
             value={form.message}
@@ -123,14 +127,14 @@ export default function FeedbackScreen() {
             onChangeText={(message) => setForm({ ...form, message })}
             multiline
             maxLength={5000}
-            placeholder="What happened? What did you expect?"
+            placeholder={tr("What happened? What did you expect?")}
             style={{ minHeight: 170, textAlignVertical: "top" }}
           />
           <Text style={{ color: t.muted, textAlign: "right", marginTop: -12 }}>
             {form.message.length}/5,000
           </Text>
           <Field
-            label="Email for a reply · optional"
+            label={tr("Email for a reply · optional")}
             containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
             value={form.email}
             editable={ready && !busy}
@@ -140,16 +144,15 @@ export default function FeedbackScreen() {
             autoCapitalize="none"
             autoCorrect={false}
             maxLength={254}
-            placeholder="you@example.com"
+            placeholder={"you@example.com"}
           />
           <Body muted style={{ fontSize: 13, lineHeight: 20 }}>
-            Only your message, optional reply email, category, app version and
-            platform are sent through Web3Forms to CorpTimer support. Your
-            agendas, notes and history stay on this device. Please leave out
-            private meeting details.
+            {tr(
+              "Only your message, optional reply email, category, app version and platform are sent through Web3Forms to CorpTimer support. Your agendas, notes and history stay on this device. Please leave out private meeting details.",
+            )}
           </Body>
           <Action
-            label="Delivery service privacy"
+            label={tr("Delivery service privacy")}
             onPress={() => {
               void Linking.openURL("https://web3forms.com/privacy").catch(() =>
                 setError(
@@ -164,13 +167,13 @@ export default function FeedbackScreen() {
             </View>
           ) : null}
           <Action
-            label={busy ? "Sending…" : "Send message"}
+            label={busy ? tr("Sending…") : tr("Send message")}
             disabled={busy || !ready}
             tone="primary"
             onPress={() => void send()}
           />
           <Body muted style={{ fontSize: 13 }}>
-            Your unsent draft is saved on this device.
+            {tr("Your unsent draft is saved on this device.")}
           </Body>
         </>
       )}

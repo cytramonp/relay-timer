@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import { CustomizationGate } from "../components/plan-status";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
@@ -10,6 +11,7 @@ import { validateConfig } from "../core/backup";
 import * as Crypto from "expo-crypto";
 import { DurationField } from "../components/duration-field";
 export default function SaveMeeting() {
+  const tr = useTranslate();
   const { id } = useLocalSearchParams<{ id?: string }>(),
     { store, saveProgram, reviseProgram } = useApp(),
     original = store.programs.find((p) => p.id === id),
@@ -58,23 +60,24 @@ export default function SaveMeeting() {
       <CustomizationGate>
         <Stack.Screen
           options={{
-            title: original ? "Edit template" : "Save template",
+            title: original ? tr("Edit template") : tr("Save template"),
             presentation: "formSheet",
-            headerRight: () => <Action label="Save" onPress={save} />,
+            headerRight: () => <Action label={tr("Save")} onPress={save} />,
           }}
         />
-        <Heading>Make it your own.</Heading>
+        <Heading>{tr("Make it your own.")}</Heading>
         <Field
-          label="Template name"
+          label={tr("Template name")}
           value={name}
           onChangeText={setName}
           autoFocus
         />
         <Body muted>
-          A reusable plan contains timing and participants. Session results,
-          notes and private follow-ups are kept separate.
+          {tr(
+            "A reusable plan contains timing and participants. Session results, notes and private follow-ups are kept separate.",
+          )}
         </Body>
-        <Heading>Color</Heading>
+        <Heading>{tr("Color")}</Heading>
         <Row>
           {(["citron", "peach", "lilac", "mint"] as const).map((value) => (
             <Pressable
@@ -95,12 +98,12 @@ export default function SaveMeeting() {
               }}
             >
               <Text style={{ color: t.onSignal }}>
-                {color === value ? "Selected" : value}
+                {color === value ? tr("Selected") : value}
               </Text>
             </Pressable>
           ))}
         </Row>
-        <Heading>Icon</Heading>
+        <Heading>{tr("Icon")}</Heading>
         <Row>
           {(
             ["people", "loop", "grid", "spark", "focus", "coffee"] as const
@@ -113,7 +116,7 @@ export default function SaveMeeting() {
             />
           ))}
         </Row>
-        <Heading>The plan</Heading>
+        <Heading>{tr("The plan")}</Heading>
         {
           <View style={{ gap: 12 }}>
             {plan.agenda.map((a, i) => (
@@ -127,7 +130,7 @@ export default function SaveMeeting() {
                 }}
               >
                 <Field
-                  label={`Slot ${i + 1}`}
+                  label={tr("Slot {0}", String(i + 1))}
                   value={a.name}
                   onChangeText={(name) =>
                     setPlan({
@@ -139,7 +142,7 @@ export default function SaveMeeting() {
                   }
                 />
                 <DurationField
-                  label="Minutes"
+                  label={tr("Minutes")}
                   unit="minutes"
                   value={timings[a.id] ?? ""}
                   onChangeText={(value) =>
@@ -148,7 +151,7 @@ export default function SaveMeeting() {
                 />
                 <Row>
                   <Action
-                    label="Move up"
+                    label={tr("Move up")}
                     disabled={i === 0}
                     onPress={() => {
                       const agenda = [...plan.agenda];
@@ -157,7 +160,7 @@ export default function SaveMeeting() {
                     }}
                   />
                   <Action
-                    label="Move down"
+                    label={tr("Move down")}
                     disabled={i === plan.agenda.length - 1}
                     onPress={() => {
                       const agenda = [...plan.agenda];
@@ -166,7 +169,7 @@ export default function SaveMeeting() {
                     }}
                   />
                   <Action
-                    label="Remove"
+                    label={tr("Remove")}
                     disabled={plan.agenda.length < 2}
                     onPress={() =>
                       setPlan({
@@ -179,8 +182,9 @@ export default function SaveMeeting() {
               </View>
             ))}
             <Body muted>
-              Only the reusable plan is saved. Existing session results stay
-              unchanged.
+              {tr(
+                "Only the reusable plan is saved. Existing session results stay unchanged.",
+              )}
             </Body>
           </View>
         }
@@ -188,7 +192,7 @@ export default function SaveMeeting() {
           {(["person", "topic"] as const).map((kind) => (
             <Action
               key={kind}
-              label={kind === "person" ? "Add speaker" : "Add topic"}
+              label={kind === "person" ? tr("Add speaker") : tr("Add topic")}
               disabled={plan.agenda.length >= 200}
               onPress={() => {
                 const id = Crypto.randomUUID();
@@ -211,7 +215,7 @@ export default function SaveMeeting() {
         </Row>
         {error ? <Body>{error}</Body> : null}
         <Action
-          label={original ? "Save template" : "Save current agenda"}
+          label={original ? tr("Save template") : tr("Save current agenda")}
           tone="primary"
           onPress={save}
         />

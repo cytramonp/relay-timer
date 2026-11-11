@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useCallback, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
@@ -5,8 +6,10 @@ import { View } from "react-native";
 import profiles from "../core/specialty-catalog.json";
 import { savedBoardSummary, type SavedBoardSummary } from "../core/library";
 import { userData } from "../services/user-data";
-import { Action, Body, Heading, Row, confirm } from "./ui";
+import { Action, Body, Heading, Row, useConfirm } from "./ui";
 export function SavedBoards({ query }: { query: string }) {
+  const tr = useTranslate();
+  const confirm = useConfirm();
   const [storage] = useState(() => userData.scope());
   const [items, setItems] = useState<SavedBoardSummary[]>([]);
   const [note, setNote] = useState("");
@@ -48,29 +51,32 @@ export function SavedBoards({ query }: { query: string }) {
   );
   return (
     <View style={{ gap: 12 }}>
-      <Heading>Your custom & specialty setups</Heading>
+      <Heading>{tr("Your custom & specialty setups")}</Heading>
       <Body muted>
-        Open a timer to continue its current state. Load setup inside the timer
-        restores its saved starting plan.
+        {tr(
+          "Open a timer to continue its current state. Load setup inside the timer restores its saved starting plan.",
+        )}
       </Body>
       {note ? <Body>{note}</Body> : null}
       {!filtered.length ? (
         <Body muted>
           {query
-            ? "No matching saved setups."
-            : "Choose Save setup or Save as new timer in a custom or specialty timer to keep it here."}
+            ? tr("No matching saved setups.")
+            : tr(
+                "Choose Save setup or Save as new timer in a custom or specialty timer to keep it here.",
+              )}
         </Body>
       ) : null}
       {filtered.map((item) => (
         <View key={item.key} style={{ gap: 10, paddingVertical: 10 }}>
           <Heading>{item.title}</Heading>
           <Body muted>
-            {item.count} {item.count === 1 ? "clock" : "clocks"} - saved on this
-            device
+            {item.count} {item.count === 1 ? tr("clock") : tr("clocks")}
+            {tr(" - saved on this device")}
           </Body>
           <Row>
             <Action
-              label="Open timer"
+              label={tr("Open timer")}
               tone="primary"
               onPress={() =>
                 router.push({
@@ -83,13 +89,15 @@ export function SavedBoards({ query }: { query: string }) {
               }
             />
             <Action
-              label="Delete saved setup"
+              label={tr("Delete saved setup")}
               onPress={() =>
                 void (async () => {
                   if (
                     !(await confirm(
-                      "Delete saved setup?",
-                      "This removes the saved starting plan. The current timer state stays on this device.",
+                      tr("Delete saved setup?"),
+                      tr(
+                        "This removes the saved starting plan. The current timer state stays on this device.",
+                      ),
                     ))
                   )
                     return;

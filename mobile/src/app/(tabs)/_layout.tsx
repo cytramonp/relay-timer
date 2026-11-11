@@ -1,3 +1,4 @@
+import { useTranslate } from "../../state/language";
 import React from "react";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -5,6 +6,7 @@ import { useTheme } from "../../theme";
 import { Image, Platform, Text, View, useWindowDimensions } from "react-native";
 
 export default function TabLayout() {
+  const tr = useTranslate();
   const t = useTheme();
   const { width } = useWindowDimensions();
   const expanded = Platform.OS === "android" && width >= 768;
@@ -49,7 +51,7 @@ export default function TabLayout() {
               </Text>
             </View>
           ),
-          tabBarLabel: "Meeting",
+          tabBarLabel: tr("Meeting"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="people-outline"
@@ -62,8 +64,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="timers"
         options={{
-          title: "Timers",
-          tabBarLabel: "Timers",
+          title: tr("Timers"),
+          tabBarLabel: tr("Timers"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="timer-outline"
@@ -76,7 +78,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="favorites"
         options={{
-          title: "Favorites",
+          title: tr("Favorites"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="star-outline" color={color as string} size={size} />
           ),
@@ -85,8 +87,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="programs"
         options={{
-          title: "Library",
-          tabBarLabel: "Library",
+          title: tr("Library"),
+          tabBarLabel: tr("Library"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="bookmarks-outline"
@@ -96,11 +98,14 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen name="history" options={{ href: null, title: "History" }} />
+      <Tabs.Screen
+        name="history"
+        options={{ href: null, title: tr("History") }}
+      />
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
+          title: tr("Settings"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons
               name="options-outline"

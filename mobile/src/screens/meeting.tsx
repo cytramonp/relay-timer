@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
@@ -32,7 +33,7 @@ import { defaultConfig } from "../core/catalog";
 import {
   Action,
   Body,
-  confirm,
+  useConfirm,
   Field,
   Heading,
   Notice,
@@ -50,6 +51,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { requireCustomization } from "../services/billing";
 
 export function MeetingScreen() {
+  const tr = useTranslate();
+  const confirm = useConfirm();
   const scrollGesture = useMemo(() => Gesture.Native(), []);
   const live = useLive();
   const {
@@ -119,7 +122,9 @@ export function MeetingScreen() {
     try {
       editMeeting(c);
     } catch (e) {
-      notify(e instanceof Error ? e.message : "Could not update this meeting.");
+      notify(
+        e instanceof Error ? e.message : tr("Could not update this meeting."),
+      );
     }
   }
   async function begin() {
@@ -128,8 +133,8 @@ export function MeetingScreen() {
       store.run.kind !== "meeting" &&
       store.run.status !== "done" &&
       !(await confirm(
-        "Start this meeting?",
-        "The current timer will finish and move to History.",
+        tr("Start this meeting?"),
+        tr("The current timer will finish and move to History."),
       ))
     )
       return;
@@ -140,8 +145,8 @@ export function MeetingScreen() {
     if (
       run.status !== "done" &&
       !(await confirm(
-        "Reset this meeting?",
-        "The current session and its results will be kept in History.",
+        tr("Reset this meeting?"),
+        tr("The current session and its results will be kept in History."),
         true,
       ))
     )
@@ -179,7 +184,7 @@ export function MeetingScreen() {
   }
   function add(kind: "person" | "topic") {
     if (config.agenda.length >= 200) {
-      notify("Use up to 200 agenda slots.");
+      notify(tr("Use up to 200 agenda slots."));
       return;
     }
     const agenda = [...config.agenda],
@@ -223,7 +228,7 @@ export function MeetingScreen() {
         }}
       >
         <Action
-          label="Float timer"
+          label={tr("Float timer")}
           onPress={() => router.push("/floating")}
           tone="primary"
         />
@@ -233,7 +238,8 @@ export function MeetingScreen() {
           style={{ minHeight: 48, justifyContent: "center" }}
         >
           <Text style={{ fontSize: 12, color: t.teal }}>
-            {config.automatic ? "Auto advance" : "Wait for the host"} · Settings
+            {config.automatic ? tr("Auto advance") : tr("Wait for the host")}
+            {tr(" · Settings")}
           </Text>
         </Pressable>
       </View>
@@ -250,7 +256,7 @@ export function MeetingScreen() {
       />
       <Row style={{ justifyContent: "space-between" }}>
         <Action
-          label="Equal times"
+          label={tr("Equal times")}
           onPress={() =>
             change(
               allocate(
@@ -263,13 +269,13 @@ export function MeetingScreen() {
           }
         />
         <Action
-          label="Session report"
+          label={tr("Session report")}
           onPress={() => router.push("/meeting-report")}
           disabled={!run}
         />
       </Row>
       <Toggle
-        label="Keep proportions when changing durations"
+        label={tr("Keep proportions when changing durations")}
         value={config.keepProp}
         onChange={(keepProp) => change({ ...config, keepProp })}
       />
@@ -290,16 +296,18 @@ export function MeetingScreen() {
             accessibilityRole="header"
             style={{ fontFamily: "Cantata", fontSize: 25, color: t.ink }}
           >
-            Run of show
+            {tr("Run of show")}
           </Text>
           <Text style={{ fontSize: 12, color: t.muted }}>
-            {config.agenda.filter((a) => a.kind !== "topic").length} people ·{" "}
-            {config.agenda.filter((a) => a.kind === "topic").length} topics
+            {config.agenda.filter((a) => a.kind !== "topic").length}
+            {tr(" people ·")}{" "}
+            {config.agenda.filter((a) => a.kind === "topic").length}
+            {tr(" topics")}
           </Text>
         </View>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Edit total meeting minutes"
+          accessibilityLabel={tr("Edit total meeting minutes")}
           onPress={() => router.push("/meeting-options")}
           style={{
             minHeight: 52,
@@ -314,7 +322,9 @@ export function MeetingScreen() {
             gap: 3,
           }}
         >
-          <Text style={{ fontSize: 11, color: t.muted }}>Total, min</Text>
+          <Text style={{ fontSize: 11, color: t.muted }}>
+            {tr("Total, min")}
+          </Text>
           <Text
             adjustsFontSizeToFit
             numberOfLines={1}
@@ -334,7 +344,7 @@ export function MeetingScreen() {
         </Pressable>
       </View>
       <Text style={{ color: t.muted, fontSize: 12, lineHeight: 18 }}>
-        Drag a handle to reorder. Tap a time to edit it.
+        {tr("Drag a handle to reorder. Tap a time to edit it.")}
       </Text>
       <View
         style={{
@@ -345,8 +355,12 @@ export function MeetingScreen() {
           gap: 8,
         }}
       >
-        <Text style={{ color: t.muted, fontSize: 11 }}>Speaker / topic</Text>
-        <Text style={{ color: t.muted, fontSize: 11 }}>Plan / available</Text>
+        <Text style={{ color: t.muted, fontSize: 11 }}>
+          {tr("Speaker / topic")}
+        </Text>
+        <Text style={{ color: t.muted, fontSize: 11 }}>
+          {tr("Plan / available")}
+        </Text>
       </View>
       <View>
         {view.rows.map((a, i) => (
@@ -378,17 +392,18 @@ export function MeetingScreen() {
         ))}
       </View>
       <Row>
-        <Action label="Add speaker" onPress={() => add("person")} />
-        <Action label="Add topic" onPress={() => add("topic")} />
+        <Action label={tr("Add speaker")} onPress={() => add("person")} />
+        <Action label={tr("Add topic")} onPress={() => add("topic")} />
         <Action
-          label="Save a copy"
+          label={tr("Save a copy")}
           onPress={() => router.push("/save-meeting")}
         />
       </Row>
       {totalSeconds(config.agenda) > config.total && config.autoSplit && (
         <Body style={{ color: t.dangerText }}>
-          Topics and fixed slots exceed your meeting total. Increase the total
-          or unpin a duration.
+          {tr(
+            "Topics and fixed slots exceed your meeting total. Increase the total or unpin a duration.",
+          )}
         </Body>
       )}
     </View>
@@ -427,7 +442,7 @@ export function MeetingScreen() {
           }}
         >
           <TextInput
-            accessibilityLabel="Meeting name"
+            accessibilityLabel={tr("Meeting name")}
             key={config.title}
             defaultValue={config.title}
             onBlur={
@@ -463,7 +478,7 @@ export function MeetingScreen() {
           />
           <IconAction
             icon="qr-code-outline"
-            label="Share live meeting"
+            label={tr("Share live meeting")}
             onPress={() => router.push("/meeting-share")}
           />
         </View>
@@ -496,7 +511,7 @@ export function MeetingScreen() {
             <Text
               style={{ fontFamily: "Manrope", fontSize: 13, color: t.teal }}
             >
-              Templates
+              {tr("Templates")}
             </Text>
             <Ionicons name="chevron-down" size={16} color={t.teal} />
           </Pressable>
@@ -510,7 +525,7 @@ export function MeetingScreen() {
                   notify(
                     e instanceof Error
                       ? e.message
-                      : "Check your plan before creating a meeting.",
+                      : tr("Check your plan before creating a meeting."),
                   );
                   return;
                 }
@@ -518,8 +533,8 @@ export function MeetingScreen() {
                   run &&
                   run.status !== "done" &&
                   !(await confirm(
-                    "Create a new meeting?",
-                    "The current session will be saved in History.",
+                    tr("Create a new meeting?"),
+                    tr("The current session will be saved in History."),
                   ))
                 )
                   return;
@@ -530,7 +545,7 @@ export function MeetingScreen() {
                     notify(
                       e instanceof Error
                         ? e.message
-                        : "Stop live sharing first.",
+                        : tr("Stop live sharing first."),
                     );
                     return;
                   }
@@ -551,7 +566,7 @@ export function MeetingScreen() {
             }}
           >
             <Text style={{ fontSize: 13, color: t.teal, fontWeight: "600" }}>
-              + New meeting
+              {tr("+ New meeting")}
             </Text>
           </Pressable>
         </View>
@@ -571,22 +586,24 @@ export function MeetingScreen() {
         )}
         <Rule />
         <View style={{ gap: 12 }}>
-          <Heading>For later</Heading>
-          <Body muted>Park the tangent. Keep the conversation moving.</Body>
+          <Heading>{tr("For later")}</Heading>
+          <Body muted>
+            {tr("Park the tangent. Keep the conversation moving.")}
+          </Body>
           <Field
-            label="Topic or action item"
+            label={tr("Topic or action item")}
             value={topic}
             onChangeText={setTopic}
             maxLength={500}
-            placeholder="Something to come back to…"
+            placeholder={tr("Something to come back to…")}
           />
           <Field
-            label="Owner (optional)"
+            label={tr("Owner (optional)")}
             value={owner}
             onChangeText={setOwner}
           />
           <Action
-            label={editingItem ? "Save item" : "Add item"}
+            label={editingItem ? tr("Save item") : tr("Add item")}
             disabled={!topic.trim()}
             onPress={() => {
               const item = {
@@ -611,7 +628,7 @@ export function MeetingScreen() {
           />
           {editingItem && (
             <Action
-              label="Cancel edit"
+              label={tr("Cancel edit")}
               onPress={() => {
                 setEditingItem(null);
                 setTopic("");
@@ -621,7 +638,7 @@ export function MeetingScreen() {
           )}
           {!items.length && (
             <Body muted>
-              Nothing parked yet. These notes stay off the live screen.
+              {tr("Nothing parked yet. These notes stay off the live screen.")}
             </Body>
           )}
           {items.map((item) => (
@@ -645,7 +662,7 @@ export function MeetingScreen() {
               />
               <Row>
                 <Action
-                  label="Edit"
+                  label={tr("Edit")}
                   onPress={() => {
                     setTopic(item.text);
                     setOwner(item.owner);
@@ -653,7 +670,7 @@ export function MeetingScreen() {
                   }}
                 />
                 <Action
-                  label="Remove"
+                  label={tr("Remove")}
                   onPress={() => parking(items.filter((a) => a.id !== item.id))}
                 />
               </Row>
@@ -662,14 +679,14 @@ export function MeetingScreen() {
         </View>
         {run && (
           <View style={{ gap: 12 }}>
-            <Heading>Private notes</Heading>
+            <Heading>{tr("Private notes")}</Heading>
             <TextInput
-              accessibilityLabel="Private meeting notes"
+              accessibilityLabel={tr("Private meeting notes")}
               multiline
               value={run.notes}
               onChangeText={notes}
               maxLength={10000}
-              placeholder="Decisions and next steps…"
+              placeholder={tr("Decisions and next steps…")}
               placeholderTextColor={t.muted}
               style={{
                 minHeight: 120,
@@ -687,16 +704,17 @@ export function MeetingScreen() {
         )}
         <Rule />
         <Body muted>
-          Unused time passes to the next speaker. Finish early, and the next
-          person gets more room. Overrun, and their available time adjusts.
+          {tr(
+            "Unused time passes to the next speaker. Finish early, and the next person gets more room. Overrun, and their available time adjusts.",
+          )}
         </Body>
         <Row>
           <Action
-            label="Import / export"
+            label={tr("Import / export")}
             onPress={() => router.push("/(tabs)/programs")}
           />
           <Action
-            label="Timing settings"
+            label={tr("Timing settings")}
             onPress={() => router.push("/meeting-options")}
           />
         </Row>

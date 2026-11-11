@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React from "react";
 import { Pressable, Text, View, type ViewStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -68,6 +69,7 @@ export function MeetingClock({
   onFocus?: () => void;
   focus?: boolean;
 }) {
+  const tr = useTranslate();
   const t = useTheme(),
     v = meetingView(config, run, now),
     done = run?.status === "done",
@@ -123,7 +125,7 @@ export function MeetingClock({
               fontSize: 12,
             }}
           >
-            {state}
+            {tr(state)}
             {run && !done
               ? ` · ${v.done.size + 1}/${config.agenda.length}`
               : ""}
@@ -132,13 +134,14 @@ export function MeetingClock({
         {onFocus ? (
           <IconAction
             icon={focus ? "contract-outline" : "expand-outline"}
-            label={focus ? "Close focus view" : "Open focus view"}
+            label={focus ? tr("Close focus view") : tr("Open focus view")}
             dark
             onPress={onFocus}
           />
         ) : (
           <Text style={{ color: t.clockMuted, fontSize: 12 }}>
-            slot {formatTime(v.available)}
+            {tr("slot ")}
+            {formatTime(v.available)}
           </Text>
         )}
       </View>
@@ -154,11 +157,16 @@ export function MeetingClock({
           color: t.cream,
         }}
       >
-        {done ? "Meeting finished" : (v.current?.name ?? "Add a speaker")}
+        {done
+          ? tr("Meeting finished")
+          : (v.current?.name ?? tr("Add a speaker"))}
       </Text>
       <Text
         testID="meeting-remaining"
-        accessibilityLabel={`Time remaining ${formatTime(v.remaining)}`}
+        accessibilityLabel={tr(
+          "Time remaining {0}",
+          String(formatTime(v.remaining)),
+        )}
         selectable
         adjustsFontSizeToFit
         numberOfLines={1}
@@ -178,7 +186,7 @@ export function MeetingClock({
       </Text>
       <View
         accessibilityRole="progressbar"
-        accessibilityLabel="Current turn elapsed"
+        accessibilityLabel={tr("Current turn elapsed")}
         accessibilityValue={{
           min: 0,
           max: 100,
@@ -207,7 +215,12 @@ export function MeetingClock({
           <View
             key={a.id}
             accessible
-            accessibilityLabel={`${a.name}, ${a.state}, ${formatTime(a.seconds * 1000)} planned`}
+            accessibilityLabel={tr(
+              "{0}, {1}, {2} planned",
+              String(a.name),
+              String(a.state),
+              String(formatTime(a.seconds * 1000)),
+            )}
             style={{
               flex: Math.max(a.seconds, 30),
               backgroundColor: a.state === "done" ? t.bright : t.clockTrack,
@@ -233,27 +246,32 @@ export function MeetingClock({
           style={{ fontFamily: "Manrope", color: t.cream, fontSize: 16 }}
         >
           {done
-            ? `${formatTime(v.elapsed)} elapsed`
+            ? tr("{0} elapsed", String(formatTime(v.elapsed)))
             : v.next
-              ? `Next: ${v.next.name}`
-              : "Last one. Make it count."}
+              ? tr("Next: {0}", String(v.next.name))
+              : tr("Last one. Make it count.")}
         </Text>
         <Text
           testID="next-budget"
           style={{ color: t.clockMuted, fontSize: 13, lineHeight: 20 }}
         >
           {done
-            ? `${formatTime(v.total)} planned`
+            ? tr("{0} planned", String(formatTime(v.total)))
             : v.next
-              ? `gets ${formatTime(v.nextBudget)}${run ? " if you stop now" : ""} · ${v.pending.length} remaining`
-              : "Your shared finish stays in view."}
+              ? tr(
+                  "gets {0}{1} · {2} remaining",
+                  String(formatTime(v.nextBudget)),
+                  String(run ? " if you stop now" : ""),
+                  String(v.pending.length),
+                )
+              : tr("Your shared finish stays in view.")}
         </Text>
       </View>
       <View style={{ flexDirection: "row", gap: 8 }}>
         <Pressable
           testID="meeting-next"
           accessibilityRole="button"
-          accessibilityLabel={mainLabel}
+          accessibilityLabel={tr(mainLabel)}
           onPress={done ? onReset : onNext}
           style={({ pressed }) => ({
             flex: 1,
@@ -276,7 +294,7 @@ export function MeetingClock({
               fontWeight: "700",
             }}
           >
-            {mainLabel}
+            {tr(mainLabel)}
           </Text>
           <Ionicons
             name={done ? "refresh" : "arrow-forward"}
@@ -287,7 +305,9 @@ export function MeetingClock({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={
-            run?.status === "paused" ? "Resume meeting" : "Pause meeting"
+            run?.status === "paused"
+              ? tr("Resume meeting")
+              : tr("Pause meeting")
           }
           disabled={!run || done}
           onPress={onToggle}
@@ -335,7 +355,7 @@ export function MeetingClock({
             accessibilityRole="button"
             accessibilityLabel={
               action.label === "+1 min"
-                ? "Extend current turn by one minute"
+                ? tr("Extend current turn by one minute")
                 : action.label
             }
             accessibilityState={{ disabled: !!action.disabled }}

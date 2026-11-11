@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
@@ -15,6 +16,7 @@ import { useApp } from "../state/app-store";
 import { useTheme } from "../theme";
 import { exportFile } from "../services/files";
 export default function ReportSheet() {
+  const tr = useTranslate();
   const { reportId } = useLocalSearchParams<{ reportId?: string }>();
   const [now, setNow] = useState(Date.now);
   useEffect(() => {
@@ -35,19 +37,21 @@ export default function ReportSheet() {
     try {
       await task();
     } catch (e) {
-      notify(e instanceof Error ? e.message : "Could not export this report.");
+      notify(
+        e instanceof Error ? e.message : tr("Could not export this report."),
+      );
     }
   }
   return (
     <Page>
       <Stack.Screen
-        options={{ title: "Session report", presentation: "formSheet" }}
+        options={{ title: tr("Session report"), presentation: "formSheet" }}
       />
-      <Heading>How the meeting went.</Heading>
+      <Heading>{tr("How the meeting went.")}</Heading>
       <Row>
         {current && (
           <Action
-            label="Current session"
+            label={tr("Current session")}
             tone={selected === "current" ? "primary" : "outline"}
             onPress={() => setSelected("current")}
           />
@@ -55,14 +59,16 @@ export default function ReportSheet() {
         {saved.slice(0, 10).map((r, i) => (
           <Action
             key={r.id}
-            label={`Saved ${i + 1}`}
+            label={tr("Saved {0}", String(i + 1))}
             tone={selected === r.id ? "primary" : "outline"}
             onPress={() => setSelected(r.id)}
           />
         ))}
       </Row>
       {!report ? (
-        <Body>Start a meeting to see its original plan and actual timing.</Body>
+        <Body>
+          {tr("Start a meeting to see its original plan and actual timing.")}
+        </Body>
       ) : (
         <>
           <Body>{report.title}</Body>
@@ -75,12 +81,15 @@ export default function ReportSheet() {
             }}
           >
             <Body>
-              Original plan ·{" "}
+              {tr("Original plan ·")}{" "}
               {formatTime(report.entries.reduce((n, a) => n + a.planned, 0))}
             </Body>
-            <Body>Actual · {formatTime(report.elapsed)}</Body>
+            <Body>
+              {tr("Actual · ")}
+              {formatTime(report.elapsed)}
+            </Body>
           </View>
-          <Body muted>Slot · original plan / actual</Body>
+          <Body muted>{tr("Slot · original plan / actual")}</Body>
           {report.entries.map((e, i) => (
             <View
               key={e.id ?? i}
@@ -97,7 +106,7 @@ export default function ReportSheet() {
               <Row style={{ justifyContent: "space-between" }}>
                 <Body muted>
                   {formatTime(e.planned)} /{" "}
-                  {e.state === "pending" ? "pending" : formatTime(e.actual)}
+                  {e.state === "pending" ? tr("pending") : formatTime(e.actual)}
                 </Body>
                 <Text
                   style={{
@@ -106,42 +115,46 @@ export default function ReportSheet() {
                   }}
                 >
                   {e.state === "pending"
-                    ? "Not yet"
+                    ? tr("Not yet")
                     : `${e.actual > e.planned ? "+" : "−"}${formatTime(Math.abs(e.actual - e.planned))}`}
                 </Text>
               </Row>
             </View>
           ))}
-          <Heading>Plan changes · {report.planChanges?.length ?? 0}</Heading>
+          <Heading>
+            {tr("Plan changes · ")}
+            {report.planChanges?.length ?? 0}
+          </Heading>
           {(report.planChanges ?? []).map((c, i) => (
             <Body key={i} muted>
-              At {formatTime(c.at)} ·{" "}
+              {tr("At ")}
+              {formatTime(c.at)} ·{" "}
               {c.agenda
                 .map((a) => `${a.name} ${a.seconds / 60} min`)
                 .join(" / ")}
             </Body>
           ))}
-          <Heading>For later</Heading>
+          <Heading>{tr("For later")}</Heading>
           {report.parking?.length ? (
             report.parking.map((p) => (
               <Body key={p.id}>
-                {p.done ? "Done" : "Open"}: {p.text}
+                {p.done ? tr("Done") : tr("Open")}: {p.text}
                 {p.owner ? ` · ${p.owner}` : ""}
               </Body>
             ))
           ) : (
-            <Body muted>No follow-ups parked.</Body>
+            <Body muted>{tr("No follow-ups parked.")}</Body>
           )}
           {report.notes && (
             <>
-              <Heading>Private notes</Heading>
+              <Heading>{tr("Private notes")}</Heading>
               <Body>{report.notes}</Body>
             </>
           )}
           <Rule />
           <Row>
             <Action
-              label="Export CSV"
+              label={tr("Export CSV")}
               tone="primary"
               onPress={() =>
                 void perform(() =>
@@ -154,16 +167,16 @@ export default function ReportSheet() {
               }
             />
             <Action
-              label="Copy report"
+              label={tr("Copy report")}
               onPress={() =>
                 void perform(async () => {
                   await Clipboard.setStringAsync(reportText(report));
-                  notify("Report copied.");
+                  notify(tr("Report copied."));
                 })
               }
             />
             <Action
-              label="Print / PDF"
+              label={tr("Print / PDF")}
               onPress={() =>
                 void perform(() =>
                   Print.printAsync({ html: reportHTML(report) }),

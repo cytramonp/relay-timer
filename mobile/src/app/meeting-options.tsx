@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import { CustomizationGate } from "../components/plan-status";
 import React, { useState } from "react";
 import { Stack, router } from "expo-router";
@@ -7,6 +8,7 @@ import { allocate, totalSeconds } from "../core/meeting";
 import { DurationField } from "../components/duration-field";
 
 export default function MeetingOptions() {
+  const tr = useTranslate();
   const { store, editMeeting } = useApp(),
     run =
       store.run?.kind === "meeting" && store.run.status !== "done"
@@ -54,70 +56,72 @@ export default function MeetingOptions() {
       <CustomizationGate>
         <Stack.Screen
           options={{
-            title: "Timing settings",
+            title: tr("Timing settings"),
             presentation: "formSheet",
-            headerRight: () => <Action label="Done" onPress={save} />,
+            headerRight: () => <Action label={tr("Done")} onPress={save} />,
           }}
         />
-        <Heading>One shared finish.</Heading>
+        <Heading>{tr("One shared finish.")}</Heading>
         <DurationField
-          label="Total meeting · minutes"
+          label={tr("Total meeting · minutes")}
           unit="minutes"
           expanded
           value={total}
           onChangeText={setTotal}
         />
         <Toggle
-          label="Split participants' time equally"
+          label={tr("Split participants' time equally")}
           value={c.autoSplit}
           onChange={(autoSplit) => setC({ ...c, autoSplit })}
         />
         <Body muted>
-          Topics, pinned durations and completed turns stay fixed. Other
-          participants share the remaining budget.
+          {tr(
+            "Topics, pinned durations and completed turns stay fixed. Other participants share the remaining budget.",
+          )}
         </Body>
         <Toggle
-          label="Keep proportions when changing durations"
+          label={tr("Keep proportions when changing durations")}
           value={c.keepProp}
           onChange={(keepProp) => setC({ ...c, keepProp })}
         />
         <DurationField
-          label="Minimum turn · seconds"
+          label={tr("Minimum turn · seconds")}
           value={minimum}
           onChangeText={setMinimum}
         />
         <DurationField
-          label="Warning before time is up · seconds"
+          label={tr("Warning before time is up · seconds")}
           value={warning}
           onChangeText={setWarning}
         />
         <Toggle
-          label="Automatically move to the next speaker"
+          label={tr("Automatically move to the next speaker")}
           value={c.automatic}
           onChange={(automatic) => setC({ ...c, automatic })}
         />
         <Body muted>
-          With automatic advance off, the clock keeps counting overtime until
-          the host chooses Next.
+          {tr(
+            "With automatic advance off, the clock keeps counting overtime until the host chooses Next.",
+          )}
         </Body>
-        <Heading>Sound</Heading>
+        <Heading>{tr("Sound")}</Heading>
         <Row>
           {(["off", "bell", "gong", "beep"] as const).map((sound) => (
             <Action
               key={sound}
-              label={sound === "off" ? "Silent" : sound}
+              label={sound === "off" ? tr("Silent") : sound}
               tone={c.sound === sound ? "primary" : "outline"}
               onPress={() => setC({ ...c, sound })}
             />
           ))}
         </Row>
         <Toggle
-          label="Spoken cues while the app is open"
+          label={tr("Spoken cues while the app is open")}
           value={c.voice}
           onChange={(voice) => setC({ ...c, voice })}
         />
         {error ? <Body>{error}</Body> : null}
-        <Action label="Save settings" tone="primary" onPress={save} />
+        <Action label={tr("Save settings")} tone="primary" onPress={save} />
       </CustomizationGate>
     </Page>
   );

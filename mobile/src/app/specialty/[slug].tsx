@@ -1,3 +1,4 @@
+import { useTranslate } from "../../state/language";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   AppState,
@@ -54,6 +55,7 @@ import { TimerBrandEditor } from "../../components/timer-brand-editor";
 import { customRecipes, recipeSetup } from "../../core/custom-recipes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BrandLogo } from "../../components/brand-logo";
+import { EggDoneness } from "../../components/egg-doneness";
 import { BreathingOrb } from "../../components/breathing-orb";
 import {
   reserveSession,
@@ -75,7 +77,13 @@ import { syncAlarmScope } from "../../services/notifications";
 import { boardSessionContinues } from "../../core/session";
 import { useTheme } from "../../theme";
 
+const eggStageNames =
+  profiles
+    .find((profile) => profile.slug === "egg-timer")
+    ?.stages.map((stage) => stage.name) ?? [];
+
 export default function SpecialtyTimer() {
+  const tr = useTranslate();
   const { slug, instance } = useLocalSearchParams<{
     slug: string;
     instance?: string;
@@ -97,9 +105,9 @@ export default function SpecialtyTimer() {
   )
     return (
       <Page>
-        <Heading>Timer not found</Heading>
+        <Heading>{tr("Timer not found")}</Heading>
         <Action
-          label="Timer library"
+          label={tr("Timer library")}
           onPress={() => router.push("/(tabs)/timers")}
         />
       </Page>
@@ -119,6 +127,22 @@ function Board({
   profile: BoardProfile;
   instance?: string;
 }) {
+  const tr = useTranslate();
+  const stageName = (name: string) =>
+    p.slug !== "custom-timer" &&
+    (p.stages.some((stage) => stage.name === name) ||
+      p.cards?.some((card) => card.stages.some((stage) => stage.name === name)))
+      ? tr(name)
+      : name;
+  const cardName = (name: string) => {
+    if (p.slug === "custom-timer") return name;
+    if (p.cards?.some((card) => card.name === name)) return tr(name);
+    const match = /^(Timer|Player) ([0-9]+)$/.exec(name);
+    return match
+      ? tr(match[1] === "Timer" ? "Timer {0}" : "Player {0}", match[2])
+      : name;
+  };
+
   const [AsyncStorage] = useState(() => userData.scope());
   const t = useTheme(),
     { store, snapshot } = useApp(),
@@ -512,18 +536,18 @@ function Board({
   }
   return (
     <Page>
-      <Stack.Screen options={{ title: p.title }} />
+      <Stack.Screen options={{ title: tr(p.title) }} />
       {specialtyArt[p.slug] || p.slug === "custom-timer" ? (
         <Image
           source={specialtyArt[p.slug] ?? require("../../../assets/simple.jpg")}
           contentFit="contain"
           style={{ width: "100%", height: 120 }}
-          accessibilityLabel={`${p.title} illustration`}
+          accessibilityLabel={tr("{0} illustration", tr(p.title))}
         />
       ) : null}
       <Row>
         <Action
-          label="Customize timer"
+          label={tr("Customize timer")}
           testID="customize-timer"
           tone="primary"
           disabled={!ready || running}
@@ -535,28 +559,30 @@ function Board({
           }
         />
         <Action
-          label="Creation guide"
+          label={tr("Creation guide")}
           onPress={() => router.push("/timer-guide")}
         />
       </Row>
       <Row>
         <Action
           label={
-            design ? "Hide colors, logo & sounds" : "Colors, logo & sounds"
+            design
+              ? tr("Hide colors, logo & sounds")
+              : tr("Colors, logo & sounds")
           }
           testID="timer-brand-options"
           onPress={() => customize(() => setDesign(!design))}
         />
         {p.slug === "custom-timer" ? (
           <Action
-            label={recipesOpen ? "Hide recipes" : "Choose a recipe"}
+            label={recipesOpen ? tr("Hide recipes") : tr("Choose a recipe")}
             testID="custom-recipes-toggle"
             onPress={() => setRecipesOpen(!recipesOpen)}
           />
         ) : null}
       </Row>
       {edit !== null ? (
-        <Action label="Close editor" onPress={() => setEdit(null)} />
+        <Action label={tr("Close editor")} onPress={() => setEdit(null)} />
       ) : null}
       {edit !== null && board[edit] && access?.customize ? (
         <ClockEditor
@@ -607,17 +633,18 @@ function Board({
       ) : null}
       {p.slug === "custom-timer" && recipesOpen ? (
         <>
-          <Heading>Try a complete recipe</Heading>
+          <Heading>{tr("Try a complete recipe")}</Heading>
           <Body muted>
-            Each recipe creates its own saved timer in Library. Example
-            durations are editable.
+            {tr(
+              "Each recipe creates its own saved timer in Library. Example durations are editable.",
+            )}
           </Body>
           <Row>
             {customRecipes.map((r) => (
               <Action
                 key={r.id}
                 testID={`custom-recipe-${r.id}`}
-                label={r.title}
+                label={tr(r.title)}
                 disabled={running}
                 onPress={() =>
                   customize(
@@ -659,7 +686,7 @@ function Board({
                   }
                   contentFit="contain"
                   style={{ width: 120, height: 72, alignSelf: "center" }}
-                  accessibilityLabel={`${p.title} illustration`}
+                  accessibilityLabel={tr("{0} illustration", tr(p.title))}
                 />
                 {options.logo && access?.customize ? (
                   <Image
@@ -671,7 +698,7 @@ function Board({
                 <Text
                   style={{ color: t.cream, fontSize: 26, textAlign: "center" }}
                 >
-                  {board[fullscreen].name}
+                  {cardName(board[fullscreen].name)}
                 </Text>
                 <Text
                   style={{
@@ -680,7 +707,9 @@ function Board({
                     textAlign: "center",
                   }}
                 >
-                  {board[fullscreen].stages[board[fullscreen].index].name}
+                  {stageName(
+                    board[fullscreen].stages[board[fullscreen].index].name,
+                  )}
                 </Text>
                 <Text
                   accessibilityRole="timer"
@@ -695,6 +724,13 @@ function Board({
                 >
                   {display(board[fullscreen], p.mode, now)}
                 </Text>
+                {p.slug === "egg-timer" ? (
+                  <EggDoneness
+                    card={board[fullscreen]}
+                    stageNames={eggStageNames}
+                    compact
+                  />
+                ) : null}
                 {p.mode !== "up" ? (
                   <StageProgress
                     card={board[fullscreen]}
@@ -705,7 +741,9 @@ function Board({
                 <Row>
                   <Action
                     label={
-                      board[fullscreen].anchor === null ? "Start" : "Pause"
+                      board[fullscreen].anchor === null
+                        ? tr("Start")
+                        : tr("Pause")
                     }
                     tone="cream"
                     disabled={
@@ -716,7 +754,7 @@ function Board({
                     onPress={() => action(fullscreen, "toggle")}
                   />
                   <Action
-                    label="Next stage"
+                    label={tr("Next stage")}
                     tone="cream"
                     disabled={pending || board[fullscreen].done}
                     onPress={() =>
@@ -727,7 +765,7 @@ function Board({
               </>
             ) : null}
             <Action
-              label="Exit full screen"
+              label={tr("Exit full screen")}
               tone="cream"
               onPress={() => setFullscreen(null)}
             />
@@ -735,11 +773,11 @@ function Board({
         </SafeAreaView>
       </Modal>
       <View style={{ gap: 6 }}>
-        <Body muted>{p.description}</Body>
+        <Body muted>{tr(p.description)}</Body>
         <Body muted style={{ fontSize: 14, lineHeight: 20 }}>
-          Background alerts follow Settings. Up to 48 upcoming alerts across
-          timers are scheduled; keep long sessions open. Voice and repeated cues
-          play in the app.
+          {tr(
+            "Background alerts follow Settings. Up to 48 upcoming alerts across timers are scheduled; keep long sessions open. Voice and repeated cues play in the app.",
+          )}
         </Body>
       </View>
       {options.logo && access?.customize ? (
@@ -757,10 +795,10 @@ function Board({
         <Action
           label={
             pending
-              ? "Checking access…"
+              ? tr("Checking access…")
               : p.mode === "turn"
-                ? "Start first player"
-                : "Start all"
+                ? tr("Start first player")
+                : tr("Start all")
           }
           tone="primary"
           disabled={!ready || pending}
@@ -782,7 +820,7 @@ function Board({
           }
         />
         <Action
-          label="Pause all"
+          label={tr("Pause all")}
           disabled={!ready}
           onPress={() =>
             setBoard((b) =>
@@ -794,7 +832,7 @@ function Board({
           }
         />
         <Action
-          label="Reset board"
+          label={tr("Reset board")}
           disabled={pending}
           onPress={() => void resetAll()}
         />
@@ -823,26 +861,26 @@ function Board({
                     fontFamily: "Cantata",
                   }}
                 >
-                  {c.name}
+                  {cardName(c.name)}
                 </Text>
                 <Row>
                   <Action
-                    label="Full screen"
+                    label={tr("Full screen")}
                     tone="cream"
                     onPress={() => setFullscreen(i)}
                   />
                 </Row>
                 <Text style={{ color: t.bright, fontSize: 16 }}>
-                  {phase.name} ·{" "}
+                  {stageName(phase.name)} ·{" "}
                   {c.done
-                    ? "Finished"
+                    ? tr("Finished")
                     : c.waiting
-                      ? "Ready for next stage"
+                      ? tr("Ready for next stage")
                       : c.scheduledAt
-                        ? "Scheduled"
+                        ? tr("Scheduled")
                         : c.anchor === null
-                          ? "Paused / ready"
-                          : "Running"}
+                          ? tr("Paused / ready")
+                          : tr("Running")}
                 </Text>
                 {!hideDigits ? (
                   <Text
@@ -865,7 +903,7 @@ function Board({
                   </Text>
                 ) : (
                   <Body style={{ color: t.cream }}>
-                    A moment without watching the clock.
+                    {tr("A moment without watching the clock.")}
                   </Body>
                 )}
                 {signal ? (
@@ -880,8 +918,11 @@ function Board({
                       fontSize: 22,
                     }}
                   >
-                    {signal} signal
+                    {tr("{0} signal", tr(signal))}
                   </Text>
+                ) : null}
+                {p.slug === "egg-timer" ? (
+                  <EggDoneness card={c} stageNames={eggStageNames} />
                 ) : null}
                 {p.slug === "breathing-timer" ? (
                   <BreathingOrb card={c} />
@@ -909,11 +950,12 @@ function Board({
                 {p.slug === "sports-scoreboard-timer" ? (
                   <>
                     <Text style={{ color: t.cream, fontSize: 24 }}>
-                      Score {Number(c.score) || 0}
+                      {tr("Score ")}
+                      {Number(c.score) || 0}
                     </Text>
                     <Row>
                       <Action
-                        label="−1 point"
+                        label={tr("−1 point")}
                         tone="cream"
                         onPress={() =>
                           patch(i, {
@@ -922,7 +964,7 @@ function Board({
                         }
                       />
                       <Action
-                        label="+1 point"
+                        label={tr("+1 point")}
                         tone="cream"
                         onPress={() =>
                           patch(i, {
@@ -942,7 +984,7 @@ function Board({
                 ) : null}
                 <Row>
                   <Action
-                    label={c.anchor === null ? "Start" : "Pause"}
+                    label={c.anchor === null ? tr("Start") : tr("Pause")}
                     tone="cream"
                     disabled={pending || c.done || !!c.waiting}
                     onPress={() => action(i, "toggle")}
@@ -950,17 +992,17 @@ function Board({
                   <Action
                     label={
                       p.mode === "up"
-                        ? "Lap"
+                        ? tr("Lap")
                         : p.mode === "turn"
-                          ? "Next player"
-                          : "Next stage"
+                          ? tr("Next player")
+                          : tr("Next stage")
                     }
                     tone="cream"
                     disabled={pending || c.done}
                     onPress={() => action(i, p.mode === "up" ? "lap" : "next")}
                   />
                   <Action
-                    label="Reset"
+                    label={tr("Reset")}
                     tone="cream"
                     onPress={() => action(i, "reset")}
                   />
@@ -970,17 +1012,17 @@ function Board({
                 {p.mode !== "up" ? (
                   <>
                     <Action
-                      label="+1 minute"
+                      label={tr("+1 minute")}
                       onPress={() => action(i, "add")}
                     />
                     <Action
-                      label="−1 minute"
+                      label={tr("−1 minute")}
                       onPress={() => action(i, "subtract")}
                     />
                   </>
                 ) : null}
                 <Action
-                  label={edit === i ? "Close editor" : "Edit clock"}
+                  label={edit === i ? tr("Close editor") : tr("Edit clock")}
                   onPress={() =>
                     customize(() => setEdit(edit === i ? null : i))
                   }
@@ -989,29 +1031,30 @@ function Board({
               </Row>
               {c.laps.map((v, j) => (
                 <Body key={j}>
-                  Lap {(c.lapOffset ?? 0) + j + 1}: {(v / 1000).toFixed(2)} s ·
-                  split{" "}
+                  {tr("Lap ")}
+                  {(c.lapOffset ?? 0) + j + 1}: {(v / 1000).toFixed(2)}
+                  {tr(" s · split")}{" "}
                   {((v - (c.laps[j - 1] ?? c.lapBase ?? 0)) / 1000).toFixed(2)}{" "}
-                  s
+                  {tr("s")}
                 </Body>
               ))}
             </View>
           );
         })
       ) : (
-        <Body>Restoring clocks…</Body>
+        <Body>{tr("Restoring clocks…")}</Body>
       )}
       <Rule />
-      <Heading>Setup & options</Heading>
+      <Heading>{tr("Setup & options")}</Heading>
 
       <TimerFavoriteControls id={instance ? `${p.slug}-${instance}` : p.slug} />
       <Body muted>
-        Clocks continue by elapsed time while away. Keep this screen open for
-        stage sounds; background alerts follow Settings and its schedule limit.
-        Up to 500 recent laps are kept.
+        {tr(
+          "Clocks continue by elapsed time while away. Keep this screen open for stage sounds; background alerts follow Settings and its schedule limit. Up to 500 recent laps are kept.",
+        )}
       </Body>
       <Action
-        label="Add clock"
+        label={tr("Add clock")}
         disabled={!ready || board.length >= 12}
         onPress={() =>
           customize(() =>
@@ -1027,30 +1070,33 @@ function Board({
       />
       {p.slug === "meditation-timer" ? (
         <Toggle
-          label="Hide clock digits"
+          label={tr("Hide clock digits")}
           value={hideDigits}
           onChange={(hideDigits) => setOptions((o) => ({ ...o, hideDigits }))}
         />
       ) : null}
       <Toggle
-        label="Stage sounds while the app is open"
+        label={tr("Stage sounds while the app is open")}
         value={sound}
         onChange={(sound) => setOptions((o) => ({ ...o, sound }))}
       />
       {p.slug === "toothbrushing-timer" ? (
         <Toggle
-          label="Show brushing zones"
+          label={tr("Show brushing zones")}
           value={kidsView}
           onChange={(kidsView) => setOptions((o) => ({ ...o, kidsView }))}
         />
       ) : null}
       {p.slug === "speech-timer" ? (
         <>
-          <Heading>Speech signals</Heading>
+          <Heading>{tr("Speech signals")}</Heading>
           {(["green", "amber", "red"] as const).map((color) => (
             <DurationField
               key={color}
-              label={`${color[0].toUpperCase() + color.slice(1)} · seconds`}
+              label={tr(
+                "{0} · seconds",
+                String(color[0].toUpperCase() + color.slice(1)),
+              )}
               value={signalDraft[color]}
               onChangeText={(v) =>
                 setSignalDraft((d) => ({ ...d, [color]: v }))
@@ -1058,7 +1104,7 @@ function Board({
             />
           ))}
           <Action
-            label="Apply signals"
+            label={tr("Apply signals")}
             tone="primary"
             onPress={() =>
               customize(() => {
@@ -1082,16 +1128,18 @@ function Board({
       ) : null}
       {p.slug === "kitchen-timer" ? (
         <>
-          <Heading>Serve dishes together</Heading>
-          <Body muted>Keep this screen open for scheduled dish starts.</Body>
+          <Heading>{tr("Serve dishes together")}</Heading>
+          <Body muted>
+            {tr("Keep this screen open for scheduled dish starts.")}
+          </Body>
           <DurationField
-            label="Serve in · minutes"
+            label={tr("Serve in · minutes")}
             unit="minutes"
             value={serve}
             onChangeText={setServe}
           />
           <Action
-            label="Schedule dishes"
+            label={tr("Schedule dishes")}
             disabled={pending || running}
             onPress={() =>
               customize(() => {
@@ -1114,14 +1162,14 @@ function Board({
       <Row>
         {p.mode === "sequence" ? (
           <Action
-            label="Save as new timer"
+            label={tr("Save as new timer")}
             testID="save-custom-copy"
             disabled={pending || running}
             onPress={() => customize(() => void files(() => saveCopy()))}
           />
         ) : null}
         <Action
-          label="Save setup"
+          label={tr("Save setup")}
           testID="save-board-setup"
           onPress={() =>
             customize(
@@ -1136,7 +1184,7 @@ function Board({
           }
         />
         <Action
-          label="Load setup"
+          label={tr("Load setup")}
           testID="load-board-setup"
           onPress={() =>
             void files(async () => {
@@ -1155,7 +1203,7 @@ function Board({
           }
         />
         <Action
-          label="Export setup"
+          label={tr("Export setup")}
           onPress={() =>
             void files(() =>
               exportFile(
@@ -1171,7 +1219,7 @@ function Board({
           }
         />
         <Action
-          label="Import setup"
+          label={tr("Import setup")}
           onPress={() =>
             customize(
               () =>
@@ -1192,7 +1240,7 @@ function Board({
           }
         />
         <Action
-          label="Export CSV"
+          label={tr("Export CSV")}
           onPress={() =>
             void files(() =>
               exportFile(
@@ -1205,7 +1253,7 @@ function Board({
         />
       </Row>
       <Action
-        label={guide ? "Hide instructions" : "How to use & advice"}
+        label={guide ? tr("Hide instructions") : tr("How to use & advice")}
         onPress={() => setGuide(!guide)}
       />
       {guide ? (
@@ -1217,13 +1265,13 @@ function Board({
               }
               contentFit="contain"
               style={{ width: "100%", aspectRatio: 1200 / 630 }}
-              accessibilityLabel={`${p.title} stage diagram`}
+              accessibilityLabel={tr("{0} stage diagram", tr(p.title))}
             />
           ) : null}
-          <Heading>How to use</Heading>
-          <Body>{p.use}</Body>
-          <Heading>Advice</Heading>
-          <Body>{p.tip}</Body>
+          <Heading>{tr("How to use")}</Heading>
+          <Body>{tr(p.use)}</Body>
+          <Heading>{tr("Advice")}</Heading>
+          <Body>{tr(p.tip)}</Body>
         </>
       ) : null}
     </Page>
@@ -1242,6 +1290,7 @@ function ClockEditor({
   onChange: (value: Partial<Card>) => void;
   onRemove: () => void;
 }) {
+  const tr = useTranslate();
   const [stages, setStages] = useState(card.stages),
     [name, setName] = useState(card.name),
     [times, setTimes] = useState(() =>
@@ -1251,7 +1300,7 @@ function ClockEditor({
   return (
     <View style={{ gap: 16 }}>
       <Field
-        label="Clock name"
+        label={tr("Clock name")}
         value={name}
         maxLength={80}
         onChangeText={setName}
@@ -1259,7 +1308,7 @@ function ClockEditor({
       {stages.map((s, j) => (
         <View key={j} style={{ gap: 8 }}>
           <Field
-            label={`Stage ${j + 1} name`}
+            label={tr("Stage {0} name", String(j + 1))}
             value={s.name}
             maxLength={80}
             onChangeText={(v) =>
@@ -1270,14 +1319,14 @@ function ClockEditor({
           />
           {mode !== "up" ? (
             <DurationField
-              label={`Stage ${j + 1} · seconds`}
+              label={tr("Stage {0} · seconds", String(j + 1))}
               value={times[j]}
               onChangeText={(v) =>
                 setTimes((a) => a.map((x, n) => (n === j ? v : x)))
               }
             />
           ) : null}
-          <Body muted>Stage end sound</Body>
+          <Body muted>{tr("Stage end sound")}</Body>
           <Row>
             {[
               "bell",
@@ -1289,7 +1338,7 @@ function ClockEditor({
             ].map((cue) => (
               <Action
                 key={cue}
-                label={cue === "custom" ? "My sound" : cue}
+                label={cue === "custom" ? tr("My sound") : cue}
                 tone={(s.cueEnd ?? "bell") === cue ? "primary" : "outline"}
                 onPress={() =>
                   setStages((a) =>
@@ -1301,7 +1350,7 @@ function ClockEditor({
           </Row>
           <Row>
             <Action
-              label="Move earlier"
+              label={tr("Move earlier")}
               disabled={j === 0}
               onPress={() => {
                 const a = [...stages],
@@ -1313,7 +1362,7 @@ function ClockEditor({
               }}
             />
             <Action
-              label="Remove stage"
+              label={tr("Remove stage")}
               disabled={stages.length < 2}
               onPress={() => {
                 setStages((a) => a.filter((_, n) => n !== j));
@@ -1324,12 +1373,12 @@ function ClockEditor({
         </View>
       ))}
       <Toggle
-        label="Automatically advance to next stage"
+        label={tr("Automatically advance to next stage")}
         value={card.automatic !== false}
         onChange={(automatic) => onChange({ automatic })}
       />
       <Action
-        label="Add stage"
+        label={tr("Add stage")}
         disabled={stages.length >= 100}
         onPress={() => {
           setStages((a) => [...a, { name: "Next stage", seconds: 60 }]);
@@ -1337,11 +1386,12 @@ function ClockEditor({
         }}
       />
       <Body muted>
-        Changing durations or the number of stages resets this clock and its
-        laps. Renaming keeps the current timing.
+        {tr(
+          "Changing durations or the number of stages resets this clock and its laps. Renaming keeps the current timing.",
+        )}
       </Body>
       <Action
-        label="Apply clock changes"
+        label={tr("Apply clock changes")}
         tone="primary"
         onPress={() => {
           if (
@@ -1384,7 +1434,7 @@ function ClockEditor({
           setError("Clock updated.");
         }}
       />
-      <Action label="Remove clock" onPress={onRemove} />
+      <Action label={tr("Remove clock")} onPress={onRemove} />
       {error ? <Body>{error}</Body> : null}
     </View>
   );
@@ -1399,12 +1449,16 @@ function StageProgress({
   now: number;
   accent?: string;
 }) {
+  const tr = useTranslate();
   const t = useTheme();
   const remaining = card.done ? 0 : card.stages.length - card.index - 1;
   return (
     <View style={{ gap: 12 }}>
       <View
-        accessibilityLabel={`${remaining} stages remaining after this one`}
+        accessibilityLabel={tr(
+          "{0} stages remaining after this one",
+          String(remaining),
+        )}
         style={{ flexDirection: "row", gap: 4, height: 14 }}
       >
         {card.stages.map((s, i) => (
@@ -1432,8 +1486,12 @@ function StageProgress({
       </View>
       <Text style={{ color: t.cream, fontSize: 16 }}>
         {card.done
-          ? "All stages finished"
-          : `${remaining} next stages · Next: ${card.stages[card.index + 1]?.name ?? "Finish"}`}
+          ? tr("All stages finished")
+          : tr(
+              "{0} next stages · Next: {1}",
+              String(remaining),
+              String(card.stages[card.index + 1]?.name ?? "Finish"),
+            )}
       </Text>
     </View>
   );

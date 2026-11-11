@@ -1,4 +1,6 @@
-import React, { useCallback, useState } from "react";
+import { useTranslate } from "../state/language";
+import { matchesTimerSearch } from "../core/language";
+import React, { useCallback, useMemo, useState } from "react";
 import { Text, View, Pressable } from "react-native";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
@@ -32,6 +34,7 @@ export function openTimer(id: string, replace = false) {
     method({ pathname: "/timer/[kind]", params: { kind: id } });
 }
 export function TimerFavoriteControls({ id }: { id: string }) {
+  const tr = useTranslate();
   const [AsyncStorage] = useState(() => userData.scope());
   const [prefs, setPrefs] = useState<Preferences>({
     favorites: [],
@@ -56,7 +59,9 @@ export function TimerFavoriteControls({ id }: { id: string }) {
     <Row>
       <Action
         label={
-          prefs.favorites.includes(id) ? "Remove favorite" : "Add to favorites"
+          prefs.favorites.includes(id)
+            ? tr("Remove favorite")
+            : tr("Add to favorites")
         }
         onPress={() =>
           save({
@@ -68,14 +73,16 @@ export function TimerFavoriteControls({ id }: { id: string }) {
         }
       />
       <Action
-        label={prefs.home === id ? "Clear start timer" : "Make start timer"}
+        label={
+          prefs.home === id ? tr("Clear start timer") : tr("Make start timer")
+        }
         onPress={() => save({ ...prefs, home: prefs.home === id ? null : id })}
       />
       {prefs.favorites.includes(id) && prefs.favorites.length > 1
         ? [-1, 1].map((delta) => (
             <Action
               key={delta}
-              label={delta < 0 ? "Previous favorite" : "Next favorite"}
+              label={delta < 0 ? tr("Previous favorite") : tr("Next favorite")}
               onPress={() =>
                 openTimer(
                   prefs.favorites[
@@ -138,6 +145,7 @@ export const SpecialtyLibrary = React.memo(function SpecialtyLibrary({
 }) {
   const [storage] = useState(() => userData.scope());
   const t = useTheme();
+  const tr = useTranslate();
   const [customEntries, setCustomEntries] = useState<typeof entries>([]);
   const [grouped, setGrouped] = useState(false);
   const [collapsed, setCollapsed] = useState<string[]>([]);
@@ -182,14 +190,35 @@ export const SpecialtyLibrary = React.memo(function SpecialtyLibrary({
       };
     }, [storage]),
   );
-  const filtered = [...entries, ...customEntries].filter(
+  const localized = useMemo(
+    () => [
+      ...entries.map((p) => ({
+        ...p,
+        title: tr(p.title),
+        description: tr(p.description),
+        source: [p.title, p.description, p.category],
+      })),
+      ...customEntries.map((p) => ({
+        ...p,
+        description: tr(p.description),
+        source: [p.title, p.description, p.category],
+      })),
+    ],
+    [tr, customEntries],
+  );
+  const filtered = localized.filter(
     (p) =>
       (!favoritesOnly || prefs.favorites.includes(p.id)) &&
-      (p.title + " " + p.description + " " + p.category)
-        .toLowerCase()
-        .includes(query.trim().toLowerCase()),
+      matchesTimerSearch(
+        query,
+        p.title,
+        p.description,
+        tr(p.category),
+        ...p.source,
+      ),
   );
-  const groups = grouped
+  const showGroups = grouped && !query.trim();
+  const groups = showGroups
     ? [...new Set(filtered.map((p) => p.category))]
     : ["All timers"];
   function toggleFavorite(id: string) {
@@ -206,63 +235,81 @@ export const SpecialtyLibrary = React.memo(function SpecialtyLibrary({
     <View style={{ gap: 16 }}>
       {!favoritesOnly ? (
         <Action
-          label="Create your timer"
+          label={tr("Create your timer")}
           tone="primary"
           onPress={() => openTimer("custom-timer")}
         />
       ) : null}
       <Row>
         <Action
-          label="Show all"
+          label={tr("Show all")}
           tone={!grouped ? "primary" : "outline"}
           onPress={() => setGrouped(false)}
         />
         <Action
-          label="Group timers"
+          label={tr("Group timers")}
           tone={grouped ? "primary" : "outline"}
           onPress={() => setGrouped(true)}
         />
       </Row>
       <Field
-        label={favoritesOnly ? "Find a favorite" : "Find a timer"}
+        label={favoritesOnly ? tr("Find a favorite") : tr("Find a timer")}
         value={query}
         onChangeText={setQuery}
-        placeholder="Meeting, boxing, kitchen, breathing..."
+        placeholder={tr("Search by name or activity")}
+        autoCorrect={false}
+        testID="timer-library-search"
         containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
       />
+      {query ? (
+        <Action
+          label={tr("Clear search")}
+          testID="clear-timer-search"
+          onPress={() => setQuery("")}
+        />
+      ) : null}
       <Body muted>
-        {filtered.length} {favoritesOnly ? "favorites" : "timers"} - tap a star
-        to save or remove a favorite
+        {tr(favoritesOnly ? "{0} favorites" : "{0} timers", filtered.length)}
+        {" · "}
+        {tr("Tap a star to save or remove a favorite")}
       </Body>
       {!filtered.length ? (
         <>
           <Heading>
-            {query ? "No matching timers" : "Keep your favorites close."}
+            {query
+              ? tr("No matching timers")
+              : tr("Keep your favorites close.")}
           </Heading>
           <Body>
             {query
-              ? "Try another name or clear your search."
-              : "Star any timer in Timers. It will appear here, ready for your next session."}
+              ? tr("Try another name or clear your search.")
+              : tr(
+                  "Star any timer in Timers. It will appear here, ready for your next session.",
+                )}
           </Body>
           {favoritesOnly ? (
             <Action
-              label="Browse timers"
+              label={tr("Browse timers")}
               onPress={() => router.navigate("/(tabs)/timers")}
             />
           ) : null}
         </>
       ) : null}
       {groups.map((category) => {
-        const items = grouped
+        const items = showGroups
           ? filtered.filter((p) => p.category === category)
           : filtered;
-        const closed = grouped && collapsed.includes(category) && !query.trim();
+        const closed = showGroups && collapsed.includes(category);
         return (
           <View key={category} style={{ gap: 10 }}>
-            {grouped ? (
+            {showGroups ? (
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={category + ", " + items.length + " timers"}
+                accessibilityLabel={tr(
+                  "{0}, {1} timers",
+                  tr(category),
+                  items.length,
+                )}
                 accessibilityState={{ expanded: !closed }}
                 onPress={() =>
                   setCollapsed((current) =>
@@ -287,7 +334,7 @@ export const SpecialtyLibrary = React.memo(function SpecialtyLibrary({
                     fontSize: 22,
                   }}
                 >
-                  {category} - {items.length}
+                  {tr(category)} - {items.length}
                 </Text>
                 <Ionicons
                   name={closed ? "chevron-down" : "chevron-up"}
@@ -312,7 +359,7 @@ export const SpecialtyLibrary = React.memo(function SpecialtyLibrary({
                   >
                     <Pressable
                       accessibilityRole="button"
-                      accessibilityLabel={"Open " + p.title + " timer"}
+                      accessibilityLabel={tr("Open {0} timer", p.title)}
                       onPress={() => openTimer(p.id)}
                       style={({ pressed }) => ({
                         flex: 1,
@@ -346,13 +393,12 @@ export const SpecialtyLibrary = React.memo(function SpecialtyLibrary({
                     </Pressable>
                     <Pressable
                       accessibilityRole="button"
-                      accessibilityLabel={
-                        (prefs.favorites.includes(p.id) ? "Remove " : "Add ") +
-                        p.title +
-                        (prefs.favorites.includes(p.id)
-                          ? " from favorites"
-                          : " to favorites")
-                      }
+                      accessibilityLabel={tr(
+                        prefs.favorites.includes(p.id)
+                          ? "Remove {0} from favorites"
+                          : "Add {0} to favorites",
+                        p.title,
+                      )}
                       accessibilityState={{
                         selected: prefs.favorites.includes(p.id),
                       }}

@@ -1,9 +1,10 @@
+import { useTranslate } from "../state/language";
 import React, { useState } from "react";
 import { View } from "react-native";
 import {
   Action,
   Body,
-  confirm,
+  useConfirm,
   Heading,
   Page,
   Row,
@@ -18,19 +19,23 @@ import { router } from "expo-router";
 import type { Report } from "../core/types";
 
 export function HistoryScreen({ embedded = false }: { embedded?: boolean }) {
+  const tr = useTranslate();
   const { store } = useApp();
   const Container = embedded ? View : Page;
   return (
     <Container>
       <Body muted>
-        Your last 100 finished sessions. Private and saved on this device.
+        {tr(
+          "Your last 100 finished sessions. Private and saved on this device.",
+        )}
       </Body>
       {!store.history.length ? (
         <>
-          <Heading>A little time well spent.</Heading>
+          <Heading>{tr("A little time well spent.")}</Heading>
           <Body>
-            Finish a timer to see its results here. Resetting an active timer
-            also saves the run.
+            {tr(
+              "Finish a timer to see its results here. Resetting an active timer also saves the run.",
+            )}
           </Body>
         </>
       ) : (
@@ -40,6 +45,8 @@ export function HistoryScreen({ embedded = false }: { embedded?: boolean }) {
   );
 }
 function ReportRow({ report: r }: { report: Report }) {
+  const confirm = useConfirm();
+  const tr = useTranslate();
   const { removeReport, notify } = useApp(),
     [open, setOpen] = useState(false);
   async function download() {
@@ -47,7 +54,7 @@ function ReportRow({ report: r }: { report: Report }) {
       try {
         await exportFile("corptimer-meeting.csv", meetingCSV(r), "text/csv");
       } catch (e) {
-        notify(e instanceof Error ? e.message : "Could not export report.");
+        notify(e instanceof Error ? e.message : tr("Could not export report."));
       }
       return;
     }
@@ -71,7 +78,7 @@ function ReportRow({ report: r }: { report: Report }) {
     try {
       await exportFile("corptimer-results.csv", csv(rows), "text/csv");
     } catch (e) {
-      notify(e instanceof Error ? e.message : "Could not export results.");
+      notify(e instanceof Error ? e.message : tr("Could not export results."));
     }
   }
   return (
@@ -82,7 +89,7 @@ function ReportRow({ report: r }: { report: Report }) {
       </Body>
       <Row>
         <Action
-          label={open ? "Hide results" : "View results"}
+          label={open ? tr("Hide results") : tr("View results")}
           onPress={() =>
             r.kind === "meeting"
               ? router.push({
@@ -92,13 +99,13 @@ function ReportRow({ report: r }: { report: Report }) {
               : setOpen(!open)
           }
         />
-        <Action label="Export CSV" onPress={() => void download()} />
+        <Action label={tr("Export CSV")} onPress={() => void download()} />
         <Action
-          label="Delete"
+          label={tr("Delete")}
           onPress={() =>
             void confirm(
-              "Delete this result?",
-              `Remove “${r.title}” from History?`,
+              tr("Delete this result?"),
+              tr("Remove “{0}” from History?", String(r.title)),
             ).then((ok) => {
               if (ok) removeReport(r.id);
             })
@@ -107,7 +114,9 @@ function ReportRow({ report: r }: { report: Report }) {
       </Row>
       {open && (
         <View style={{ gap: 12 }}>
-          {r.entries.length > 0 && <Body muted>Stage · planned / actual</Body>}
+          {r.entries.length > 0 && (
+            <Body muted>{tr("Stage · planned / actual")}</Body>
+          )}
           {r.entries.map((e, i) => (
             <Row key={i} style={{ justifyContent: "space-between" }}>
               <Body style={{ flex: 1 }}>{e.name}</Body>
@@ -118,14 +127,16 @@ function ReportRow({ report: r }: { report: Report }) {
           ))}
           {r.laps.map((lap, i) => (
             <Body key={i}>
-              Lap {(r.lapOffset ?? 0) + i + 1}:{" "}
-              {formatTime(lap - (r.laps[i - 1] ?? r.lapBase ?? 0), true)} ·
-              total {formatTime(lap, true)}
+              {tr("Lap ")}
+              {(r.lapOffset ?? 0) + i + 1}:{" "}
+              {formatTime(lap - (r.laps[i - 1] ?? r.lapBase ?? 0), true)}
+              {tr(" · total ")}
+              {formatTime(lap, true)}
             </Body>
           ))}
           {r.notes && (
             <>
-              <Heading>Private notes</Heading>
+              <Heading>{tr("Private notes")}</Heading>
               <Body>{r.notes}</Body>
             </>
           )}

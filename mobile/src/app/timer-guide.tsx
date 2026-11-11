@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React from "react";
 import { Stack, router } from "expo-router";
 import { Action, Body, Heading, Page, Rule } from "../components/ui";
@@ -54,16 +55,18 @@ const steps = [
   ],
 ];
 export default function TimerGuide() {
+  const tr = useTranslate();
   return (
     <Page>
-      <Stack.Screen options={{ title: "Create your timer · guide" }} />
-      <Heading>A timer for your routine.</Heading>
+      <Stack.Screen options={{ title: tr("Create your timer · guide") }} />
+      <Heading>{tr("A timer for your routine.")}</Heading>
       <Body>
-        Build a useful sequence from simple stages. Start with an example, then
-        make it yours.
+        {tr(
+          "Build a useful sequence from simple stages. Start with an example, then make it yours.",
+        )}
       </Body>
       <Action
-        label="Create your timer"
+        label={tr("Create your timer")}
         tone="primary"
         onPress={() => router.push("/specialty/custom-timer")}
       />
@@ -81,31 +84,32 @@ export default function TimerGuide() {
                 style={{ width: "100%", height: 360 }}
               />
               <Body muted>
-                {illustrations[[0, 2, 6].indexOf(i)].label}. Local demo capture;
-                device layout may vary.
+                {illustrations[[0, 2, 6].indexOf(i)].label}
+                {tr(". Local demo capture; device layout may vary.")}
               </Body>
             </>
           ) : null}
         </React.Fragment>
       ))}
       <Rule />
-      <Heading>Ten ideas to build</Heading>
+      <Heading>{tr("Ten ideas to build")}</Heading>
       {customRecipes.map((recipe) => (
         <React.Fragment key={recipe.id}>
-          <Heading>{recipe.title}</Heading>
+          <Heading>{tr(recipe.title)}</Heading>
           <Body>
             {recipe.stages
               .map(
                 (s) =>
-                  `${s.name}: ${Math.floor(s.seconds / 60)}m ${s.seconds % 60}s`,
+                  `${tr(s.name)}: ${Math.floor(s.seconds / 60)}m ${s.seconds % 60}s`,
               )
               .join(" → ")}
           </Body>
         </React.Fragment>
       ))}
       <Body muted>
-        Recipes are editable examples, not cooking, exercise or medical
-        instructions. Set durations appropriate to your activity.
+        {tr(
+          "Recipes are editable examples, not cooking, exercise or medical instructions. Set durations appropriate to your activity.",
+        )}
       </Body>
     </Page>
   );

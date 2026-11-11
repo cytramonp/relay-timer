@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import { GoogleMark } from "../components/google-mark";
 import React, { useState } from "react";
 import { Linking, Platform, View } from "react-native";
@@ -22,6 +23,7 @@ import { useLive } from "../state/live-store";
 import { useTheme } from "../theme";
 
 export default function ProScreen() {
+  const tr = useTranslate();
   const live = useLive();
   const { settings } = useApp();
   const { access, product, error, account } = useBilling(),
@@ -47,13 +49,15 @@ export default function ProScreen() {
   }
   return (
     <Page>
-      <Stack.Screen options={{ title: "Your plan" }} />
+      <Stack.Screen options={{ title: tr("Your plan") }} />
       <Body muted>
-        {access ? `YOUR PLAN · ${access.tier.toUpperCase()}` : "YOUR PLAN"}
+        {access
+          ? tr("YOUR PLAN · {0}", String(access.tier.toUpperCase()))
+          : tr("YOUR PLAN")}
       </Body>
-      <Heading>Your timer. Your way.</Heading>
+      <Heading>{tr("Your timer. Your way.")}</Heading>
       <Body>
-        One library for meetings, training, focus and everyday routines.
+        {tr("One library for meetings, training, focus and everyday routines.")}
       </Body>
       <View
         style={{
@@ -63,32 +67,36 @@ export default function ProScreen() {
           gap: 16,
         }}
       >
-        <Body style={{ color: t.cream, fontSize: 23 }}>CorpTimer Pro</Body>
+        <Body style={{ color: t.cream, fontSize: 23 }}>
+          {tr("CorpTimer Pro")}
+        </Body>
         <Body style={{ color: t.cream }}>
-          Unlimited starts. Edit durations, stages, rounds and agendas. Save and
-          reuse your own timers.
+          {tr(
+            "Unlimited starts. Edit durations, stages, rounds and agendas. Save and reuse your own timers.",
+          )}
         </Body>
         {product ? (
           <Body style={{ color: t.bright }}>
-            {product.price} / year · auto-renewing
+            {product.price}
+            {tr(" / year · auto-renewing")}
           </Body>
         ) : (
           <Body style={{ color: t.bright }}>
             {Platform.OS === "android"
-              ? "Annual plan - price shown by Google Play"
-              : "Annual plan - purchases unavailable in this build"}
+              ? tr("Annual plan - price shown by Google Play")
+              : tr("Annual plan - purchases unavailable in this build")}
           </Body>
         )}
         {access?.tier === "pro" ? (
-          <Body style={{ color: t.bright }}>Pro is active.</Body>
+          <Body style={{ color: t.bright }}>{tr("Pro is active.")}</Body>
         ) : (
           <Action
             label={
               busy
-                ? "Please wait..."
+                ? tr("Please wait...")
                 : Platform.OS === "android"
-                  ? "Subscribe with Google Play"
-                  : "Pro subscription"
+                  ? tr("Subscribe with Google Play")
+                  : tr("Pro subscription")
             }
             tone="cream"
             disabled={busy || !product || !purchasesEnabled()}
@@ -99,17 +107,22 @@ export default function ProScreen() {
       {!purchasesEnabled() ? (
         <Body muted>
           {Platform.OS === "android"
-            ? "Google Play purchases and restore are not available in this build yet."
-            : "App Store purchases and restore are not available in this build yet."}{" "}
-          You can use the trial and Free timers without signing in. No payment
-          can be taken in this build.
+            ? tr(
+                "Google Play purchases and restore are not available in this build yet.",
+              )
+            : tr(
+                "App Store purchases and restore are not available in this build yet.",
+              )}{" "}
+          {tr(
+            "You can use the trial and Free timers without signing in. No payment can be taken in this build.",
+          )}
         </Body>
       ) : null}
       <Action
         label={
           Platform.OS === "android"
-            ? "Restore Google Play purchases"
-            : "Restore purchases"
+            ? tr("Restore Google Play purchases")
+            : tr("Restore purchases")
         }
         disabled={busy || !purchasesEnabled()}
         onPress={() =>
@@ -120,13 +133,13 @@ export default function ProScreen() {
         }
       />
       <Action
-        label="Refresh plan"
+        label={tr("Refresh plan")}
         disabled={busy}
         onPress={() => void task(refreshBilling)}
       />
       {Platform.OS === "android" ? (
         <Action
-          label="Manage Google Play subscription"
+          label={tr("Manage Google Play subscription")}
           onPress={() =>
             void Linking.openURL(
               "https://play.google.com/store/account/subscriptions?sku=corptimer_pro_yearly&package=com.corptimer.app",
@@ -140,42 +153,43 @@ export default function ProScreen() {
       ) : null}
       {Platform.OS === "android" ? (
         <Body muted>
-          Payment is charged to your Google Play account. The annual
-          subscription renews automatically unless cancelled in Google Play
-          before renewal. Cancelling retains Pro until the end of the paid
-          period. No payment is required to start the CorpTimer trial.
+          {tr(
+            "Payment is charged to your Google Play account. The annual subscription renews automatically unless cancelled in Google Play before renewal. Cancelling retains Pro until the end of the paid period. No payment is required to start the CorpTimer trial.",
+          )}
         </Body>
       ) : null}
-      <Heading>Start with full access.</Heading>
+      <Heading>{tr("Start with full access.")}</Heading>
       <Body>
-        The trial ends only after both 10 days and 10 timer starts. Then Free
-        includes two starts per UTC day. Pausing, resuming, changing speakers
-        and stages use the same start.
+        {tr(
+          "The trial ends only after both 10 days and 10 timer starts. Then Free includes two starts per UTC day. Pausing, resuming, changing speakers and stages use the same start.",
+        )}
       </Body>
       <Body>
-        Your running timers, history, exports and saved setups remain available
-        when your plan changes.
+        {tr(
+          "Your running timers, history, exports and saved setups remain available when your plan changes.",
+        )}
       </Body>
       {access?.tier === "free" ? (
         <Body>
-          {access.remaining} of 2 starts left today. Resets at 00:00 UTC.
+          {access.remaining}
+          {tr(" of 2 starts left today. Resets at 00:00 UTC.")}
         </Body>
       ) : null}
       <Rule />
-      <Heading>Website account (optional)</Heading>
+      <Heading>{tr("Website account (optional)")}</Heading>
       <Body muted>
-        Already have Pro on corptimer.com? Link the same Google account to check
-        that access here. This is separate from purchasing or restoring through
-        the app store.
+        {tr(
+          "Already have Pro on corptimer.com? Link the same Google account to check that access here. This is separate from purchasing or restoring through the app store.",
+        )}
       </Body>
       {account ? (
         <>
           <Body>
-            Website account:{" "}
-            {account.email || account.name || "your Google account"}.
+            {tr("Website account:")}{" "}
+            {account.email || account.name || tr("your Google account")}.
           </Body>
           <Action
-            label="Sign out"
+            label={tr("Sign out")}
             disabled={busy}
             onPress={() =>
               void task(async () => {
@@ -188,7 +202,7 @@ export default function ProScreen() {
       ) : (
         <>
           <Action
-            label="Sign in with Google"
+            label={tr("Sign in with Google")}
             icon={<GoogleMark />}
             disabled={busy || !googleSignInEnabled()}
             onPress={() =>
@@ -200,21 +214,25 @@ export default function ProScreen() {
           />
           <Body muted>
             {googleSignInEnabled()
-              ? "Use the same Google account as the website to check your Pro access. Your local timers stay on this device."
-              : "Website account linking is not available in this build yet. No sign-in is needed to use the trial or Free timers."}
+              ? tr(
+                  "Use the same Google account as the website to check your Pro access. Your local timers stay on this device.",
+                )
+              : tr(
+                  "Website account linking is not available in this build yet. No sign-in is needed to use the trial or Free timers.",
+                )}
           </Body>
         </>
       )}
       <Rule />
-      <Heading>Your logo</Heading>
+      <Heading>{tr("Your logo")}</Heading>
       <BrandLogo />
       <Body muted>
-        PNG, JPEG or WebP, up to 2 MB. Stored on this device and in your
-        explicit device-data export; never attached to feedback or sent to
-        billing.
+        {tr(
+          "PNG, JPEG or WebP, up to 2 MB. Stored on this device and in your explicit device-data export; never attached to feedback or sent to billing.",
+        )}
       </Body>
       <Action
-        label="Choose company logo"
+        label={tr("Choose company logo")}
         disabled={busy || !access?.customize}
         onPress={() =>
           void task(async () => {
@@ -250,11 +268,14 @@ export default function ProScreen() {
         }
       />
       <Action
-        label="Remove company logo"
+        label={tr("Remove company logo")}
         onPress={() => settings({ companyLogo: undefined })}
       />
       <Rule />
-      <Action label="Privacy & data" onPress={() => router.push("/privacy")} />
+      <Action
+        label={tr("Privacy & data")}
+        onPress={() => router.push("/privacy")}
+      />
       {message || error ? <Body>{message || error}</Body> : null}
     </Page>
   );

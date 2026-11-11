@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useState } from "react";
 import { Modal, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,6 +13,7 @@ export function TimerSurface({
   children: React.ReactNode;
   identity?: React.ReactNode;
 }) {
+  const tr = useTranslate();
   const [full, setFull] = useState(false),
     inset = useSafeAreaInsets(),
     t = useTheme();
@@ -28,7 +30,7 @@ export function TimerSurface({
         <IconAction
           dark
           icon={full ? "contract-outline" : "expand-outline"}
-          label={full ? "Close full screen" : "Full screen"}
+          label={full ? tr("Close full screen") : tr("Full screen")}
           onPress={() => setFull(!full)}
         />
       </View>

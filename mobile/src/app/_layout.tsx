@@ -1,3 +1,4 @@
+import { LanguageProvider, useTranslate } from "../state/language";
 import React, { useEffect } from "react";
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
@@ -26,6 +27,7 @@ export const unstable_settings = { initialRouteName: "(tabs)" };
 void SplashScreen.preventAutoHideAsync();
 
 function Navigation() {
+  const tr = useTranslate();
   useEffect(initializeBilling, []);
   useEffect(() => {
     let live = true;
@@ -92,10 +94,10 @@ function Navigation() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="timer/[kind]" options={{ title: "Timer" }} />
+        <Stack.Screen name="timer/[kind]" options={{ title: tr("Timer") }} />
         <Stack.Screen
           name="edit/[kind]"
-          options={{ title: "Edit timer", presentation: "modal" }}
+          options={{ title: tr("Edit timer"), presentation: "modal" }}
         />
       </Stack>
     </NavigationThemeProvider>
@@ -114,7 +116,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AppProvider>
-          <AppContents />
+          <LanguageProvider>
+            <AppContents />
+          </LanguageProvider>
         </AppProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

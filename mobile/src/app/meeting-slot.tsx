@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import { CustomizationGate } from "../components/plan-status";
 import React, { useState } from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
@@ -15,6 +16,7 @@ import { allocate, editDuration } from "../core/meeting";
 import { DurationField } from "../components/duration-field";
 
 export default function SlotSheet() {
+  const tr = useTranslate();
   const { id } = useLocalSearchParams<{ id: string }>(),
     { store, editMeeting } = useApp();
   const run =
@@ -58,24 +60,25 @@ export default function SlotSheet() {
       <CustomizationGate>
         <Stack.Screen
           options={{
-            title: "Edit turn",
+            title: tr("Edit turn"),
             presentation: "formSheet",
-            headerRight: () => <Action label="Done" onPress={save} />,
+            headerRight: () => <Action label={tr("Done")} onPress={save} />,
           }}
         />
-        <Heading>{slot?.name ?? "Turn removed"}</Heading>
+        <Heading>{slot?.name ?? tr("Turn removed")}</Heading>
         <Body muted>
-          Durations use minutes. With proportions on, other unfinished slots
-          absorb the change.
+          {tr(
+            "Durations use minutes. With proportions on, other unfinished slots absorb the change.",
+          )}
         </Body>
         <Field
-          label="Speaker or topic"
+          label={tr("Speaker or topic")}
           value={name}
           onChangeText={setName}
           containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
         />
         <DurationField
-          label="Duration · minutes"
+          label={tr("Duration · minutes")}
           unit="minutes"
           expanded
           value={minutes}
@@ -88,7 +91,7 @@ export default function SlotSheet() {
           {[1, 2, 3, 5, 8, 10].map((m) => (
             <Action
               key={m}
-              label={`${m} min`}
+              label={tr("{0} min", String(m))}
               onPress={() => {
                 setMinutes(String(m));
                 setPinned(true);
@@ -97,17 +100,17 @@ export default function SlotSheet() {
           ))}
         </Row>
         <Toggle
-          label="Topic rather than participant"
+          label={tr("Topic rather than participant")}
           value={topic}
           onChange={setTopic}
         />
         <Toggle
-          label="Pin this duration during automatic split"
+          label={tr("Pin this duration during automatic split")}
           value={pinned}
           onChange={setPinned}
         />
         {error ? <Body>{error}</Body> : null}
-        <Action label="Apply changes" tone="primary" onPress={save} />
+        <Action label={tr("Apply changes")} tone="primary" onPress={save} />
       </CustomizationGate>
     </Page>
   );

@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useEffect, useState } from "react";
 import { Platform, Text, TextInput, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -33,6 +34,7 @@ export function DurationField({
   min?: number;
   max?: number;
 }) {
+  const tr = useTranslate();
   const t = useTheme(),
     { store, settings } = useApp();
   const [open, setOpen] = useState(expanded),
@@ -114,7 +116,10 @@ export function DurationField({
             selectTextOnFocus
             containerStyle={{ flexGrow: 0, flexBasis: "auto" }}
           />
-          <Action label={`Use dial · ${label}`} onPress={() => setOpen(true)} />
+          <Action
+            label={tr("Use dial · {0}", String(label))}
+            onPress={() => setOpen(true)}
+          />
         </>
       ) : (
         <>
@@ -134,8 +139,10 @@ export function DurationField({
               <Animated.View
                 testID="duration-dial"
                 accessibilityRole="adjustable"
-                accessibilityLabel={`Adjust ${label}`}
-                accessibilityHint="Turn clockwise to add time, or use the plus and minus buttons."
+                accessibilityLabel={tr("Adjust {0}", String(label))}
+                accessibilityHint={tr(
+                  "Turn clockwise to add time, or use the plus and minus buttons.",
+                )}
                 accessibilityValue={{
                   min,
                   max,
@@ -247,7 +254,7 @@ export function DurationField({
                 pointerEvents="none"
                 style={{ color: t.clockMuted, fontSize: 12, marginTop: 6 }}
               >
-                tap number to type
+                {tr("tap number to type")}
               </Text>
             </View>
           </View>
@@ -261,16 +268,16 @@ export function DurationField({
               onPress={() => changeBy(step)}
             />
             <Action
-              label={sound ? "Clicks on" : "Clicks off"}
+              label={sound ? tr("Clicks on") : tr("Clicks off")}
               onPress={() => settings({ dialSound: !sound })}
             />
           </Row>
           <Body muted style={{ textAlign: "center", fontSize: 13 }}>
-            Turn the rim to adjust. One tick = {step}{" "}
-            {unit === "minutes" ? "minute" : "second"}.
+            {tr("Turn the rim to adjust. One tick = ")}
+            {step} {unit === "minutes" ? tr("minute") : tr("second")}.
           </Body>
           {!expanded && (
-            <Action label="Close dial" onPress={() => setOpen(false)} />
+            <Action label={tr("Close dial")} onPress={() => setOpen(false)} />
           )}
         </>
       )}

@@ -125,6 +125,7 @@ export type Report = {
   parking?: ParkingItem[];
 };
 export type Settings = {
+  language?: import("./language.ts").Language;
   notifications: boolean;
   keepAwake: boolean;
   haptics: boolean;

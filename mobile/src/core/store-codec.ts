@@ -1,3 +1,4 @@
+import { readLanguage } from "./language.ts";
 import { defaultConfig } from "./catalog.ts";
 import { validateConfig } from "./backup.ts";
 import { kinds, type Store } from "./types.ts";
@@ -108,6 +109,7 @@ export function decodeStore(json?: string | null): {
     initial.history = saved.history.map(decodeReport);
     initial.meetingParking = decodeParking(saved.meetingParking);
     initial.settings = {
+      language: readLanguage(saved.settings?.language),
       notifications: saved.settings?.notifications === true,
       keepAwake: saved.settings?.keepAwake !== false,
       haptics: saved.settings?.haptics !== false,

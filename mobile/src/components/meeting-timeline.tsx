@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useState, useMemo } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -33,6 +34,7 @@ function Boundary({
   scrollGesture: ReturnType<typeof Gesture.Native>;
   horizontalGesture: ReturnType<typeof Gesture.Native>;
 }) {
+  const tr = useTranslate();
   const t = useTheme(),
     dx = useSharedValue(0);
   const pan = Gesture.Pan()
@@ -59,8 +61,11 @@ function Boundary({
         testID={`boundary-${index}`}
         accessible
         accessibilityRole="adjustable"
-        accessibilityLabel={`Resize boundary after slot ${index + 1}`}
-        accessibilityHint="Drag left or right to adjust planned time"
+        accessibilityLabel={tr(
+          "Resize boundary after slot {0}",
+          String(index + 1),
+        )}
+        accessibilityHint={tr("Drag left or right to adjust planned time")}
         accessibilityActions={[
           { name: "increment", label: "Add 15 seconds" },
           { name: "decrement", label: "Remove 15 seconds" },
@@ -124,6 +129,7 @@ function ClockCursor({
   scrollGesture: ReturnType<typeof Gesture.Native>;
   horizontalGesture: ReturnType<typeof Gesture.Native>;
 }) {
+  const tr = useTranslate();
   const t = useTheme(),
     dx = useSharedValue(0),
     left = Math.min(1, at / scale) * width;
@@ -150,8 +156,10 @@ function ClockCursor({
       <Animated.View
         accessible
         accessibilityRole="adjustable"
-        accessibilityLabel="Correct meeting clock"
-        accessibilityHint="Drag to adjust elapsed time without changing recorded turns"
+        accessibilityLabel={tr("Correct meeting clock")}
+        accessibilityHint={tr(
+          "Drag to adjust elapsed time without changing recorded turns",
+        )}
         accessibilityValue={{
           min: 0,
           max: Math.ceil(scale / 1000),
@@ -220,6 +228,7 @@ export function MeetingTimeline({
   onSeek: (ms: number) => void;
   scrollGesture: ReturnType<typeof Gesture.Native>;
 }) {
+  const tr = useTranslate();
   const horizontalGesture = useMemo(() => Gesture.Native(), []);
   const t = useTheme(),
     v = meetingView(config, run, now),
@@ -244,7 +253,7 @@ export function MeetingTimeline({
           accessibilityRole="header"
           style={{ fontFamily: "Cantata", fontSize: 21, color: t.ink }}
         >
-          Meeting timeline
+          {tr("Meeting timeline")}
         </Text>
         <Text
           style={{
@@ -257,7 +266,9 @@ export function MeetingTimeline({
         </Text>
       </View>
       <Text style={{ fontSize: 12, color: t.muted, lineHeight: 18 }}>
-        Drag a handle to change the plan. Swipe the track to see every slot.
+        {tr(
+          "Drag a handle to change the plan. Swipe the track to see every slot.",
+        )}
       </Text>
       <GestureDetector gesture={horizontalGesture}>
         <ScrollView
@@ -278,7 +289,12 @@ export function MeetingTimeline({
                 <View
                   key={a.id}
                   accessible
-                  accessibilityLabel={`${a.name}, ${formatTime(a.seconds * 1000)} planned, ${a.state}`}
+                  accessibilityLabel={tr(
+                    "{0}, {1} planned, {2}",
+                    String(a.name),
+                    String(formatTime(a.seconds * 1000)),
+                    String(a.state),
+                  )}
                   style={{
                     flex: Math.max(a.seconds, 1),
                     backgroundColor:
@@ -336,7 +352,7 @@ export function MeetingTimeline({
               );
             })}
             <View
-              accessibilityLabel="Actual time used"
+              accessibilityLabel={tr("Actual time used")}
               style={{
                 flexDirection: "row",
                 height: 18,
@@ -415,21 +431,21 @@ export function MeetingTimeline({
       >
         <View style={{ flex: 1, minWidth: 140 }}>
           <Text style={{ fontSize: 12, color: t.muted }}>
-            Plan above · actual below
+            {tr("Plan above · actual below")}
           </Text>
           <Text style={{ fontSize: 12, color: t.muted }}>
-            Teal: early · coral: over
+            {tr("Teal: early · coral: over")}
           </Text>
         </View>
         <IconAction
           icon="remove"
-          label="Move meeting clock back one minute"
+          label={tr("Move meeting clock back one minute")}
           disabled={!run || run.status === "done"}
           onPress={() => onClock(-60)}
         />
         <IconAction
           icon="add"
-          label="Move meeting clock forward one minute"
+          label={tr("Move meeting clock forward one minute")}
           disabled={!run || run.status === "done"}
           onPress={() => onClock(60)}
         />

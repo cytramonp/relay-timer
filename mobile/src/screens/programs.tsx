@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useState } from "react";
 import { router } from "expo-router";
 import { Text, View } from "react-native";
@@ -5,7 +6,7 @@ import * as Crypto from "expo-crypto";
 import {
   Action,
   Body,
-  confirm,
+  useConfirm,
   Field,
   Heading,
   Page,
@@ -21,6 +22,8 @@ import { importFile, exportFile } from "../services/files";
 import { useTheme } from "../theme";
 
 export function ProgramsScreen() {
+  const tr = useTranslate();
+  const confirm = useConfirm();
   const {
       store,
       updateDraft,
@@ -43,7 +46,9 @@ export function ProgramsScreen() {
       const json = await importFile();
       if (json !== null) importPrograms(readBackup(json, Crypto.randomUUID));
     } catch (e) {
-      notify(e instanceof Error ? e.message : "Could not import this file.");
+      notify(
+        e instanceof Error ? e.message : tr("Could not import this file."),
+      );
     } finally {
       setBusy(false);
     }
@@ -53,7 +58,7 @@ export function ProgramsScreen() {
     try {
       await exportFile("corptimer-programs.json", writeBackup(store.programs));
     } catch (e) {
-      notify(e instanceof Error ? e.message : "Could not export programs.");
+      notify(e instanceof Error ? e.message : tr("Could not export programs."));
     } finally {
       setBusy(false);
     }
@@ -62,12 +67,12 @@ export function ProgramsScreen() {
     <Page>
       <Row>
         <Action
-          label="Saved programs"
+          label={tr("Saved programs")}
           tone={section === "saved" ? "primary" : "outline"}
           onPress={() => setSection("saved")}
         />
         <Action
-          label="History"
+          label={tr("History")}
           tone={section === "history" ? "primary" : "outline"}
           onPress={() => setSection("history")}
         />
@@ -77,42 +82,44 @@ export function ProgramsScreen() {
       ) : (
         <>
           <Body muted>
-            Set it up once. Make it yours. Saved on this device.
+            {tr("Set it up once. Make it yours. Saved on this device.")}
           </Body>
           <Row>
             <Action
-              label={busy ? "Working…" : "Import"}
+              label={busy ? tr("Working…") : tr("Import")}
               disabled={busy}
               onPress={() => void load()}
             />
             <Action
-              label="Export programs"
+              label={tr("Export programs")}
               disabled={busy || !store.programs.length}
               onPress={() => void backup()}
             />
           </Row>
           <Field
-            label="Find a program"
+            label={tr("Find a program")}
             value={query}
             onChangeText={setQuery}
-            placeholder="Search by name or timer"
+            placeholder={tr("Search by name or timer")}
           />
           <SavedBoards query={query} />
-          <Heading>Saved programs</Heading>
+          <Heading>{tr("Saved programs")}</Heading>
           {!programs.length && (
             <>
               <Heading>
                 {store.programs.length
-                  ? "No matching programs"
-                  : "Your next routine starts here."}
+                  ? tr("No matching programs")
+                  : tr("Your next routine starts here.")}
               </Heading>
               <Body>
                 {store.programs.length
-                  ? "Try another name or clear the search."
-                  : "Open a timer, edit its setup and choose Save program. You can also import a setup or meeting backup from corptimer.com."}
+                  ? tr("Try another name or clear the search.")
+                  : tr(
+                      "Open a timer, edit its setup and choose Save program. You can also import a setup or meeting backup from corptimer.com.",
+                    )}
               </Body>
               <Action
-                label="Browse timers"
+                label={tr("Browse timers")}
                 onPress={() => router.navigate("/(tabs)/timers")}
               />
             </>
@@ -130,7 +137,7 @@ export function ProgramsScreen() {
               </Body>
               <Row>
                 <Action
-                  label="Open"
+                  label={tr("Open")}
                   tone="primary"
                   onPress={() =>
                     void (async () => {
@@ -138,8 +145,10 @@ export function ProgramsScreen() {
                         if (
                           store.run.status !== "done" &&
                           !(await confirm(
-                            "Load this program?",
-                            "The active run will finish and move to History.",
+                            tr("Load this program?"),
+                            tr(
+                              "The active run will finish and move to History.",
+                            ),
                           ))
                         )
                           return;
@@ -151,7 +160,7 @@ export function ProgramsScreen() {
                   }
                 />
                 <Action
-                  label="Export"
+                  label={tr("Export")}
                   onPress={() =>
                     void exportFile(
                       "corptimer-program.json",
@@ -160,11 +169,11 @@ export function ProgramsScreen() {
                   }
                 />
                 <Action
-                  label="Delete"
+                  label={tr("Delete")}
                   onPress={() =>
                     void confirm(
-                      "Delete saved program?",
-                      `Remove “${p.name}” from this device?`,
+                      tr("Delete saved program?"),
+                      tr("Remove “{0}” from this device?", String(p.name)),
                     ).then((ok) => {
                       if (ok) deleteProgram(p.id);
                     })
@@ -173,7 +182,7 @@ export function ProgramsScreen() {
               </Row>
               <Row>
                 <Action
-                  label="Edit"
+                  label={tr("Edit")}
                   onPress={() =>
                     p.kind === "meeting"
                       ? router.push({
@@ -187,7 +196,7 @@ export function ProgramsScreen() {
                   }
                 />
                 <Action
-                  label="Duplicate"
+                  label={tr("Duplicate")}
                   onPress={() => duplicateProgram(p.id)}
                 />
               </Row>

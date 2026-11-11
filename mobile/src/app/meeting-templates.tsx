@@ -1,9 +1,10 @@
+import { useTranslate } from "../state/language";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
 import { Stack, router } from "expo-router";
 import * as Crypto from "expo-crypto";
 import { Ionicons } from "@expo/vector-icons";
-import { Action, Body, confirm, Heading, Page } from "../components/ui";
+import { Action, Body, useConfirm, Heading, Page } from "../components/ui";
 import { meetingPresets } from "../core/meeting-presets";
 import { totalSeconds } from "../core/meeting";
 import { useApp } from "../state/app-store";
@@ -11,6 +12,8 @@ import { useTheme } from "../theme";
 import type { Config } from "../core/types";
 import { useLive } from "../state/live-store";
 export default function TemplatesSheet() {
+  const tr = useTranslate();
+  const confirm = useConfirm();
   const live = useLive();
   const { store, editMeeting, act } = useApp(),
     t = useTheme();
@@ -26,8 +29,8 @@ export default function TemplatesSheet() {
       if (
         store.run.status !== "done" &&
         !(await confirm(
-          "Use this template?",
-          "Your current session will be kept in History.",
+          tr("Use this template?"),
+          tr("Your current session will be kept in History."),
         ))
       )
         return;
@@ -45,25 +48,25 @@ export default function TemplatesSheet() {
   return (
     <Page>
       <Stack.Screen
-        options={{ title: "Templates", presentation: "formSheet" }}
+        options={{ title: tr("Templates"), presentation: "formSheet" }}
       />
-      <Heading>A good meeting starts here.</Heading>
-      <Body muted>A repeatable plan, with your own rhythm.</Body>
+      <Heading>{tr("A good meeting starts here.")}</Heading>
+      <Body muted>{tr("A repeatable plan, with your own rhythm.")}</Body>
       <Action
-        label="Save current agenda as template"
+        label={tr("Save current agenda as template")}
         tone="primary"
         onPress={() => router.push("/save-meeting")}
       />
       {store.programs.some((p) => p.kind === "meeting") && (
         <>
-          <Heading>Your templates</Heading>
+          <Heading>{tr("Your templates")}</Heading>
           {store.programs
             .filter((p) => p.kind === "meeting")
             .map((p) => (
               <Pressable
                 key={p.id}
                 accessibilityRole="button"
-                accessibilityLabel={`Use ${p.name}`}
+                accessibilityLabel={tr("Use {0}", String(p.name))}
                 onPress={() => void apply(p.config)}
                 style={{
                   paddingVertical: 16,
@@ -78,19 +81,20 @@ export default function TemplatesSheet() {
                   {p.name}
                 </Text>
                 <Text style={{ color: t.muted, fontSize: 13 }}>
-                  {p.config.agenda.length} slots ·{" "}
-                  {totalSeconds(p.config.agenda) / 60} min
+                  {p.config.agenda.length}
+                  {tr(" slots ·")} {totalSeconds(p.config.agenda) / 60}
+                  {tr(" min")}
                 </Text>
               </Pressable>
             ))}
         </>
       )}
-      <Heading>Start with a little structure.</Heading>
+      <Heading>{tr("Start with a little structure.")}</Heading>
       {meetingPresets.map((p) => (
         <Pressable
           key={p.name}
           accessibilityRole="button"
-          accessibilityLabel={`Use ${p.name}`}
+          accessibilityLabel={tr("Use {0}", String(p.name))}
           onPress={() => void apply(p.config)}
           style={({ pressed }) => ({
             flexDirection: "row",
@@ -135,15 +139,16 @@ export default function TemplatesSheet() {
               {p.name}
             </Text>
             <Text style={{ fontSize: 13, color: t.muted }}>
-              {totalSeconds(p.config.agenda) / 60} min ·{" "}
-              {p.config.agenda.length} slots
+              {totalSeconds(p.config.agenda) / 60}
+              {tr(" min ·")} {p.config.agenda.length}
+              {tr(" slots")}
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={t.teal} />
         </Pressable>
       ))}
       <Action
-        label="Manage saved templates"
+        label={tr("Manage saved templates")}
         onPress={() => {
           router.back();
           router.push("/(tabs)/programs");

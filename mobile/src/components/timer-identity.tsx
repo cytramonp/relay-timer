@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React from "react";
 import { View } from "react-native";
 import { Image } from "expo-image";
@@ -16,6 +17,7 @@ const art: Partial<Record<Kind, number>> = {
 };
 /** The timer's familiar illustration remains separate from the owner's brand. */
 export function TimerIdentity({ kind }: { kind: Kind }) {
+  const tr = useTranslate();
   return (
     <View
       style={{
@@ -27,7 +29,7 @@ export function TimerIdentity({ kind }: { kind: Kind }) {
     >
       {kind === "meeting" ? (
         <View
-          accessibilityLabel="Meeting glasses"
+          accessibilityLabel={tr("Meeting glasses")}
           style={{
             width: 88,
             height: 72,
@@ -42,7 +44,7 @@ export function TimerIdentity({ kind }: { kind: Kind }) {
       ) : (
         <Image
           source={art[kind]}
-          accessibilityLabel={`${kind} timer illustration`}
+          accessibilityLabel={tr("{0} timer illustration", String(kind))}
           contentFit="cover"
           style={{ width: 88, height: 72, borderRadius: 18 }}
         />

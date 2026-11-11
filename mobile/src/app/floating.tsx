@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useState } from "react";
 import { Platform } from "react-native";
 import { Stack, router } from "expo-router";
@@ -5,23 +6,24 @@ import { Action, Body, Heading, Page, Row } from "../components/ui";
 import { useOverlay } from "../state/overlay-store";
 import { useApp } from "../state/app-store";
 export default function FloatingSettings() {
+  const tr = useTranslate();
   const overlay = useOverlay(),
     { store, settings } = useApp(),
     [error, setError] = useState("");
   return (
     <Page>
       <Stack.Screen
-        options={{ title: "Floating timer", presentation: "formSheet" }}
+        options={{ title: tr("Floating timer"), presentation: "formSheet" }}
       />
-      <Heading>Keep time in sight.</Heading>
+      <Heading>{tr("Keep time in sight.")}</Heading>
       {Platform.OS === "android" ? (
         <>
           <Body>
-            A small draggable clock can stay above your call or presentation. It
-            has Next, Pause, Undo and Extend controls. Close it whenever you are
-            done.
+            {tr(
+              "A small draggable clock can stay above your call or presentation. It has Next, Pause, Undo and Extend controls. Close it whenever you are done.",
+            )}
           </Body>
-          <Heading>Shape</Heading>
+          <Heading>{tr("Shape")}</Heading>
           <Row>
             {(["wide", "strip", "square"] as const).map((floatingShape) => (
               <Action
@@ -38,17 +40,19 @@ export default function FloatingSettings() {
           </Row>
           {!overlay.available ? (
             <Body>
-              This preview does not include the Android floating module. Install
-              the CorpTimer APK to use it.
+              {tr(
+                "This preview does not include the Android floating module. Install the CorpTimer APK to use it.",
+              )}
             </Body>
           ) : !overlay.allowed ? (
             <>
               <Body>
-                Android asks you to allow CorpTimer to display over other apps.
-                Return here after enabling it.
+                {tr(
+                  "Android asks you to allow CorpTimer to display over other apps. Return here after enabling it.",
+                )}
               </Body>
               <Action
-                label="Allow floating timer"
+                label={tr("Allow floating timer")}
                 tone="primary"
                 onPress={overlay.request}
               />
@@ -57,8 +61,8 @@ export default function FloatingSettings() {
             <Action
               label={
                 overlay.visible
-                  ? "Floating timer is open"
-                  : "Open floating timer"
+                  ? tr("Floating timer is open")
+                  : tr("Open floating timer")
               }
               tone="primary"
               onPress={() =>
@@ -71,7 +75,7 @@ export default function FloatingSettings() {
           )}
           {overlay.visible && (
             <Action
-              label="Close floating timer"
+              label={tr("Close floating timer")}
               tone="danger"
               onPress={overlay.hide}
             />
@@ -79,11 +83,15 @@ export default function FloatingSettings() {
         </>
       ) : (
         <Body>
-          iOS keeps app windows inside the app. Use the large focus view or
-          share the live screen to another device.
+          {tr(
+            "iOS keeps app windows inside the app. Use the large focus view or share the live screen to another device.",
+          )}
         </Body>
       )}
-      <Action label="Open focus view" onPress={() => router.push("/focus")} />
+      <Action
+        label={tr("Open focus view")}
+        onPress={() => router.push("/focus")}
+      />
       {error ? <Body>{error}</Body> : null}
     </Page>
   );

@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import { TimerIdentity } from "../components/timer-identity";
 import React, { useEffect } from "react";
 import { ScrollView, Text } from "react-native";
@@ -10,6 +11,7 @@ import { useApp } from "../state/app-store";
 import { useTheme } from "../theme";
 import { MeetingClock } from "../components/meeting-clock";
 export default function FocusScreen() {
+  const tr = useTranslate();
   const { store, start, act } = useApp(),
     t = useTheme(),
     inset = useSafeAreaInsets();
@@ -68,7 +70,7 @@ export default function FocusScreen() {
           padding: 16,
         }}
       >
-        Focus view stays in CorpTimer. Your screen stays awake.
+        {tr("Focus view stays in CorpTimer. Your screen stays awake.")}
       </Text>
     </ScrollView>
   );

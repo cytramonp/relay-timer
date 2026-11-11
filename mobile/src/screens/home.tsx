@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React from "react";
 import { SpecialtyLibrary } from "../components/timer-library";
 import { Text, View } from "react-native";
@@ -9,6 +10,7 @@ import { useApp } from "../state/app-store";
 import { useTheme } from "../theme";
 
 export function HomeScreen() {
+  const tr = useTranslate();
   const t = useTheme(),
     { store } = useApp(),
     active = store.run;
@@ -20,10 +22,11 @@ export function HomeScreen() {
   return (
     <Page>
       <View style={{ gap: 8 }}>
-        <Heading>Every timer. One place.</Heading>
+        <Heading>{tr("Every timer. One place.")}</Heading>
         <Body muted>
-          Browse the full collection, group by activity, or star the timers you
-          use most.
+          {tr(
+            "Browse the full collection, group by activity, or star the timers you use most.",
+          )}
         </Body>
         <Row>
           <View style={{ height: 3, width: 48, backgroundColor: t.red }} />
@@ -40,7 +43,7 @@ export function HomeScreen() {
           }}
         >
           <Text style={{ color: t.cream, fontSize: 16 }}>
-            {active.config.title} · {active.status}
+            {active.config.title} · {tr(active.status)}
           </Text>
           <Text
             style={{
@@ -53,29 +56,32 @@ export function HomeScreen() {
             {formatTime(remaining(active, now))}
           </Text>
           <Action
-            label="Return to active timer"
+            label={tr("Return to active timer")}
             tone="cream"
             onPress={() => router.push(`/timer/${active.kind}`)}
           />
         </View>
       )}
       <SpecialtyLibrary />
-      <Heading>Just a few minutes?</Heading>
+      <Heading>{tr("Just a few minutes?")}</Heading>
       <Row>
         {[5, 10, 15, 20, 25, 30].map((m) => (
           <QuickMinute key={m} minutes={m} />
         ))}
       </Row>
       <Rule />
-      <Body muted>Programs stay on this device. No account needed.</Body>
+      <Body muted>
+        {tr("Programs stay on this device. No account needed.")}
+      </Body>
     </Page>
   );
 }
 function QuickMinute({ minutes }: { minutes: number }) {
+  const tr = useTranslate();
   const { store, updateDraft } = useApp();
   return (
     <Action
-      label={`${minutes} min`}
+      label={tr("{0} min", String(minutes))}
       onPress={() => {
         updateDraft(
           "simple",

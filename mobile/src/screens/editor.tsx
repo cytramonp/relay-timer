@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import { CustomizationGate } from "../components/plan-status";
 import React, { useState } from "react";
 import { Text, View } from "react-native";
@@ -23,6 +24,7 @@ import { clone } from "../core/clone";
 import { DurationField } from "../components/duration-field";
 
 export function EditorScreen({ kind }: { kind: Kind }) {
+  const tr = useTranslate();
   const { programId } = useLocalSearchParams<{ programId?: string }>();
   const { store, updateDraft, reviseProgram, notify } = useApp(),
     t = useTheme();
@@ -96,7 +98,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
         )
           return;
       } else if (!updateDraft(kind, valid)) return;
-      notify("Setup saved for your next run.");
+      notify(tr("Setup saved for your next run."));
       router.back();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Check your timer settings.");
@@ -108,16 +110,20 @@ export function EditorScreen({ kind }: { kind: Kind }) {
       <CustomizationGate>
         <Stack.Screen
           options={{
-            title: `${catalog.find((c) => c.kind === kind)!.title} setup`,
+            title: tr(
+              "{0} setup",
+              String(catalog.find((c) => c.kind === kind)!.title),
+            ),
             headerRight: () => (
-              <Action label="Done" onPress={done} tone="primary" />
+              <Action label={tr("Done")} onPress={done} tone="primary" />
             ),
           }}
         />
         {store.run?.kind === kind && store.run.status !== "done" && (
           <Body muted>
-            These changes apply to the next run. Reset the active timer to use
-            the new setup.
+            {tr(
+              "These changes apply to the next run. Reset the active timer to use the new setup.",
+            )}
           </Body>
         )}
         {error ? (
@@ -129,13 +135,13 @@ export function EditorScreen({ kind }: { kind: Kind }) {
           </Text>
         ) : null}
         <Field
-          label={kind === "pomodoro" ? "Focus task" : "Program name"}
+          label={kind === "pomodoro" ? tr("Focus task") : tr("Program name")}
           value={config.title}
           onChangeText={(title) => patch({ title })}
         />
         {presets[kind] && (
           <>
-            <Heading>Start with a preset</Heading>
+            <Heading>{tr("Start with a preset")}</Heading>
             <Row>
               {presets[kind]!.map((p) => (
                 <Action
@@ -151,10 +157,11 @@ export function EditorScreen({ kind }: { kind: Kind }) {
         )}
         {kind === "meeting" && (
           <>
-            <Heading>Your agenda</Heading>
+            <Heading>{tr("Your agenda")}</Heading>
             <Body muted>
-              Early finishes give the next speaker more time. Overruns shorten
-              later turns.
+              {tr(
+                "Early finishes give the next speaker more time. Overruns shorten later turns.",
+              )}
             </Body>
             {config.agenda.map((slot, i) => (
               <View
@@ -167,7 +174,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                 }}
               >
                 <Field
-                  label={`Item ${i + 1}`}
+                  label={tr("Item {0}", String(i + 1))}
                   value={slot.name}
                   onChangeText={(name) =>
                     patch({
@@ -178,7 +185,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                   }
                 />
                 <DurationField
-                  label="Duration · minutes"
+                  label={tr("Duration · minutes")}
                   unit="minutes"
                   value={agendaMinutes[slot.id] ?? String(slot.seconds / 60)}
                   onChangeText={(v) =>
@@ -187,7 +194,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                 />
                 <Row>
                   <Action
-                    label="Move up"
+                    label={tr("Move up")}
                     disabled={i === 0}
                     onPress={() => {
                       const a = [...config.agenda];
@@ -196,7 +203,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                     }}
                   />
                   <Action
-                    label="Move down"
+                    label={tr("Move down")}
                     disabled={i === config.agenda.length - 1}
                     onPress={() => {
                       const a = [...config.agenda];
@@ -205,7 +212,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                     }}
                   />
                   <Action
-                    label="Remove"
+                    label={tr("Remove")}
                     disabled={config.agenda.length === 1}
                     onPress={() =>
                       patch({
@@ -218,7 +225,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
             ))}
             <Row>
               <Action
-                label="Add item"
+                label={tr("Add item")}
                 disabled={config.agenda.length >= 200}
                 onPress={() =>
                   patch({
@@ -234,7 +241,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                 }
               />
               <Action
-                label="Equal times"
+                label={tr("Equal times")}
                 onPress={() => {
                   const seconds =
                     config.agenda.reduce((n, a) => n + a.seconds, 0) /
@@ -251,7 +258,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
             </Row>
             {numeric("minimum", "Minimum turn · seconds")}
             <Toggle
-              label="Move to the next speaker automatically"
+              label={tr("Move to the next speaker automatically")}
               value={config.automatic}
               onChange={(automatic) => patch({ automatic })}
             />
@@ -259,7 +266,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
         )}
         {interval && (
           <>
-            <Heading>Work & rest</Heading>
+            <Heading>{tr("Work & rest")}</Heading>
             <Row>
               {numeric("rounds", "Rounds")}
               {numeric("work", "Work · seconds")}
@@ -274,7 +281,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
               )}
             </Row>
             <Toggle
-              label="Customize individual rounds"
+              label={tr("Customize individual rounds")}
               value={config.customRounds}
               onChange={(customRounds) => patch({ customRounds })}
             />
@@ -313,18 +320,18 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                   return (
                     <View key={i} style={{ gap: 12 }}>
                       <Field
-                        label={`Round ${i + 1} name`}
+                        label={tr("Round {0} name", String(i + 1))}
                         value={round.name}
                         onChangeText={(name) => edit({ name })}
                       />
                       <Row>
                         <DurationField
-                          label="Work · seconds"
+                          label={tr("Work · seconds")}
                           value={String(round.work)}
                           onChangeText={(v) => edit({ work: Number(v) })}
                         />
                         <DurationField
-                          label="Rest · seconds"
+                          label={tr("Rest · seconds")}
                           value={String(round.rest)}
                           onChangeText={(v) => edit({ rest: Number(v) })}
                         />
@@ -334,7 +341,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                 },
               )}
             <Toggle
-              label="Advance automatically"
+              label={tr("Advance automatically")}
               value={config.automatic}
               onChange={(automatic) => patch({ automatic })}
             />
@@ -342,7 +349,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
         )}
         {kind === "pomodoro" && (
           <>
-            <Heading>Focus & breaks</Heading>
+            <Heading>{tr("Focus & breaks")}</Heading>
             <Row>
               {numeric("work", "Focus · seconds")}
               {numeric("rest", "Short break · seconds")}
@@ -351,12 +358,12 @@ export function EditorScreen({ kind }: { kind: Kind }) {
               {numeric("rounds", "Focus sessions")}
             </Row>
             <Toggle
-              label="Include the final break"
+              label={tr("Include the final break")}
               value={config.finalBreak}
               onChange={(finalBreak) => patch({ finalBreak })}
             />
             <Toggle
-              label="Advance automatically"
+              label={tr("Advance automatically")}
               value={config.automatic}
               onChange={(automatic) => patch({ automatic })}
             />
@@ -375,7 +382,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
                 {[5, 10, 15, 20, 25, 30].map((m) => (
                   <Action
                     key={m}
-                    label={`${m} min`}
+                    label={tr("{0} min", String(m))}
                     onPress={() => patch({ duration: m * 60 })}
                   />
                 ))}
@@ -385,7 +392,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
         )}
         {kind === "classroom" && (
           <Toggle
-            label="Hide digits and show visual progress"
+            label={tr("Hide digits and show visual progress")}
             value={config.hideDigits}
             onChange={(hideDigits) => patch({ hideDigits })}
           />
@@ -396,7 +403,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
               {numeric("increment", "Increment · seconds")}
               {numeric("delay", "Delay · seconds")}
             </Row>
-            <Heading>First player</Heading>
+            <Heading>{tr("First player")}</Heading>
             <Row>
               {["White", "Black"].map((label, i) => (
                 <Action
@@ -411,7 +418,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
         )}
         {kind === "newyear" && (
           <>
-            <Heading>Celebrate midnight in…</Heading>
+            <Heading>{tr("Celebrate midnight in…")}</Heading>
             <Row>
               {[
                 ["local", "My time zone"],
@@ -435,7 +442,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
           </>
         )}
         <Rule />
-        <Heading>Sound & cues</Heading>
+        <Heading>{tr("Sound & cues")}</Heading>
         {!["stopwatch", "chess", "newyear"].includes(kind) && (
           <Row>
             {numeric("warning", "Warning · seconds left")}
@@ -448,7 +455,7 @@ export function EditorScreen({ kind }: { kind: Kind }) {
               key={sound}
               label={
                 sound === "off"
-                  ? "Silent"
+                  ? tr("Silent")
                   : sound[0].toUpperCase() + sound.slice(1)
               }
               tone={config.sound === sound ? "primary" : "outline"}
@@ -458,15 +465,15 @@ export function EditorScreen({ kind }: { kind: Kind }) {
         </Row>
         {numeric("volume", "In-app volume · 0–100%")}
         <Body muted>
-          Background notification volume is controlled by your phone.
+          {tr("Background notification volume is controlled by your phone.")}
         </Body>
         <Toggle
-          label="Speak stage names while the app is open"
+          label={tr("Speak stage names while the app is open")}
           value={config.voice}
           onChange={(voice) => patch({ voice })}
         />
         <Action
-          label="Test sound"
+          label={tr("Test sound")}
           onPress={() =>
             void playCue(
               { ...config, volume: Number(numbers.volume) },
@@ -477,8 +484,8 @@ export function EditorScreen({ kind }: { kind: Kind }) {
             )
           }
         />
-        <Action label="Save setup" tone="primary" onPress={done} />
-        <Action label="Cancel" onPress={() => router.back()} />
+        <Action label={tr("Save setup")} tone="primary" onPress={done} />
+        <Action label={tr("Cancel")} onPress={() => router.back()} />
       </CustomizationGate>
     </Page>
   );

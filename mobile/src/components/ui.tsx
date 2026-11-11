@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React, { useCallback } from "react";
 import {
   Alert,
@@ -18,10 +19,11 @@ import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../theme";
 import { useApp } from "../state/app-store";
 
-export async function confirm(
+async function confirm(
   title: string,
   message: string,
-  destructive = false,
+  destructive: boolean,
+  tr: ReturnType<typeof useTranslate>,
 ): Promise<boolean> {
   if (Platform.OS === "web") return window.confirm(`${title}\n\n${message}`);
   return new Promise((resolve) =>
@@ -29,15 +31,23 @@ export async function confirm(
       title,
       message,
       [
-        { text: "Cancel", style: "cancel", onPress: () => resolve(false) },
+        { text: tr("Cancel"), style: "cancel", onPress: () => resolve(false) },
         {
-          text: destructive ? "Reset" : "Continue",
+          text: tr(destructive ? "Reset" : "Continue"),
           style: destructive ? "destructive" : "default",
           onPress: () => resolve(true),
         },
       ],
       { cancelable: true, onDismiss: () => resolve(false) },
     ),
+  );
+}
+export function useConfirm() {
+  const tr = useTranslate();
+  return useCallback(
+    (title: string, message: string, destructive = false) =>
+      confirm(title, message, destructive, tr),
+    [tr],
   );
 }
 export function Body({
@@ -258,6 +268,7 @@ export function Toggle({
   );
 }
 export function Notice() {
+  const tr = useTranslate();
   const { notice, notify } = useApp(),
     t = useTheme();
   return notice ? (
@@ -276,11 +287,13 @@ export function Notice() {
       </Text>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Dismiss message"
+        accessibilityLabel={tr("Dismiss message")}
         onPress={() => notify("")}
         style={{ minHeight: 48, justifyContent: "center" }}
       >
-        <Text style={{ color: t.teal, fontWeight: "600" }}>Dismiss</Text>
+        <Text style={{ color: t.teal, fontWeight: "600" }}>
+          {tr("Dismiss")}
+        </Text>
       </Pressable>
     </View>
   ) : null;

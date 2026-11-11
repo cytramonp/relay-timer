@@ -1,3 +1,4 @@
+import { useTranslate } from "../state/language";
 import React from "react";
 import { router } from "expo-router";
 import { Action, Body, Row } from "./ui";
@@ -5,25 +6,26 @@ import { useBilling, refreshBilling } from "../services/billing";
 import { BrandLogo } from "./brand-logo";
 
 export function PlanStatus({ showLogo = true }: { showLogo?: boolean }) {
+  const tr = useTranslate();
   const { access, error, loading } = useBilling();
   return (
     <Row>
       {showLogo ? <BrandLogo /> : null}
       <Body muted>
         {loading
-          ? "Checking access…"
+          ? tr("Checking access…")
           : access?.tier === "pro"
-            ? "CorpTimer Pro"
+            ? tr("CorpTimer Pro")
             : access?.tier === "trial"
-              ? "Full access · trial"
+              ? tr("Full access · trial")
               : access
-                ? `Free · ${access.remaining} starts left today`
-                : "Access check unavailable"}
+                ? tr("Free · {0} starts left today", String(access.remaining))
+                : tr("Access check unavailable")}
       </Body>
-      <Action label="Your plan" onPress={() => router.push("/pro")} />
+      <Action label={tr("Your plan")} onPress={() => router.push("/pro")} />
       {!access && !loading ? (
         <Action
-          label="Retry access check"
+          label={tr("Retry access check")}
           onPress={() => void refreshBilling().catch(() => {})}
         />
       ) : null}
@@ -32,21 +34,27 @@ export function PlanStatus({ showLogo = true }: { showLogo?: boolean }) {
   );
 }
 export function CustomizationGate({ children }: { children: React.ReactNode }) {
+  const tr = useTranslate();
   const { access, loading } = useBilling();
   if (access?.customize) return <>{children}</>;
   return (
     <>
       <Body>
         {loading
-          ? "Checking your access…"
+          ? tr("Checking your access…")
           : access
-            ? "Editing and custom timers are included in Pro. Your saved setups stay on this device."
-            : "Reconnect to check your access before editing."}
+            ? tr(
+                "Editing and custom timers are included in Pro. Your saved setups stay on this device.",
+              )
+            : tr("Reconnect to check your access before editing.")}
       </Body>
-      <Action label="View your plan" onPress={() => router.push("/pro")} />
+      <Action
+        label={tr("View your plan")}
+        onPress={() => router.push("/pro")}
+      />
       {!access ? (
         <Action
-          label="Retry access check"
+          label={tr("Retry access check")}
           onPress={() => void refreshBilling().catch(() => {})}
         />
       ) : null}
