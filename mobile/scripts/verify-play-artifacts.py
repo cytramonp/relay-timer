@@ -10,6 +10,7 @@ aapt = sorted(sdk.glob(f'build-tools/*/{aapt_name}'))[-1]
 badging = subprocess.check_output([str(aapt), 'dump', 'badging', str(apk)], encoding='utf-8')
 permissions = subprocess.check_output([str(aapt), 'dump', 'permissions', str(apk)], encoding='utf-8')
 config = json.loads((root / 'app.json').read_text(encoding='utf-8'))['expo']
+billing = json.loads((root / 'src/config/billing-public.json').read_text(encoding='utf-8'))
 package = config['android']['package']
 version_code = config['android']['versionCode']
 version = config['version']
@@ -37,9 +38,9 @@ with zipfile.ZipFile(apk) as z:
     assert any(b'CorpTimerClock' in z.read(n) for n in z.namelist() if n.endswith('.dex')), 'Native monotonic clock was not linked'
     bundle = z.read('assets/index.android.bundle')
     assert b'cytramonp@gmail.com' not in bundle
-    assert b'corptimer_pro_yearly' in bundle
-    assert b'Google Play purchases are being prepared' in bundle
-report = {'version': version, 'versionCode': version_code, 'targetSdk': 36, 'package': package, 'apkSha256': hashlib.sha256(apk.read_bytes()).hexdigest(), 'nativeLibraries16KB': len(checked), 'sensitiveMediaPermissions': False, 'recipientAddressInBundle': False, 'storePurchasesEnabled': False}
+    assert billing['productId'].encode('utf-8') in bundle
+    assert billing['purchasesEnabled'] is False, 'Purchases must stay disabled in this beta'
+report = {'version': version, 'versionCode': version_code, 'targetSdk': 36, 'package': package, 'apkSha256': hashlib.sha256(apk.read_bytes()).hexdigest(), 'nativeLibraries16KB': len(checked), 'sensitiveMediaPermissions': False, 'recipientAddressInBundle': False, 'storePurchasesEnabled': billing['purchasesEnabled']}
 aab = root / 'android/app/build/outputs/bundle/release/app-release.aab'
 if aab.exists():
     cert = subprocess.check_output(['keytool', '-printcert', '-jarfile', str(aab)], text=True)
