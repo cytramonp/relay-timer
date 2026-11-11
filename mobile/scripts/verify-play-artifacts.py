@@ -5,9 +5,10 @@ import hashlib, json, os, struct, subprocess, zipfile
 root = Path(__file__).resolve().parents[1]
 apk = next((root / 'android/app/build/outputs/apk/release').glob('*.apk'))
 sdk = Path(os.environ['ANDROID_HOME'])
-aapt = sorted(sdk.glob('build-tools/*/aapt'))[-1]
-badging = subprocess.check_output([str(aapt), 'dump', 'badging', str(apk)], text=True)
-permissions = subprocess.check_output([str(aapt), 'dump', 'permissions', str(apk)], text=True)
+aapt_name = 'aapt.exe' if os.name == 'nt' else 'aapt'
+aapt = sorted(sdk.glob(f'build-tools/*/{aapt_name}'))[-1]
+badging = subprocess.check_output([str(aapt), 'dump', 'badging', str(apk)], encoding='utf-8')
+permissions = subprocess.check_output([str(aapt), 'dump', 'permissions', str(apk)], encoding='utf-8')
 config = json.loads((root / 'app.json').read_text(encoding='utf-8'))['expo']
 package = config['android']['package']
 version_code = config['android']['versionCode']
