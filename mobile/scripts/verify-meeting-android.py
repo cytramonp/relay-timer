@@ -1,5 +1,6 @@
 """Release APK behavior/gesture/overlay evidence on the disposable CI emulator."""
 from pathlib import Path
+import json
 import os
 import re
 import subprocess
@@ -322,18 +323,19 @@ try:
         _, search = scroll_to('timer-library-search')
         tap_node(search)
         adb('shell', 'input', 'text', 'meditacion')
+        adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
         scroll_text(spanish['Meditation Timer'])
         capture(f'{form}-android-spanish-search.png')
         adb('shell', 'am', 'force-stop', 'com.corptimer.app')
         open_path('specialty/egg-timer')
-        assert find(tree(), text=spanish['Egg Timer']) is not None, 'Language did not persist'
-        _, egg = scroll_to('egg-doneness')
-        assert find(tree(), description=spanish['Translucent white · liquid yolk']) is not None
+        scroll_text(spanish['Egg Timer'])
+        scroll_text(spanish['Translucent white · liquid yolk'])
         capture(f'{form}-android-egg-doneness.png')
         open_path('settings')
         _, language = scroll_to('language-en')
         tap_node(language)
-        open_path('settings'); tap_node(find(tree(), text='Dark'))
+        _, dark = scroll_text('Dark')
+        tap_node(dark)
         adb('shell', 'settings', 'put', 'system', 'font_scale', '1.3')
         open_path(''); capture(f'{form}-android-dark-large-text.png')
         if form == 'tablet':
