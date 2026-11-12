@@ -31,15 +31,15 @@ export function TimerIdentity({ kind }: { kind: Kind }) {
         <View
           accessibilityLabel={tr("Meeting glasses")}
           style={{
-            width: 88,
-            height: 72,
+            width: 44,
+            height: 40,
             borderRadius: 18,
             backgroundColor: "#e7e9b1",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Ionicons name="glasses-outline" size={52} color="#17676b" />
+          <Ionicons name="glasses-outline" size={30} color="#b82933" />
         </View>
       ) : (
         <Image

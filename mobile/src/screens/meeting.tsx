@@ -432,7 +432,6 @@ export function MeetingScreen() {
         }}
       >
         <Notice />
-        <TimerIdentity kind="meeting" />
         <View
           style={{
             flexDirection: "row",
@@ -441,6 +440,7 @@ export function MeetingScreen() {
             gap: 10,
           }}
         >
+          <TimerIdentity kind="meeting" />
           <TextInput
             accessibilityLabel={tr("Meeting name")}
             key={config.title}

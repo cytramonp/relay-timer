@@ -1,6 +1,6 @@
 import { useTranslate } from "../state/language";
 import React, { useState } from "react";
-import { Platform } from "react-native";
+import { Platform, Text, View } from "react-native";
 import { Stack, router } from "expo-router";
 import { Action, Body, Heading, Page, Row } from "../components/ui";
 import { useOverlay } from "../state/overlay-store";
@@ -28,7 +28,7 @@ export default function FloatingSettings() {
             {(["wide", "strip", "square"] as const).map((floatingShape) => (
               <Action
                 key={floatingShape}
-                label={floatingShape}
+                label={tr(floatingShape)}
                 tone={
                   (store.settings.floatingShape ?? "wide") === floatingShape
                     ? "primary"
@@ -38,6 +38,42 @@ export default function FloatingSettings() {
               />
             ))}
           </Row>
+          <View
+            style={{
+              backgroundColor: "#061a1e",
+              padding: 16,
+              borderRadius: 14,
+              alignSelf: "center",
+              width: store.settings.floatingShape === "square" ? 180 : "100%",
+              maxWidth: 300,
+              gap: 8,
+            }}
+          >
+            <Text style={{ color: "#a8c2c1" }}>CorpTimer</Text>
+            {store.settings.floatingShape !== "strip" && (
+              <Text style={{ color: "#f5f2e9" }}>{tr("Meeting")}</Text>
+            )}
+            <Text
+              style={{
+                color: "#f5f2e9",
+                fontSize: store.settings.floatingShape === "strip" ? 26 : 38,
+              }}
+            >
+              05:00
+            </Text>
+            <Text style={{ color: "#64c9c4" }}>
+              {tr("Next")} {tr("Pause")} +1
+            </Text>
+          </View>
+          <Body>
+            {tr(
+              store.settings.floatingShape === "strip"
+                ? "A shorter window that hides the speaker name."
+                : store.settings.floatingShape === "square"
+                  ? "A narrower window for keeping more of your other app visible."
+                  : "Shows the current speaker, time and controls.",
+            )}
+          </Body>
           {!overlay.available ? (
             <Body>
               {tr(

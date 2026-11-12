@@ -1,9 +1,9 @@
 {
   "expo": {
     "icon": "./assets/icon.png",
-    "version": "0.6.0",
+    "version": "0.6.1",
     "ios": {
-      "buildNumber": "9",
+      "buildNumber": "10",
       "bundleIdentifier": "com.corptimer.app",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -21,7 +21,7 @@
       }
     },
     "android": {
-      "versionCode": 9,
+      "versionCode": 10,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#eeece5"

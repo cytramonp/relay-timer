@@ -6,6 +6,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   View,
@@ -13,7 +14,6 @@ import {
   type TextInputProps,
   type ViewStyle,
 } from "react-native";
-import { Host, Switch } from "@expo/ui";
 import { useFocusEffect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useTheme } from "../theme";
@@ -193,8 +193,10 @@ export function Action({
         borderWidth: 1,
         borderColor:
           tone === "danger" ? t.salmon : tone === "cream" ? t.cream : t.teal,
-        backgroundColor: bg,
-        opacity: disabled ? 0.45 : pressed ? 0.7 : 1,
+        backgroundColor: disabled ? t.field : bg,
+        opacity: pressed ? 0.7 : 1,
+        maxWidth: "100%",
+        flexShrink: 1,
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
@@ -209,7 +211,8 @@ export function Action({
         style={{
           fontSize: 15,
           fontWeight: "600",
-          color: fg,
+          color: disabled ? t.muted : fg,
+          flexShrink: 1,
           textAlign: "center",
         }}
       >
@@ -262,9 +265,36 @@ export function Toggle({
 }) {
   const t = useTheme();
   return (
-    <Host matchContents seedColor={t.teal} style={{ minHeight: 48 }}>
-      <Switch label={label} value={value} onValueChange={onChange} />
-    </Host>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        minHeight: 48,
+        width: "100%",
+      }}
+    >
+      <Text
+        style={{
+          flex: 1,
+          flexShrink: 1,
+          color: t.ink,
+          fontSize: 16,
+          lineHeight: 24,
+        }}
+      >
+        {label}
+      </Text>
+      <Switch
+        accessibilityLabel={label}
+        value={value}
+        onValueChange={onChange}
+        trackColor={{ false: t.line, true: t.teal }}
+        thumbColor={t.cream}
+        ios_backgroundColor={t.line}
+        style={{ flexShrink: 0 }}
+      />
+    </View>
   );
 }
 export function Notice() {

@@ -37,12 +37,18 @@ export function IconAction({
           alignItems: "center",
           justifyContent: "center",
           borderRadius: 12,
-          opacity: disabled ? 0.35 : pressed ? 0.6 : 1,
+          opacity: pressed ? 0.6 : 1,
         },
         style,
       ]}
     >
-      <Ionicons name={icon} size={22} color={dark ? t.cream : t.teal} />
+      <Ionicons
+        name={icon}
+        size={22}
+        color={
+          disabled ? (dark ? t.clockMuted : t.muted) : dark ? t.cream : t.teal
+        }
+      />
     </Pressable>
   );
 }
@@ -319,7 +325,8 @@ export function MeetingClock({
             borderRadius: 10,
             borderColor: t.clockLine,
             borderWidth: 1,
-            opacity: !run || done ? 0.35 : pressed ? 0.6 : 1,
+            opacity: pressed ? 0.6 : 1,
+            backgroundColor: !run || done ? t.clockTrack : "transparent",
           })}
         >
           <Ionicons
@@ -368,12 +375,15 @@ export function MeetingClock({
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor:
-                action.label === "Reset" ? t.salmon : "transparent",
+              backgroundColor: action.disabled
+                ? t.clockTrack
+                : action.label === "Reset"
+                  ? t.salmon
+                  : "transparent",
               borderWidth: action.label === "Reset" ? 0 : 1,
               borderColor: t.clockLine,
               borderRadius: 10,
-              opacity: action.disabled ? 0.35 : pressed ? 0.6 : 1,
+              opacity: pressed ? 0.6 : 1,
             })}
           >
             <Ionicons
@@ -381,11 +391,23 @@ export function MeetingClock({
                 action.icon as React.ComponentProps<typeof Ionicons>["name"]
               }
               size={16}
-              color={action.label === "Reset" ? t.onSignal : t.cream}
+              color={
+                action.disabled
+                  ? t.cream
+                  : action.label === "Reset"
+                    ? t.onSignal
+                    : t.cream
+              }
             />
             <Text
               style={{
-                color: action.label === "Reset" ? t.onSignal : t.cream,
+                color: action.disabled
+                  ? t.cream
+                  : action.label === "Reset"
+                    ? t.onSignal
+                    : t.cream,
+                flexShrink: 1,
+                textAlign: "center",
                 fontSize: 13,
                 fontFamily: "Manrope",
                 fontWeight: "600",

@@ -841,5 +841,8 @@
   "· pinned": "· angepinnt",
   "· total": "· gesamt",
   "−1 minute": "−1 Minute",
-  "−1 point": "−1 Punkt"
+  "−1 point": "−1 Punkt",
+  "A shorter window that hides the speaker name.": "Ein flacheres Fenster ohne den Namen der sprechenden Person.",
+  "A narrower window for keeping more of your other app visible.": "Ein schmaleres Fenster lässt mehr von der anderen App sichtbar.",
+  "Shows the current speaker, time and controls.": "Zeigt die aktuelle Person, die Zeit und die Bedienelemente."
 }
